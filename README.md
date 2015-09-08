@@ -19,4 +19,5 @@ Licensed under the Apache License v/2.0
 * Python 2.7 for importing
 * MailMan3 if you fancy that (we have an archive plugin)
 * OR any mailing list system of your choice
+* Lua 5.1 or 5.2 + lua-cjson
 
