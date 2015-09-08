@@ -1,3 +1,19 @@
+--[[
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+]]--
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 
@@ -58,7 +74,7 @@ function handle(r)
         end
         qs = table.concat(x, " OR ")
     end
-    local listraw = get.list .. "." .. get.domain
+    local listraw = "<" .. get.list .. "." .. get.domain .. ">"
     local listdata = {
         name = get.list,
         domain = get.domain
@@ -80,7 +96,7 @@ function handle(r)
     local wc = false
     local sterm = {
                     term = {
-                        list = listraw
+                        list_raw = listraw
                     }
                 }
     if get.list == "*" then
@@ -208,7 +224,7 @@ function handle(r)
         },
         size = maxresults
     }
-    
+    local h = #doc.hits.hits
     for k = #doc.hits.hits, 1, -1 do
         local v = doc.hits.hits[k]
         local email = v._source
@@ -224,7 +240,7 @@ function handle(r)
             epoch = email['epoch'],
             date = email.date,
             subject = email['subject'],
-            list = email['list_raw'],
+            list = email['list_raw']:gsub("[<>]+", ""),
             children = {
                 
             }
@@ -263,7 +279,7 @@ function handle(r)
                     epoch = email['epoch'],
                     from = email['from'],
                     subject = email['subject'],
-                    list = email['list_raw'],
+                    list = email['list_raw']:gsub("[<>]+", ""),
                     date = email.date,
                     children = {
                         emails[mid]
@@ -277,14 +293,18 @@ function handle(r)
         end
         table.insert(emls, email)
     end
+    
+    
     JSON.encode_max_depth(500)
     listdata.max = maxresults
     listdata.using_wc = wc
     listdata.no_threads = #threads
     listdata.thread_struct = threads
     listdata.firstYear = firstYear
-    listdata.list = listraw:gsub("^([^.]+)%.", "%1@")
+    listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")
     listdata.emails = emls
+    listdata.hits = h
+    listdata.searchlist = listraw
     listdata.took = r:clock() - now
     r:puts(JSON.encode(listdata))
     
