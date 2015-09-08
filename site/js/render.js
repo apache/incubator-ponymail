@@ -752,6 +752,12 @@ var xlist = ""
 
 function seedGetListInfo(json, state) {
     all_lists = json.lists
+    if (typeof json.preferences != undefined) {
+        prefs = json.preferences
+    }
+    if (typeof json.login != undefined) {
+        login = json.login
+    }
     getListInfo(state.l, state.x, state.n)
 }
 
@@ -1015,6 +1021,10 @@ var prefs = {
     sortOrder: 'forward',       // forward or reverse sort
     compactQuotes: true,        // Show quotes from original email as compacted blocks?
     loggedIn: false
+}
+
+var login = {
+    
 }
 
 var viewModes = {
