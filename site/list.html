@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Pony Mail!</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/popup.css" rel="stylesheet">
+    <link href="css/hack.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body onload="preGetListInfo(null, document.location.search.substr(1))" style="margin: 20px;">
+    <h2 style="color: #E90;">DISCLAIMER: This is a live test/dev version, it may break from time to time!</h2>
+    <p>This project is undergoing FOSSification and will be made public as soon as the ugliest hacks are weeded out (for the sake of pretending it was neat to begin with)</p>
+    <nav class="navbar navbar-default" style="margin-bottom: 5px;">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header" style="min-width: 200px;">
+      <a class="navbar-brand" href="/"><span><img src="images/logo.png" style="margin-top: -10px !important;" height="32" width="32"/>&nbsp;Pony Mail!</span></a>
+      </div>
+    
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" id="listslist">
+
+      </ul>
+      <ul class="nav navbar-nav" id="otherstuff">
+      <li id="listtitle" style="font-size: 16pt; padding-top: 10px; padding-left: 30px;"><a href="#">dev@httpd.apache.org:</a></li>
+      <li class="dropdown navbar-right" id="listchoice">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Available projects: <span class="caret"></span></a>
+            <ul class="dropdown-menu" id="lc_dropdown">
+
+          </ul>
+      </li>
+      </ul>
+      
+    </div>
+    </div>
+    </nav>
+    <div class="container-fluid">
+      
+      <!-- Quick search -->
+      <div class="bs-callout bs-callout-default" id="quicksearch" style="margin: 2px !important; padding: 5px;">
+      <form action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
+        Quick search: <input type="text" name="q" id="q"/>
+        <select name="d" id='dp'>
+          <option value="30">past month</option>
+          <option value="180">past 6 months</option>
+          <option value="365">past year</option>
+          <option value="99999">since the dawn of time</option>
+        </select>
+        <input type="checkbox" value="all" id="checkall"><label for="checkall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
+        <input type="submit" value="Search!" class="btn btn-primary"/> &nbsp;
+        <input type="button" value="Switch to deep search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
+      </form>
+    </div>
+      
+      
+      <!-- Advanced search -->
+      <div style="display: none;" class="bs-callout bs-callout-danger" id="advanced" style="margin: 2px !important; padding: 5px;">
+      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['ad'].value, false);">
+        <p>This search allows you to search all archives you have access to at once. Use with care.</p>
+        Deep search: <input type="text" name="aq" id="aq"/>
+        <select name="ad" id='adp'>
+          <option value="30">past month</option>
+          <option value="180">past 6 months</option>
+          <option value="365">past year</option>
+          <option value="99999">since the dawn of time</option>
+        </select>
+        <input type="submit" value="Search!" class="btn btn-primary"/> &nbsp;
+        <input type="button" value="Switch to quick search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
+      </form>
+    </div>
+      
+      
+    <div class="row">
+      <div id="datepicker" class="col-md-2">
+        
+      </div>
+      <div id="stats" class="hidden-md col-lg-3" style="font-size: 9pt;">
+        
+      </div>
+      <div id="emails" class="col-lg-7 col-md-10">
+        
+      </div>
+      </div>
+    </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/weburl.js"></script>
+    <div id="splash" class="splash"> &nbsp; moo</div>
+  </body>
+</html>
