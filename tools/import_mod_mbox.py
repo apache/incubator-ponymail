@@ -13,6 +13,7 @@ from threading import Thread, Lock
 from formatflowed import convertToWrapped
 import chardet
 import datetime
+import ConfigParser as configparser
 
 y = 0
 baddies = 0
@@ -20,9 +21,16 @@ block = Lock()
 lists = []
 start = time.time()
 quickmode = False
+
+
+# Fetch config
+config = configparser.RawConfigParser()
+config.read(path + '/ponymail.cfg')
+
+
 es = Elasticsearch([
     {
-        'host': '127.0.0.1',
+        'host': config.get("elasticsearch", "hostname"),
         'port': 9200,
         'use_ssl': False,
         'url_prefix': ''
@@ -31,6 +39,7 @@ es = Elasticsearch([
     retry_on_timeout=True
     )
 
+rootURL = config.get("import", "mod_mbox") #http://mail-archives.eu.apache.org/mod_mbox/
 
 def getcharsets(msg):
     charsets = set({})
@@ -41,17 +50,17 @@ def getcharsets(msg):
 
 def msgbody(msg):
     body = None
-    #Walk through the parts of the email to find the text body.    
-    if msg.is_multipart():    
+    #Walk through the parts of the email to find the text body.
+    if msg.is_multipart():
         for part in msg.walk():
 
-            # If part is multipart, walk through the subparts.            
-            if part.is_multipart(): 
+            # If part is multipart, walk through the subparts.
+            if part.is_multipart():
 
                 for subpart in part.walk():
                     if subpart.get_content_type() == 'text/plain':
                         # Get the subpart payload (i.e the message body)
-                        body = subpart.get_payload(decode=True) 
+                        body = subpart.get_payload(decode=True)
                         #charset = subpart.get_charset()
 
             # Part isn't multipart so get the email body
@@ -61,16 +70,16 @@ def msgbody(msg):
 
     # If this isn't a multi-part message then get the payload (i.e the message body)
     elif msg.get_content_type() == 'text/plain':
-        body = msg.get_payload(decode=True) 
+        body = msg.get_payload(decode=True)
 
-   # No checking done to match the charset with the correct part. 
+   # No checking done to match the charset with the correct part.
     for charset in getcharsets(msg):
         try:
             body = body.decode(charset)
         except:
             body = None
-            
-    return body    
+
+    return body
 
 
 def msgfactory(fp):
@@ -92,7 +101,7 @@ class BulkThread(Thread):
         iname = "ponymail_alpha"
         if not self.xes.indices.exists(iname):
             self.xes.indices.create(index = iname)
-                
+
         js_arr = []
         i = 0
         for entry in self.json:
@@ -112,7 +121,7 @@ class BulkThread(Thread):
         except:
             sys.exit(-1)
         #print("Inserted %u entries" % len(js_arr))
-        
+
 
 class SlurpThread(Thread):
 
@@ -145,19 +154,19 @@ class SlurpThread(Thread):
             if m:
                 EY = int(m.group(1))
                 EM = int(m.group(2))
-            inp = urllib.urlopen("http://mail-archives.eu.apache.org/mod_mbox/%s/%s" % (ml, mboxfile )).read()
-            
+            inp = urllib.urlopen("%s%s/%s" % (rootURL, ml, mboxfile )).read()
+
             tmpname = hashlib.sha224("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()
             with open("%s.mbox" % tmpname, "w") as f:
                 f.write(inp)
                 f.close()
-            
+
             count = 0
             for message in mailbox.mbox("%s.mbox" % tmpname, factory=msgfactory):
                 if 'subject' in message:
                     subject = message['subject']       # Could possibly be None.
                     mid = message['message-id']
-                    
+
                     lid = message['list-id']
                     if not lid or lid == "" or lid.find("incubator") != -1: # Guess list name in absence
                         lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
@@ -181,7 +190,7 @@ class SlurpThread(Thread):
                                 #print("Could not decode message, ignoring..")
                                 baddies += 1
                                 body = None
-                                
+
                     okay = True
                     dheader = {}
                     for key in ['to','from','subject','message-id']:
@@ -222,7 +231,7 @@ class SlurpThread(Thread):
                         irt = ""
                         if 'in-reply-to' in message:
                             irt = message['in-reply-to']
-                        
+
                         json = {
                             'from_raw': dheader['from'],
                             'from': dheader['from'],
@@ -264,8 +273,9 @@ elif len(sys.argv) == 3:
 else:
     print("Usage: slurp.py tlpname")
     sys.exit(-1)
-    
-data = urllib.urlopen("http://mail-archives.eu.apache.org/mod_mbox/").read()
+
+
+data = urllib.urlopen(rootURL).read()
 print("Fetched %u bytes of main data, parsing month lists" % len(data))
 
 ns = r"<a href='(%s[-a-z0-9]+)/'" % tlpname
@@ -275,7 +285,7 @@ if tlpname.find("-") != -1:
 baddies = 0
 for mlist in re.finditer(ns, data):
     ml = mlist.group(1)
-    mldata = urllib.urlopen("http://mail-archives.eu.apache.org/mod_mbox/%s/" % ml).read()
+    mldata = urllib.urlopen("%s%s/" % (rootURL, ml)).read()
     present = re.search(r"<th colspan=\"3\">Year 20[\d]{2}</th>", mldata) # Check that year 2014-2017 exists, otherwise why keep it?
     if present:
         for mbox in re.finditer(r"(\d+\.mbox)/thread", mldata):
@@ -294,5 +304,5 @@ for i in range(1,7):
 
 for t in threads:
     t.join()
-    
+
 print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (y, int(time.time() - start), baddies))
