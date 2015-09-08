@@ -23,30 +23,17 @@ local days = {
 
 function leapYear(year)
     if (year % 4 == 0) then
-     if (year%100 == 0)then                
-      if (year %400 == 0) then                    
-          return true
-      end
-     else                
-      return true
-     end
-    return false
-end
-end
-
-
-function showThread(r, thread)
-    r:puts("<ul>")
-    for k, eml in pairs(thread) do
-        r:puts("<li>" .. eml.subject .. " (" .. eml.date ..") ")
-        if eml.children and #eml.children > 0 then
-            r:puts(": <br/>")
-            showThread(r, eml.children)
+        if (year%100 == 0)then                
+            if (year %400 == 0) then                    
+                return true
+            end
+        else                
+            return true
         end
-        r:puts("</li>")
+        return false
     end
-    r:puts("</ul>")
 end
+
 
 function handle(r)
     r.content_type = "application/json"
@@ -58,7 +45,7 @@ function handle(r)
     end
     local qs = "*"
     local dd = 30
-    local maxresults = 3000
+    local maxresults = 5000
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
         dd = tonumber(get.d)
     end
