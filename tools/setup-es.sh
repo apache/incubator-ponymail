@@ -34,16 +34,15 @@ EOT
     exit 1
 fi
 
-echo "Setting up ElasticSearch structure..."
+echo "Setting up ElasticSearch structure...\n"
 PSERVER=${1:-localhost}
 PDBNAME=${2:-ponymail}
 
-echo "Creating DB named $PDBNAME..."
-curl -XPUT "http://$PSERVER/$PDBNAME"
+echo "Creating DB named $PDBNAME...\n"
+curl -XPUT "http://$PSERVER:9200/$PDBNAME"
 
-echo "Creating mappings for $PDBNAME..."
-curl -XPUT "http://$PSERVER/$PDBNAME/mbox/_mappings" -d '{
-    "mappings" : {
+echo "\nCreating mappings for $PDBNAME..."
+curl -XPOST "http://$PSERVER:9200/$PDBNAME/mbox/_mappings" -d '{
       "mbox" : {
         "_size" : {
           "enabled" : true,
@@ -105,7 +104,24 @@ curl -XPUT "http://$PSERVER/$PDBNAME/mbox/_mappings" -d '{
           }
         }
       }
-    }
-  }'
+    }'
   
-echo "All done!"
+echo "\nWriting ponymail.cfg..."
+
+cat <<EOT>> ponymail.cfg
+############################################################################
+# Pony Mail Configuration file                                             #
+
+# Main ES configuration
+[elasticsearch]
+hostname:               $PSERVER
+dbname:                 $PDBNAME
+port:                   9200
+
+# Imports and such for importing mod_mbox etc
+[import]
+mod_mbox:               http://foo.example.org/mod_mbox/
+############################################################################
+EOT
+
+echo "All done!\n"
