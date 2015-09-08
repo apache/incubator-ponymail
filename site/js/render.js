@@ -1,3 +1,24 @@
+/*
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*/
+
+// These are all variables needed at some point during our work.
+// They keep track of the JSON we have received, storing it in the browser,
+// Thus lightening the load on the backend (caching and such)
+
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
 var d_at = 10;
 var d_ppp = 15;
@@ -730,12 +751,12 @@ function buildPage(json, state) {
 var xlist = ""
 
 function seedGetListInfo(json, state) {
-    all_lists = json
+    all_lists = json.lists
     getListInfo(state.l, state.x, state.n)
 }
 
 function preGetListInfo(list, xdomain, nopush) {
-    GetAsync("lists.lua", { l:list, x:xdomain, n:nopush}, seedGetListInfo)
+    GetAsync("preferences.lua", { l:list, x:xdomain, n:nopush}, seedGetListInfo)
 }
 
 function getListInfo(list, xdomain, nopush) {
@@ -986,13 +1007,14 @@ function listDomains() {
 }
 
 
-// Preferences
+// Preferences (defaults)
 
 var prefs = {
     displayMode: 'threaded',    // threaded or flat
     groupBy: 'thread',          // thread or date
     sortOrder: 'forward',       // forward or reverse sort
-    compactQuotes: true         // Show quotes from original email as compacted blocks?
+    compactQuotes: true,        // Show quotes from original email as compacted blocks?
+    loggedIn: false
 }
 
 var viewModes = {
