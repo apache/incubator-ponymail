@@ -151,59 +151,70 @@ function handle(r)
     end
     listdata.participants = top10
     
-    -- Get years active
-    local doc = elastic.raw {
-
-        query = {
-            bool = {
-                must = {
-                    {
-                    range = {
-                        date = {
-                            gt = "0",
-                        }
-                    }
-                },sterm
-            }}
-        },
-        
-        sort = {
-            {
-                date = {
-                    order = "asc"
-                }
-            }  
-        },
-        size = 1
-    }
-    local firstYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+    
     
     -- Get years active
-    local doc = elastic.raw {
-
-        query = {
-            bool = {
-                must = {
-                    {
-                    range = {
-                        date = {
-                            gt = "0",
+    local nowish = os.time() % 600
+    local firstYear = r:ivm_get("firstYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
+    if not firstYear or firstYear == "" then
+        local doc = elastic.raw {
+    
+            query = {
+                bool = {
+                    must = {
+                        {
+                        range = {
+                            date = {
+                                gt = "0",
+                            }
                         }
+                    },sterm
+                }}
+            },
+            
+            sort = {
+                {
+                    date = {
+                        order = "asc"
                     }
-                },sterm
-            }}
-        },
-        
-        sort = {
-            {
-                date = {
-                    order = "desc"
-                }
-            }  
-        },
-        size = 1
-    }
-    local lastYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+                }  
+            },
+            size = 1
+        }
+        firstYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+        r:ivm_set("firstYear:" .. nowish .. ":" .. get.list .. "@" .. get.domain, firstYear)
+    end
+    
+    -- Get years active
+    local lastYear = r:ivm_get("lastYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
+    if not lastYear or lastYear == "" then
+        local doc = elastic.raw {
+    
+            query = {
+                bool = {
+                    must = {
+                        {
+                        range = {
+                            date = {
+                                gt = "0",
+                            }
+                        }
+                    },sterm
+                }}
+            },
+            
+            sort = {
+                {
+                    date = {
+                        order = "desc"
+                    }
+                }  
+            },
+            size = 1
+        }
+        lastYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+        r:ivm_set("lastYear:"  .. nowish .. ":" ..get.list .. "@" .. get.domain, lastYear)
+    end
     
     
     -- Get threads
