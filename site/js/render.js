@@ -1087,6 +1087,9 @@ function seedDomains(json) {
     if (pg) {
         obj.appendChild(pg);
     }
+    if (doms.length == 0) {
+        obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
+    }
 }
 
 function listDomains() {
