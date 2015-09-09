@@ -1017,25 +1017,46 @@ function seedDomains(json) {
     }
     if (json.login && json.login.fullname) {
         document.getElementById('welcome').innerHTML = "Welcome, " + json.login.fullname.split(/ /)[0] + "!"
+    } else {
+        document.getElementById('login_disclaimer').style.display = "block"
     }
     var doms = []
     for (var key in json.lists) {
         doms.push(key)
     }
     doms.sort()
+    var lu = {}
+    var pg;
     for (var i in doms) {
         var dom = doms[i]
+        var letter = dom.substr(0,1)
+        // Make character entry
+        if (!lu[letter]) {
+            lu[letter] = true
+            if (pg) {
+                obj.appendChild(pg);
+            }
+            pg = document.createElement("div")
+            pg.setAttribute("class", "phonebook_grouping")
+            
+            var pc = document.createElement("div")
+            pc.setAttribute("class", "phonebook_letter")
+            pc.appendChild(document.createTextNode(letter.toUpperCase()))
+            pg.appendChild(pc)
+        }
+        
+        // Make ML entry
         var li = document.createElement("label")
-        li.setAttribute("class", "label label-info")
-        li.style.margin = "5px"
-        li.style.float = "left"
+        li.setAttribute("class", "phonebook_entry")
         var a = document.createElement("a")
         var t = document.createTextNode(dom)
         a.setAttribute("href", "list.html?" + dom)
-        a.style.color = "#FFF"
         a.appendChild(t)
         li.appendChild(a)
-        obj.appendChild(li)
+        pg.appendChild(li)
+    }
+    if (pg) {
+        obj.appendChild(pg);
     }
 }
 
