@@ -185,7 +185,12 @@ var login = {}
 
         var bulk = document.getElementById('emails')
         bulk.innerHTML = nest
-        bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        if (prefs.hideStats == 'yes') {
+            bulk.setAttribute("class", "well col-md-10 col-lg-10")
+        } else {
+            bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        }
+        
 
         if (start > 0) {
             var nstart = Math.max(0, start - limit)
@@ -256,7 +261,11 @@ var login = {}
 
         var bulk = document.getElementById('emails')
         bulk.innerHTML = nest
-        bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        if (prefs.hideStats == 'yes') {
+            bulk.setAttribute("class", "well col-md-10 col-lg-10")
+        } else {
+            bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        }
         var dp = (deep || global_deep) ? 'true' : 'false'
         if (start > 0) {
             var nstart = Math.max(0, start - limit)
@@ -698,6 +707,11 @@ var kiddos = []
         checkCalendar(json)
 
         var stats = document.getElementById('stats')
+        if (prefs.hideStats == 'yes') {
+            stats.style.display = "none"
+        } else {
+            stats.style.display = "block"
+        }
         stats.style.width = "300px"
         stats.innerHTML = "<br/><h4>Stats for this blob of emails:</h4>"
 
@@ -1174,6 +1188,7 @@ function showPreferences() {
     var obj = document.getElementById('splash')
     obj.style.display = "block"
     obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>User preferences:</h3>"
+    obj.innerHTML += "<p>You can change your preferences here. Some changes may not take place til you refresh your view.</p>"
     
     
     // set up view section
@@ -1206,6 +1221,11 @@ function showPreferences() {
         no: "No"
     }, prefs.compactQuotes))
     
+    // hideStats mode
+    section.appendChild(generateFormDivs('hideStats', 'Hide statistics window:', 'select', {
+        yes: "Yes",
+        no: "No"
+    }, prefs.hideStats))
     
     var btn = document.createElement('input')
     btn.setAttribute("type", "button")
