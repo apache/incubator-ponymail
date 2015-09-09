@@ -29,3 +29,13 @@ var pm_config = {
         enabled: true
     }
 }
+
+
+// Localized preferences (defaults)
+var prefs = {
+    displayMode: 'threaded', // threaded or flat
+    groupBy: 'thread', // thread or date
+    sortOrder: 'forward', // forward or reverse sort
+    compactQuotes: 'yes', // Show quotes from original email as compacted blocks?
+    loggedIn: false
+}
