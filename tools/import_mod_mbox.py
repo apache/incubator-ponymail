@@ -364,6 +364,7 @@ baddies = 0
 def globDir(d):
     dirs = [ f for f in listdir(d) if isdir(join(d,f)) ]
     mboxes = [ f for f in glob.glob(join(d,"*" + extension)) if isfile(f) ]
+    lo = list_override
     if not d in fileToLID and len(mboxes) > 0 and interactive:
         print("Would you like to set a list-ID override for %s?:" % d)
         lo = sys.stdin.readline()
@@ -373,7 +374,7 @@ def globDir(d):
         else:
             print("alright, I'll try to figure it out myself!")
     for fi in mboxes:
-        lists.append([fi, fileToLID.get(d)])
+        lists.append([fi, fileToLID.get(d) if fileToLID.get(d) else list_override])
     for nd in dirs:
         globDir(join(d,nd))
  
