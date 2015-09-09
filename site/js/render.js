@@ -322,7 +322,7 @@ var login = {}
                 thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
             }
             var ebody = json.body
-
+            ebody = ebody.replace(/</, "&lt;")
             ebody = "\n" + ebody
             if (prefs.compactQuotes == 'yes') {
                 ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
@@ -367,7 +367,7 @@ var login = {}
             var ebody = json.body
             ebody = ebody.replace(/</, "&lt;")
             ebody = "\n" + ebody
-            if (prefs && prefs.compactQuotes == 'yes') {
+            if (true) {
                 ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                     var rnd = (Math.random() * 100).toString()
                     var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
