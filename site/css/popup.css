@@ -110,17 +110,21 @@
 .phonebook_grouping {
     background: none;
     width: 400px;
+    min-height: 48px;
+    border: 1px solid #eee;
+    border-left-color: #5bc0de;
+    border-left-width: 5px;
+    border-radius: 3px;
     float: left;
-    border-radius: 4px;
     background: rgba(247,247,247,1);
     border: 1px solid #333;
     margin-top: 10px;
     margin-left: 15px;
-    width: 90%;
+    
 }
 
 .phonebook_letter {
-    background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
+    background: #5bc0de;
     border: 1px solid #333;
     border-radius: 4px;
     font-size: 14pt;
@@ -128,17 +132,29 @@
     margin-top: -1px;
     margin-left: -1px;
     margin-right: -1px;
-    margin-bottom: 5px;
+    margin-bottom: -1px;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+    padding-top: 10px;
+    vertical-align: middle;
     text-align: center;
+    float: left;
+    height: 100%;
+    width: 32px;
+    min-height: 56px;
+    margin-right: 10px;
 }
 
-.phonebook_entry {
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(247,247,247,1) 50%,rgba(244,244,244,1) 100%);
-    border: 1px solid #333;
+.phonebook_entry, .phonebook_entry a {
+    background: none;
     color: #666;
-    padding: 5px;
+    font-weight: 600;
+    padding: 0px;
+    float: left;
     margin-right: 8px;
-    border-radius: 3px;
+    margin-top: 3px;
+    margin-bottom: -2px;
     font-size: 10pt;
     font-family: sans-serif;
     text-align: center;
