@@ -27,7 +27,7 @@ function setupPersona(json) {
       // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
       $.ajax({
         type: 'POST',
-        url: '/persona.lua?mode=logout', // This is a URL on your website.
+        url: '/oauth.lua?mode=logout', // This is a URL on your website.
         success: function(res, status, xhr) { window.location.reload(); }
       });
     }
