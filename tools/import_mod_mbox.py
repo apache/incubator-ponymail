@@ -198,14 +198,14 @@ class SlurpThread(Thread):
                     lid = message['list-id']
                     if not lid or lid == "" or lid.find("incubator") != -1: # Guess list name in absence
                         lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
-                        
+                    
                     # Compact LID to <foo@domain>, discard rest
                     m = re.search(r"(<.+>)", lid)
                     if m:
                         lid = m.group(1)
                     if xlist_override and len(xlist_override) > 3:
                         lid = xlist_override
-                        
+                    lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
                     date = message['date']
                     fro = message['from']
                     to = message['to']
