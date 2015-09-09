@@ -89,7 +89,7 @@ function handle(r)
             from = {
                 terms = {
                     field = "list_raw",
-                    size = 100000
+                    size = 500000
                 }
             }
         }
@@ -110,7 +110,8 @@ function handle(r)
     r:puts(JSON.encode{
         lists = lists,
         preferences = prefs,
-        login = login
+        login = login,
+        took = r:clock() - now
     })
     
     return apache2.OK
