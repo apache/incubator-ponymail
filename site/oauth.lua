@@ -43,12 +43,20 @@ function handle(r)
         if eml and fname then
             local uid = json.uid
             local cookie = r:sha1(r.useragent_ip .. ':' .. (math.random(1,9999999)*os.time()) .. r:clock())
+            
+            -- Does this account exists? If so, grab the prefs first
+            local prefs = nil
+            local odoc = elastic.get('account', r:sha1(uid or eml))
+            if odoc and odoc.preferences then
+                prefs = odoc.preferences
+            end
             elastic.index(r, r:sha1(uid or eml), 'account', JSON.encode{
                 uid = uid,
                 email = eml,
                 fullname = fname,
                 admin = admin,
-                cookie = cookie
+                cookie = cookie,
+                preferences = prefs
             })
             r:setcookie("pony",cookie .. "==" .. (uid or eml))
             r:puts[[{"okay": true, "msg": "Logged in successfully!"}]]
