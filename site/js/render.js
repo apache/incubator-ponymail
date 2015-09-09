@@ -1029,8 +1029,10 @@ function seedDomains(json) {
     if (!obj) {
         return
     }
+    document.getElementById('login_disclaimer').style.display = "block"
     if (json.login && json.login.fullname) {
         document.getElementById('welcome').innerHTML = "Welcome, " + json.login.fullname.split(/ /)[0] + "!"
+        document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
     } else {
         document.getElementById('login_disclaimer').style.display = "block"
     }
