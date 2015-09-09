@@ -26,7 +26,7 @@ function handle(r)
     local post = r:parsebody()
     local valid, json
     if get.mode and get.mode == "persona" then
-        local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=http://ponyarchive.info:80/"):format(post.assertion))
+        local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=https://%s:%u/"):format(post.assertion, r.hostname, r.port))
         r:err(("assertion=%s&audience=https://ponymail:443/"):format(post.assertion))
         r:err(result)
         valid, json = pcall(function() return JSON.decode(result) end)
