@@ -178,6 +178,33 @@ function handle(r)
     }
     local firstYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
     
+    -- Get years active
+    local doc = elastic.raw {
+
+        query = {
+            bool = {
+                must = {
+                    {
+                    range = {
+                        date = {
+                            gt = "0",
+                        }
+                    }
+                },sterm
+            }}
+        },
+        
+        sort = {
+            {
+                date = {
+                    order = "desc"
+                }
+            }  
+        },
+        size = 1
+    }
+    local lastYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+    
     
     -- Get threads
     local threads = {}
@@ -288,6 +315,7 @@ function handle(r)
     listdata.no_threads = #threads
     listdata.thread_struct = threads
     listdata.firstYear = firstYear
+    listdata.lastYear = lastYear
     listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")
     listdata.emails = emls
     listdata.hits = h

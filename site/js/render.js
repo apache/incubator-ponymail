@@ -603,12 +603,13 @@ var kiddos = []
     }
 
 
-    function buildCalendar(firstYear) {
+    function buildCalendar(firstYear, lastYear) {
         var dp = document.getElementById('datepicker')
         dp.style.width = "150px"
         dp.innerHTML = "<h3>Archive:</h3>"
+        var fyear = lastYear ? lastYear : new Date().getFullYear();
 
-        for (var year = new Date().getFullYear(); year >= (firstYear ? firstYear : current_cal_min); year--) {
+        for (var year = fyear; year >= (firstYear ? firstYear : current_cal_min); year--) {
             dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 120px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
             var cale = "<div style='float: left; width: 90%; display: none; padding-left: 20px; margin-bottom: 15px;' id='cal_" + year + "'>"
             var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
@@ -691,10 +692,10 @@ var kiddos = []
         if (json.list && !list_year[json.list]) {
             xlist = (json.list && json.list.search(/\*/) == -1) ? json.list : xlist
             list_year[json.list] = json.firstYear
-            buildCalendar(json.firstYear)
+            buildCalendar(json.firstYear, json.lastYear)
         }
         if (xlist != json.list || current_cal_min != json.firstYear) {
-            buildCalendar(json.firstYear)
+            buildCalendar(json.firstYear, json.lastYear)
             xlist = (json.list && json.list.search(/\*/) == -1) ? json.list : xlist
             current_cal_min = json.firstYear
         }
