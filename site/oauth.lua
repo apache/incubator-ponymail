@@ -23,29 +23,40 @@ local https = require 'ssl.https'
 function handle(r)
     r.content_type = "application/json"
     local get = r:parseargs()
+    local post = r:parsebody()
+    local valid, json
+    if get.mode and get.mode == "persona" then
+        local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=http://ponyarchive.info:80/"):format(post.assertion))
+        r:err(("assertion=%s&audience=https://ponymail:443/"):format(post.assertion))
+        r:err(result)
+        valid, json = pcall(function() return JSON.decode(result) end)
+        
+    end
     if get.state and get.code and get.oauth_token then
         local result = https.request(get.oauth_token, r.args)
-        local valid, json = pcall(function() return JSON.decode(result) end)
-        if valid and json then
-            local eml = json.email
-            local fname = json.fullname
-            local admin = json.isMember
-            if eml and fname then
-                local cookie = r:sha1(r.useragent_ip .. ':' .. (math.random(1,9999999)*os.time()) .. r:clock())
-                elastic.index(r, r:sha1(eml), 'account', JSON.encode{
-                    email = eml,
-                    fullname = fname,
-                    admin = admin,
-                    cookie = cookie
-                })
-                r:setcookie("pony",cookie .. "==" .. eml)
-                r:puts[[{"okay": true, "msg": "Logged in successfully!"}]]
-            end
+        valid, json = pcall(function() return JSON.decode(result) end)
+    end
+    if valid and json then
+        local eml = json.email
+        local fname = json.fullname or json.email
+        local admin = json.isMember
+        if eml and fname then
+            local uid = json.uid
+            local cookie = r:sha1(r.useragent_ip .. ':' .. (math.random(1,9999999)*os.time()) .. r:clock())
+            elastic.index(r, r:sha1(uid or eml), 'account', JSON.encode{
+                uid = uid,
+                email = eml,
+                fullname = fname,
+                admin = admin,
+                cookie = cookie
+            })
+            r:setcookie("pony",cookie .. "==" .. (uid or eml))
+            r:puts[[{"okay": true, "msg": "Logged in successfully!"}]]
         else
-            r:puts[[{"okay": false, "msg": "Invalid oauth response!"}]]
+            r:puts[[{"okay": false, "msg": "Erroneous or missing response from backend!"}]]
         end
     else
-        r:puts[[{"okay": false, "msg": "No OAuth creds provided"}]]
+        r:puts[[{"okay": false, "msg": "Invalid oauth response!"}]]
     end
     return apache2.OK
 end
