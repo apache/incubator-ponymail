@@ -31,11 +31,17 @@ var pm_config = {
 }
 
 
+
 // Localized preferences (defaults)
 var prefs = {
-    displayMode: 'threaded', // threaded or flat
-    groupBy: 'thread', // thread or date
-    sortOrder: 'forward', // forward or reverse sort
-    compactQuotes: 'yes', // Show quotes from original email as compacted blocks?
+    displayMode: 'threaded',        // threaded or flat
+    groupBy: 'thread',              // thread or date
+    sortOrder: 'forward',           // forward or reverse sort
+    compactQuotes: 'yes',           // Show quotes from original email as compacted blocks?
+    notifications: 'direct',        // Notify on direct or indirect replies to your posts?
     loggedIn: false
 }
+
+// array of prefs we have now. This is needed in case we change/break the existing
+// structure saved in elasticsearch for users. Update when needed!
+var pref_keys = ['displayMode','groupBy','sortOrder','compactQuotes','notifications']

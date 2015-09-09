@@ -1134,7 +1134,8 @@ function generateFormDivs(id, title, type, options, selval) {
 
 function savePreferences() {
     var prefarr = []
-    for (var key in prefs) {
+    for (var i in pref_keys) {
+        var key = pref_keys[i]
         var o = document.getElementById(key)
         var val = o ? o.value : null
         if (o && o.selectedIndex) {
@@ -1194,9 +1195,25 @@ function showPreferences() {
     
     
     obj.appendChild(section)
-    obj.appendChild(btn)
     
-    // displayMode, groupBy, sortOrder, compactQuotes
+    
+    
+    // set up notifications section
+    var section = document.createElement('div')
+    section.setAttribute("class", "bs-callout bs-callout-success prefs")
+    section.innerHTML = "<h3>Notification preferences:</h3>"
+    
+    // notifications mode
+    section.appendChild(generateFormDivs('notifications', 'Notify me on:', 'select', {
+        direct: "Only direct replies to my emails",
+        indirect: "Any reply that references my email",
+        none: "Don't notify me at all!"
+    }, prefs.notifications))
+    
+    obj.appendChild(section)
+    
+    // Save button
+    obj.appendChild(btn)
 }
 
 var viewModes = {
