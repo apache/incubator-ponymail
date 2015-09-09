@@ -293,7 +293,7 @@ var login = {}
     }
 
     function permaLink(id) {
-        location.href = "permalink.html?" + id
+        location.href = "permalink.html/" + id
     }
 
     function displayEmail(json, id) {
@@ -379,7 +379,7 @@ var login = {}
 
             ebody = ebody.replace(re_weburl, "<a href=\"$1\">$1</a>")
 
-            thread.innerHTML += "<b>List ID: </b><a href='list.html?" + lid + "'>" + lid + "</a><br/>"
+            thread.innerHTML += "<b>List ID: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
             thread.innerHTML += "<br/><pre style='font-family: Hack;'>" + ebody + '</pre>'
         } else {
             alert("Error, " + id + " not found :(")
@@ -1032,7 +1032,7 @@ function compose(eid) {
 
 
 function getSingleEmail(id) {
-    GetAsync("email.lua?id=" + id, null, displaySingleEmail)
+    GetAsync("/email.lua?id=" + id, null, displaySingleEmail)
 }
 
 function seedDomains(json) {
