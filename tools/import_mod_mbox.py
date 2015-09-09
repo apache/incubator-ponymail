@@ -171,6 +171,12 @@ class SlurpThread(Thread):
                     if not lid or lid == "" or lid.find("incubator") != -1: # Guess list name in absence
                         lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
                         #print("No LID specified, trying %s" % lid)
+                        
+                    # Compact LID to <foo@domain>, discard rest
+                    m = re.search(r"(<.+>)", lid)
+                    if m:
+                        lid = m.group(1)
+                        
                     date = message['date']
                     fro = message['from']
                     to = message['to']
