@@ -964,7 +964,7 @@ if (document.getElementById('emails')) {
 function compose(eid) {
     var email = saved_emails[eid]
     if (email) {
-        if (prefs.loggedIn) {
+        if (login.loggedIn) {
 
             var obj = document.getElementById('splash')
             obj.style.display = "block"
