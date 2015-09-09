@@ -24,6 +24,41 @@ function handle(r)
     local now = r:clock()
     local get = r:parseargs()
     
+    
+    local login = {
+        loggedIn = false
+    }
+    
+    local prefs = nil -- Default to JS prefs if not logged in
+    
+    -- prefs?
+    local ocookie = r:getcookie("pony")
+    if ocookie and #ocookie > 43 then
+        local cookie, eml = r:unescape(ocookie):match("([a-f0-9]+)==(.+)")
+        if cookie and #cookie >= 40 and eml then
+            local js = elastic.get('account', r:sha1(eml))
+            if js and js.email then
+                login = {
+                    loggedIn = true,
+                    email = js.email,
+                    fullname = js.fullname
+                }
+            end
+            
+            -- while we're here, are you logging out?
+            if get.logout and login.loggedIn == true then
+                elastic.index(r, r:sha1(eml), 'account', JSON.encode{
+                    email = eml,
+                    fullname = fname,
+                    admin = admin,
+                    cookie = 'nil'
+                })
+                r:setcookie("pony", "----")
+            end
+        end
+    end
+    
+    -- Get lists
     local doc = elastic.raw {
         aggs = {
             from = {
@@ -44,11 +79,7 @@ function handle(r)
         end
     end
     
-     local login = {
-        loggedIn = false
-    }
-    
-    local prefs = nil -- Default to JS prefs if not logged in
+     
     
     
     r:puts(JSON.encode{
