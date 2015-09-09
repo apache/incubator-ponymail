@@ -23,3 +23,12 @@ Licensed under the Apache License v/2.0
 * OR any mailing list system of your choice
 * Lua 5.1 or 5.2 + lua-cjson
 
+
+### Getting started ###
+
+* Install Apache httpd + mod_lua
+* Install ElasticSearch
+* go to tools/ and run setup-es.sh
+* pip install elasticsearch formatflowed
+* import if need be
+
