@@ -175,4 +175,5 @@
     margin-right: 5px;
     margin-left: 5px;
     cursor: pointer;
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%);
 }

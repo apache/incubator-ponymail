@@ -769,7 +769,7 @@ var kiddos = []
         stats.appendChild(btn)
         if (prefs.hideStats == 'yes') {
             stats.setAttribute("class", "col-md-1 vertical-text")
-            stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildPage(old_json, old_state);\">Show stats..</div>"
+            stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildPage(old_json, old_state);\">Show stats panel..</div>"
         } else {
             stats.setAttribute("class", "hidden-md col-lg-3")
             stats.removeAttribute("onclick")
