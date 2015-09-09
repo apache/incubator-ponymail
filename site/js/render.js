@@ -774,11 +774,14 @@ var kiddos = []
 
     function seedGetListInfo(json, state) {
         all_lists = json.lists
-        if (typeof json.preferences != undefined) {
+        if (typeof json.preferences != undefined && prefs.viewMode) {
             prefs = json.preferences
         }
         if (typeof json.login != undefined) {
             login = json.login
+            if (login.loggedIn) {
+                setupUser(login)
+            }
         }
         getListInfo(state.l, state.x, state.n)
     }
@@ -1038,7 +1041,45 @@ function listDomains() {
     GetAsync("lists.lua", null, seedDomains)
 }
 
+function setupUser(login) {
+    var uimg = document.getElementById('uimg')
+    uimg.setAttribute("src", "images/user.png")
+    uimg.setAttribute("title", "Logged in as " + login.fullname)
+    var pd = document.getElementById('prefs_dropdown')
+    pd.innerHTML = ""
+    
+    // Prefs item
+    var li = document.createElement("li")
+    var a = document.createElement("a")
+    var t = document.createTextNode(login.fullname + "'s preferences")
+    a.setAttribute("href", "javascript:void(0);")
+    a.appendChild(t)
+    li.appendChild(a)
+    pd.appendChild(li)
+    
+    // Notifications item
+    var li = document.createElement("li")
+    var a = document.createElement("a")
+    var t = document.createTextNode("Notifications")
+    a.setAttribute("href", "javascript:void(0);")
+    a.appendChild(t)
+    li.appendChild(a)
+    pd.appendChild(li)
+    
+    // Logout item
+    var li = document.createElement("li")
+    var a = document.createElement("a")
+    var t = document.createTextNode("Log out")
+    a.setAttribute("href", "javascript:void(0);")
+    a.setAttribute("onclick", "logout()")
+    a.appendChild(t)
+    li.appendChild(a)
+    pd.appendChild(li)
+}
 
+function logout() {
+    GetAsync("preferences.lua?logout=true", null, function() { location.href = document.location; })
+}
 
 var viewModes = {
     threaded: {
