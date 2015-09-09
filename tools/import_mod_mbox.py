@@ -373,9 +373,9 @@ def globDir(d):
             print("Righto, setting it to %s." % fileToLID[d])
         else:
             print("alright, I'll try to figure it out myself!")
-    for fi in mboxes:
+    for fi in sorted(mboxes):
         lists.append([fi, fileToLID.get(d) if fileToLID.get(d) else list_override])
-    for nd in dirs:
+    for nd in sorted(dirs):
         globDir(join(d,nd))
  
 
