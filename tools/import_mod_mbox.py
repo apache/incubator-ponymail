@@ -14,6 +14,10 @@ from formatflowed import convertToWrapped
 import chardet
 import datetime
 import ConfigParser as configparser
+import argparse
+from os import listdir
+from os.path import isfile, join, isdir
+import glob
 
 y = 0
 baddies = 0
@@ -21,11 +25,21 @@ block = Lock()
 lists = []
 start = time.time()
 quickmode = False
+lid_override = None
 
+
+source = "./"
+list_override = None
+project = ""
+recursive = False
+filebased = False
+fileToLID = {}
+interactive = False
+extension = "*.mbox"
 
 # Fetch config
 config = configparser.RawConfigParser()
-config.read(path + '/ponymail.cfg')
+config.read('ponymail.cfg')
 
 
 es = Elasticsearch([
@@ -130,6 +144,10 @@ class SlurpThread(Thread):
         ja = []
         print("Thread started")
         mla = None
+        ml = ""
+        mboxfile = ""
+        filename = ""
+        xlist_override = None
         while len(lists) > 0:
             if len(lists) == 0:
                 return
@@ -145,24 +163,34 @@ class SlurpThread(Thread):
                 return
             block.release()
             y += 1
-            ml = mla[0]
-            mboxfile = mla[1]
-            print("Slurping %s/%s" % (ml, mboxfile))
-            m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
-            EY = 1997
+            EY = 1980
             EM = 1
-            if m:
-                EY = int(m.group(1))
-                EM = int(m.group(2))
-            inp = urllib.urlopen("%s%s/%s" % (rootURL, ml, mboxfile )).read()
-
-            tmpname = hashlib.sha224("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()
-            with open("%s.mbox" % tmpname, "w") as f:
-                f.write(inp)
-                f.close()
-
+            if filebased:
+                
+                tmpname = mla[0]
+                filename = mla[0]
+                xlist_override = mla[1]
+                print("Slurping %s" % filename)
+            else:
+                ml = mla[0]
+                mboxfile = mla[1]
+                print("Slurping %s/%s" % (ml, mboxfile))
+                m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
+                EY = 1997
+                EM = 1
+                if m:
+                    EY = int(m.group(1))
+                    EM = int(m.group(2))
+                inp = urllib.urlopen("%s%s/%s" % (rootURL, ml, mboxfile )).read()
+    
+                tmpname = hashlib.sha224("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()
+                with open(tmpname, "w") as f:
+                    f.write(inp)
+                    f.close()
+    
             count = 0
-            for message in mailbox.mbox("%s.mbox" % tmpname, factory=msgfactory):
+            LEY = EY
+            for message in mailbox.mbox(tmpname, factory=msgfactory):
                 if 'subject' in message:
                     subject = message['subject']       # Could possibly be None.
                     mid = message['message-id']
@@ -170,12 +198,13 @@ class SlurpThread(Thread):
                     lid = message['list-id']
                     if not lid or lid == "" or lid.find("incubator") != -1: # Guess list name in absence
                         lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
-                        #print("No LID specified, trying %s" % lid)
                         
                     # Compact LID to <foo@domain>, discard rest
                     m = re.search(r"(<.+>)", lid)
                     if m:
                         lid = m.group(1)
+                    if xlist_override and len(xlist_override) > 3:
+                        lid = xlist_override
                         
                     date = message['date']
                     fro = message['from']
@@ -213,10 +242,19 @@ class SlurpThread(Thread):
                             except Exception as err:
                                 print("Could not decode headers, ignoring..")
                                 okay = False
-                    mdate = email.utils.parsedate_tz(message['date'])
-                    if not mdate or mdate[0] < EY:
-                        print("Date is wrong or missing here, setting to %s" % EY)
-                        mdate = datetime.datetime(EY, EM, 1).timetuple()
+                    mdt = ""
+                    if not 'date' in message and 'received' in message:
+                        m = re.search(r"(\d+ \S+ \d{4} \d\d:\d\d:\d\d ([-+]\d{4})?)", message['received'])
+                        if m:
+                            mdt = m.group(1)
+                    else:
+                        mdt = message['date']
+                    mdate = email.utils.parsedate_tz(mdt)
+                    if not mdate or mdate[0] < (LEY-1):
+                        print("Date is wrong or missing here (%s), setting to %s" % ( LEY))
+                        mdate = datetime.datetime(LEY, EM, 1).timetuple()
+                    else:
+                        LEY = mdate[0] # Gather evidence 'n'stuff!
                     mdatestring = ""
                     try:
                         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
@@ -227,7 +265,10 @@ class SlurpThread(Thread):
                             try:
                                 mid = hashlib.sha256(body).hexdigest() + "@apache.org"
                             except:
-                                mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@apache.org"
+                                if filebased:
+                                    mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@apache.org"
+                                else:
+                                    mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@apache.org"
                             print("No MID found, setting to %s" % mid)
                         mid2 = hashlib.sha224(mdatestring + mid).hexdigest() + "@" + (lid if lid else "none")
                         count += 1
@@ -262,8 +303,12 @@ class SlurpThread(Thread):
                             ja = []
                 else:
                     baddies += 1
-            print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
-            os.unlink("%s.mbox" % tmpname)
+            if filebased:
+                print("Parsed %u records from %s" % (count, filename))
+            else:
+                print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
+                os.unlink(tmpname)
+                
             y += count
             bulk = BulkThread()
             bulk.assign(ja, es)
@@ -273,7 +318,7 @@ class SlurpThread(Thread):
 tlpname = "foo"
 if len(sys.argv) == 2:
     tlpname = sys.argv[1]
-elif len(sys.argv) == 3:
+elif len(sys.argv) >= 3:
     tlpname = sys.argv[1]
     quickmode = True if sys.argv[2] == "quick" else False
 else:
@@ -281,28 +326,89 @@ else:
     sys.exit(-1)
 
 
-data = urllib.urlopen(rootURL).read()
-print("Fetched %u bytes of main data, parsing month lists" % len(data))
 
-ns = r"<a href='(%s[-a-z0-9]+)/'" % tlpname
-if tlpname.find("-") != -1:
-    ns = r"<a href='(%s)/'" % tlpname
+parser = argparse.ArgumentParser(description='Command line options.')
+parser.add_argument('--source', dest='source', type=str, nargs=1,
+                   help='Source to scan (either http(s):// or file path)')
+parser.add_argument('--recursive', dest='recursive', type=bool, 
+                   help='Do a recursive scan (sub dirs etc)')
+parser.add_argument('--interactive', dest='interactive', type=bool,
+                   help='Ask for help when possible')
+parser.add_argument('--mod-mbox', dest='modmbox', type=str, nargs=1,
+                   help='This is mod_mbox, derive list-id and files from it')
+parser.add_argument('--lid', dest='listid', type=str, nargs=1,
+                   help='Optional List-ID to override source with.')
+parser.add_argument('--project', dest='project', type=str, nargs=1,
+                   help='Optional project to look for ($project-* will be imported as well)')
+parser.add_argument('--ext', dest='ext', type=str, nargs=1,
+                   help='Optional file extension (or call it with no args to not care)')
+
+args = parser.parse_args()
+
+if args.source:
+    source = args.source[0]
+if args.listid:
+    list_override = args.listid[0]
+if args.project:
+    project = args.project[0]
+if args.recursive:
+    recursive = args.recursive
+if args.interactive:
+    interactive = args.interactive
+if args.ext:
+    extension = args.ext[0]
 
 baddies = 0
-for mlist in re.finditer(ns, data):
-    ml = mlist.group(1)
-    mldata = urllib.urlopen("%s%s/" % (rootURL, ml)).read()
-    present = re.search(r"<th colspan=\"3\">Year 20[\d]{2}</th>", mldata) # Check that year 2014-2017 exists, otherwise why keep it?
-    if present:
-        for mbox in re.finditer(r"(\d+\.mbox)/thread", mldata):
-            mboxfile = mbox.group(1)
-            lists.append([ml, mboxfile])
-            if quickmode:
-                break
 
+
+def globDir(d):
+    dirs = [ f for f in listdir(d) if isdir(join(d,f)) ]
+    mboxes = [ f for f in glob.glob(join(d,"*" + extension)) if isfile(f) ]
+    if not d in fileToLID and len(mboxes) > 0 and interactive:
+        print("Would you like to set a list-ID override for %s?:" % d)
+        lo = sys.stdin.readline()
+        if lo and len(lo) > 3:
+            fileToLID[d] = "<" + lo.strip("\r\n<>") + ">"
+            print("Righto, setting it to %s." % fileToLID[d])
+        else:
+            print("alright, I'll try to figure it out myself!")
+    for fi in mboxes:
+        lists.append([fi, fileToLID.get(d)])
+    for nd in dirs:
+        globDir(join(d,nd))
+ 
+
+# File based import??
+if source[0] == "/" or source[0] == ".":
+    print("Doing file based import")
+    filebased = True
+    globDir(source)
+    
+
+# HTTP(S) based import?
+elif source[0] == 'h':
+    data = urllib.urlopen(rootURL).read()
+    print("Fetched %u bytes of main data, parsing month lists" % len(data))
+    
+    ns = r"<a href='(%s[-a-z0-9]+)/'" % project
+    if project.find("-") != -1:
+        ns = r"<a href='(%s)/'" % project
+    
+    if args.modmbox:
+        for mlist in re.finditer(ns, data):
+            ml = mlist.group(1)
+            mldata = urllib.urlopen("%s%s/" % (rootURL, ml)).read()
+            present = re.search(r"<th colspan=\"3\">Year 20[\d]{2}</th>", mldata) # Check that year 2014-2017 exists, otherwise why keep it?
+            if present:
+                for mbox in re.finditer(r"(\d+\.mbox)/thread", mldata):
+                    mboxfile = mbox.group(1)
+                    lists.append([ml, mboxfile])
+                    if quickmode:
+                        break
+    
 threads = []
-print("Starting up to 6 threads to fetch the %u %s lists" % (len(lists), tlpname))
-for i in range(1,7):
+print("Starting up to 4 threads to fetch the %u %s lists" % (len(lists), project))
+for i in range(1,5):
     t = SlurpThread()
     threads.append(t)
     t.start()
