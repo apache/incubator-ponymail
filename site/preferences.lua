@@ -43,17 +43,42 @@ function handle(r)
                     email = js.email,
                     fullname = js.fullname
                 }
+                prefs = js.preferences
             end
             
             -- while we're here, are you logging out?
             if get.logout and login.loggedIn == true then
                 elastic.index(r, r:sha1(eml), 'account', JSON.encode{
-                    email = eml,
-                    fullname = fname,
-                    admin = admin,
-                    cookie = 'nil'
+                    email = js.email,
+                    uid = js.uid,
+                    fullname = js.fullname,
+                    admin = js.admin,
+                    cookie = 'nil',
+                    preferences = js.preferences
                 })
                 r:setcookie("pony", "----")
+                r:puts[[{"logut": true}]]
+                return apache2.OK
+            end
+            
+            -- Or are you saving your preferences?
+            if get.save and login.loggedIn == true then
+                prefs = {}
+                for k, v in pairs(get) do
+                    if k ~= 'save' then
+                        prefs[k] = v
+                    end
+                end
+                elastic.index(r, r:sha1(eml), 'account', JSON.encode{
+                    email = js.email,
+                    fullname = js.fullname,
+                    uid = js.uid,
+                    admin = js.admin,
+                    cookie = r:unescape(ocookie),
+                    preferences = prefs
+                })
+                r:puts[[{"saved": true}]]
+                return apache2.OK
             end
         end
     end
