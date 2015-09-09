@@ -24,5 +24,8 @@ var pm_config = {
             fullname_key: 'fullname',
             email_key: 'email'
         }
+    },
+    persona: {
+        enabled: true
     }
 }

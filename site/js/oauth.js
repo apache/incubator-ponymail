@@ -66,6 +66,20 @@ function oauthOptions() {
         img.style.cursor = "pointer"
         oobj.appendChild(img)
         oobj.appendChild(document.createElement('br'))
+        oobj.appendChild(document.createTextNode(' '))
+        oobj.appendChild(document.createElement('br'))
+    }
+    
+    if (pm_config.persona.enabled) {
+        var img = document.createElement('img')
+        img.setAttribute("src", "images/persona.png")
+        img.setAttribute("title", "Log on with persona")
+        img.setAttribute("onclick", "navigator.id.request();")
+        img.style.cursor = "pointer"
+        oobj.appendChild(img)
+        oobj.appendChild(document.createElement('br'))
+        oobj.appendChild(document.createTextNode(' '))
+        oobj.appendChild(document.createElement('br'))
     }
 }
 
@@ -76,6 +90,7 @@ function oauthWelcome(args) {
             key = key[1]
         }
         if (key && key.length > 0 && pm_config.oauth[key]) {
+            document.getElementById('oauthtypes').innerHTML = "Logging you in, hang on..!"
             GetAsync("oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {}, parseOauthResponse)
         } else {
             alert("Key missing or invalid! " + key)
