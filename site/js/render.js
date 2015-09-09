@@ -44,14 +44,7 @@ var nest = ""
 var xlist = ""
 
 
-// Localized preferences (defaults)
-var prefs = {
-    displayMode: 'threaded', // threaded or flat
-    groupBy: 'thread', // thread or date
-    sortOrder: 'forward', // forward or reverse sort
-    compactQuotes: true, // Show quotes from original email as compacted blocks?
-    loggedIn: false
-}
+
 
 var login = {}
 
@@ -322,7 +315,7 @@ var login = {}
             var ebody = json.body
 
             ebody = "\n" + ebody
-            if (prefs.compactQuotes) {
+            if (prefs.compactQuotes == 'yes') {
                 ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                     var rnd = (Math.random() * 100).toString()
                     var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
@@ -365,7 +358,7 @@ var login = {}
             var ebody = json.body
             ebody = ebody.replace(/</, "&lt;")
             ebody = "\n" + ebody
-            if (prefs && prefs.compactQuotes) {
+            if (prefs && prefs.compactQuotes == 'yes') {
                 ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                     var rnd = (Math.random() * 100).toString()
                     var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
@@ -774,10 +767,10 @@ var kiddos = []
 
     function seedGetListInfo(json, state) {
         all_lists = json.lists
-        if (typeof json.preferences != undefined && prefs.viewMode) {
+        if (typeof json.preferences != undefined && json.preferences) {
             prefs = json.preferences
         }
-        if (typeof json.login != undefined) {
+        if (typeof json.login != undefined && json.login) {
             login = json.login
             if (login.loggedIn) {
                 setupUser(login)
@@ -942,7 +935,7 @@ var kiddos = []
     }
 
     function hideComposer(evt) {
-        var es = evt.target || evt.srcElement;
+        var es = evt ? (evt.target || evt.srcElement) : null;
         if (!es || !es.getAttribute || !es.getAttribute("class") || es.getAttribute("class").search(/label/) == -1) {
             document.getElementById('splash').style.display = "none"
         }
@@ -960,6 +953,11 @@ if (document.getElementById('emails')) {
 }
 
 
+function sendEmail(form) {
+    hideComposer()
+}
+
+
 
 function compose(eid) {
     var email = saved_emails[eid]
@@ -973,7 +971,7 @@ function compose(eid) {
             area.style.width = "660px"
             area.style.height = "400px";
             var eml = "\n\nOn " + email.date + ", " + email.from.replace(/<.+>/, "") + " wrote: \n"
-            eml += email.body.replace(/([^\r\n]+)/mg, "&gt; $1")
+            eml += email.body.replace(/([^\r\n]*)/mg, "&gt; $1")
 
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
 
@@ -1028,7 +1026,7 @@ function seedDomains(json) {
     for (var i in doms) {
         var dom = doms[i]
         var li = document.createElement("label")
-        li.setAttribute("class", "label label-success")
+        li.setAttribute("class", "label label-info")
         li.style.margin = "5px"
         li.style.float = "left"
         var a = document.createElement("a")
@@ -1057,6 +1055,7 @@ function setupUser(login) {
     var a = document.createElement("a")
     var t = document.createTextNode(login.fullname + "'s preferences")
     a.setAttribute("href", "javascript:void(0);")
+    a.setAttribute("onclick", "showPreferences()")
     a.appendChild(t)
     li.appendChild(a)
     pd.appendChild(li)
@@ -1083,6 +1082,121 @@ function setupUser(login) {
 
 function logout() {
     GetAsync("preferences.lua?logout=true", null, function() { location.href = document.location; })
+}
+
+function generateFormDivs(id, title, type, options, selval) {
+    var mf = document.createElement('div')
+    mf.setAttribute('id', "main_form_" + id)
+    mf.style.margin = "10px"
+    mf.style.padding = "10px"
+    
+    var td = document.createElement('div')
+    td.style.width = "300px"
+    td.style.float = "left"
+    td.style.fontWeight = "bold"
+    td.appendChild(document.createTextNode(title))
+    mf.appendChild(td)
+    
+    var td2 = document.createElement('div')
+    td2.style.width = "200px"
+    td2.style.float = "left"
+    if (type == 'select') {
+        var sel = document.createElement('select')
+        sel.setAttribute("name", id)
+        sel.setAttribute("id", id)
+        for (var key in options) {
+            var opt = document.createElement('option')
+            if (typeof key == "string") {
+                opt.setAttribute("value", key)
+                if (key == selval) {
+                    opt.setAttribute("selected", "selected")
+                }
+            } else {
+                if (options[key] == selval) {
+                    opt.setAttribute("selected", "selected")
+                }
+            }
+            opt.text = options[key]
+            sel.appendChild(opt)
+        }
+        td2.appendChild(sel)
+    }
+    if (type == 'input') {
+        var inp = document.createElement('input')
+        inp.setAttribute("name", id)
+        inp.setAttribute("id", id)
+        inp.setAttribute("value", options)
+        td2.appendChild(inp)
+    }
+    mf.appendChild(td2)
+    return mf
+}
+
+function savePreferences() {
+    var prefarr = []
+    for (var key in prefs) {
+        var o = document.getElementById(key)
+        var val = o ? o.value : null
+        if (o && o.selectedIndex) {
+            val = o.options[o.selectedIndex].value
+        }
+        if (val) {
+            prefarr.push(key + "=" + val)
+            prefs[key] = val
+        }
+    }
+    GetAsync("preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
+}
+
+function showPreferences() {
+    var obj = document.getElementById('splash')
+    obj.style.display = "block"
+    obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>User preferences:</h3>"
+    
+    
+    // set up view section
+    var section = document.createElement('div')
+    section.setAttribute("class", "bs-callout bs-callout-primary prefs")
+    section.innerHTML = "<h3>Viewing preferences:</h3>"
+    
+    
+    // Display mode
+    section.appendChild(generateFormDivs('displayMode', 'Display mode, list view:', 'select', {
+        threaded: "Threaded view",
+        flat: "Flat view"
+    }, prefs.displayMode))
+    
+    // groupBy mode
+    section.appendChild(generateFormDivs('groupBy', 'Display mode, email view:', 'select', {
+        threaded: "Threaded view, nest by reference",
+        date: "Flat view, order by date"
+    }, prefs.groupBy))
+    
+    // sortOrder mode
+    section.appendChild(generateFormDivs('sortOrder', 'Sort order in email view:', 'select', {
+        forward: "Sort emails by date, ascending",
+        backward: "Sort emails by date, descending"
+    }, prefs.sortOrder))
+    
+    // compactQuotes mode
+    section.appendChild(generateFormDivs('compactQuotes', 'Compact quotes in emails:', 'select', {
+        yes: "Yes",
+        no: "No"
+    }, prefs.compactQuotes))
+    
+    
+    var btn = document.createElement('input')
+    btn.setAttribute("type", "button")
+    btn.setAttribute("class", "btn btn-warning")
+    btn.setAttribute("value", "Save preferences")
+    btn.setAttribute("onclick", "savePreferences()")
+    
+    
+    
+    obj.appendChild(section)
+    obj.appendChild(btn)
+    
+    // displayMode, groupBy, sortOrder, compactQuotes
 }
 
 var viewModes = {
