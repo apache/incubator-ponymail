@@ -39,7 +39,7 @@ var current_flat_json = {}
 var current_email_msgs = []
 var firstVisit = true
 var global_deep = false
-
+var old_state = {}
 var nest = ""
 var xlist = ""
 
@@ -703,15 +703,12 @@ var kiddos = []
     function buildPage(json, state) {
         json = json ? json : old_json
         old_json = json
+        old_state = state
         d_at = 10
         checkCalendar(json)
 
         var stats = document.getElementById('stats')
-        if (prefs.hideStats == 'yes') {
-            stats.style.display = "none"
-        } else {
-            stats.style.display = "block"
-        }
+        
         stats.style.width = "300px"
         stats.innerHTML = "<br/><h4>Stats for this blob of emails:</h4>"
 
@@ -759,11 +756,26 @@ var kiddos = []
             btn.setAttribute("href", "javascript:void(0);")
             btn.setAttribute("class", "btn btn-" + ((prefs.displayMode == mode) ? 'info' : 'default'))
             btn.setAttribute("onclick", "prefs.displayMode='" + mode + "'; buildPage();")
-            btn.style.marginRight = "20px"
+            btn.style.marginRight = "10px"
             btn.innerHTML = mode
             stats.appendChild(btn)
         }
-
+        var btn = document.createElement('a')
+        btn.setAttribute("href", "javascript:void(0);")
+        btn.setAttribute("class", "btn btn-warning")
+        btn.setAttribute("onclick", "prefs.hideStats='yes'; buildPage(old_json, old_state);")
+        btn.style.marginRight = "10px"
+        btn.innerHTML = "Hide me!"
+        stats.appendChild(btn)
+        if (prefs.hideStats == 'yes') {
+            stats.setAttribute("class", "col-md-1 vertical-text")
+            stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildPage(old_json, old_state);\">Show stats..</div>"
+        } else {
+            stats.setAttribute("class", "hidden-md col-lg-3")
+            stats.removeAttribute("onclick")
+            stats.style.display = "block"
+        }
+        
         nest = ""
 
         viewModes[prefs.displayMode].list(json, 0, 0, state ? state.deep : false);

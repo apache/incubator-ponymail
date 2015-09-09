@@ -163,3 +163,16 @@
     font-family: sans-serif;
     text-align: center;
 }
+
+.vertical-text {
+	transform: rotate(90deg);
+	transform-origin: left top 0;
+    margin: 3px;
+    border: 1px solid #666;
+    border-radius: 4px;
+    margin-top: 60px;
+    margin-bottom: -60px;
+    margin-right: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
