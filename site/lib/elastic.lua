@@ -73,10 +73,23 @@ function raw(query)
     return json or {}
 end
 
+function index(r, id, ty, body)
+    local js = JSON.encode(query)
+    if not id then
+        id = r:sha1(ty .. (math.random(1,99999999)*os.time()) .. ':' .. r:clock())
+    end
+    local url = "http://127.0.0.1:9200/ponymail_alpha/" .. ty .. "/" .. id
+    local result = http.request(url, body)
+    local out = {}
+    local json = JSON.decode(result)
+    return json or {}
+end
+
 return {
     find = getHits,
     findFast = getHeaders,
     findFastReverse = getHeadersReverse,
     get = getDoc,
-    raw = raw
+    raw = raw,
+    index = index
 }
