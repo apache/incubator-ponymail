@@ -1,4 +1,4 @@
-GetAsync("preferences.lua", null, setupPersona)
+
 
 
 function setupPersona(json) {
@@ -32,4 +32,5 @@ function setupPersona(json) {
       });
     }
   });
+  navigator.id.request();
 }

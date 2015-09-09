@@ -74,7 +74,7 @@ function oauthOptions() {
         var img = document.createElement('img')
         img.setAttribute("src", "images/persona.png")
         img.setAttribute("title", "Log on with persona")
-        img.setAttribute("onclick", "navigator.id.request();")
+        img.setAttribute("onclick", 'GetAsync("preferences.lua", null, setupPersona)')
         img.style.cursor = "pointer"
         oobj.appendChild(img)
         oobj.appendChild(document.createElement('br'))
