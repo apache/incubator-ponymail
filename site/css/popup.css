@@ -45,9 +45,13 @@
     background: rgba(255,255,255,0.9) !important;
     color: #533;
  }
- .prefs h3,p,input,textarea,select{
+ .prefs h3,input,textarea,select{
     color: #333;
     font-family: sans-serif;
+ }
+ 
+ .prefs p {
+    color: #FFF;
  }
  
  .bs-callout {
