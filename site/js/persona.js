@@ -1,8 +1,8 @@
-
+GetAsync("preferences.lua", null, setupPersona)
 
 
 function setupPersona(json) {
-  navigator.id.logout()
+  
   navigator.id.watch({
     loggedInUser: json.login ? json.login.email : 'not@logged.in',
     onlogin: function(assertion) {
@@ -27,10 +27,9 @@ function setupPersona(json) {
       // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
       $.ajax({
         type: 'POST',
-        url: '/oauth.lua?mode=logout', // This is a URL on your website.
-        success: function(res, status, xhr) { window.location.reload(); }
+        url: '/persona.lua?mode=logout', // This is a URL on your website.
+        success: function(res, status, xhr) { }
       });
     }
   });
-  navigator.id.request();
 }
