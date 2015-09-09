@@ -1012,12 +1012,16 @@ function getSingleEmail(id) {
 }
 
 function seedDomains(json) {
+    
     var obj = document.getElementById('domains')
     if (!obj) {
         return
     }
+    if (json.login && json.login.fullname) {
+        document.getElementById('welcome').innerHTML = "Welcome, " + json.login.fullname.split(/ /)[0] + "!"
+    }
     var doms = []
-    for (var key in json) {
+    for (var key in json.lists) {
         doms.push(key)
     }
     doms.sort()
@@ -1038,7 +1042,7 @@ function seedDomains(json) {
 }
 
 function listDomains() {
-    GetAsync("lists.lua", null, seedDomains)
+    GetAsync("preferences.lua", null, seedDomains)
 }
 
 function setupUser(login) {
