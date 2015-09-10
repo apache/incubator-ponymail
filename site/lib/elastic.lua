@@ -1,11 +1,12 @@
 local http = require 'socket.http'
 local JSON = require 'cjson'
+local config = require 'lib/config'
 
 function getHits(query, size, doc)
     doc = doc or "ponymail_alpha"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = "http://127.0.0.1:9200/" .. doc .. "/_search?q="..query.."&sort=date:desc&size=" .. size
+    local url = config.es_url .. "_search?q="..query.."&sort=date:desc&size=" .. size
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
@@ -21,7 +22,7 @@ end
 
 
 function getDoc (ty, id)
-    local url = "http://127.0.0.1:9200/ponymail_alpha/" .. ty .. "/" .. id
+    local url = config.es_url  .. ty .. "/" .. id
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
@@ -32,7 +33,7 @@ function getHeaders(query, size, doc)
     doc = doc or "ponymail_alpha"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = "http://127.0.0.1:9200/" .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
+    local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
@@ -50,7 +51,7 @@ function getHeadersReverse(query, size, doc)
     doc = doc or "ponymail_alpha"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = "http://127.0.0.1:9200/" .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
+    local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
@@ -66,7 +67,7 @@ end
 
 function raw(query)
     local js = JSON.encode(query)
-    local url = "http://127.0.0.1:9200/ponymail_alpha/_search"
+    local url = config.es_url .. "_search"
     local result = http.request(url, js)
     local out = {}
     local json = JSON.decode(result)
@@ -78,7 +79,7 @@ function index(r, id, ty, body)
     if not id then
         id = r:sha1(ty .. (math.random(1,99999999)*os.time()) .. ':' .. r:clock())
     end
-    local url = "http://127.0.0.1:9200/ponymail_alpha/" .. ty .. "/" .. id
+    local url = config.es_url .. ty .. "/" .. id
     local result = http.request(url, body)
     local out = {}
     local json = JSON.decode(result)
