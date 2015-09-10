@@ -2,7 +2,7 @@
 Pony Mail - a lightweight web-based mail archive browser
 Licensed under the Apache License v/2.0
 
-See [http://ponyarchive.invo](http://ponyarchive.invo) for a demo.
+See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 
 ### TODO: ###
 * Set up dir structure (*DONE*)
