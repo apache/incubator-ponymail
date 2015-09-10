@@ -1117,7 +1117,7 @@ function seedDomains(json) {
 function showStats(json) {
     var obj = document.getElementById('list_stats')
     
-    obj.innerHTML = "<h2 style='margin-top: -5px;'>Overall 14 day activity:</h2>"
+    obj.innerHTML = "<h3 style='margin-top: -10px;'>Overall 14 day activity:</h3>"
     obj.innerHTML += '<span class="glyphicon glyphicon-user"> </span> ' + json.participants.toLocaleString() + " People &nbsp; "
     obj.innerHTML += '<span class="glyphicon glyphicon-envelope"> </span> ' + json.hits.toLocaleString() + ' messages &nbsp';
     obj.innerHTML += '<span class="glyphicon glyphicon-list-alt"> </span> ' + json.no_threads.toLocaleString() + " topics &nbsp; "
