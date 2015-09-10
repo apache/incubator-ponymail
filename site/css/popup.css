@@ -124,6 +124,8 @@
     border: 1px solid #333;
     margin-top: 10px;
     margin-left: 15px;
+    position: relative;
+    padding-left: 40px;
     
 }
 
@@ -144,10 +146,11 @@
     vertical-align: middle;
     text-align: center;
     float: left;
-    height: 100%;
+    top: 0px;
+    bottom: 0px;
     width: 32px;
-    min-height: 56px;
-    margin-right: 10px;
+    margin-left: -41px;
+    position: absolute;
 }
 
 .phonebook_entry, .phonebook_entry a {
@@ -162,6 +165,7 @@
     font-size: 10pt;
     font-family: sans-serif;
     text-align: center;
+    position: relative;
 }
 
 .vertical-text {
