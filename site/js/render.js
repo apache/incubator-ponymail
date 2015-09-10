@@ -1074,6 +1074,7 @@ function showDomains(l) {
     pg.innerHTML = ""
     var ul = document.createElement('ul')
     ul.style.textAlign = "left"
+    ul.style.listStyle = "none"
     for (var i in domlist[l]) {
         var dom = domlist[l][i]
         var letter = dom.substr(0,1)
