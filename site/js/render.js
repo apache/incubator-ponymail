@@ -1114,8 +1114,16 @@ function seedDomains(json) {
     }
 }
 
+function showStats(json) {
+    var obj = document.getElementById('list_stats')
+    
+    obj.innerHTML = "<h2 style='margin-top: -5px;'>Overall 14 day activity:</h2>"
+    obj.innerHTML += json.participants.toLocaleString() + " people have sent " + json.hits.toLocaleString() + " emails sent, covering " + json.no_threads.toLocaleString() + " topics on " + json.no_active_lists.toLocaleString() + " different mailing lists."
+}
+
 function listDomains() {
     GetAsync("preferences.lua", null, seedDomains)
+    GetAsync("pminfo.lua", null, showStats)
 }
 
 function setupUser(login) {
