@@ -289,6 +289,7 @@ function handle(r)
         emails[mid] = {
             tid = v._id,
             nest = 1,
+            epoch = email.epoch,
             children = {
                 
             }
@@ -326,6 +327,7 @@ function handle(r)
                         emails[mid]
                     },
                     nest = 1,
+                    epoch = email.epoch,
                     tid = v._id
                 }
                 emails[mid].nest = emails[irt].nest + 1
