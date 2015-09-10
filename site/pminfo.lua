@@ -35,7 +35,7 @@ function handle(r)
     local listdata = {}
 
     
-    local nowish = math.floor(os.time() / 7200)
+    local nowish = math.floor(os.time() / 1800)
     
     local cache = r:ivm_get("pminfo_cache_" ..r.hostname .."-" .. nowish)
     if cache then
