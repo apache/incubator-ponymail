@@ -23,7 +23,7 @@ See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 * Python 2.7 for importing
 * MailMan3 if you fancy that (we have an archive plugin)
 * OR any mailing list system of your choice
-* Lua 5.1 or 5.2 + lua-cjson
+* Lua 5.1 or 5.2 + lua-cjson & luasec
 
 
 ### Getting started ###
