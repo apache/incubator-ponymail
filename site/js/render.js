@@ -259,7 +259,7 @@ var login = {}
             var d = ''
             var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
             if (qdeep || deep || global_deep) {
-                var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@").replace(/\.apache\.org/, "")
+                var elist = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@").replace(/\.apache\.org/, "")
                 d = "<a href='list.html?" + elist + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
                 if (eml.subject.length > 75) {
                     eml.subject = eml.subject.substr(0, 75) + "..."

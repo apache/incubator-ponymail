@@ -288,7 +288,6 @@ function handle(r)
         email.irt = irt
         emails[mid] = {
             tid = v._id,
-            list = email.list_raw,
             nest = 1,
             epoch = email.epoch,
             children = {
