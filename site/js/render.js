@@ -1121,7 +1121,7 @@ function showStats(json) {
     obj.innerHTML += '<span class="glyphicon glyphicon-user"> </span> ' + json.participants.toLocaleString() + " People &nbsp; "
     obj.innerHTML += '<span class="glyphicon glyphicon-envelope"> </span> ' + json.hits.toLocaleString() + ' messages &nbsp';
     obj.innerHTML += '<span class="glyphicon glyphicon-list-alt"> </span> ' + json.no_threads.toLocaleString() + " topics &nbsp; "
-    obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span>' + json.no_active_lists.toLocaleString() + " active lists."
+    obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span> ' + json.no_active_lists.toLocaleString() + " active lists."
 }
 
 function listDomains() {
