@@ -265,7 +265,7 @@ var login = {}
                     eml.subject = eml.subject.substr(0, 75) + "..."
                 }
             }
-            mdate = new Date(eml.epoch * 1000)
+            mdate = new Date(latest * 1000)
             mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
                 hour12: false
             })
