@@ -187,9 +187,9 @@
 
 .phonebook_topletter {
     border-top: 2px solid #666;
-    border-left: 1px solid #666;
+    border-left: 0px solid #666;
     border-right: 1px solid #666;
-    background: linear-gradient(135deg, rgba(252,234,187,1) 0%,rgba(252,205,77,1) 50%,rgba(248,181,0,1) 51%,rgba(251,223,147,1) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
     color: #000;
     width: 24px;
     height: 32px;
@@ -199,7 +199,7 @@
 
 .phonebook_topletter_active {
     border-top: 2px solid #666;
-    border-left: 1px solid #666;
+    border-left: 0px solid #666;
     border-right: 1px solid #666;
     background: linear-gradient(135deg, rgba(183,222,237,1) 0%,rgba(113,206,239,1) 50%,rgba(33,180,226,1) 51%,rgba(183,222,237,1) 100%);
     color: #000;
