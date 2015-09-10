@@ -1366,3 +1366,14 @@ var viewModes = {
         list: loadList_flat
     }
 }
+
+var footer = document.createElement('footer')
+footer.setAttribute("class", 'footer')
+footer.style.height = "32px"
+footer.style.width = "90%"
+var fd = document.createElement('div')
+fd.setAttribute("class", "container")
+fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href='https://github.com/Humbedooh/ponymail'>Pony Mail v/0.1a</a>.</p>"
+footer.appendChild(fd)
+document.body.appendChild(footer)
+
