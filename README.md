@@ -1,6 +1,8 @@
 # ponymail
 Pony Mail - a lightweight web-based mail archive browser
-Licensed under the Apache License v/2.0
+Licensed under the Apache License v/20. 
+
+![Ponies](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo.png)
 
 See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 
@@ -31,7 +33,7 @@ See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 * Install Apache httpd + mod_lua
 * Install ElasticSearch
 * go to tools/ and run python setup.py
-* * Follow the instructions and enter info
+  * Follow the instructions and enter info
 * import mbox data with import-mbox.py if need be
 * DONE!
 
