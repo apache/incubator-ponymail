@@ -126,6 +126,7 @@
     margin-left: 15px;
     position: relative;
     padding-left: 40px;
+    padding-bottom: 10px;
     
 }
 
@@ -166,6 +167,7 @@
     font-family: sans-serif;
     text-align: center;
     position: relative;
+    padding-bottom: 3px;
 }
 
 .vertical-text {
