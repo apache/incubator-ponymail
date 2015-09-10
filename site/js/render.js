@@ -1170,6 +1170,19 @@ function showStats(json) {
     obj.innerHTML += '<span class="glyphicon glyphicon-envelope"> </span> ' + json.hits.toLocaleString() + ' messages &nbsp';
     obj.innerHTML += '<span class="glyphicon glyphicon-list-alt"> </span> ' + json.no_threads.toLocaleString() + " topics &nbsp; "
     obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span> ' + json.no_active_lists.toLocaleString() + " active lists."
+    
+    var ts = "<table border='0' style='float: right; margin-top: -30px;'><tr>"
+    var max = 1
+    for (var i in json.activity) {
+        max = Math.max(max, json.activity[i][1])
+    }
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    for (var i in json.activity) {
+        var day = days[new Date(json.activity[i][0]*1000).getDay()]
+        ts += "<td style='padding-left: 2px; vertical-align: bottom'><div title='" + day + ": " + json.activity[i][1] + " emails' style='background: #369; width: 6px; height: " + parseInt((json.activity[i][1] / max) * 48) + "px;'> </div></td>"
+    }
+    ts += "</tr></table>"
+    obj.innerHTML += ts
 }
 
 function listDomains() {
