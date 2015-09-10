@@ -117,9 +117,10 @@ var login = {}
 
     function countParts(eml, kv) {
         n = 0;
+        email = findEml(eml.tid)
         kv = kv ? kv : {}
-        if (!kv[eml.from]) {
-            kv[eml.from] = true
+        if (!kv[email.from]) {
+            kv[email.from] = true
             n++;
         }
         for (var i in eml.children) {
@@ -216,13 +217,14 @@ var login = {}
     function loadList_threaded(mjson, limit, start, deep) {
         open_emails = []
         limit = limit ? limit : d_ppp;
-        var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
+        var fjson = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
             return b.epoch - a.epoch
         }) : []) : current_flat_json
-        current_flat_json = json
+        current_flat_json = fjson
         
         json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
         current_thread_json = json
+        
         var now = new Date().getTime() / 1000
         nest = '<ul class="list-group">'
         if (!start) {
@@ -236,9 +238,9 @@ var login = {}
             if (eml && eml.subject.length > 90) {
                 eml.subject = eml.subject.substr(0, 90) + "..."
             }
-            var subs = countSubs(eml)
-            var people = countParts(eml)
-            var latest = countNewest(eml)
+            var subs = countSubs(json[i])
+            var people = countParts(json[i])
+            var latest = countNewest(json[i])
 
             ls = 'default'
             if (subs > 0) {
