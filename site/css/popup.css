@@ -157,13 +157,13 @@
 .phonebook_entry, .phonebook_entry a {
     background: none;
     color: #666;
-    font-weight: 600;
+    font-weight: 500;
     padding: 0px;
     float: left;
     margin-right: 8px;
     margin-top: 3px;
     margin-bottom: -2px;
-    font-size: 10pt;
+    font-size: 9pt;
     font-family: sans-serif;
     text-align: center;
     position: relative;
