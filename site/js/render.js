@@ -1178,7 +1178,7 @@ function showStats(json) {
     }
     
     for (var i in json.activity) {
-        var day = new Date(json.activity[i][0]*1000).toDateString()
+        var day = new Date(json.activity[i][0]).toDateString()
         ts += "<td style='padding-left: 2px; vertical-align: bottom'><div title='" + day + ": " + json.activity[i][1] + " emails' style='background: #369; width: 6px; height: " + parseInt((json.activity[i][1] / max) * 48) + "px;'> </div></td>"
     }
     ts += "</tr></table>"
