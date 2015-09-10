@@ -621,10 +621,16 @@ var kiddos = []
 
 
     function buildCalendar(firstYear, lastYear) {
+        
         var dp = document.getElementById('datepicker')
         dp.style.width = "150px"
         dp.innerHTML = "<h3>Archive:</h3>"
         var fyear = lastYear ? lastYear : new Date().getFullYear();
+        
+        // Check we don't esplode
+        if (fyear > new Date().getFullYear()) {
+            fyear = new Date().getFullYear();
+        }
 
         for (var year = fyear; year >= (firstYear ? firstYear : current_cal_min); year--) {
             dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 120px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
