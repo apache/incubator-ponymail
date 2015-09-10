@@ -297,3 +297,9 @@ body {
 .list-group-item {
     padding: 8px;
 }
+
+.should-scroll {
+    height: auto;
+    max-height: 600px;
+    overflow-x: hidden;
+}
