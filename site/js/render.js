@@ -1072,10 +1072,6 @@ function getSingleEmail(id) {
 function showDomains(l) {
     var pg = document.getElementById('active_domlist')
     pg.innerHTML = ""
-    var pl = document.createElement('div')
-    pl.setAttribute("class", "phonebook_letter_right")
-    pl.innerHTML = l.toUpperCase()
-    pg.appendChild(pl)
     var ul = document.createElement('ul')
     ul.style.textAlign = "left"
     for (var i in domlist[l]) {
@@ -1093,6 +1089,16 @@ function showDomains(l) {
         ul.appendChild(li)
     }
     pg.appendChild(ul)
+    
+    var ls = "abcdefghijklmnopqrstuvwxyz".split("")
+    for (var i in ls) {
+        var xl = ls[i]
+        if (l == xl) {
+            document.getElementById('letter_' + xl).setAttribute("class", "phonebook_topletter_active")
+        } else {
+            document.getElementById('letter_' + xl).setAttribute("class", "phonebook_topletter")
+        }
+    }
 }
 
 var fl = null
@@ -1126,26 +1132,25 @@ function seedDomains(json) {
     }
     
     var po = document.createElement("div")
-    po.style.width = "140px"
+    po.style.width = "650px"
     po.style.textAlign = "left"
     po.style.float = "left"
     var x = 0;
-    for (var l in domlist) {
-        x++
+    var ls = "abcdefghijklmnopqrstuvwxyz".split("")
+    for (var i in ls) {
+        var l = ls[i]
         fl = fl ? fl : l
         var pc = document.createElement("label")
-        pc.setAttribute("class", "phonebook_letter")
+        pc.setAttribute("class", "phonebook_topletter")
+        pc.setAttribute("id", "letter_" + l)
         pc.appendChild(document.createTextNode(l.toUpperCase()))
         pc.setAttribute("onclick", "showDomains('" + l + "');")
         pc.style.cursor = "pointer"
         po.appendChild(pc)
-        if (x % 3 == 0) {
-            po.appendChild(document.createElement('br'))
-        }
     }
     obj.appendChild(po)
     var dshow = document.createElement('div')
-    dshow.setAttribute("class", "phonebook_grouping")
+    dshow.setAttribute("class", "phonebook_page")
     dshow.setAttribute("id", "active_domlist")
     obj.appendChild(dshow)
     if (doms.length == 0) {
