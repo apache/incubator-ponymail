@@ -57,13 +57,12 @@
     </div>
     </nav>
     <div class="container-fluid">
-      
        <noscript>
           <div class="bs-callout bs-callout-alert">
             This site requires JavaScript enabled. Please enable it.
           </div>
       </noscript>
-      
+      <div class="row">
       <!-- Quick search -->
       <div class="bs-callout bs-callout-default" id="quicksearch" style="margin: 2px !important; padding: 5px;">
       <form action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
@@ -80,7 +79,6 @@
       </form>
     </div>
       
-      
       <!-- Advanced search -->
       <div style="display: none;" class="bs-callout bs-callout-danger" id="advanced" style="margin: 2px !important; padding: 5px;">
       <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['ad'].value, false);">
@@ -96,7 +94,7 @@
         <input type="button" value="Switch to quick search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
       </form>
     </div>
-      
+    </div>
       
     <div class="row">
       <div id="datepicker" class="col-md-2">
