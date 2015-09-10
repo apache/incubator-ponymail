@@ -189,11 +189,12 @@
     border-top: 2px solid #666;
     border-left: 0px solid #666;
     border-right: 1px solid #666;
-    background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+    background: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(219,219,219,1) 100%);
     color: #000;
     width: 24px;
     height: 32px;
     font-size: 14pt;
+    margin: 1px;
     text-align: center;
 }
 
@@ -201,11 +202,12 @@
     border-top: 2px solid #666;
     border-left: 0px solid #666;
     border-right: 1px solid #666;
-    background: linear-gradient(135deg, rgba(183,222,237,1) 0%,rgba(113,206,239,1) 50%,rgba(33,180,226,1) 51%,rgba(183,222,237,1) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(242,242,242,1) 100%); 
     color: #000;
     width: 24px;
     height: 32px;
     font-size: 14pt;
+    margin: 1px;
     text-align: center;
 }
 
@@ -213,28 +215,38 @@
     border-left: 2px solid #666;
     border-right: 2px solid #666;
     border-bottom: 2px solid #666;
-    width: 624px;
+    width: 675px;
+    margin: 0px;
+    padding: 0px;
     min-height: 400px;
-    background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+    background: rgba(242,242,242,1);
     border-radius: 10px;
 }
 
 .phonebook_topletter:first-child {
     border-left: 2px solid #666;
     border-top-left-radius: 10px;
+    margin-left: 0px;
+    margin-top: -1px;
 }
 .phonebook_topletter:last-child {
     border-right: 2px solid #666;
     border-top-right-radius: 10px;
+    margin-right: 0px;
+    margin-top: -1px;
 }
 
 .phonebook_topletter_active:first-child {
     border-left: 2px solid #666;
     border-top-left-radius: 10px;
+    margin-left: 0px;
+    margin-top: -1px;
 }
 .phonebook_topletter_active:last-child {
     border-right: 2px solid #666;
     border-top-right-radius: 10px;
+    margin-right: 0px;
+    margin-top: -1px;
 }
 
 .vertical-text {
