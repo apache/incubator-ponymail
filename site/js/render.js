@@ -149,9 +149,9 @@ var login = {}
     function loadList_flat(mjson, limit, start, deep) {
         open_emails = []
         limit = limit ? limit : d_ppp;
-        var json = mjson ? mjson.emails.sort(function(a, b) {
+        var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
             return b.epoch - a.epoch
-        }) : current_flat_json
+        }) : []) : current_flat_json
         current_flat_json = json
         var now = new Date().getTime() / 1000
         nest = '<ul class="list-group">'
@@ -216,9 +216,9 @@ var login = {}
     function loadList_threaded(mjson, limit, start, deep) {
         open_emails = []
         limit = limit ? limit : d_ppp;
-        var json = mjson ? mjson.emails.sort(function(a, b) {
+        var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
             return b.epoch - a.epoch
-        }) : current_flat_json
+        }) : []) : current_flat_json
         current_flat_json = json
         
         json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
@@ -233,7 +233,7 @@ var login = {}
                 break
             }
             var eml = findEml(json[i].tid)
-            if (eml.subject.length > 90) {
+            if (eml && eml.subject.length > 90) {
                 eml.subject = eml.subject.substr(0, 90) + "..."
             }
             var subs = countSubs(eml)
@@ -803,6 +803,9 @@ var kiddos = []
         }
         if (json.took) {
             document.getElementById('emails').innerHTML += "<br/><br/><small><i>Rendered in " + parseInt(json.took / 1000) + "ms</i></small>"
+        }
+        if (json.debug && pm_config.debug) {
+            document.getElementById('emails').innerHTML += "<br/><br/><small><i>Debug times: " + json.debug.join(" + ") + "</i></small>"
         }
     }
 

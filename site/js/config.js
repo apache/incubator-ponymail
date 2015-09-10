@@ -16,6 +16,7 @@
 */
 
 var pm_config = {
+    debug: false, // set to true for some debug output
     oauth: {
         apache: {
             name: "Apache OAuth",

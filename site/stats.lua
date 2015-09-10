@@ -37,7 +37,9 @@ end
 
 function handle(r)
     r.content_type = "application/json"
+    local t = {}
     local now = r:clock()
+    local tnow = now
     local get = r:parseargs()
     if not get.list or not get.domain then
         r:puts("{}")
@@ -66,6 +68,10 @@ function handle(r)
         name = get.list,
         domain = get.domain
     }
+    
+    -- Debug time point 1
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
     
     local daterange = {gt = "now-"..dd.."d" }
     if get.s and get.e then
@@ -105,6 +111,10 @@ function handle(r)
         maxresults = 1000
     end
     
+    -- Debug time point 2
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
     local doc = elastic.raw {
         aggs = {
             from = {
@@ -137,6 +147,10 @@ function handle(r)
     }
     local top10 = {}
 
+    -- Debug time point 3
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
     for x,y in pairs (doc.aggregations.from.buckets) do
         local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
         local gravatar = r:md5(eml)
@@ -154,8 +168,12 @@ function handle(r)
     
     
     
+    -- Debug time point 4
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
     -- Get years active
-    local nowish = os.time() % 600
+    local nowish = math.floor(os.time()/600)
     local firstYear = r:ivm_get("firstYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
     if not firstYear or firstYear == "" then
         local doc = elastic.raw {
@@ -218,6 +236,10 @@ function handle(r)
     end
     
     
+    -- Debug time point 5
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
     -- Get threads
     local threads = {}
     local emails = {}
@@ -252,6 +274,11 @@ function handle(r)
         size = maxresults
     }
     local h = #doc.hits.hits
+    
+    -- Debug time point 6
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
     for k = #doc.hits.hits, 1, -1 do
         local v = doc.hits.hits[k]
         local email = v._source
@@ -271,7 +298,7 @@ function handle(r)
             irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
         end
         if not emails[irt] then
-            for ref in email.references:gmatch("([^%s]+)") do
+            for ref in email.references:gmatch("(%S+)") do
                 if emails[ref] then
                     irt = ref
                     break
@@ -288,7 +315,7 @@ function handle(r)
         end
         
         if emails[irt] then
-            if emails[irt].nest < 20 then
+            if emails[irt].nest < 50 then
                 emails[mid].nest = emails[irt].nest + 1
                 table.insert(emails[irt].children, emails[mid])
             end
@@ -310,6 +337,9 @@ function handle(r)
         table.insert(emls, email)
     end
     
+    -- Debug time point 7
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
     
     JSON.encode_max_depth(500)
     listdata.max = maxresults
@@ -323,6 +353,13 @@ function handle(r)
     listdata.hits = h
     listdata.searchlist = listraw
     listdata.took = r:clock() - now
+    
+    -- Debug time point 8
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
+    listdata.debug = t
+    
     r:puts(JSON.encode(listdata))
     
     return apache2.OK
