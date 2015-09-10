@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import mailbox
-import email.errors, email.utils, email.header
-import urllib
-import re
-from elasticsearch import Elasticsearch, helpers
 import sys
 import random, time
 import hashlib
 import os
 from threading import Thread, Lock
-from formatflowed import convertToWrapped
+import mailbox
+import email.errors, email.utils, email.header
+import urllib
+import re
 import chardet
 import datetime
 import ConfigParser as configparser
@@ -18,7 +16,13 @@ import argparse
 from os import listdir
 from os.path import isfile, join, isdir
 import glob
-
+try:
+    from elasticsearch import Elasticsearch, helpers
+    from formatflowed import convertToWrapped
+except:
+    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
+    sys.exit(-1)
+    
 y = 0
 baddies = 0
 block = Lock()
