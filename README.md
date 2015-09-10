@@ -30,7 +30,8 @@ See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 
 * Install Apache httpd + mod_lua
 * Install ElasticSearch
-* go to tools/ and run setup-es.sh
-* pip install elasticsearch formatflowed
-* import if need be
+* go to tools/ and run python setup.py
+* * Follow the instructions and enter info
+* import mbox data with import-mbox.py if need be
+* DONE!
 
