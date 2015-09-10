@@ -1112,6 +1112,7 @@ function seedDomains(json) {
     if (json.login && json.login.fullname) {
         document.getElementById('welcome').innerHTML = "Welcome, " + json.login.fullname.split(/ /)[0] + "!"
         document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
+        setupUser(json.login)
     } else {
         document.getElementById('login_disclaimer').style.display = "block"
     }
