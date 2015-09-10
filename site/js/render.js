@@ -633,8 +633,12 @@ var kiddos = []
         }
 
         for (var year = fyear; year >= (firstYear ? firstYear : current_cal_min); year--) {
+            var n = "none";
+            if (fyear == firstYear) {
+                n = "block"
+            }
             dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 120px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
-            var cale = "<div style='float: left; width: 90%; display: none; padding-left: 20px; margin-bottom: 15px;' id='cal_" + year + "'>"
+            var cale = "<div style='float: left; width: 90%; display: " + n + "; padding-left: 20px; margin-bottom: 15px;' id='cal_" + year + "'>"
             var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
             for (var y = em; y >= 0; y--) {
                 cale += "<label style='width: 80px; float: left;cursor: pointer;' class='label label-default' onmouseout='this.setAttribute(\"class\", \"label label-default\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label><br/>"
