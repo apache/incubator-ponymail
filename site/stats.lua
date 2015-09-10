@@ -104,6 +104,7 @@ function handle(r)
                 }
         maxresults = 1000
     end
+    
     local doc = elastic.raw {
         aggs = {
             from = {
@@ -222,7 +223,7 @@ function handle(r)
     local emails = {}
     local emls = {}
     local doc = elastic.raw {
-        _source = {'message-id','in-reply-to','to','from','subject','epoch','date','references','list_raw'},
+        _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw'},
         query = {
             bool = {
                 must = {

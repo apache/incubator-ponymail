@@ -315,6 +315,7 @@ var login = {}
             //thread.style.border = "1px dotted #666"
             thread.style.padding = "5px"
             thread.style.fontFamily = "Hack"
+            json.date = new Date(json.epoch*1000).toLocaleString();
             var fields = ['From', 'To', 'Subject', 'Date']
             for (var i in fields) {
                 var key = fields[i]
@@ -356,6 +357,7 @@ var login = {}
             thread.innerHTML = ''
             thread.style.padding = "5px"
             thread.style.fontFamily = "Hack"
+            json.date = new Date(json.epoch*1000).toLocaleString();
             var fields = ['From', 'To', 'Subject', 'Date']
             for (var i in fields) {
                 var key = fields[i]
