@@ -340,7 +340,7 @@ parser.add_argument('--interactive', dest='interactive', action='store_true',
                    help='Ask for help when possible')
 parser.add_argument('--quick', dest='quick', action='store_true',
                    help='Only grab the first file you can find')
-parser.add_argument('--mod-mbox', dest='modmbox', type=str, nargs=1,
+parser.add_argument('--mod-mbox', dest='modmbox', action='store_true',
                    help='This is mod_mbox, derive list-id and files from it')
 parser.add_argument('--lid', dest='listid', type=str, nargs=1,
                    help='Optional List-ID to override source with.')
