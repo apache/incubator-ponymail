@@ -169,6 +169,7 @@ class SlurpThread(Thread):
             y += 1
             EY = 1980
             EM = 1
+            stime = time.time()
             if filebased:
                 
                 tmpname = mla[0]
@@ -195,6 +196,9 @@ class SlurpThread(Thread):
             count = 0
             LEY = EY
             for message in mailbox.mbox(tmpname, factory=msgfactory):
+                if (time.time() - stime > 120):
+                    print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
+                    break
                 if 'subject' in message:
                     subject = message['subject']       # Could possibly be None.
                     mid = message['message-id']
