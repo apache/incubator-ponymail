@@ -31,7 +31,7 @@ function handle(r)
         domain = "*"
     end
     local dd = 14
-    local maxresults = 100000
+    local maxresults = 200000
     local listdata = {}
 
     
@@ -79,7 +79,7 @@ function handle(r)
             from = {
                 terms = {
                     field = "list_raw",
-                    size = 100000
+                    size = 200000
                 }
             }
         }
