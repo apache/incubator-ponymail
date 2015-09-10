@@ -1118,7 +1118,10 @@ function showStats(json) {
     var obj = document.getElementById('list_stats')
     
     obj.innerHTML = "<h2 style='margin-top: -5px;'>Overall 14 day activity:</h2>"
-    obj.innerHTML += json.participants.toLocaleString() + " people have sent " + json.hits.toLocaleString() + " emails sent, covering " + json.no_threads.toLocaleString() + " topics on " + json.no_active_lists.toLocaleString() + " different mailing lists."
+    obj.innerHTML += '<span class="glyphicon glyphicon-user"> </span> ' + json.participants.toLocaleString() + " People &nbsp; "
+    obj.innerHTML += '<span class="glyphicon glyphicon-envelope"> </span> ' + json.hits.toLocaleString() + ' messages &nbsp';
+    obj.innerHTML += '<span class="glyphicon glyphicon-list-alt"> </span> ' + json.no_threads.toLocaleString() + " topics &nbsp; "
+    obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span>' + json.no_active_lists.toLocaleString() + " active lists."
 }
 
 function listDomains() {
