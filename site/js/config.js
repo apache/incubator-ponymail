@@ -28,7 +28,8 @@ var pm_config = {
     },
     persona: {
         enabled: true
-    }
+    },
+    indexMode: 'phonebook'
 }
 
 
