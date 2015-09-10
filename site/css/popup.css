@@ -114,7 +114,7 @@
 .phonebook_grouping {
     background: none;
     width: 400px;
-    min-height: 48px;
+    min-height: 200px;
     border: 1px solid #eee;
     border-left-color: #5bc0de;
     border-left-width: 5px;
@@ -130,8 +130,8 @@
     
 }
 
-.phonebook_letter {
-    background: #5bc0de;
+.phonebook_letter_right {
+    background: linear-gradient(135deg, rgba(246,230,180,1) 0%,rgba(237,144,23,1) 100%);
     border: 1px solid #333;
     border-radius: 4px;
     font-size: 14pt;
@@ -145,7 +145,6 @@
     padding: 5px;
     padding-top: 10px;
     vertical-align: middle !important;
-    line-height: calc(100% + 20px);
     text-align: center;
     float: left;
     top: 0px;
@@ -153,6 +152,21 @@
     width: 32px;
     margin-left: -41px;
     position: absolute;
+}
+
+.phonebook_letter {
+    background: linear-gradient(135deg, rgba(246,230,180,1) 0%,rgba(237,144,23,1) 100%);
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 14pt;
+    font-family: sans-serif;
+    margin: 2px;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+    padding-top: 5px;
+    width: 32px;
+    height: 42px;
 }
 
 .phonebook_entry, .phonebook_entry a {

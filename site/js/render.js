@@ -42,7 +42,7 @@ var global_deep = false
 var old_state = {}
 var nest = ""
 var xlist = ""
-
+var domlist = {}
 
 
 
@@ -1068,6 +1068,34 @@ function getSingleEmail(id) {
     GetAsync("/email.lua?id=" + id, null, displaySingleEmail)
 }
 
+
+function showDomains(l) {
+    var pg = document.getElementById('active_domlist')
+    pg.innerHTML = ""
+    var pl = document.createElement('div')
+    pl.setAttribute("class", "phonebook_letter_right")
+    pl.innerHTML = l.toUpperCase()
+    pg.appendChild(pl)
+    var ul = document.createElement('ul')
+    ul.style.textAlign = "left"
+    for (var i in domlist[l]) {
+        var dom = domlist[l][i]
+        var letter = dom.substr(0,1)
+        // Make ML entry
+        var li = document.createElement("li")
+        li.style.padding = "2px"
+        //li.setAttribute("class", "phonebook_entry")
+        var a = document.createElement("a")
+        var t = document.createTextNode(dom)
+        a.setAttribute("href", "list.html?" + dom)
+        a.appendChild(t)
+        li.appendChild(a)
+        ul.appendChild(li)
+    }
+    pg.appendChild(ul)
+}
+
+var fl = null
 function seedDomains(json) {
     
     var obj = document.getElementById('domains')
@@ -1088,39 +1116,42 @@ function seedDomains(json) {
     doms.sort()
     var lu = {}
     var pg;
+    var letters = []
     for (var i in doms) {
         var dom = doms[i]
         var letter = dom.substr(0,1)
-        // Make character entry
-        if (!lu[letter]) {
-            lu[letter] = true
-            if (pg) {
-                obj.appendChild(pg);
-            }
-            pg = document.createElement("div")
-            pg.setAttribute("class", "phonebook_grouping")
-            
-            var pc = document.createElement("div")
-            pc.setAttribute("class", "phonebook_letter")
-            pc.appendChild(document.createTextNode(letter.toUpperCase()))
-            pg.appendChild(pc)
+        letters.push(letter)
+        domlist[letter] = domlist[letter] ? domlist[letter] : []
+        domlist[letter].push(dom)
+    }
+    
+    var po = document.createElement("div")
+    po.style.width = "140px"
+    po.style.textAlign = "left"
+    po.style.float = "left"
+    var x = 0;
+    for (var l in domlist) {
+        x++
+        fl = fl ? fl : l
+        var pc = document.createElement("label")
+        pc.setAttribute("class", "phonebook_letter")
+        pc.appendChild(document.createTextNode(l.toUpperCase()))
+        pc.setAttribute("onclick", "showDomains('" + l + "');")
+        pc.style.cursor = "pointer"
+        po.appendChild(pc)
+        if (x % 3 == 0) {
+            po.appendChild(document.createElement('br'))
         }
-        
-        // Make ML entry
-        var li = document.createElement("label")
-        li.setAttribute("class", "phonebook_entry")
-        var a = document.createElement("a")
-        var t = document.createTextNode(dom)
-        a.setAttribute("href", "list.html?" + dom)
-        a.appendChild(t)
-        li.appendChild(a)
-        pg.appendChild(li)
     }
-    if (pg) {
-        obj.appendChild(pg);
-    }
+    obj.appendChild(po)
+    var dshow = document.createElement('div')
+    dshow.setAttribute("class", "phonebook_grouping")
+    dshow.setAttribute("id", "active_domlist")
+    obj.appendChild(dshow)
     if (doms.length == 0) {
         obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
+    } else {
+        showDomains(fl)
     }
 }
 
