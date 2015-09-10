@@ -35,6 +35,7 @@ See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 * Install ElasticSearch
 * go to tools/ and run python setup.py
   * Follow the instructions and enter info
+* Fiddle a bit with site/js/config.js for now
 * import mbox data with import-mbox.py if need be
 * DONE!
 
