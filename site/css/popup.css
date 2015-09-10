@@ -145,6 +145,7 @@
     padding: 5px;
     padding-top: 10px;
     vertical-align: middle !important;
+    line-height: calc(100% + 20px);
     text-align: center;
     float: left;
     top: 0px;
