@@ -177,3 +177,11 @@
     cursor: pointer;
     background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%);
 }
+
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:14px !important; 
+    padding-bottom:0 !important;
+    height: 48px;
+}
+.navbar {min-height:48px !important;}
