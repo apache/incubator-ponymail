@@ -221,6 +221,7 @@ function handle(r)
     -- Get threads
     local threads = {}
     local emails = {}
+    local emails_full = {}
     local emls = {}
     local doc = elastic.raw {
         _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw'},
@@ -260,16 +261,12 @@ function handle(r)
         email.irt = irt
         emails[mid] = {
             tid = v._id,
-            id = mid,
             nest = 1,
-            from = email['from'],
-            epoch = email['epoch'],
-            subject = email['subject'],
-            list = email['list_raw']:gsub("[<>]+", ""),
             children = {
                 
             }
         }
+        
         if not irt or #irt == 0 then
             irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
         end
@@ -298,16 +295,11 @@ function handle(r)
         else
             if (#email['in-reply-to'] > 0) then
                 emails[irt] = {
-                    tid = v._id,
-                    id = irt,
-                    nest = 1,
-                    epoch = email['epoch'],
-                    from = email['from'],
-                    subject = email['subject'],
-                    list = email['list_raw']:gsub("[<>]+", ""),
                     children = {
                         emails[mid]
-                    }
+                    },
+                    nest = 1,
+                    tid = v._id
                 }
                 emails[mid].nest = emails[irt].nest + 1
                 table.insert(threads, emails[irt])

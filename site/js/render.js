@@ -76,6 +76,14 @@ var login = {}
         }
     }
 
+    function findEml(id) {
+        for (var i in current_flat_json) {
+            if (current_flat_json[i].id == id) {
+                return current_flat_json[i]
+            }
+        }
+    }
+    
     function countSubs(eml, state) {
         n = 0;
         if (!state) {
@@ -208,7 +216,12 @@ var login = {}
     function loadList_threaded(mjson, limit, start, deep) {
         open_emails = []
         limit = limit ? limit : d_ppp;
-        var json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
+        var json = mjson ? mjson.emails.sort(function(a, b) {
+            return b.epoch - a.epoch
+        }) : current_flat_json
+        current_flat_json = json
+        
+        json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
         current_thread_json = json
         var now = new Date().getTime() / 1000
         nest = '<ul class="list-group">'
@@ -219,7 +232,7 @@ var login = {}
             if (i >= (start + limit)) {
                 break
             }
-            var eml = json[i]
+            var eml = findEml(json[i].tid)
             if (eml.subject.length > 90) {
                 eml.subject = eml.subject.substr(0, 90) + "..."
             }
