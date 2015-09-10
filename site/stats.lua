@@ -264,7 +264,6 @@ function handle(r)
             nest = 1,
             from = email['from'],
             epoch = email['epoch'],
-            date = email.date,
             subject = email['subject'],
             list = email['list_raw']:gsub("[<>]+", ""),
             children = {
@@ -306,7 +305,6 @@ function handle(r)
                     from = email['from'],
                     subject = email['subject'],
                     list = email['list_raw']:gsub("[<>]+", ""),
-                    date = email.date,
                     children = {
                         emails[mid]
                     }
