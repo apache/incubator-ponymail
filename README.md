@@ -9,13 +9,14 @@ See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 ### TODO: ###
 * Set up dir structure (*DONE*)
 * Import site data (*DONE*)
-* Add license headers (ALv2)
-* Import tools
+* Import tools (*DONE*)
+* Import settings / setup tools (*DONE*)
 * Import, fix archiver
-* Import settings / setup tools
+* Add license headers (ALv2) to everything
 * Start on documentation
 * Rework JS, turn those ugly innerHTML hacks into proper DOM handling
 * Have reply feature actually work
+* Set up notification system (depends on reply system)
 
 
 ### Requirements: ###
