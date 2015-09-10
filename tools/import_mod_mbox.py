@@ -181,7 +181,7 @@ class SlurpThread(Thread):
                 if m:
                     EY = int(m.group(1))
                     EM = int(m.group(2))
-                inp = urllib.urlopen("%s%s/%s" % (rootURL, ml, mboxfile )).read()
+                inp = urllib.urlopen("%s%s/%s" % (source, ml, mboxfile )).read()
     
                 tmpname = hashlib.sha224("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()
                 with open(tmpname, "w") as f:
@@ -330,10 +330,12 @@ else:
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source to scan (either http(s):// or file path)')
-parser.add_argument('--recursive', dest='recursive', type=bool, 
+parser.add_argument('--recursive', dest='recursive', action='store_true', 
                    help='Do a recursive scan (sub dirs etc)')
-parser.add_argument('--interactive', dest='interactive', type=bool,
+parser.add_argument('--interactive', dest='interactive', action='store_true',
                    help='Ask for help when possible')
+parser.add_argument('--quick', dest='quick', action='store_true',
+                   help='Only grab the first file you can find')
 parser.add_argument('--mod-mbox', dest='modmbox', type=str, nargs=1,
                    help='This is mod_mbox, derive list-id and files from it')
 parser.add_argument('--lid', dest='listid', type=str, nargs=1,
@@ -355,6 +357,8 @@ if args.recursive:
     recursive = args.recursive
 if args.interactive:
     interactive = args.interactive
+if args.quick:
+    quickmode = args.quick
 if args.ext:
     extension = args.ext[0]
 
@@ -375,6 +379,7 @@ def globDir(d):
             print("alright, I'll try to figure it out myself!")
     for fi in sorted(mboxes):
         lists.append([fi, fileToLID.get(d) if fileToLID.get(d) else list_override])
+    
     for nd in sorted(dirs):
         globDir(join(d,nd))
  
@@ -387,8 +392,8 @@ if source[0] == "/" or source[0] == ".":
     
 
 # HTTP(S) based import?
-elif source[0] == 'h':
-    data = urllib.urlopen(rootURL).read()
+elif source[0] == "h":
+    data = urllib.urlopen(source).read()
     print("Fetched %u bytes of main data, parsing month lists" % len(data))
     
     ns = r"<a href='(%s[-a-z0-9]+)/'" % project
@@ -398,7 +403,7 @@ elif source[0] == 'h':
     if args.modmbox:
         for mlist in re.finditer(ns, data):
             ml = mlist.group(1)
-            mldata = urllib.urlopen("%s%s/" % (rootURL, ml)).read()
+            mldata = urllib.urlopen("%s%s/" % (source, ml)).read()
             present = re.search(r"<th colspan=\"3\">Year 20[\d]{2}</th>", mldata) # Check that year 2014-2017 exists, otherwise why keep it?
             if present:
                 for mbox in re.finditer(r"(\d+\.mbox)/thread", mldata):
