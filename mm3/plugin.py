@@ -9,16 +9,17 @@ Enable this by adding the following to your mailman.cfg file::
 
 
 """
-
-from zope.interface import implements
-from mailman.interfaces.archiver import IArchiver
+if __name__ != '__main__':
+    from zope.interface import implements
+    from mailman.interfaces.archiver import IArchiver
+else:
+    import sys
 
 from elasticsearch import Elasticsearch
 import hashlib
 import email.utils
 import datetime, time
 import json
-import sys
 
 
 class Archiver(object):
