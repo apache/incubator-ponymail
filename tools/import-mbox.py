@@ -421,8 +421,8 @@ elif source[0] == "h":
                         break
     
 threads = []
-print("Starting up to 4 threads to fetch the %u %s lists" % (len(lists), project))
-for i in range(1,5):
+print("Starting up to 6 threads to fetch the %u %s lists" % (len(lists), project))
+for i in range(1,7):
     t = SlurpThread()
     threads.append(t)
     t.start()
