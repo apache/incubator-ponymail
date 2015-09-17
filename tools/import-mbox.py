@@ -30,6 +30,7 @@ lists = []
 start = time.time()
 quickmode = False
 lid_override = None
+private = False
 
 
 source = "./"
@@ -298,7 +299,7 @@ class SlurpThread(Thread):
                             'list': lid,
                             'list_raw': lid,
                             'date': mdatestring,
-                            'private': False,
+                            'private': private,
                             'references': mr,
                             'in-reply-to': irt,
                             'body': body
@@ -352,6 +353,8 @@ parser.add_argument('--project', dest='project', type=str, nargs=1,
                    help='Optional project to look for ($project-* will be imported as well)')
 parser.add_argument('--ext', dest='ext', type=str, nargs=1,
                    help='Optional file extension (or call it with no args to not care)')
+parser.add_argument('--private', dest='private', action='store_true',
+                   help='This is a privately archived list. Filter through auth proxy.')
 
 args = parser.parse_args()
 
@@ -367,6 +370,8 @@ if args.interactive:
     interactive = args.interactive
 if args.quick:
     quickmode = args.quick
+if args.private:
+    private = args.private
 if args.ext:
     extension = args.ext[0]
 
