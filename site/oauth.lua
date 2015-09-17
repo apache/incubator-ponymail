@@ -18,6 +18,7 @@ local JSON = require 'cjson'
 local http = require 'socket.http'
 local elastic = require 'lib/elastic'
 local https = require 'ssl.https'
+local user = require 'lib/user'
 
 
 function handle(r)
@@ -25,9 +26,13 @@ function handle(r)
     local get = r:parseargs()
     local post = r:parsebody()
     local valid, json
+    local scheme = "https"
+    if r.port == 80 then
+        scheme = "http"
+    end
     if get.mode and get.mode == "persona" then
-        local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=https://%s:%u/"):format(post.assertion, r.hostname, r.port))
-        r:err(("assertion=%s&audience=https://ponymail:443/"):format(post.assertion))
+        local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=%s://%s:%u/"):format(post.assertion, scheme, r.hostname, r.port))
+        r:err(("assertion=%s&audience=%s://ponymail:443/"):format(post.assertion, scheme))
         r:err(result)
         valid, json = pcall(function() return JSON.decode(result) end)
         
@@ -41,24 +46,20 @@ function handle(r)
         local fname = json.fullname or json.email
         local admin = json.isMember
         if eml and fname then
-            local uid = json.uid
-            local cookie = r:sha1(r.useragent_ip .. ':' .. (math.random(1,9999999)*os.time()) .. r:clock())
-            
-            -- Does this account exists? If so, grab the prefs first
-            local prefs = nil
-            local odoc = elastic.get('account', r:sha1(uid or eml))
-            if odoc and odoc.preferences then
-                prefs = odoc.preferences
+            local cid = json.uid or json.email
+            -- Does the user exist already?
+            local oaccount = user.get(r, cid)
+            local usr = {}
+            if oaccount then
+                usr.preferences = oaccount.preferences
+            else
+                usr.preferences = {}
             end
-            elastic.index(r, r:sha1(uid or eml), 'account', JSON.encode{
-                uid = uid,
-                email = eml,
-                fullname = fname,
-                admin = admin,
-                cookie = cookie,
-                preferences = prefs
-            })
-            r:setcookie("pony",cookie .. "==" .. (uid or eml))
+            usr.fullname = fname
+            usr.admin = admin
+            usr.email = eml
+            usr.uid = json.uid
+            user.update(r, cid, usr)
             r:puts[[{"okay": true, "msg": "Logged in successfully!"}]]
         else
             r:puts[[{"okay": false, "msg": "Erroneous or missing response from backend!"}]]

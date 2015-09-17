@@ -831,7 +831,7 @@ var kiddos = []
         }
         if (typeof json.login != undefined && json.login) {
             login = json.login
-            if (login.loggedIn) {
+            if (login.credentials) {
                 setupUser(login)
             }
         }
@@ -1021,7 +1021,7 @@ function sendEmail(form) {
 function compose(eid) {
     var email = saved_emails[eid]
     if (email) {
-        if (login.loggedIn) {
+        if (login.credentials) {
 
             var obj = document.getElementById('splash')
             obj.style.display = "block"
@@ -1111,9 +1111,9 @@ function seedDomains(json) {
         return
     }
     document.getElementById('login_disclaimer').style.display = "block"
-    if (json.login && json.login.fullname) {
-        document.getElementById('welcome').innerHTML = "Welcome, " + json.login.fullname.split(/ /)[0] + "!"
-        document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
+    if (json.login && json.login.credentials && json.login.credentials.fullname) {
+        document.getElementById('welcome').innerHTML = "Welcome, " + json.login.credentials.fullname.split(/ /)[0] + "!"
+        document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.credentials.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
         setupUser(json.login)
     } else {
         document.getElementById('login_disclaimer').style.display = "block"
@@ -1194,14 +1194,14 @@ function listDomains() {
 function setupUser(login) {
     var uimg = document.getElementById('uimg')
     uimg.setAttribute("src", "images/user.png")
-    uimg.setAttribute("title", "Logged in as " + login.fullname)
+    uimg.setAttribute("title", "Logged in as " + login.credentials.fullname)
     var pd = document.getElementById('prefs_dropdown')
     pd.innerHTML = ""
     
     // Prefs item
     var li = document.createElement("li")
     var a = document.createElement("a")
-    var t = document.createTextNode(login.fullname + "'s preferences")
+    var t = document.createTextNode(login.credentials.fullname + "'s preferences")
     a.setAttribute("href", "javascript:void(0);")
     a.setAttribute("onclick", "showPreferences()")
     a.appendChild(t)

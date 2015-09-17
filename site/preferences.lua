@@ -16,7 +16,7 @@
 ]]--
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
-
+local user = require 'lib/user'
 
 function handle(r)
     local now = r:clock()
@@ -32,56 +32,29 @@ function handle(r)
     local prefs = nil -- Default to JS prefs if not logged in
     
     -- prefs?
-    local ocookie = r:getcookie("pony")
-    if ocookie and #ocookie > 43 then
-        local cookie, eml = r:unescape(ocookie):match("([a-f0-9]+)==(.+)")
-        if cookie and #cookie >= 40 and eml then
-            local js = elastic.get('account', r:sha1(eml))
-            if js and js.email then
-                login = {
-                    loggedIn = true,
-                    email = js.email,
-                    fullname = js.fullname
-                }
-                prefs = js.preferences
-            end
-            
-            -- while we're here, are you logging out?
-            if get.logout and login.loggedIn == true then
-                elastic.index(r, r:sha1(eml), 'account', JSON.encode{
-                    email = js.email,
-                    uid = js.uid,
-                    fullname = js.fullname,
-                    admin = js.admin,
-                    cookie = 'nil',
-                    preferences = js.preferences
-                })
-                r:setcookie("pony", "----")
-                r:puts[[{"logut": true}]]
-                return apache2.OK
-            end
-            
-            -- Or are you saving your preferences?
-            if get.save and login.loggedIn == true then
-                prefs = {}
-                for k, v in pairs(get) do
-                    if k ~= 'save' then
-                        prefs[k] = v
-                    end
-                end
-                elastic.index(r, r:sha1(eml), 'account', JSON.encode{
-                    email = js.email,
-                    fullname = js.fullname,
-                    uid = js.uid,
-                    admin = js.admin,
-                    cookie = r:unescape(ocookie),
-                    preferences = prefs
-                })
-                r:puts[[{"saved": true}]]
-                return apache2.OK
+    local account = user.get(r)
+    
+    -- while we're here, are you logging out?
+    if get.logout and account then
+        user.logout(r, account)
+        r:puts[[{"logut": true}]]
+        return apache2.OK
+    end
+
+    -- Or are you saving your preferences?
+    if get.save and account then
+        prefs = {}
+        for k, v in pairs(get) do
+            if k ~= 'save' then
+                prefs[k] = v
             end
         end
+        account.preferences = prefs
+        user.save(r, account)
+        r:puts[[{"saved": true}]]
+        return apache2.OK
     end
+       
     
     -- Get lists
     local doc = elastic.raw {
@@ -105,12 +78,14 @@ function handle(r)
     end
     
      
-    
+    account = account or {}
     
     r:puts(JSON.encode{
         lists = lists,
-        preferences = prefs,
-        login = login,
+        preferences = account.preferences,
+        login = {
+            credentials = account.credentials,
+        },
         took = r:clock() - now
     })
     
