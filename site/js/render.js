@@ -1096,7 +1096,7 @@ function showDomains(l) {
     var ul = document.createElement('ul')
     ul.style.textAlign = "left"
     ul.style.listStyle = "none"
-    ul.style.marginTop = "10px"
+    ul.style.paddingTop = "12px"
     for (var i in domlist[l]) {
         var dom = domlist[l][i]
         var letter = dom.substr(0,1)
@@ -1158,7 +1158,7 @@ function seedDomains(json) {
     var po = document.createElement("div")
     
     po.style.textAlign = "left"
-    po.style.float = "left"
+    po.style.margin = "0px"
     var x = 0;
     var ls = "abcdefghijklmnopqrstuvwxyz".split("")
     for (var i in ls) {
