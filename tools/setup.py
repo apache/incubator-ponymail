@@ -37,6 +37,7 @@ hostname = ""
 port = 0
 dbname = ""
 mlserver = ""
+mldom = ""
 
 while hostname == "":
     sys.stdout.write("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
@@ -53,6 +54,10 @@ while dbname == "":
 while mlserver == "":
     sys.stdout.write("What is the hostname of the outgoing mailserver? (e.g. mail.foo.org): ")
     mlserver = sys.stdin.readline().strip()
+    
+while mldom == "":
+    sys.stdout.write("Which domains would you accept mail to from web-replies? (e.g. foo.org or *): ")
+    mldom = sys.stdin.readline().strip()
 
 
 print("Okay, I got all I need, setting up Pony Mail...")
@@ -161,10 +166,11 @@ with open("../site/lib/config.lua", "w") as f:
     f.write("""
 local config = {
     es_url = "http://%s:%u/%s/",
-    mailserver = "%s"
+    mailserver = "%s",
+    accepted_domains = "%s"
 }
 return config
-            """ % (hostname, port, dbname, mlserver))
+            """ % (hostname, port, dbname, mlserver, mldom))
     f.close()
     
 print("All done, Pony Mail should...work now :)")
