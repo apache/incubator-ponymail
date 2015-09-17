@@ -9,6 +9,9 @@ Enable this by adding the following to your mailman.cfg file::
 
 
 """
+
+# Change this index name to whatever you picked!!
+indexname = "ponymail_alpha"
 if __name__ != '__main__':
     from zope.interface import implements
     from mailman.interfaces.archiver import IArchiver
@@ -102,8 +105,6 @@ class Archiver(object):
         format = lambda value: value and unicode(value)
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         lst_metadata = dict(list_name=mlist.list_name)
-        print(mlist.list_name)
-        #print(msg_metadata['archived-at'])
         mid = hashlib.sha224("%s-%s" % (mlist.list_name, msg_metadata['archived-at'])).hexdigest() + "@" + (mlist.list_name if mlist.list_name else "none")
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
@@ -146,7 +147,7 @@ class Archiver(object):
             }
         
             self.es.index(
-                index="ponymail_alpha",
+                index=indexname,
                 doc_type="mbox",
                 id=mid,
                 body = ojson
@@ -172,7 +173,7 @@ if __name__ == '__main__':
     foo = Archiver()
     ip = sys.stdin.read()
     msg = email.message_from_string(ip)
-    # We're reading from STDIN, so let's 'fake' an MM3 call
+    # We're reading from STDIN, so let's fake an MM3 call
     if 'list-id' in msg:
         if not msg.get('archived-at'):
             msg.add_header('archived-at', email.utils.formatdate())
