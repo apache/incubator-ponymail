@@ -43,7 +43,7 @@ var old_state = {}
 var nest = ""
 var xlist = ""
 var domlist = {}
-
+var compose_headers = {}
 
 
 var login = {}
@@ -1013,7 +1013,21 @@ if (document.getElementById('emails')) {
 
 
 function sendEmail(form) {
-    hideComposer()
+    
+    var f = new FormData();
+    for (var k in compose_headers) {
+        f.append(k, compose_headers[k])
+    }
+    f.append("subject", document.getElementById('reply_subject').value)
+    f.append("body", document.getElementById('reply_body').value)
+    
+    var request = new XMLHttpRequest();
+    request.open("POST", "compose.lua");
+    request.send(f);
+    
+    var obj = document.getElementById('splash')
+    obj.innerHTML = "<h3>Email dispatched!</h3>"
+    window.setTimeout(hideComposer, 2000)
 }
 
 
@@ -1022,13 +1036,18 @@ function compose(eid) {
     var email = saved_emails[eid]
     if (email) {
         if (login.credentials) {
-
+            compose_headers = {
+                'in-reply-to': email['message-id'],
+                'references': email['message-id'] + " " + (email['references'] ? email['references'] : ""),
+                'to': email['list_raw'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            }
             var obj = document.getElementById('splash')
             obj.style.display = "block"
             obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>Reply to email:</h3>"
             var area = document.createElement('textarea')
             area.style.width = "660px"
             area.style.height = "400px";
+            area.setAttribute("id", "reply_body")
             var eml = "\n\nOn " + email.date + ", " + email.from.replace(/<.+>/, "") + " wrote: \n"
             eml += email.body.replace(/([^\r\n]*)/mg, "&gt; $1")
 
@@ -1038,6 +1057,8 @@ function compose(eid) {
             txt.setAttribute("type", "text")
             txt.setAttribute("style", "width: 500px;")
             txt.value = subject
+            txt.setAttribute("id", "reply_subject")
+            
 
             obj.appendChild(txt)
 
