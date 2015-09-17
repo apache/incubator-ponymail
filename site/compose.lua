@@ -32,7 +32,7 @@ function handle(r)
         if post.to and post.subject and post.body then
             to = ("<%s>"):format(post.to)
             local fp, lp = post.to:match("([^@]+)@([^@]+)")
-            if config.accepted_domains == lp:lower() or config.accepted_domains == "*" then
+            if r.strcmp_match(lp, config.accepted_domains) or config.accepted_domains == "*" then
                 local fr = ([[%s<%s>]]):format(account.credentials.fullname, account.credentials.email)
                 local headers = {
                     ['x-ponymail-sender'] = r:sha1(account.cid),
