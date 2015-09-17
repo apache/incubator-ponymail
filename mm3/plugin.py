@@ -20,12 +20,20 @@ import hashlib
 import email.utils
 import datetime, time
 import json
+from collections import namedtuple
 
+
+def pm_charsets(msg):
+    charsets = set({})
+    for c in msg.get_charsets():
+        if c is not None:
+            charsets.update([c])
+    return charsets
 
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
-
-    implements(IArchiver)
+    if __name__ != '__main__':
+        implements(IArchiver)
     name = "ponymail"
 
     # This is a list of the headers we're interested in publishing.
@@ -58,7 +66,7 @@ class Archiver(object):
             retry_on_timeout=True
             )
 
-    def msgbody(msg):
+    def msgbody(self, msg):
         body = None
         if msg.is_multipart():    
             for part in msg.walk():
@@ -75,7 +83,7 @@ class Archiver(object):
         elif msg.get_content_type() == 'text/plain':
             body = msg.get_payload(decode=True) 
     
-        for charset in getcharsets(msg):
+        for charset in pm_charsets(msg):
             try:
                 body = body.decode(charset)
             except:
@@ -94,9 +102,11 @@ class Archiver(object):
         format = lambda value: value and unicode(value)
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         lst_metadata = dict(list_name=mlist.list_name)
-        mid = hashlib.sha224(mlist.list_name + msg_metadata['archived-at']).hexdigest() + "@" + (mlist.list_name if mlist.list_name else "none")
+        print(mlist.list_name)
+        #print(msg_metadata['archived-at'])
+        mid = hashlib.sha224("%s-%s" % (mlist.list_name, msg_metadata['archived-at'])).hexdigest() + "@" + (mlist.list_name if mlist.list_name else "none")
         if not msg_metadata.get('message-id'):
-            msg_metadata.__setattr__('message-id', mid)
+            msg_metadata['message-id'] = mid
         mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
         if not mdate:
             mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
@@ -164,7 +174,10 @@ if __name__ == '__main__':
     msg = email.message_from_string(ip)
     # We're reading from STDIN, so let's 'fake' an MM3 call
     if 'list-id' in msg:
-        msg_metadata = dict([('list_name', msg.get('list-id'))])
+        if not msg.get('archived-at'):
+            msg.add_header('archived-at', email.utils.formatdate())
+        msg_metadata = namedtuple('importmsg', ['list_name'])(list_name = msg.get('list-id'))
+        
         foo.archive_message(msg_metadata, msg)
         print("Done archiving!")
     else:
