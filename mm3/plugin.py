@@ -24,6 +24,7 @@ import email.utils
 import datetime, time
 import json
 from collections import namedtuple
+import re
 
 
 def pm_charsets(msg):
@@ -152,6 +153,30 @@ class Archiver(object):
                 id=mid,
                 body = ojson
             )
+            
+            # Is this a direct reply to a pony mail email?
+            dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('in-reply-to'))
+            if dm:
+                cid = dm.group(1)
+                mid = dm.group(2)
+                doc = self.es.get(index = indexname, doc_type = 'account', id = cid)
+                if doc:
+                    self.es.index(
+                        index=indexname,
+                        doc_type="notifications",
+                        body = {
+                            'type': 'direct',
+                            'recipient': cid,
+                            'list': mlist.list_name,
+                            'date': msg_metadata['date'],
+                            'from': msg_metadata['from'],
+                            'to': msg_metadata['to'],
+                            'subject': msg_metadata['subject'],
+                            'message-id': msg_metadata['message-id'],
+                            'mid': mid
+                        }
+                    )
+            #im = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references'))
             
     def list_url(self, mlist):
         """ Gots
