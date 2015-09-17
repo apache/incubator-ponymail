@@ -160,7 +160,7 @@ print("mod_lua configuration (config.lua)")
 with open("../site/lib/config.lua", "w") as f:
     f.write("""
 local config = {
-    es_url = "http://%s:%u/%s/,
+    es_url = "http://%s:%u/%s/",
     mailserver = "%s"
 }
 return config
