@@ -18,6 +18,7 @@ import hashlib
 import email.utils
 import datetime, time
 import json
+import sys
 
 
 class Archiver(object):
@@ -44,7 +45,7 @@ class Archiver(object):
     ]
 
     def __init__(self):
-        """ Just initialize fedmsg. """
+        """ Just initialize ES. """
         self.es = Elasticsearch([
             {
                 'host': '127.0.0.1',
@@ -155,3 +156,17 @@ class Archiver(object):
             here
         """
         return None
+    
+if __name__ == '__main__':
+    foo = Archiver()
+    ip = sys.stdin.read()
+    msg = email.message_from_string(ip)
+    # We're reading from STDIN, so let's 'fake' an MM3 call
+    if 'list-id' in msg:
+        msg_metadata = dict([('list_name', msg.get('list-id'))])
+        foo.archive_message(msg_metadata, msg)
+        print("Done archiving!")
+    else:
+        print("Nothing to import (no list-id found!)")
+        
+    
