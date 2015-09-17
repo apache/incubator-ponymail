@@ -1,6 +1,6 @@
 # ponymail
 Pony Mail - a lightweight web-based mail archive browser
-Licensed under the Apache License v/20. 
+Licensed under the Apache License v/2.0
 
 ![Ponies](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo.png)
 
