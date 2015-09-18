@@ -39,7 +39,11 @@ function isMember(uid)
 end
 
 function getRights(uid)
+    uid = uid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
+    if not uid then
+        return rights
+    end
     if isMember(uid) then
         table.insert(rights, "*")
     else
