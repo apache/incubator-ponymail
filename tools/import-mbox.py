@@ -233,8 +233,8 @@ class SlurpThread(Thread):
                             except:
                                 try:
                                     body = body.decode('utf-8', 'replace')
-                                except:
-                                    print("Could not decode message from %s, ignoring.." % message.get('from'))
+                                except Exception as err:
+                                    print("Could not decode message from %s, ignoring: %s" % (message.get('from'), err))
                                     baddies += 1
                                     body = None
 
