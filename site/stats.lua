@@ -171,9 +171,6 @@ function handle(r)
             count = y.doc_count
         })
     end
-    listdata.participants = top10
-    
-    
     
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
@@ -361,6 +358,19 @@ function handle(r)
                 end
             end
             table.insert(emls, email)
+        else
+            for k, v in pairs(top10) do
+                local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
+                if v.email == eml then
+                    v.count = v.count - 1
+                end
+            end
+        end
+    end
+    
+    for k, v in pairs(top10) do
+        if v.count == 0 then
+            v = nil
         end
     end
     
@@ -379,6 +389,7 @@ function handle(r)
     listdata.emails = emls
     listdata.hits = h
     listdata.searchlist = listraw
+    listdata.participants = top10
     listdata.took = r:clock() - now
     
     -- Debug time point 8
