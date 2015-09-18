@@ -1,3 +1,20 @@
+/*
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*/
+
 GetAsync("preferences.lua", null, setupPersona)
 
 
@@ -6,12 +23,9 @@ function setupPersona(json) {
   navigator.id.watch({
     loggedInUser: json.login ? json.login.email : 'not@logged.in',
     onlogin: function(assertion) {
-      // A user has logged in! Here you need to:
-      // 1. Send the assertion to your backend for verification and to create a session.
-      // 2. Update your UI.
-      $.ajax({ /* <-- This example uses jQuery, but you can use whatever you'd like */
+      $.ajax({ 
         type: 'POST',
-        url: '/oauth.lua?mode=persona', // This is a URL on your website.
+        url: '/oauth.lua?mode=persona',
         data: {assertion: assertion},
         success: function(res, status, xhr) { location.href = "/"; },
         error: function(xhr, status, err) {
@@ -21,13 +35,9 @@ function setupPersona(json) {
       });
     },
     onlogout: function() {
-      // A user has logged out! Here you need to:
-      // Tear down the user's session by redirecting the user or making a call to your backend.
-      // Also, make sure loggedInUser will get set to null on the next page load.
-      // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
       $.ajax({
         type: 'POST',
-        url: '/persona.lua?mode=logout', // This is a URL on your website.
+        url: '/persona.lua?mode=logout', // This does nothing atm!
         success: function(res, status, xhr) { }
       });
     }
