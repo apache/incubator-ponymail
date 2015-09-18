@@ -81,11 +81,11 @@ function handle(r)
     end
     
     -- Get notifs
-    local notifications = false
+    local notifications = 0
     if account then
-        local notifs = elastic.find("seen:0 AND recipient:" .. account.cid, 1, "notifications")
+        local notifs = elastic.find("seen:0 AND recipient:" .. account.cid, 10, "notifications")
         if notifs and #notifs > 0 then
-            notifications = true
+            notifications = #notifs
         end
     end
      
