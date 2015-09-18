@@ -34,7 +34,7 @@ function wordCloud(hash, width, height) {
     }
     var hashSorted = []
     for (word in hash) hashSorted.push(word)
-    hashSorted.sort(function(a,b) { return hash[a] > hash[b] })
+    hashSorted = hashSorted.sort(function(a,b) { return hash[a] > hash[b] })
     var svgNS = "http://www.w3.org/2000/svg"
     var svg = document.createElementNS(svgNS, "svg");
     document.body.appendChild(svg)
