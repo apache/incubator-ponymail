@@ -19,7 +19,7 @@
 
 function getPMCs(uid)
     local groups = {}
-    local ldapdata = io.popen( ([[ldapsearch -x -LLL (|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org)) cn]]):format(uid,uid) )
+    local ldapdata = io.popen( ([[ldapsearch -x -LLL "(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))" cn]]):format(uid,uid) )
     local data = ldapdata:read("*a")
     for match in data:gmatch("dn: cn=([-a-zA-Z0-9]+),ou=pmc,ou=committees,ou=groups,dc=apache,dc=org") do
         table.insert(groups, match)
