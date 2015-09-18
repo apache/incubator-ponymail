@@ -380,6 +380,10 @@ var login = {}
             thread.innerHTML = ''
             thread.style.padding = "5px"
             thread.style.fontFamily = "Hack"
+            if (json.error) {
+                thread.innerHTML = "<h3>Error: " + json.error + "</h3>"
+                return;
+            }
             json.date = new Date(json.epoch*1000).toLocaleString();
             var fields = ['From', 'To', 'Subject', 'Date']
             for (var i in fields) {
