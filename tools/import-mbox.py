@@ -231,7 +231,7 @@ class SlurpThread(Thread):
                             try:
                                 body = body.decode('latin-1')
                             except:
-                                #print("Could not decode message, ignoring..")
+                                print("Could not decode message from %s, ignoring.." % message.get('from'))
                                 baddies += 1
                                 body = None
 
