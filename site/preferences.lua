@@ -80,11 +80,20 @@ function handle(r)
         end
     end
     
+    -- Get notifs
+    local notifications = false
+    if account then
+        local notifs = elastic.find("seen:0 AND recipient:" .. account.cid, 1, "notifications")
+        if notifs and #notifs > 0 then
+            notifications = true
+        end
+    end
      
     account = account or {}
     
     r:puts(JSON.encode{
         lists = lists,
+        notifications = notifications,
         preferences = account.preferences,
         login = {
             credentials = account.credentials,

@@ -191,7 +191,8 @@ class Archiver(object):
                             'to': msg_metadata['to'],
                             'subject': msg_metadata['subject'],
                             'message-id': msg_metadata['message-id'],
-                            'mid': mid
+                            'mid': mid,
+                            'seen': 0
                         }
                     )
             #im = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references'))
