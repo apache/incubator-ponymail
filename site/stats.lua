@@ -21,7 +21,7 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local aaa = require 'lib/aaa'
-
+local config = require 'lib/config'
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
@@ -176,45 +176,46 @@ function handle(r)
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
-    
-    local cloud = {}
-    -- Word cloud!
-    local doc = elastic.raw {
-        aggregations = {
-        cloud = {
-            significant_terms =  {
-                field =  "subject",
-                size = 10,
-                chi_square = {}
+    local cloud = nil
+    if config.cloud then
+        cloud = {}
+        -- Word cloud!
+        local doc = elastic.raw {
+            aggregations = {
+            cloud = {
+                significant_terms =  {
+                    field =  "subject",
+                    size = 10,
+                    chi_square = {}
+                }
+            }
+        },
+            
+            query = {
+                
+                bool = {
+                    must = {
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = qs
+                            }
+                        },
+                        {
+                        range = {
+                            date = daterange
+                        }
+                    }, sterm
+                        
+                }}
+                
             }
         }
-    },
         
-        query = {
-            
-            bool = {
-                must = {
-                    {
-                        query_string = {
-                            default_field = "subject",
-                            query = qs
-                        }
-                    },
-                    {
-                    range = {
-                        date = daterange
-                    }
-                }, sterm
-                    
-            }}
-            
-        }
-    }
-    
-    for x,y in pairs (doc.aggregations.cloud.buckets) do
-        cloud[y.key] = y.doc_count
+        for x,y in pairs (doc.aggregations.cloud.buckets) do
+            cloud[y.key] = y.doc_count
+        end
     end
-    
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()

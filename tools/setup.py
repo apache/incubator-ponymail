@@ -182,7 +182,8 @@ with open("../site/lib/config.lua", "w") as f:
 local config = {
     es_url = "http://%s:%u/%s/",
     mailserver = "%s",
-    accepted_domains = "%s"
+    accepted_domains = "%s",
+    wordcloud = true
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom))

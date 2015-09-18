@@ -819,8 +819,10 @@ var kiddos = []
             stats.setAttribute("class", "hidden-md col-lg-3")
             stats.removeAttribute("onclick")
             stats.style.display = "block"
-            stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
-            stats.appendChild(wordCloud(json.cloud, 250, 80))
+            if (json.cloud) {
+                stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
+                stats.appendChild(wordCloud(json.cloud, 250, 80))
+            }
         }
         
         nest = ""
