@@ -42,6 +42,7 @@ function handle(r)
                 r:puts(JSON.encode{
                     error = "You must be logged in to view this email"
                 })
+                return apache2.OK
             end
         else
             canAccess = true
@@ -52,6 +53,7 @@ function handle(r)
             r:puts(JSON.encode{
                     error = "You do not have access to view this email, sorry."
                 })
+            return apache2.OK
         end
     else
         r:puts[[{}]]
