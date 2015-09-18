@@ -11,18 +11,9 @@ using Mozilla Persona or OAuth2 for authentication.
 
 See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 
-### TODO: ###
-* Set up dir structure (*DONE*)
-* Import site data (*DONE*)
-* Import tools (*DONE*)
-* Import settings / setup tools (*DONE*)
-* Import, fix archiver (*DONE*)
-* Add license headers (ALv2) to everything (*DONE(?)*)
-* Start on documentation
-* Rework JS, turn those ugly innerHTML hacks into proper DOM handling
-* Have reply feature actually work (*DONE*)
-* Set up notification system (depends on reply system) (*WIP!*)
-
+Pony Mail works in both public, private and mixed-mode, allowing you 
+to have one unified place for all your communication, both public and 
+private.
 
 ### Requirements: ###
 
@@ -43,4 +34,17 @@ See [http://ponyarchive.info](http://ponyarchive.info) for a demo.
 * Fiddle a bit with site/js/config.js for now
 * import mbox data with import-mbox.py if need be
 * All done :)
+
+
+### TODO: ###
+* ~~Set up dir structure~~ (*DONE*)
+* ~~Import site data~~ (*DONE*)
+* ~~Import tools~~ (*DONE*)
+* ~~Import settings / setup tools~~ (*DONE*)
+* ~~Import, fix archiver~~ (*DONE*)
+* ~~Add license headers (ALv2) to everything~~ (*DONE(?)*)
+* ~~Have reply feature actually work~~ (*DONE*)
+* Start on documentation
+* Rework JS, turn those ugly innerHTML hacks into proper DOM handling
+* Set up notification system (depends on reply system) (*WIP!*)
 
