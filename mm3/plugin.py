@@ -126,9 +126,12 @@ class Archiver(object):
                 try:
                     body = body.decode('latin-1')
                 except:
-                    #print("Could not decode message, ignoring..")
-                    baddies += 1
-                    body = None
+                    try:
+                        if isinstance(body, str):
+                            body = body.decode('utf-8')
+                    except:
+                        baddies += 1
+                        body = None
         if body:
             ojson = {
                 'from_raw': msg_metadata['from'],
