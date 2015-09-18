@@ -195,6 +195,7 @@ class SlurpThread(Thread):
             else:
                 ml = mla[0]
                 mboxfile = mla[1]
+                xlist_override = list_override
                 print("Slurping %s/%s" % (ml, mboxfile))
                 m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
                 EY = 1997
