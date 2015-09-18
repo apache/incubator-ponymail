@@ -978,6 +978,7 @@ function getListInfo(list, xdomain, nopush) {
         for (var key in all_lists[xdomain]) {
             listnames.push(key)
         }
+        var overlaps = []
         for (var i in listnames.sort(function(a, b) {
             return all_lists[xdomain][b] - all_lists[xdomain][a]
         })) {
@@ -987,11 +988,9 @@ function getListInfo(list, xdomain, nopush) {
                 continue
             }
             var collapse = ''
-            if (all_lists[xdomain][key] < 100 || i >= 6) {
+            if (all_lists[xdomain][key] < 100 || i >= 5) {
                 collapse = 'hidden-xs hidden-sm hidden-md hidden-lg'
-            }
-            if (all_lists[xdomain][key] < 10) {
-                collapse = 'hidden-xs hidden-sm hidden-md hidden-lg'
+                overlaps.push(key)
             }
             var ln = key + '@' + xdomain
             //alert("adding" + ln)
@@ -1013,6 +1012,29 @@ function getListInfo(list, xdomain, nopush) {
                 li.setAttribute("class", "active " + collapse)
             } else {
                 li.setAttribute("class", collapse)
+            }
+        }
+        if (overlaps.length > 0) {
+            ll.innerHTML += '<li class="dropdown navbar-right" id="otherlists"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other lists:<span class="caret"></span></a><ul class="dropdown-menu" id="otherlists_dropdown"></ul></li>'
+            var ul = document.getElementById('otherlists_dropdown')
+            for (var i in overlaps) {
+                var key = overlaps[i]
+                var ln = key + '@' + xdomain
+                
+                var li = document.createElement("li")
+                var a = document.createElement("a")
+                var t = document.createTextNode(key + '@')
+                a.setAttribute("href", "javascript:void(0);")
+                a.setAttribute("onclick", "getListInfo(this.getAttribute('id'))")
+                a.setAttribute("id", ln)
+                a.appendChild(t)
+                li.appendChild(a)
+                ul.appendChild(li)
+                if (list == ln) {
+                    li.setAttribute("class", "active")
+                } else {
+                    li.setAttribute("class", "")
+                }
             }
         }
 
