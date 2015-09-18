@@ -19,6 +19,8 @@
 
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
+local user = require 'lib/user'
+local aaa = require 'lib/aaa'
 
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
@@ -51,6 +53,11 @@ function handle(r)
     local qs = "*"
     local dd = 30
     local maxresults = 5000
+    local account = user.get(r)
+    local rights = {}
+    if account then
+        rights = aaa.rights(account.credentials.uid or account.credentials.email)
+    end
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
         dd = tonumber(get.d)
     end
@@ -249,7 +256,7 @@ function handle(r)
     local emails_full = {}
     local emls = {}
     local doc = elastic.raw {
-        _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw'},
+        _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw', 'private'},
         query = {
             bool = {
                 must = {
@@ -285,61 +292,76 @@ function handle(r)
     for k = #doc.hits.hits, 1, -1 do
         local v = doc.hits.hits[k]
         local email = v._source
-        local mid = email['message-id']
-        local irt = email['in-reply-to']
-        email.id = v._id
-        email.irt = irt
-        emails[mid] = {
-            tid = v._id,
-            nest = 1,
-            epoch = email.epoch,
-            children = {
-                
-            }
-        }
-        
-        if not irt or #irt == 0 then
-            irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
-        end
-        if not emails[irt] then
-            for ref in email.references:gmatch("(%S+)") do
-                if emails[ref] then
-                    irt = ref
-                    break
+        local canUse = true
+        if email.private then
+            canUse = false
+            if account then
+                local lid = email.list_raw:match("<[^.]+%.(.-)>")
+                for k, v in pairs(rights) do
+                    if v == "*" or v == lid then
+                        canUse = true
+                        break
+                    end
                 end
             end
         end
-        
-        -- If we can't match by in-reply-to or references, match/group by subject, ignoring Re:/Fwd:/etc
-        if not emails[irt] then
-            irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
-            while irt:match("^[a-zA-Z]+:%s+") do
-                irt = irt:gsub("^[a-zA-Z]+:%s+", "")
-            end
-        end
-        
-        if emails[irt] then
-            if emails[irt].nest < 50 then
-                emails[mid].nest = emails[irt].nest + 1
-                table.insert(emails[irt].children, emails[mid])
-            end
-        else
-            if (#email['in-reply-to'] > 0) then
-                emails[irt] = {
-                    children = {
-                        emails[mid]
-                    },
-                    nest = 1,
-                    epoch = email.epoch,
-                    tid = v._id
+        if canUse then
+            local mid = email['message-id']
+            local irt = email['in-reply-to']
+            email.id = v._id
+            email.irt = irt
+            emails[mid] = {
+                tid = v._id,
+                nest = 1,
+                epoch = email.epoch,
+                children = {
+                    
                 }
-                emails[mid].nest = emails[irt].nest + 1
-                table.insert(threads, emails[irt])
-            else
-                table.insert(threads, emails[mid])
+            }
+            
+            if not irt or #irt == 0 then
+                irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
             end
+            if not emails[irt] then
+                for ref in email.references:gmatch("([^%s]+)") do
+                    if emails[ref] then
+                        irt = ref
+                        break
+                    end
+                end
+            end
+            
+            -- If we can't match by in-reply-to or references, match/group by subject, ignoring Re:/Fwd:/etc
+            if not emails[irt] then
+                irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
+                while irt:match("^[a-zA-Z]+:%s+") do
+                    irt = irt:gsub("^[a-zA-Z]+:%s+", "")
+                end
+            end
+            
+            if emails[irt] then
+                if emails[irt].nest < 50 then
+                    emails[mid].nest = emails[irt].nest + 1
+                    table.insert(emails[irt].children, emails[mid])
+                end
+            else
+                if (#email['in-reply-to'] > 0) then
+                    emails[irt] = {
+                        children = {
+                            emails[mid]
+                        },
+                        nest = 1,
+                        epoch = email.epoch,
+                        tid = v._id
+                    }
+                    emails[mid].nest = emails[irt].nest + 1
+                    table.insert(threads, emails[irt])
+                else
+                    table.insert(threads, emails[mid])
+                end
+            end
+            table.insert(emls, email)
         end
-        table.insert(emls, email)
     end
     
     -- Debug time point 7
