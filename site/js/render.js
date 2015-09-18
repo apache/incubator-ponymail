@@ -1268,6 +1268,11 @@ function setupUser(login) {
     var uimg = document.getElementById('uimg')
     uimg.setAttribute("src", "images/user.png")
     uimg.setAttribute("title", "Logged in as " + login.credentials.fullname)
+    if (login.notifications && login.notifications > 0) {
+        uimg.setAttribute("src", "images/user_notif.png")
+        uimg.setAttribute("title", "Logged in as " + login.credentials.fullname + " - You have " + login.notifications + " new notifications!")
+    }
+    
     var pd = document.getElementById('prefs_dropdown')
     pd.innerHTML = ""
     
@@ -1285,8 +1290,15 @@ function setupUser(login) {
     var li = document.createElement("li")
     var a = document.createElement("a")
     var t = document.createTextNode("Notifications")
-    a.setAttribute("href", "javascript:void(0);")
+    a.setAttribute("href", "notifications.html")
+    
     a.appendChild(t)
+    if (login.notifications && login.notifications > 0) {
+        a.setAttribute("style", "font-weight: bold;")
+        t.nodeValue = "Notifications (" + login.notifications + ")"
+        a.innerHTML += ' <span class="glyphicon glyphicon-star"> </span>'
+    }
+    
     li.appendChild(a)
     pd.appendChild(li)
     
