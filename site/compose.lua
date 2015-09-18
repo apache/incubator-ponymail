@@ -35,7 +35,8 @@ function handle(r)
             if r.strcmp_match(lp, config.accepted_domains) or config.accepted_domains == "*" then
                 local fr = ([["%s"<%s>]]):format(account.credentials.fullname, account.credentials.email)
                 local headers = {
-                    ['x-ponymail-sender'] = r:sha1(account.cid),
+                    ['X-PonyMail-Sender'] = r:sha1(account.cid),
+                    ['X-PonyMail-Agent'] = "PonyMail/0.1a",
                     ['message-id'] = ("<pony-%s-%s@%s>"):format(r:sha1(account.cid), r:sha1(r:clock() .. os.time() .. r.useragent_ip), post.to),
                     to = to,
                     subject = post.subject,
