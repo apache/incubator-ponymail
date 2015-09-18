@@ -1,6 +1,6 @@
 # ponymail
-Pony Mail - a lightweight web-based mail archive browser
-Licensed under the Apache License v/2.0 and built to scale 
+Pony Mail - a web-based mail archive browser
+licensed under the Apache License v/2.0 and built to scale 
 to millions of archived messages with hundreds of requests 
 per second
 
