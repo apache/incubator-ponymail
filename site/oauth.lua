@@ -14,6 +14,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 ]]--
+
+-- This is oauth.lua - an oauth providing script for ponymail
+
 local JSON = require 'cjson'
 local http = require 'socket.http'
 local elastic = require 'lib/elastic'

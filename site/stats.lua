@@ -14,6 +14,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 ]]--
+
+-- This is stats.lua - the main stats/ML rendering script for the web.
+
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 

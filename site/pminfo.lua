@@ -16,6 +16,7 @@
  
  pminfo.lua  Pony Mail Information module
 ]]--
+
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 

@@ -14,6 +14,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 ]]--
+
+-- This is preferences.lua - an account info agent
+
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local user = require 'lib/user'
