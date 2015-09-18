@@ -177,7 +177,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     local cloud = nil
-    if config.cloud then
+    if config.wordcloud then
         cloud = {}
         -- Word cloud!
         local doc = elastic.raw {
