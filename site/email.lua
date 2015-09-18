@@ -25,7 +25,16 @@ local user = require 'lib/user'
 function handle(r)
     r.content_type = "application/json"
     local get = r:parseargs()
-    local doc = elastic.get("mbox", get.id or "hmm")
+    local eid = (get.id or ""):gsub("\"", "")
+    local doc = elastic.get("mbox", eid or "hmm")
+    
+    -- Try searching by mid if not found, for backward compat
+    if not doc or not doc.subject then
+        local docs = elastic.find("message-id:\"" .. eid .. "\"", 1, "mbox")
+        if #docs == 1 then
+            doc = docs[1]
+        end
+    end
     if doc then
         local canAccess = false
         if doc.private then
