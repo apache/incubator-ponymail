@@ -232,7 +232,7 @@ class SlurpThread(Thread):
                                 body = body.decode('latin-1')
                             except:
                                 try:
-                                    body = body.decode('utf-8', 'replace')
+                                    body = unicode(body, 'utf-8', 'replace')
                                 except Exception as err:
                                     print("Could not decode message from %s, ignoring: %s" % (message.get('from'), err))
                                     baddies += 1
