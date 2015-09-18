@@ -15,11 +15,10 @@
  limitations under the License.
 */
 
-function intersects(r1, r2) {
-    var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
-    var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
+function intersects(x1, x2) {
+    var r1 = x1.getBoundingClientRect();
+    var r2 = x2.getBoundingClientRect();
  
-    //CHECK IF THE TWO BOUNDING BOXES OVERLAP
   return !(r2.left > r1.right || 
            r2.right < r1.left || 
            r2.top > r1.bottom ||
@@ -33,13 +32,17 @@ function wordCloud(hash, width, height) {
     for (i in hash) {
         total += Math.sqrt(hash[i])
     }
+    var hashSorted = []
+    for (word in hash) hashSorted.push(word)
+    hashSorted.sort(function(a,b) { return hash[a] > hash[b] })
     var svgNS = "http://www.w3.org/2000/svg"
     var svg = document.createElementNS(svgNS, "svg");
     document.body.appendChild(svg)
     svg.setAttribute("width",  width)
     svg.setAttribute("height",  height)
     svg.setAttribute("class", "wordcloud")
-    for (word in hash) {
+    for (var n in hashSorted) {
+        var word = hashSorted[n]
         var size = 0;
         var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.7)
         console.log(expected_area)
