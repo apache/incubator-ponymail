@@ -387,6 +387,9 @@ var login = {}
 
                 thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
             }
+            if (json.private) {
+                thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
+            }
             var lid = json.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
 
             var ebody = json.body
