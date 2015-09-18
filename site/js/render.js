@@ -177,8 +177,11 @@ var login = {}
             }
             var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
             if (qdeep || deep || global_deep && typeof eml.list != undefined && eml.list != null) {
-                var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@").replace(/\.apache\.org/, "")
+                var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
                 var elist2 = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+                if (pm_config.shortLists) {
+                    elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
+                }
                 d = "<a href='list.html?" + elist2 + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
                 if (eml.subject.length > 75) {
                     eml.subject = eml.subject.substr(0, 75) + "..."
@@ -260,8 +263,11 @@ var login = {}
             var d = ''
             var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
             if (qdeep || deep || global_deep) {
-                var elist = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@").replace(/\.apache\.org/, "")
+                var elist = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
                 var elist2 = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+                if (pm_config.shortLists) {
+                    elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
+                }
                 d = "<a href='list.html?" + elist2 + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
                 if (eml.subject.length > 75) {
                     eml.subject = eml.subject.substr(0, 75) + "..."
