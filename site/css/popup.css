@@ -319,3 +319,14 @@ body {
     max-height: 600px;
     overflow-x: hidden;
 }
+
+.cloudword:hover {
+    fill: blue;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.wordcloud {
+    border: 1px solid #666;
+    border-radius: 20px;
+}

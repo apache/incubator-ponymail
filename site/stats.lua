@@ -172,6 +172,48 @@ function handle(r)
         })
     end
     
+    
+    -- Debug time point 4
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
+    local cloud = {}
+    -- Word cloud!
+    local doc = elastic.raw {
+        aggregations = {
+        cloud = {
+            significant_terms =  {
+                field =  "subject",
+                gnd = {}
+            }
+        }
+    },
+        
+        query = {
+            
+            bool = {
+                must = {
+                    {
+                        query_string = {
+                            default_field = "subject",
+                            query = qs
+                        }
+                    },
+                    {
+                    range = {
+                        date = daterange
+                    }
+                }, sterm
+                    
+            }}
+            
+        }
+    }
+    
+    for x,y in pairs (doc.aggregations.cloud.buckets) do
+        cloud[y.key] = y.doc_count
+    end
+    
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
@@ -390,7 +432,9 @@ function handle(r)
     listdata.hits = h
     listdata.searchlist = listraw
     listdata.participants = top10
+    listdata.cloud = cloud
     listdata.took = r:clock() - now
+    
     
     -- Debug time point 8
     table.insert(t, r:clock() - tnow)

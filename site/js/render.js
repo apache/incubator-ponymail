@@ -715,7 +715,7 @@ var kiddos = []
     function do_search(q, d, nopush, all) {
         document.getElementById('q').value = q
         document.getElementById('aq').value = q
-        current_retention = d
+        current_retention = d ? d : 30
         current_query = q
         var arr = xlist.split('@', 2)
         var listname = arr[0]
@@ -819,6 +819,8 @@ var kiddos = []
             stats.setAttribute("class", "hidden-md col-lg-3")
             stats.removeAttribute("onclick")
             stats.style.display = "block"
+            stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
+            stats.appendChild(wordCloud(json.cloud, 250, 80))
         }
         
         nest = ""
