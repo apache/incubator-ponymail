@@ -185,7 +185,7 @@ function handle(r)
             significant_terms =  {
                 field =  "subject",
                 size = 10,
-                gnd = {}
+                chi_square = {}
             }
         }
     },
