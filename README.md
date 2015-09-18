@@ -1,6 +1,8 @@
 # ponymail
 Pony Mail - a lightweight web-based mail archive browser
-Licensed under the Apache License v/2.0
+Licensed under the Apache License v/2.0 and built to scale 
+to millions of archived messages with hundreds of requests 
+per second
 
 Pony Mail allows you to browse and interact with mailing lists 
 using Mozilla Persona or OAuth2 for authentication.
