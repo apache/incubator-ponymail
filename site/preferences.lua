@@ -93,10 +93,10 @@ function handle(r)
     
     r:puts(JSON.encode{
         lists = lists,
-        notifications = notifications,
         preferences = account.preferences,
         login = {
             credentials = account.credentials,
+            notifications = notifications
         },
         took = r:clock() - now
     })
