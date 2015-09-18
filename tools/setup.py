@@ -53,6 +53,8 @@ port = 0
 dbname = ""
 mlserver = ""
 mldom = ""
+wc = ""
+wce = False
 
 while hostname == "":
     sys.stdout.write("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
@@ -73,6 +75,12 @@ while mlserver == "":
 while mldom == "":
     sys.stdout.write("Which domains would you accept mail to from web-replies? (e.g. foo.org or *): ")
     mldom = sys.stdin.readline().strip()
+
+while wc == "":
+    sys.stdout.write("Would you like to enable the word cloud feature? (Y/N): ")
+    wc = sys.stdin.readline().strip()
+    if wc.lower() == "y":
+        wce = True
 
 
 print("Okay, I got all I need, setting up Pony Mail...")
@@ -183,10 +191,10 @@ local config = {
     es_url = "http://%s:%u/%s/",
     mailserver = "%s",
     accepted_domains = "%s",
-    wordcloud = true
+    wordcloud = %s
 }
 return config
-            """ % (hostname, port, dbname, mlserver, mldom))
+            """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
     f.close()
     
 print("All done, Pony Mail should...work now :)")
