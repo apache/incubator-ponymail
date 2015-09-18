@@ -370,7 +370,7 @@ function handle(r)
     
     for k, v in pairs(top10) do
         if v.count == 0 then
-            v = nil
+            top10[k] = nil
         end
     end
     
