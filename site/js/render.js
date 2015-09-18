@@ -381,7 +381,7 @@ var login = {}
             thread.style.padding = "5px"
             thread.style.fontFamily = "Hack"
             if (json.error) {
-                thread.innerHTML = "<h3>Error: " + json.error + "</h3>"
+                thread.innerHTML = "<h4>Error: " + json.error + "</h4>"
                 return;
             }
             json.date = new Date(json.epoch*1000).toLocaleString();
@@ -392,7 +392,7 @@ var login = {}
                 thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
             }
             if (json.private) {
-                thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
+                thread.innerHTML += "<font color='#C00'><b>Private list: </b> YES</font><br/>"
             }
             var lid = json.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
 
