@@ -54,10 +54,7 @@ function handle(r)
     local dd = 30
     local maxresults = 5000
     local account = user.get(r)
-    local rights = {}
-    if account then
-        rights = aaa.rights(account.credentials.uid or account.credentials.email)
-    end
+    local rights = nil
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
         dd = tonumber(get.d)
     end
@@ -294,10 +291,13 @@ function handle(r)
         local email = v._source
         local canUse = true
         if email.private then
+            if account and not rights then
+                rights = aaa.rights(account.credentials.uid or account.credentials.email)
+            end
             canUse = false
             if account then
                 local lid = email.list_raw:match("<[^.]+%.(.-)>")
-                for k, v in pairs(rights) do
+                for k, v in pairs(rights or {}) do
                     if v == "*" or v == lid then
                         canUse = true
                         break
