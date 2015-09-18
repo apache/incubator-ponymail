@@ -207,7 +207,8 @@ function loadList_flat(mjson, limit, start, deep) {
         mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
             hour12: false
         })
-        nest += "<li class='list-group-item'> &nbsp; <a href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + eml.subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + eml.from.replace(/<.*>/, "") + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        var subject = eml.subject.replace(/</mg, "&lt;")
+        nest += "<li class='list-group-item'> &nbsp; <a href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + eml.from.replace(/<.*>/, "") + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -289,11 +290,12 @@ function loadList_threaded(mjson, limit, start, deep) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
+        var subject = eml.subject.replace(/</mg, "&lt;")
         mdate = new Date(latest * 1000)
         mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
             hour12: false
         })
-        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + eml.subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + (people > 1 ? "<label class='label label-" + lp + "'>" + people + " participants</label>" : "") + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + (people > 1 ? "<label class='label label-" + lp + "'>" + people + " participants</label>" : "") + "<div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -1117,7 +1119,8 @@ function compose(eid) {
             obj.appendChild(btn)
             area.focus()
         } else {
-            var link = 'mailto:' + email.list.replace(/([^.]+)\./, "$1@") + "?subject=" + email.subject + "&amp;In-Reply-To=" + email['message-id']
+            var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
+            var link = 'mailto:' + email.list.replace(/([^.]+)\./, "$1@") + "?subject=" + subject + "&amp;In-Reply-To=" + email['message-id']
             var obj = document.getElementById('splash')
             obj.style.display = "block"
             obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>Reply to email:</h3>"
