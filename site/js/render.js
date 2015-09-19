@@ -1031,7 +1031,7 @@ function getListInfo(list, xdomain, nopush) {
         }
         var overlaps = []
         listnames = listnames.sort(function(a, b) {
-            return all_lists[xdomain][b] - all_lists[xdomain][a]
+            return all_lists[xdomain][b] > all_lists[xdomain][a]
         })
         for (var i in listnames) {
 
