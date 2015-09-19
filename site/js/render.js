@@ -338,7 +338,7 @@ function toggleCalendar(year) {
 
 // permaLink: redirect to an email permalink
 function permaLink(id) {
-    location.href = "permalink.html/" + id
+    location.href = "/permalink.html/" + id
 }
 
 
@@ -369,8 +369,9 @@ function displayEmail(json, id) {
             if (json[key.toLowerCase()] != undefined) {
                 thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
             }
-            
         }
+        var lid = json.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+        thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
         var ebody = json.body
         ebody = ebody.replace(/</, "&lt;")
         ebody = "\n" + ebody
@@ -378,7 +379,7 @@ function displayEmail(json, id) {
             ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                 var rnd = (Math.random() * 100).toString()
                 var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
-                    "<img src='images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
+                    "<img src='/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
                     "<div style='display: none;' id='quote_" + rnd + "'>" + inner + "</div></div>"
                 return html
             })
@@ -553,7 +554,7 @@ function getChildren(main, email) {
             if (child.tid != email.mid) {
                 var eml = saved_emails[child.tid]
                 if (!eml || !eml.from) {
-                    GetAsync("email.lua?id=" + child.tid, {
+                    GetAsync("/email.lua?id=" + child.tid, {
                         main: main,
                         before: email.tid,
                         pchild: pchild
@@ -1187,6 +1188,19 @@ function compose(eid) {
 // getSingleEmail: fetch an email from ES and go to callback
 function getSingleEmail(id) {
     GetAsync("/email.lua?id=" + id, null, displaySingleEmail)
+}
+
+
+function displaySingleThread(json) {
+    loadEmails_threaded(json.thread, {
+                blockid: 0,
+                thread: json.thread
+            })
+}
+
+// getSingleThread: fetch a thread from ES and go to callback
+function getSingleThread(id) {
+    GetAsync("/thread.lua?id=" + id, null, displaySingleThread)
 }
 
 
