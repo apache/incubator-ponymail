@@ -313,6 +313,7 @@ class SlurpThread(Thread):
                             'from': dheader['from'],
                             'to': dheader['to'],
                             'subject': dheader['subject'],
+                            'cc': message.get('cc'),
                             'message-id': mid,
                             'mid': mid2,
                             'epoch': email.utils.mktime_tz(mdate),
