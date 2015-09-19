@@ -155,6 +155,7 @@ class Archiver(object):
                 'subject': msg_metadata['subject'],
                 'message-id': msg_metadata['message-id'],
                 'mid': mid,
+                'cc': msg_metadata.get('cc'),
                 'epoch': email.utils.mktime_tz(mdate),
                 'list': mlist.list_name,
                 'list_raw': mlist.list_name,
