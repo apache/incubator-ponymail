@@ -878,8 +878,11 @@ function buildPage(json, state) {
         stats.removeAttribute("onclick")
         stats.style.display = "block"
         if (json.cloud) {
-            stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
-            stats.appendChild(wordCloud(json.cloud, 250, 80))
+            for (var i in json.cloud) {
+                stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
+                stats.appendChild(wordCloud(json.cloud, 250, 80))
+                break // so..this'll run if cloud has stuff, otherwise not.
+            }
         }
     }
     
