@@ -337,8 +337,12 @@ function toggleCalendar(year) {
 }
 
 // permaLink: redirect to an email permalink
-function permaLink(id) {
-    location.href = "/permalink.html/" + id
+function permaLink(id, type) {
+    var t = 'thread'
+    if (prefs.groupBy == 'date') {
+        t = 'permalink'
+    }
+    location.href = "/" + t + ".html/" + id
 }
 
 
@@ -357,7 +361,7 @@ function displayEmail(json, id) {
         thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
         thread.innerHTML = ''
         thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
-        thread.innerHTML += ' &nbsp; <label class="label label-warning" onclick="permaLink(\'' + json.mid + '\');" style="cursor: pointer; float: right;">Permalink</label>'
+        thread.innerHTML += ' &nbsp; <label class="label label-warning" onclick="permaLink(\'' + json.mid + '\', \'' + prefs.groupBy + '\');" style="cursor: pointer; float: right;">Permalink</label>'
         thread.innerHTML += "<br/>"
         //thread.style.border = "1px dotted #666"
         thread.style.padding = "5px"
