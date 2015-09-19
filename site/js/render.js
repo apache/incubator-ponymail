@@ -1030,9 +1030,10 @@ function getListInfo(list, xdomain, nopush) {
             listnames.push(key)
         }
         var overlaps = []
-        for (var i in listnames.sort(function(a, b) {
+        listnames = listnames.sort(function(a, b) {
             return all_lists[xdomain][b] - all_lists[xdomain][a]
-        })) {
+        })
+        for (var i in listnames) {
 
             var key = listnames[i]
             var collapse = ''
