@@ -920,6 +920,21 @@ function seedGetListInfo(json, state) {
     getListInfo(state.l, state.x, state.n)
 }
 
+// seedPrefs: get prefs/login and call something else
+function seedPrefs(json, state) {
+    if (typeof json.preferences != undefined && json.preferences) {
+        prefs = json.preferences
+    }
+    if (typeof json.login != undefined && json.login) {
+        login = json.login
+        if (login.credentials) {
+            setupUser(login)
+        }
+    }
+    if (state && state.docall) {
+        GetAsync(state.docall[0], null, state.docall[1])
+    }
+}
 // preGetListInfo: Callback that fetches preferences and sets up list data
 function preGetListInfo(list, xdomain, nopush) {
     GetAsync("preferences.lua", {
@@ -1198,11 +1213,16 @@ function displaySingleThread(json) {
             })
 }
 
+
 // getSingleThread: fetch a thread from ES and go to callback
 function getSingleThread(id) {
     GetAsync("/thread.lua?id=" + id, null, displaySingleThread)
 }
 
+// seedGetSingleThread: pre-caller for the above.
+function seedGetSingleThread(id) {
+    GetAsync("/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
+}
 
 // showDomains: Show domains in the phone book display
 function showDomains(l) {
@@ -1334,10 +1354,13 @@ function listDomains() {
 // setupUser: Set up the user dropdown (top right)
 function setupUser(login) {
     var uimg = document.getElementById('uimg')
-    uimg.setAttribute("src", "images/user.png")
+    if (!uimg) {
+        return
+    }
+    uimg.setAttribute("src", "/images/user.png")
     uimg.setAttribute("title", "Logged in as " + login.credentials.fullname)
     if (login.notifications && login.notifications > 0) {
-        uimg.setAttribute("src", "images/user_notif.png")
+        uimg.setAttribute("src", "/images/user_notif.png")
         uimg.setAttribute("title", "Logged in as " + login.credentials.fullname + " - You have " + login.notifications + " new notifications!")
     }
     

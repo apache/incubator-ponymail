@@ -19,7 +19,30 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body onload="getSingleThread(window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1));" style="margin: 20px;">
+  <body onload="seedGetSingleThread(window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1));" style="margin: 20px;">
+    <nav class="navbar navbar-default" style="margin-bottom: 5px;">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header" style="min-width: 200px;">
+      <a class="navbar-brand" href="/"><span><img src="/images/logo.png" style="margin-top: -10px !important;" height="32" width="32"/>&nbsp;Pony Mail!</span></a>
+      </div>
+    
+    
+      <ul class="nav navbar-nav" id="userprefs" style="float: right;">
+      <li class="dropdown navbar-right" id="listchoice">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img id="uimg" src="/images/user_loggedout.png" title="Not logged in"/>
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu" id="prefs_dropdown">
+            <li><a href="oauth.html">Log in</a></li>
+          </ul>
+      </li>
+      </ul>
+      
+    </div>
+    
+    </div>
+    </nav>
+    
     
     <div class="row">
       <div id="thread_0" class="col-md-8">
