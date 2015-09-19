@@ -37,17 +37,16 @@ function fetchChildren(pdoc, c, biglist)
             local mykids = fetchChildren(doc, c, biglist)
             local dc = {
                 tid = doc.mid,
-                mid = doc.mid
+                mid = doc.mid,
+                epoch = doc.epoch,
+                children = mykids
             }
-            dc.children = mykids
-            docs[k] = dc
-            
+            table.insert(children, dc)
         else
             docs[k] = nil
         end
---        table.insert(children, doc)
     end
-    return docs
+    return children
 end
 
 function handle(r)
@@ -87,7 +86,7 @@ function handle(r)
             canAccess = true
         end
         if canAccess then
-            doc.children = fetchChildren(doc)
+            doc.children = fetchChildren(doc, 1, {[doc.mid] = true})
             doc.tid = doc.mid
             --doc.body = nil
             r:puts(JSON.encode({
