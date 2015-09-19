@@ -23,21 +23,28 @@ local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 
-function fetchChildren(pdoc, c)
+function fetchChildren(pdoc, c, biglist)
     c = (c or 0) + 1
     if c > 250 then
         return {}
     end
+    biglist = biglist or {}
     local children = {}
     local docs = elastic.find('in-reply-to:"' .. pdoc['message-id']..'"', 50, "mbox")
     for k, doc in pairs(docs) do
-        local mykids = fetchChildren(doc, c)
-        local dc = {
-            tid = doc.mid,
-            mid = doc.mid
-        }
-        dc.children = mykids
-        docs[k] = dc
+        if not biglist[doc.mid] then
+            biglist[doc.mid] = true
+            local mykids = fetchChildren(doc, c, biglist)
+            local dc = {
+                tid = doc.mid,
+                mid = doc.mid
+            }
+            dc.children = mykids
+            docs[k] = dc
+            
+        else
+            docs[k] = nil
+        end
 --        table.insert(children, doc)
     end
     return docs
