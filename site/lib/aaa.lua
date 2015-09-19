@@ -38,10 +38,10 @@ function isMember(uid)
     return false
 end
 
-function getRights(uid)
-    uid = uid:match("([-a-zA-Z0-9._]+)") -- whitelist
+function getRights(xuid)
+    uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
-    if not uid then
+    if not uid or xuid ~= uid then
         return rights
     end
     if isMember(uid) then
