@@ -32,9 +32,12 @@ function fetchChildren(pdoc, c)
     local docs = elastic.find('in-reply-to:"' .. pdoc['message-id']..'"', 50, "mbox")
     for k, doc in pairs(docs) do
         local mykids = fetchChildren(doc, c)
-        doc.body = nil
-        doc.children = mykids
-        doc.tid = doc.mid
+        local dc = {
+            tid = doc.mid,
+            mid = doc.mid
+        }
+        dc.children = mykids
+        docs[k] = dc
 --        table.insert(children, doc)
     end
     return docs
