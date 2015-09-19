@@ -590,7 +590,14 @@ function toggleEmails_threaded(id, close) {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
         }
         if (keywords.length > 0) {
-            helper.innerHTML += "<p><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there</i></p>"
+            helper.innerHTML += "<p><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode.</i></p>"
+            var btn = document.createElement('a')
+            btn.setAttribute("href", "javascript:void(0);")
+            btn.setAttribute("class", "btn btn-success")
+            btn.setAttribute("onclick", "prefs.displayMode='flat'; buildPage();")
+            btn.style.marginRight = "10px"
+            btn.innerHTML = "View results in flat mode instead"
+            helper.appendChild(btn)
         }
 
         if (close == true) {
