@@ -1125,14 +1125,15 @@ function compose(eid) {
     var email = saved_emails[eid]
     if (email) {
         if (login.credentials) {
+            var listname = email['list_raw'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             compose_headers = {
                 'in-reply-to': email['message-id'],
                 'references': email['message-id'] + " " + (email['references'] ? email['references'] : ""),
-                'to': email['list_raw'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+                'to': listname
             }
             var obj = document.getElementById('splash')
             obj.style.display = "block"
-            obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>Reply to email:</h3>"
+            obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>Reply to email on " + listname + ":</h3>"
             var area = document.createElement('textarea')
             area.style.width = "660px"
             area.style.height = "400px";
