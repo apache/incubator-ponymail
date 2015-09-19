@@ -121,7 +121,7 @@ function wordCloud(hash, width, height) {
     for (var n in hashSorted) {
         var word = hashSorted[n]
         var size = 0;
-        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*1.25)
+        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.9)
         console.log(expected_area)
         
         var txt = document.createElementNS(svgNS, "text");
@@ -159,7 +159,7 @@ function wordCloud(hash, width, height) {
         var txt = makeWord(word, ss)
         svg.appendChild(txt)
         if (!popped) {
-            for (var ss = size; ss > 5; ss -= 2) {
+            for (var ss = size; ss > 5; ss -= 4) {
                // alert(ss)
                 if (popped) {
                     break
