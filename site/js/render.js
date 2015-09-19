@@ -363,11 +363,13 @@ function displayEmail(json, id) {
         thread.style.padding = "5px"
         thread.style.fontFamily = "Hack"
         json.date = new Date(json.epoch*1000).toLocaleString();
-        var fields = ['From', 'To', 'Subject', 'Date']
+        var fields = ['From', 'To', 'CC', 'Subject', 'Date']
         for (var i in fields) {
             var key = fields[i]
-
-            thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
+            if (json[key.toLowerCase()] != undefined) {
+                thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
+            }
+            
         }
         var ebody = json.body
         ebody = ebody.replace(/</, "&lt;")
