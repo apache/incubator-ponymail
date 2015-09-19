@@ -32,8 +32,8 @@ function fetchChildren(pdoc, c, biglist)
     local children = {}
     local docs = elastic.find('in-reply-to:"' .. pdoc['message-id']..'"', 50, "mbox")
     for k, doc in pairs(docs) do
-        if not biglist[doc.mid] then
-            biglist[doc.mid] = true
+        if not biglist[doc['message-id']] then
+            biglist[doc['message-id']] = true
             local mykids = fetchChildren(doc, c, biglist)
             local dc = {
                 tid = doc.mid,
