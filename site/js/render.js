@@ -654,7 +654,8 @@ function loadEmails_flat(id, close) {
         } else {
             displayEmail(eml, id)
         }
-
+    } else {
+        alert("no such thread ID: " + id)
     }
 }
 
@@ -796,6 +797,7 @@ function buildPage(json, state) {
     old_json = json
     old_state = state
     d_at = 10
+    current_thread_mids = []
     checkCalendar(json)
 
     var stats = document.getElementById('stats')
