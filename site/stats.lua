@@ -205,7 +205,11 @@ function handle(r)
                         range = {
                             date = daterange
                         }
-                    }, sterm
+                    }, sterm, {
+                            term = {
+                                private = false
+                            }
+                        }
                         
                 }}
                 
