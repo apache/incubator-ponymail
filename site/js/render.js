@@ -589,7 +589,7 @@ function toggleEmails_threaded(id, close) {
         } else {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
         }
-        if (keywords.length > 0) {
+        if (current_query.length > 0) {
             helper.innerHTML += "<p><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode.</i></p>"
             var btn = document.createElement('a')
             btn.setAttribute("href", "javascript:void(0);")
@@ -659,6 +659,7 @@ function loadEmails_flat(id, close) {
 // toggleEmail: Fetch a list of emails from an ML in a specific year/month
 function toggleEmail(year, mo, nopush) {
     global_deep = false
+    current_query = ""
     var arr = xlist.split('@', 2)
     var listname = arr[0]
     var domain = arr[1]
