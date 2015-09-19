@@ -167,11 +167,12 @@ function wordCloud(hash, width, height) {
                 txt.setAttribute("font-size", ss + "px")
                 var theta = 0
                 var increment = 2*Math.PI/5;       
-                while( theta < 40*Math.PI) {
+                for (var l = 0; l < 50; l++) {
+                 
                     angle = (Math.random() * 120) - 60
                     //txt.setAttribute("transform", "rotate(0)")//rotate(" + angle + ", " + nx + "," + ny + ")")
-                    var nx = (width/2) - (w.width/2) + ((theta *2 * Math.cos(theta)))
-                    var ny = (height/2) - ((theta *2*Math.sin(theta))*prop) + (w.height/2)
+                    var nx = 4 + (Math.random() * width-8-w.width)//(width/2) - (w.width/2) + ((theta *2 * Math.cos(theta)))
+                    var ny = 4 + w.height + (Math.random() * height-8-w.height) //(height/2) - ((theta *2*Math.sin(theta))*prop) + (w.height/2)
                     txt.setAttribute("x", nx)
                     txt.setAttribute("y", ny)
                     theta = theta + increment;
@@ -186,9 +187,9 @@ function wordCloud(hash, width, height) {
                     y.top = w.top - gw.top
                     y.left = w.left - gw.left
                     y.right = w.right - gw.left
-                    if (y.bottom > height || ny < 8 || nx < 8 || y.right > width) {
+                    if (y.bottom > height || ny < w.height+4 || nx < 4 || y.right > width) {
                         //alert(JSON.stringify([y.bottom, y.top, y.left, y.right]))
-                        break
+                        continue
                     }
                     for (var b in boxes) {
                         //if (definitely_intersecting(txt, boxes[b], null, gw, width, height)) {
