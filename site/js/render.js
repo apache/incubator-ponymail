@@ -433,7 +433,7 @@ function displaySingleEmail(json, id) {
             ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                 var rnd = (Math.random() * 100).toString()
                 var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
-                    "<img src='images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
+                    "<img src='/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
                     "<div style='display: none;' id='quote_" + rnd + "'>" + inner + "</div></div>"
                 return html
             })
