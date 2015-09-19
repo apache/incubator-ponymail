@@ -1039,7 +1039,7 @@ function getListInfo(list, xdomain, nopush) {
                 continue
             }
             var collapse = ''
-            if (all_lists[xdomain][key] < 100 || i >= 5) {
+            if (all_lists[xdomain][key] < 10 || i >= 5) {
                 collapse = 'hidden-xs hidden-sm hidden-md hidden-lg'
                 overlaps.push(key)
             }
