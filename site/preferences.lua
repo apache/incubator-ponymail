@@ -60,6 +60,8 @@ function handle(r)
        
     
     -- Get lists
+    local dd = 180
+    local daterange = {gt = "now-"..dd.."d" }
     local doc = elastic.raw {
         aggs = {
             from = {
@@ -68,6 +70,11 @@ function handle(r)
                     size = 500000
                 }
             }
+        },
+        query = {
+            range = {
+                    date = daterange
+                }
         }
     }
     local lists = {}
