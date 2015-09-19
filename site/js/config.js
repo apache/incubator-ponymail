@@ -18,6 +18,7 @@
 var pm_config = {
     debug: false, // set to true for some debug output
     oauth: {
+        // OAuth settings
         apache: {
             name: "Apache OAuth",
             oauth_portal: "https://oauth.apache.org/",
@@ -27,10 +28,10 @@ var pm_config = {
         }
     },
     persona: {
-        enabled: true
+        enabled: true // Is Mozilla Persona something we'd use?
     },
-    indexMode: 'phonebook',
-    shortLists: true
+    indexMode: 'phonebook', // front page view mode
+    shortLists: true // whether to display foo@bar.org or just foo@ in flat view
 }
 
 
