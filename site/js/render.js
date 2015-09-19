@@ -1207,10 +1207,26 @@ function getSingleEmail(id) {
 
 
 function displaySingleThread(json) {
+    json = json ? json : current_thread_json
+    current_thread_json = json
+    var thread = document.getElementById('thread_0')
+    thread.innerHTML = ""
+    var helper = document.createElement('div')
+    thread.appendChild(helper)
+    id = 0
+    if (prefs.groupBy == 'thread') {
+        helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'date\'; displaySingleThread();" style="cursor: pointer; float: right;">Click to view as flat thread, sort by date</label> &nbsp;'
+    } else {
+        helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; displaySingleThread();" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
+    }
+    
     loadEmails_threaded(json.thread, {
                 blockid: 0,
                 thread: json.thread
             })
+    if (prefs.groupBy != 'thread') {
+        sortByDate(0)
+    }
 }
 
 
