@@ -85,8 +85,8 @@ function handle(r)
         else
             canAccess = true
         end
-        if canAccess then
-            doc.children = fetchChildren(doc, 1, {[doc.mid] = true})
+        if canAccess and doc and doc.mid then
+            doc.children = fetchChildren(doc, 1)
             doc.tid = doc.mid
             --doc.body = nil
             r:puts(JSON.encode({
