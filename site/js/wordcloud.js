@@ -15,27 +15,45 @@
  limitations under the License.
 */
 
-function definitely_intersecting(a, b, aangle, gw) {
+var svgNS = "http://www.w3.org/2000/svg"
+
+
+function fastIntersect(x,y) {
+    var a = x.getBoundingClientRect()
+    var b = y.getBoundingClientRect()
+    return !(b.left > a.right
+        || b.right < a.left
+        || b.top > a.bottom
+        || b.bottom < a.top);
+}
+function definitely_intersecting(a, b, aangle,gw, w,h) {
     var r1 = a.getBoundingClientRect();
+    var xangle = 0
+    var r2
+    if (aangle != null) {
+        xangle = parseFloat(b.hasAttribute("transform") ? b.getAttribute("transform").match(/(-?\d+\.?\d*)/)[1] : "0")
+        b.setAttribute("transform", "rotate(" + -xangle + ")")
+        r2 = b.getBoundingClientRect();
+        b.setAttribute("transform", "rotate(" + xangle + ")")
+    } else {
+        aangle = 0
+        r2 = b.getBoundingClientRect();
+    }
     
-    var xangle = parseFloat(b.getAttribute("transform").match(/(-?\d+\.?\d*)/)[1])
-    b.setAttribute("transform", "rotate(0)")
-    var r2 = b.getBoundingClientRect();
-    b.setAttribute("transform", "rotate(" + xangle + ")")
     a = {
-        w: r1.width,
-        h: r1.height,
-        x: r1.left + r1.width/2,
-        y: gw.bottom - r1.bottom + (r1.height/2),
+        w: r1.width+2,
+        h: r1.height+2,
+        x: r1.left + r1.width/2 - gw.left,
+        y: h - r1.top + (r1.height/2) - gw.top,
         theta: aangle,
         otheta: 0
     }
     
     b = {
-        w: r2.width,
-        h: r2.height,
-        x: r2.left + r2.width/2,
-        y: gw.bottom - r2.bottom + (r2.height/2),
+        w: r2.width+2,
+        h: r2.height+2,
+        x: r2.left + r2.width/2 - gw.left,
+        y: h - r2.top + (r2.height/2) - gw.top,
         theta: xangle
     }
     //alert(b.theta + ":" + a.theta + "::" + a.otheta)
@@ -69,10 +87,21 @@ function definitely_intersecting(a, b, aangle, gw) {
     b_ymin = b_yc + Math.min(b_y1, b_y2, -b_y1, -b_y2)
     b_ymax = b_yc + Math.max(b_y1, b_y2, -b_y1, -b_y2)
     var is = ((b_xmax < -a_w2) || (b_xmin > a_w2) || (b_ymax < -a_h2) || (b_ymin > a_h2))
+    //alert(JSON.stringify([b_xmax < -a_w2 ,b_xmin > a_w2, b_ymax < -a_h2, b_ymin > a_h2 ]))
     //alert(is)
     return !is
 }
 
+function makeWord(word, size) {
+    var txt = document.createElementNS(svgNS, "text");
+    txt.setAttribute("font-size", size + "px")
+    txt.setAttribute("x", "0")
+    txt.setAttribute("y", "40")
+    txt.setAttribute("class", "cloudword")
+    txt.setAttribute("onclick", "do_search(\"" + word + "\", 30)")
+    txt.textContent = word
+    return txt
+}
 
 function wordCloud(hash, width, height) {
     var total = 0
@@ -84,7 +113,6 @@ function wordCloud(hash, width, height) {
     var hashSorted = []
     for (word in hash) hashSorted.push(word)
     hashSorted = hashSorted.sort(function(a,b) { return hash[a] > hash[b] })
-    var svgNS = "http://www.w3.org/2000/svg"
     var svg = document.createElementNS(svgNS, "svg");
     document.body.appendChild(svg)
     svg.setAttribute("width",  width)
@@ -93,36 +121,29 @@ function wordCloud(hash, width, height) {
     for (var n in hashSorted) {
         var word = hashSorted[n]
         var size = 0;
-        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.9)
+        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*1.25)
         console.log(expected_area)
         
-        for (var s = 100; s > 0; s--) {
-            var txt = document.createElementNS(svgNS, "text");
-            txt.textContent = word
-            txt.setAttribute("font-size", s + "px")
-            svg.appendChild(txt)
-            w = txt.getBBox();
-            var area = w.width * w.height;
+        var txt = document.createElementNS(svgNS, "text");
+        txt.textContent = word
+        txt.setAttribute("font-size", "100px")
+        svg.appendChild(txt)
+        
+        w = txt.getBoundingClientRect();
+        
+        for (var s = 100; s > 0; s-=1) {
+                        
+            var area = w.width * w.height * ( (s/100)*(s/100) );
             if (area <= expected_area ) {
+                //alert(area + ":" + expected_area + ":" + s)
                 size = s;
                 svg.removeChild(txt)
                 break
             }
-            svg.removeChild(txt)
         }
         
         
-        var txt = document.createElementNS(svgNS, "text");
-        txt.setAttribute("font-size", size + "px")
-        txt.setAttribute("x", "0")
-        txt.setAttribute("y", "40")
-        txt.setAttribute("class", "cloudword")
-        txt.setAttribute("onclick", "do_search(\"" + word + "\", 30)")
-        txt.textContent = word
-        svg.appendChild(txt)
-        w = txt.getBBox();
         
-        var increment = 2*Math.PI/10;       
         var theta = 50;
         var prop = height/width
         var popped = false
@@ -131,66 +152,53 @@ function wordCloud(hash, width, height) {
         
         // Try with random placement
         var gw = svg.getBoundingClientRect()
-        txt.setAttribute("transform", "rotate(" + angle + ")")
-        if (!popped) {
-            var ss = size
-            for(var n = 0; n < 50; n++) {
-                var nx = (width-w.width) * Math.random()
-                var ny = ((height-w.height) * Math.random()) + w.height
-                txt.setAttribute("x", nx)
-                txt.setAttribute("y", ny)
-                angle = (Math.random() * 120) - 60
-                
-                ss *= 0.9
-                txt.setAttribute("font-size", size + "px")
-                var ow = txt.getBoundingClientRect()
-                txt.setAttribute("transform", "rotate(" + angle + ", " + (ow.left + (ow.width/2)) + ", "+ (ow.top + (ow.height/2)) + ")")
-                var w = txt.getBoundingClientRect()
-                if (w.bottom > gw.bottom-12 || w.top < gw.top+12 || w.left < gw.left-12 || w.right > gw.right-12) continue
-                txt.setAttribute("transform", "rotate(" + 0 + ", " + (ow.width/2) + ", "+ (ow.height/2) + ")")
-                var it = false
-                for (var b in boxes) {
-                    if (definitely_intersecting(txt, boxes[b], angle, gw)) {
-                        it = true
-                        break
-                    }
-                }
-                if (!it) {
-                    popped = true
-                    txt.setAttribute("transform", "rotate(" + angle + ", " + (ow.left + (ow.width/2)) + ", "+ (ow.top + (ow.height/2)) + ")")
-                    //alert("added at " + angle)
-                    break
-                } 
-            }
-        }
+        var w
         
-        // Didn't work? Spiral time!
+        
+        // Spiral time!
+        var txt = makeWord(word, ss)
+        svg.appendChild(txt)
         if (!popped) {
-            for (var ss = size; ss > 10; ss -= 3) {
-                txt.setAttribute("font-size", size + "px")
-                while( theta < 60*Math.PI) {
+            for (var ss = size; ss > 5; ss -= 2) {
+               // alert(ss)
+                if (popped) {
+                    break
+                }
+                txt.setAttribute("font-size", ss + "px")
+                var theta = 0
+                var increment = 2*Math.PI/5;       
+                while( theta < 40*Math.PI) {
                     angle = (Math.random() * 120) - 60
-                    txt.setAttribute("transform", "rotate(0)")//rotate(" + angle + ", " + nx + "," + ny + ")")
-                    var nx = (width/2) - (w.width/2) + ((theta * Math.cos(theta)))
-                    var ny = (height/2) + ((theta * Math.sin(theta))*prop)
+                    //txt.setAttribute("transform", "rotate(0)")//rotate(" + angle + ", " + nx + "," + ny + ")")
+                    var nx = (width/2) - (w.width/2) + ((theta *2 * Math.cos(theta)))
+                    var ny = (height/2) - ((theta *2*Math.sin(theta))*prop) + (w.height/2)
                     txt.setAttribute("x", nx)
                     txt.setAttribute("y", ny)
                     theta = theta + increment;
-                    increment *= 0.995
+                    increment *= 0.97
                     if (increment < 0.05) {
                         increment = 0.05
                     }
                     var it = false
-                    if (!(nx > 8 && nx < (width-w.width-16) && (ny > w.height+8 && ny < height-8))) continue
+                    var w = txt.getBoundingClientRect()
+                    var y = {}
+                    y.bottom = w.bottom - gw.top
+                    y.top = w.top - gw.top
+                    y.left = w.left - gw.left
+                    y.right = w.right - gw.left
+                    if (y.bottom > height || ny < 8 || nx < 8 || y.right > width) {
+                        //alert(JSON.stringify([y.bottom, y.top, y.left, y.right]))
+                        break
+                    }
                     for (var b in boxes) {
-                        if (definitely_intersecting(txt, boxes[b], 0, gw)) {
+                        //if (definitely_intersecting(txt, boxes[b], null, gw, width, height)) {
+                        if (fastIntersect(txt, boxes[b])) {
                             it = true
                             break
                         }
                     }
-                    if (!it) {
+                    if (it == false) {
                         popped = true
-                        
                         break
                     } 
                 }
@@ -200,6 +208,8 @@ function wordCloud(hash, width, height) {
         
         
         if (popped) {
+            var color = 'hsl('+ Math.random()*360 +', 40%, 50%)';
+            txt.setAttribute("fill", color)
             boxes.push(txt)
         } else {
             //alert("Could not add " + word)
