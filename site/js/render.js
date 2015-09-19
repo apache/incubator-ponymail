@@ -1035,9 +1035,6 @@ function getListInfo(list, xdomain, nopush) {
         })) {
 
             var key = listnames[i]
-            if (xdomain == 'incubator.apache.org' && key != 'general') {
-                continue
-            }
             var collapse = ''
             if (all_lists[xdomain][key] < 10 || i >= 5) {
                 collapse = 'hidden-xs hidden-sm hidden-md hidden-lg'
