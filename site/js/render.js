@@ -872,7 +872,7 @@ function buildPage(json, state) {
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildPage(old_json, old_state);\">Show stats panel..</div>"
     } else {
-        var sw = 180 + stats.offsetWidh;
+        var sw = 180 + stats.offsetWidth;
         document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
         stats.setAttribute("class", "hidden-md col-lg-3")
         stats.removeAttribute("onclick")
