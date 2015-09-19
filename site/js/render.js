@@ -583,10 +583,14 @@ function toggleEmails_threaded(id, close) {
             helper.style.padding = "10px"
             thread.parentNode.insertBefore(helper, thread)
         }
+        
         if (prefs.groupBy == 'thread') {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'date\'; sortByDate(' + id + ');" style="cursor: pointer; float: right;">Click to view as flat thread, sort by date</label> &nbsp;'
         } else {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
+        }
+        if (keywords.length > 0) {
+            helper.innerHTML += "<p><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there</i></p>"
         }
 
         if (close == true) {
