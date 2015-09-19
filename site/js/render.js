@@ -953,9 +953,13 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     //buildCalendar()
-    document.getElementById('dp').selectedIndex = 0;
-    document.getElementById('q').value = ""
-    document.getElementById('aq').value = ""
+    var dp = document.getElementById('dp')
+    for (var i in dp.options) {
+        if (dp.options[i].value == current_retention) dp.selectedIndex = i;
+    }
+    
+    document.getElementById('q').value = current_query
+    document.getElementById('aq').value = current_query
     xlist = list;
     var arr = list.split('@', 2)
     var listname = arr[0]
