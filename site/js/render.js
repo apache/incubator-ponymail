@@ -581,7 +581,7 @@ function getChildren(main, email) {
 }
 
 // toggleEmails_threaded: Open up a threaded display of a topic
-function toggleEmails_threaded(id, close) {
+function toggleEmails_threaded(id, close, toverride) {
     current_thread_mids = {}
     current_email_msgs = []
     var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
@@ -596,8 +596,8 @@ function toggleEmails_threaded(id, close) {
             thread.parentNode.insertBefore(helper, thread)
         }
         
-        if (prefs.groupBy == 'thread') {
-            helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'date\'; sortByDate(' + id + ');" style="cursor: pointer; float: right;">Click to view as flat thread, sort by date</label> &nbsp;'
+        if (prefs.groupBy == 'thread' && !toverride) {
+            helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'date\'; toggleEmails_threaded(' + id + ', true); toggleEmails_threaded(' + id + ', false, true); sortByDate(' + id + ');" style="cursor: pointer; float: right;">Click to view as flat thread, sort by date</label> &nbsp;'
         } else {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
         }
