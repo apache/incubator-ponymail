@@ -465,7 +465,7 @@ function traverseThread(child) {
         return
     }
     for (var i in child.childNodes) {
-        if (child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == 'DIV') {
+        if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == 'DIV') {
             kiddos.push(child.childNodes[i])
             if (child.childNodes[i].hasChildNodes()) {
                 traverseThread(child.childNodes[i])
