@@ -44,7 +44,8 @@ function fetchChildren(pdoc, c, biglist)
                 from = doc.from,
                 id = doc.request_id,
                 epoch = doc.epoch,
-                children = mykids
+                children = mykids,
+                irt = doc['in-reply-to']
             }
             table.insert(children, dc)
             table.insert(emls_thrd, dc)
@@ -115,6 +116,7 @@ function handle(r)
             table.insert(emls_thrd, doc)
             doc.children = fetchChildren(doc, 1)
             doc.tid = doc.mid
+            doc.irt = doc['in-reply-to']
             doc.id = doc.request_id
             --doc.body = nil
             r:puts(JSON.encode({
