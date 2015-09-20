@@ -127,7 +127,7 @@ class Archiver(object):
         mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
         if not mdate:
             mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
-        
+        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
             if 'content-type' in message and message['content-type'].find("flowed") != -1:
@@ -159,7 +159,7 @@ class Archiver(object):
                 'epoch': email.utils.mktime_tz(mdate),
                 'list': mlist.list_name,
                 'list_raw': mlist.list_name,
-                'date': msg_metadata['date'],
+                'date': mdatestring,
                 'private': False,
                 'references': msg_metadata['references'],
                 'in-reply-to': msg_metadata['in-reply-to'],
