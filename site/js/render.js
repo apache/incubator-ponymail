@@ -131,7 +131,7 @@ function countNewest(eml) {
 
 // countParts: counts the number of unique participants in a thread
 function countParts(eml, kv) {
-    n = 0;
+    var n = 0;
     var email = findEml(eml.tid)
     kv = kv ? kv : {}
     if (!kv[email.from]) {
@@ -990,8 +990,8 @@ function getListInfo(list, xdomain, nopush) {
 
     //buildCalendar()
     var dp = document.getElementById('dp')
-    for (var i in dp.options) {
-        if (dp.options[i].value == current_retention) dp.selectedIndex = i;
+    for (var i = 0; i < dp.length; i++) {
+        if (dp[i].value == current_retention) dp.selectedIndex = i;
     }
     
     document.getElementById('q').value = current_query
