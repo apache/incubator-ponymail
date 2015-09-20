@@ -1219,14 +1219,16 @@ function getSingleEmail(id) {
 
 
 function displaySingleThread(json) {
-    json = json ? json : current_thread_json
-    current_thread_json = json
+    if (json) {
+        current_thread_json = [json.thread]
+        current_flat_json = json.emails
+    }
     var thread = document.getElementById('thread_0')
     thread.innerHTML = ""
     var helper = document.createElement('div')
     helper.setAttribute("id", "helper_0")
     thread.appendChild(helper)
-    var mid = json.thread.mid.replace(/[<>]/g, "")
+    var mid = current_thread_json[0].mid.replace(/[<>]/g, "")
     if (mid.length > 40) {
         mid = mid.substring(0,40) + "..."
     }
@@ -1236,13 +1238,13 @@ function displaySingleThread(json) {
     } else {
         helper.innerHTML += '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; displaySingleThread();" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
     }
-    if (json.thread['in-reply-to']) {
+    if (current_thread_json[0]['in-reply-to']) {
         helper.innerHTML += '<p><i>This appears to not be the first email in this thread (it has <kbd>in-reply-to</kbd> set). If you like, we can try to find the first email in the thread for you: <a href="javascript:void(0);" style="font-size: 10pt; cursor: pointer;" onclick="timeTravelSingleThread();" style="cursor: pointer; ">Go to the first email in this thread</a> &nbsp;</p>'
     }
     
-    loadEmails_threaded(json.thread, {
+    loadEmails_threaded(current_thread_json[0], {
                 blockid: 0,
-                thread: json.thread
+                thread: current_thread_json[0]
             })
     if (prefs.groupBy != 'thread') {
         sortByDate(0)
