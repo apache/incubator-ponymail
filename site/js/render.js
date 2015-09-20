@@ -366,6 +366,10 @@ function permaLink(id, type) {
     if (prefs.groupBy == 'date') {
         t = 'permalink'
     }
+    var eml = findEml(id)
+    if (eml) { // This is so, in case you move to another list software, you'll keep back compat
+        id = eml['message-id']
+    }
     location.href = "/" + t + ".html/" + id
 }
 
