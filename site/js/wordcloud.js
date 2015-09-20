@@ -31,71 +31,6 @@ function fastIntersect(x,y,nx,ny) {
         || b.top > (a.bottom+ny)
         || b.bottom < (a.top+ny));
 }
-function definitely_intersecting(a, b, aangle,gw, w,h) {
-    var r1 = a.getBoundingClientRect();
-    var xangle = 0
-    var r2
-    if (aangle != null) {
-        xangle = parseFloat(b.hasAttribute("transform") ? b.getAttribute("transform").match(/(-?\d+\.?\d*)/)[1] : "0")
-        b.setAttribute("transform", "rotate(" + -xangle + ")")
-        r2 = b.getBoundingClientRect();
-        b.setAttribute("transform", "rotate(" + xangle + ")")
-    } else {
-        aangle = 0
-        r2 = b.getBoundingClientRect();
-    }
-    
-    a = {
-        w: r1.width+2,
-        h: r1.height+2,
-        x: r1.left + r1.width/2 - gw.left,
-        y: h - r1.top + (r1.height/2) - gw.top,
-        theta: aangle,
-        otheta: 0
-    }
-    
-    b = {
-        w: r2.width+2,
-        h: r2.height+2,
-        x: r2.left + r2.width/2 - gw.left,
-        y: h - r2.top + (r2.height/2) - gw.top,
-        theta: xangle
-    }
-    //alert(b.theta + ":" + a.theta + "::" + a.otheta)
-    var a_w2, a_h2, b_w2, b_h2;
-    a_w2 = a.w/2
-    a_h2 = a.h/2
-    b_w2 = b.w/2
-    b_h2 = b.h/2
-
-    var torad = Math.PI/180
-    b_xc_tmp = (b.x+b_w2) - (a.x+a_w2)
-    b_yc_tmp = (b.y+b_h2) - (a.y+a_h2)
-    
-
-    c = Math.cos(-a.theta*torad)
-    s = Math.sin(-a.theta*torad)
-
-    b_xc = b_xc_tmp*c - b_yc_tmp*s
-    b_yc = b_yc_tmp*c + b_xc_tmp*s
-
-    theta = b.theta - a.theta
-    c = Math.cos(theta*torad)
-    s = Math.sin(theta*torad)
-
-    b_x1 = b_w2*c - b_h2*s
-    b_y1 = b_w2*s + b_h2*c
-    b_x2 = b_w2*c + b_h2*s
-    b_y2 = b_w2*s - b_h2*c
-    b_xmin = b_xc + Math.min(b_x1, b_x2, -b_x1, -b_x2)
-    b_xmax = b_xc + Math.max(b_x1, b_x2, -b_x1, -b_x2)
-    b_ymin = b_yc + Math.min(b_y1, b_y2, -b_y1, -b_y2)
-    b_ymax = b_yc + Math.max(b_y1, b_y2, -b_y1, -b_y2)
-    var is = ((b_xmax < -a_w2) || (b_xmin > a_w2) || (b_ymax < -a_h2) || (b_ymin > a_h2))
-    //alert(JSON.stringify([b_xmax < -a_w2 ,b_xmin > a_w2, b_ymax < -a_h2, b_ymin > a_h2 ]))
-    //alert(is)
-    return !is
-}
 
 function makeWord(word, size) {
     var txt = document.createElementNS(svgNS, "text");
@@ -126,7 +61,7 @@ function wordCloud(hash, width, height) {
     for (var n in hashSorted) {
         var word = hashSorted[n]
         var size = 0;
-        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.8)
+        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.9)
         console.log(expected_area)
         
         var txt = document.createElementNS(svgNS, "text");
@@ -140,7 +75,6 @@ function wordCloud(hash, width, height) {
                         
             var area = w.width * w.height * ( (s/100)*(s/100) );
             if (area <= expected_area ) {
-                //alert(area + ":" + expected_area + ":" + s)
                 size = s;
                 svg.removeChild(txt)
                 break
