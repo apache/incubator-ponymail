@@ -136,17 +136,19 @@ function handle(r)
             
             bool = {
                 must = {
+                    
+                    {
+                        range = {
+                            date = daterange
+                        }
+                    },
                     {
                         query_string = {
                             default_field = "subject",
                             query = qs
                         }
                     },
-                    {
-                    range = {
-                        date = daterange
-                    }
-                }, sterm
+                    sterm
                     
             }}
             
@@ -196,16 +198,17 @@ function handle(r)
                 bool = {
                     must = {
                         {
+                            range = {
+                                date = daterange
+                            }
+                        }, 
+                        {
                             query_string = {
                                 default_field = "subject",
                                 query = qs
                             }
                         },
-                        {
-                        range = {
-                            date = daterange
-                        }
-                    }, sterm, {
+                        sterm, {
                             term = {
                                 private = false
                             }
@@ -303,16 +306,17 @@ function handle(r)
             bool = {
                 must = {
                     {
+                        range = {
+                            date = daterange
+                        }
+                    },
+                    sterm,
+                    {
                         query_string = {
                             default_field = "subject",
                             query = qs
                         }
-                    },
-                    {
-                    range = {
-                        date = daterange
                     }
-                }, sterm
             }}
         },
         
