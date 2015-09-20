@@ -320,7 +320,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     }
 
     if (json.length > (start + limit)) {
-        remain = Math.min(15, json.length - (start + limit))
+        var remain = Math.min(15, json.length - (start + limit))
         bulk.innerHTML += '<a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ', ' + dp + ');">Show next ' + remain + '</a>'
     }
 
@@ -1587,7 +1587,7 @@ function showPreferences() {
     
     // groupBy mode
     section.appendChild(generateFormDivs('groupBy', 'Display mode, email view:', 'select', {
-        threaded: "Threaded view, nest by reference",
+        thread: "Threaded view, nest by reference",
         date: "Flat view, order by date"
     }, prefs.groupBy))
     
