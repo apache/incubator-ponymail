@@ -1264,7 +1264,7 @@ function timeTravelSingleThreadRedirect(json) {
 }
 
 function timeTravelSingleThread() {
-    var mid = current_thread_json.thread.mid
+    var mid = current_thread_json[0].thread.mid
     GetAsync("/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
 }
 
