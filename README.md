@@ -1,5 +1,5 @@
 # Pony Mail
-<img src="https://github.com/Humbedooh/ponymail/blob/master/site/images/logo_large.png" align="left"/>
+<img src="https://github.com/Humbedooh/ponymail/blob/master/site/images/logo_large.png" align="left"/><br/><br/>
 Pony Mail is a web-based mail archive browser
 licensed under the Apache License v/2.0 and built to scale 
 to millions of archived messages with hundreds of requests 
