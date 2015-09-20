@@ -122,7 +122,7 @@ function countSubs(eml, state) {
 
 // countNewest: finds the newest email in a thread
 function countNewest(eml) {
-    n = eml.epoch;
+    var n = eml.epoch;
     for (var i in eml.children) {
         n = Math.max(n, countNewest(eml.children[i]));
     }
@@ -132,7 +132,7 @@ function countNewest(eml) {
 // countParts: counts the number of unique participants in a thread
 function countParts(eml, kv) {
     n = 0;
-    email = findEml(eml.tid)
+    var email = findEml(eml.tid)
     kv = kv ? kv : {}
     if (!kv[email.from]) {
         kv[email.from] = true
@@ -245,7 +245,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     }) : []) : current_flat_json
     current_flat_json = fjson
     
-    json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
+    var json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
     current_thread_json = json
     
     var now = new Date().getTime() / 1000
@@ -265,15 +265,15 @@ function loadList_threaded(mjson, limit, start, deep) {
         var people = countParts(json[i])
         var latest = countNewest(json[i])
 
-        ls = 'default'
+        var ls = 'default'
         if (subs > 0) {
             ls = 'primary'
         }
-        lp = 'default'
+        var lp = 'default'
         if (people > 1) {
             lp = 'success'
         }
-        ld = 'default'
+        var ld = 'default'
         var ti = ''
         if (latest > (now - 86400)) {
             ld = 'warning'
@@ -293,7 +293,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             }
         }
         var subject = eml.subject.replace(/</mg, "&lt;")
-        mdate = new Date(latest * 1000)
+        var mdate = new Date(latest * 1000)
         mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
             hour12: false
         })
@@ -718,7 +718,7 @@ function buildCalendar(firstYear, lastYear) {
 
 // dailyStats: compiles the day-by-day stats for a chunk of emails
 function dailyStats(json) {
-    days = {}
+    var days = {}
     for (var i in json) {
         var day = new Date(json[i].epoch * 1000).getDate()
         days[day] = days[day] ? (days[day] + 1) : 1
