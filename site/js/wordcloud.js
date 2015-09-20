@@ -18,13 +18,13 @@
 var svgNS = "http://www.w3.org/2000/svg"
 
 
-function fastIntersect(x,y) {
+function fastIntersect(x,y,nx,ny) {
     var a = x.getBoundingClientRect()
     var b = y.getBoundingClientRect()
-    return !(b.left > a.right
-        || b.right < a.left
-        || b.top > a.bottom
-        || b.bottom < a.top);
+    return !(b.left > (a.right+nx)
+        || b.right < (a.left+nx)
+        || b.top > (a.bottom+ny)
+        || b.bottom < (a.top+ny));
 }
 function definitely_intersecting(a, b, aangle,gw, w,h) {
     var r1 = a.getBoundingClientRect();
@@ -159,47 +159,29 @@ function wordCloud(hash, width, height) {
         var txt = makeWord(word, ss)
         svg.appendChild(txt)
         if (!popped) {
-            for (var ss = size; ss > 5; ss -= 4) {
+            txt.setAttribute("x", 0)
+            txt.setAttribute("y", 0)
+            for (var ss = size; ss > 5; ss *= 0.9) {
                // alert(ss)
                 if (popped) {
                     break
                 }
                 txt.setAttribute("font-size", ss + "px")
-                var theta = 0
-                var increment = 2*Math.PI/5;       
-                for (var l = 0; l < 50; l++) {
-                 
-                    angle = (Math.random() * 120) - 60
-                    //txt.setAttribute("transform", "rotate(0)")//rotate(" + angle + ", " + nx + "," + ny + ")")
-                    var nx = 4 + (Math.random() * width-8-w.width)//(width/2) - (w.width/2) + ((theta *2 * Math.cos(theta)))
-                    var ny = 4 + w.height + (Math.random() * height-8-w.height) //(height/2) - ((theta *2*Math.sin(theta))*prop) + (w.height/2)
-                    txt.setAttribute("x", nx)
-                    txt.setAttribute("y", ny)
-                    theta = theta + increment;
-                    increment *= 0.97
-                    if (increment < 0.05) {
-                        increment = 0.05
-                    }
+                var w = txt.getBoundingClientRect()
+                for (var l = 0; l < 80; l++) {
+                    var nx = 4 + (Math.random() * (width-8-w.width))
+                    var ny = 4 + w.height + ((l/80) * (height-8-w.height))
                     var it = false
-                    var w = txt.getBoundingClientRect()
-                    var y = {}
-                    y.bottom = w.bottom - gw.top
-                    y.top = w.top - gw.top
-                    y.left = w.left - gw.left
-                    y.right = w.right - gw.left
-                    if (y.bottom > height || ny < w.height+4 || nx < 4 || y.right > width) {
-                        //alert(JSON.stringify([y.bottom, y.top, y.left, y.right]))
-                        continue
-                    }
                     for (var b in boxes) {
-                        //if (definitely_intersecting(txt, boxes[b], null, gw, width, height)) {
-                        if (fastIntersect(txt, boxes[b])) {
+                        if (fastIntersect(txt, boxes[b], nx, ny)) {
                             it = true
                             break
                         }
                     }
                     if (it == false) {
                         popped = true
+                        txt.setAttribute("x", nx)
+                        txt.setAttribute("y", ny)
                         break
                     } 
                 }
