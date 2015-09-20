@@ -64,7 +64,7 @@ function findParent(r, doc)
         if not doc['in-reply-to'] then
             break
         end
-        local docs = elastic.find('message-id:"' .. r:escape(oc['in-reply-to'])..'"', 1, "mbox")
+        local docs = elastic.find('message-id:"' .. r:escape(doc['in-reply-to'])..'"', 1, "mbox")
         if #docs == 0 then
             break
         end
