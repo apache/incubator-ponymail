@@ -116,7 +116,6 @@ function handle(r)
             table.insert(emls_thrd, doc)
             doc.children = fetchChildren(doc, 1)
             doc.tid = doc.mid
-            doc.irt = doc['in-reply-to']
             doc.id = doc.request_id
             --doc.body = nil
             r:puts(JSON.encode({
