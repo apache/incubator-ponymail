@@ -405,6 +405,9 @@ function handle(r)
                     table.insert(threads, emails[mid])
                 end
             end
+            email.references = nil
+            email.to = nil
+            email.private = nil
             table.insert(emls, email)
         else
             for k, v in pairs(top10) do
