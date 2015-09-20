@@ -229,13 +229,23 @@ function loadList_flat(mjson, limit, start, deep) {
 
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<a href="javascript:void(0);" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+    } else {
+        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
-
+    
+    
+    if (login && login.credentials) {
+        bulk.innerHTML += '<div style="width: 33%; float: left; text-align: center;"><a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a></div>'
+    } else {
+        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
+    }
+    
     if (json.length > (start + limit)) {
         remain = Math.min(15, json.length - (start + limit))
-        bulk.innerHTML += '<a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
     }
+    
 
 }
 
@@ -314,14 +324,24 @@ function loadList_threaded(mjson, limit, start, deep) {
         bulk.setAttribute("class", "well col-md-10 col-lg-7")
     }
     var dp = (deep || global_deep) ? 'true' : 'false'
+    
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<a href="javascript:void(0);" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ', ' + dp + ');">Show previous 15</a> &nbsp '
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+    } else {
+        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
-
+    
+    
+    if (login && login.credentials) {
+        bulk.innerHTML += '<div style="width: 33%; float: left; text-align: center;"><a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a></div>'
+    } else {
+        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
+    }
+    
     if (json.length > (start + limit)) {
-        var remain = Math.min(15, json.length - (start + limit))
-        bulk.innerHTML += '<a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ', ' + dp + ');">Show next ' + remain + '</a>'
+        remain = Math.min(15, json.length - (start + limit))
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
     }
 
 }
@@ -1122,7 +1142,7 @@ function dealWithKeyboard(e) {
 // hideComposer: hide the composer (splash) window
 function hideComposer(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
-    if (!es || !es.getAttribute || !es.getAttribute("class") || es.getAttribute("class").search(/label/) == -1) {
+    if (!es || !es.getAttribute || !es.getAttribute("class") || (es.nodeName != 'A' && es.getAttribute("class").search(/label/) == -1))  {
         document.getElementById('splash').style.display = "none"
     }
 }
@@ -1151,10 +1171,24 @@ function sendEmail(form) {
 
 
 // compose: render a compose dialog for a reply to an email
-function compose(eid) {
-    var email = saved_emails[eid]
+function compose(eid, lid) {
+    var email
+    if (lid) {
+        email = {
+            'message-id': "",
+            'list_raw': xlist.replace("@", "."),
+            'subject': "",
+            'body': "",
+            'from': "",
+            'date': ""
+        }
+    }
+    else {
+        email = saved_emails[eid]
+    }
     if (email) {
         if (login.credentials) {
+            
             var listname = email['list_raw'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             compose_headers = {
                 'in-reply-to': email['message-id'],
@@ -1163,20 +1197,28 @@ function compose(eid) {
             }
             var obj = document.getElementById('splash')
             obj.style.display = "block"
-            obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>Reply to email on " + listname + ":</h3>"
+            what = "Reply to email"
+            if (lid) {
+                what = "Start a new thread"
+            }
+            obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>" + what + " on " + listname + ":</h3>"
             var area = document.createElement('textarea')
             area.style.width = "660px"
             area.style.height = "400px";
             area.setAttribute("id", "reply_body")
             var eml = "\n\nOn " + email.date + ", " + email.from.replace(/</mg, "&lt;") + " wrote: \n"
             eml += email.body.replace(/([^\r\n]*)/mg, "&gt; $1")
-            
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
             eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
 
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
             
-
+            if (lid) {
+                eml = ""
+                eml_raw = ""
+                subject = ""
+            }
+            obj.appendChild(document.createTextNode('Subject: '))
             var txt = document.createElement('input')
             txt.setAttribute("type", "text")
             txt.setAttribute("style", "width: 500px;")
