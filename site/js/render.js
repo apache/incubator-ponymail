@@ -606,16 +606,19 @@ function toggleEmails_threaded(id, close) {
         }
         if (current_query.length > 0) {
             // time travel magic!
-            if (!current_thread_json[id].magic) {
+            if (!current_thread_json[id].magic && findEml(current_thread_json[id].tid).irt) {
                 helper.innerHTML += "<p id='magic_"+id+"'><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode. Or we can <a href='javascript:void(0);' onclick='timeTravelList("+id+")'>do some magic for you</a>.</i></p>"
+                var btn = document.createElement('a')
+                btn.setAttribute("href", "javascript:void(0);")
+                btn.setAttribute("class", "btn btn-success")
+                btn.setAttribute("onclick", "prefs.displayMode='flat'; buildPage();")
+                btn.style.marginRight = "10px"
+                btn.innerHTML = "View results in flat mode instead"
+                helper.appendChild(btn)
+            } else if (!current_thread_json[id].magic) {
+                helper.innerHTML += "<p id='magic_"+id+"'></p>"
             }
-            var btn = document.createElement('a')
-            btn.setAttribute("href", "javascript:void(0);")
-            btn.setAttribute("class", "btn btn-success")
-            btn.setAttribute("onclick", "prefs.displayMode='flat'; buildPage();")
-            btn.style.marginRight = "10px"
-            btn.innerHTML = "View results in flat mode instead"
-            helper.appendChild(btn)
+            
         }
 
         if (close == true) {
