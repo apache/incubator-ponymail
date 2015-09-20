@@ -1620,7 +1620,7 @@ function showPreferences() {
     // set up view section
     var section = document.createElement('div')
     section.setAttribute("class", "bs-callout bs-callout-primary prefs")
-    section.innerHTML = "<h3>Viewing preferences:</h3>"
+    section.innerHTML = "<h4>Viewing preferences:</h4>"
     
     
     // Display mode
@@ -1668,7 +1668,7 @@ function showPreferences() {
     // set up notifications section
     var section = document.createElement('div')
     section.setAttribute("class", "bs-callout bs-callout-success prefs")
-    section.innerHTML = "<h3>Notification preferences:</h3>"
+    section.innerHTML = "<h4>Notification preferences:</h4>"
     
     // notifications mode
     section.appendChild(generateFormDivs('notifications', 'Notify me on:', 'select', {
