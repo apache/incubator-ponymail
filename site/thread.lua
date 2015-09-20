@@ -114,7 +114,7 @@ function handle(r)
         end
         if canAccess and doc and doc.mid then
             table.insert(emls_thrd, doc)
-            doc.children = fetchChildren(doc, 1)
+            doc.children = fetchChildren(r, doc, 1)
             doc.tid = doc.mid
             doc.id = doc.request_id
             --doc.body = nil
