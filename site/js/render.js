@@ -272,7 +272,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         if (subs > 0) {
             ls = 'primary'
         }
-        var lp = 'default'
+        var lp = 'success'
         if (people > 1) {
             lp = 'success'
         }
@@ -300,8 +300,8 @@ function loadList_threaded(mjson, limit, start, deep) {
         mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
             hour12: false
         })
-        var pds = people > 1 ? "block" : "none"
-        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='display:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        var pds = people > 1 ? "visible" : "hidden"
+        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -1279,7 +1279,7 @@ function timeTravelListRedirect(json, id) {
         var parts = countParts(json.thread)
         document.getElementById('subs_' + id).innerHTML = subs + " replies"
         document.getElementById('people_' + id).innerHTML = parts + " people"
-        document.getElementById('people_' + id).style.display = parts > 1 ? "block" : "none"
+        document.getElementById('people_' + id).style.visibility = parts > 1 ? "visible" : "hidden"
         document.getElementById('magic_' + id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         current_thread_json[id].magic = true
     }
