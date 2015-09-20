@@ -551,7 +551,7 @@ function getChildren(main, email) {
     var pchild = null
     if (email.children && email.children.sort) {
         email.children.sort(function(a, b) {
-            return b.epoc - a.epoch
+            return b.epoch - a.epoch
         })
         for (var i in email.children) {
             var child = email.children[i]
