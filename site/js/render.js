@@ -134,6 +134,9 @@ function countParts(eml, kv) {
     var n = 0;
     var email = findEml(eml.tid)
     kv = kv ? kv : {}
+    if (!email) {
+        return n
+    }
     if (!kv[email.from]) {
         kv[email.from] = true
         n++;
@@ -297,7 +300,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
             hour12: false
         })
-        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + (people > 1 ? "<label class='label label-" + lp + "'>" + people + " participants</label>" : "") + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + (people > 1 ? "<label id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" : "") + "<div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -601,7 +604,10 @@ function toggleEmails_threaded(id, close) {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
         }
         if (current_query.length > 0) {
-            helper.innerHTML += "<p><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode.</i></p>"
+            // time travel magic!
+            if (!current_thread_json[id].magic) {
+                helper.innerHTML += "<p id='magic_"+id+"'><i><b>Note:</b> You are viewing a keyword search result in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode. Or we can <a href='javascript:void(0);' onclick='timeTravelList("+id+")'>do some magic for you</a>.</i></p>"
+            }
             var btn = document.createElement('a')
             btn.setAttribute("href", "javascript:void(0);")
             btn.setAttribute("class", "btn btn-success")
@@ -1226,6 +1232,9 @@ function displaySingleThread(json) {
     } else {
         helper.innerHTML += '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; displaySingleThread();" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
     }
+    if (json.thread['in-reply-to']) {
+        helper.innerHTML += '<p><i>This appears to not be the first email in this topic. If you like, we can try to find the first email in this topic for you: <a href="javascript:void(0);" style="font-size: 10pt; cursor: pointer;" onclick="timeTravelSingleThread();" style="cursor: pointer; ">Go to the first email in this thread</a> &nbsp;</p>'
+    }
     
     loadEmails_threaded(json.thread, {
                 blockid: 0,
@@ -1240,6 +1249,43 @@ function displaySingleThread(json) {
 // getSingleThread: fetch a thread from ES and go to callback
 function getSingleThread(id) {
     GetAsync("/thread.lua?id=" + id, null, displaySingleThread)
+}
+
+function timeTravelSingleThreadRedirect(json) {
+    if (json && json.thread) {
+        location.href = "/thread.html/" + json.thread.mid
+    }
+}
+
+function timeTravelSingleThread() {
+    var mid = current_thread_json.thread.mid
+    GetAsync("/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
+}
+
+
+// time travel in list mode:
+function timeTravelListRedirect(json, id) {
+    if (json && json.emails) {
+        for (var i in json.emails) {
+            current_flat_json.push(json.emails[i])
+        }
+    }
+    if (json && json.thread) {
+        toggleEmails_threaded(id)
+        current_thread_json[id] = json.thread
+        toggleEmails_threaded(id)
+        var subs = countSubs(json.thread)
+        var parts = countParts(json.thread)
+        document.getElementById('subs_' + id).innerHTML = subs + " replies"
+        document.getElementById('people_' + id).innerHTML = parts + " people"
+        document.getElementById('magic_' + id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
+        current_thread_json[id].magic = true
+    }
+}
+
+function timeTravelList(id) {
+    var mid = current_thread_json[id].tid
+    GetAsync("/thread.lua?timetravel=true&id=" + mid, id, timeTravelListRedirect)
 }
 
 // seedGetSingleThread: pre-caller for the above.
