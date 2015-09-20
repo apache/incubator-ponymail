@@ -32,7 +32,7 @@ function fetchChildren(pdoc, c, biglist)
     end
     biglist = biglist or {}
     local children = {}
-    local docs = elastic.find('in-reply-to:"' .. pdoc['message-id']..'"', 50, "mbox")
+    local docs = elastic.find('in-reply-to:"' .. r:escape(pdoc['message-id'])..'"', 50, "mbox")
     for k, doc in pairs(docs) do
         if not biglist[doc['message-id']] then
             biglist[doc['message-id']] = true
@@ -64,7 +64,7 @@ function findParent(doc)
         if not doc['in-reply-to'] then
             break
         end
-        local docs = elastic.find('message-id:"' .. doc['in-reply-to']..'"', 1, "mbox")
+        local docs = elastic.find('message-id:"' .. r:escape(oc['in-reply-to'])..'"', 1, "mbox")
         if #docs == 0 then
             break
         end
@@ -82,7 +82,7 @@ function handle(r)
     emls_thrd = {}
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.subject then
-        local docs = elastic.find("message-id:\"" .. eid .. "\"", 1, "mbox")
+        local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
         if #docs == 1 then
             doc = docs[1]
         end
