@@ -1170,15 +1170,18 @@ function compose(eid) {
             area.setAttribute("id", "reply_body")
             var eml = "\n\nOn " + email.date + ", " + email.from.replace(/</mg, "&lt;") + " wrote: \n"
             eml += email.body.replace(/([^\r\n]*)/mg, "&gt; $1")
+            
+            var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
+            eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
 
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
+            
 
             var txt = document.createElement('input')
             txt.setAttribute("type", "text")
             txt.setAttribute("style", "width: 500px;")
             txt.value = subject
             txt.setAttribute("id", "reply_subject")
-            
             obj.appendChild(txt)
 
             area.innerHTML = eml
@@ -1193,13 +1196,25 @@ function compose(eid) {
             btn.setAttribute("onclick", "sendEmail(this.form)")
             obj.appendChild(btn)
             
-            var xsubject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</g, "&lt;")
-            var xlink = 'mailto:' + email.list.replace(/([^.]+)\./, "$1@") + "?subject=" + xsubject + "&amp;In-Reply-To=" + email['message-id']
-            obj.innerHTML += " <br/>OR<br/> <a style='color: #FFF;' class='btn btn-info' onclick='hideComposer(event);' href=\"" + xlink + "\">Reply via your own Mail Client</a>"
+            
+            
+            // reply-via-mua button
+            var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
+            var btn = document.createElement('input')
+            btn.setAttribute("type", "button")
+            btn.setAttribute("class", "btn btn-info")
+            btn.style.float = "right"
+            btn.style.background = "#51A351 !important"
+            btn.setAttribute("value", "reply via your own mail client")
+            btn.setAttribute("onclick", "location.href=\"" + xlink + "\";")
+            obj.appendChild(btn)
+            
             area.focus()
         } else {
+            var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
+            eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
-            var link = 'mailto:' + email.list.replace(/([^.]+)\./, "$1@") + "?subject=" + subject + "&amp;In-Reply-To=" + email['message-id']
+            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + escape(subject) + "&In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
             var obj = document.getElementById('splash')
             obj.style.display = "block"
             obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here</a></p><h3>Reply to email:</h3>"
