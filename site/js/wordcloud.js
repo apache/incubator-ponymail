@@ -19,6 +19,11 @@ var svgNS = "http://www.w3.org/2000/svg"
 
 
 function fastIntersect(x,y,nx,ny) {
+    if (x.getAttribute("id") == y.getAttribute("id")) { // can't collide with itself
+        return false
+    }
+    nx = nx ? nx : 0
+    ny = ny ? ny : 0
     var a = x.getBoundingClientRect()
     var b = y.getBoundingClientRect()
     return !(b.left > (a.right+nx)
@@ -121,7 +126,7 @@ function wordCloud(hash, width, height) {
     for (var n in hashSorted) {
         var word = hashSorted[n]
         var size = 0;
-        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.9)
+        var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.8)
         console.log(expected_area)
         
         var txt = document.createElementNS(svgNS, "text");
@@ -155,8 +160,9 @@ function wordCloud(hash, width, height) {
         var w
         
         
-        // Spiral time!
+        
         var txt = makeWord(word, ss)
+        txt.setAttribute("id", word)
         svg.appendChild(txt)
         if (!popped) {
             txt.setAttribute("x", 0)
@@ -167,6 +173,7 @@ function wordCloud(hash, width, height) {
                     break
                 }
                 txt.setAttribute("font-size", ss + "px")
+                
                 var w = txt.getBoundingClientRect()
                 for (var l = 0; l < 80; l++) {
                     var nx = 4 + (Math.random() * (width-8-w.width))
@@ -199,6 +206,32 @@ function wordCloud(hash, width, height) {
             svg.removeChild(txt)
         }
         
+    }
+    
+    // Try to size up texts a bit
+    var ts = 0
+    for (var i in boxes) {
+        var txt = boxes[i]
+        var osize = parseFloat(txt.getAttribute('font-size'))
+        var psize = osize
+        for (var n = 1; n < 1.4; n+=0.025) {
+            var nsize = osize * n
+            txt.setAttribute("font-size", nsize + "px")
+            var w = txt.getBoundingClientRect()
+            var good = true
+            for (var b in boxes) {
+                if (fastIntersect(txt, boxes[b])) {
+                    good = false
+                    break
+                }
+            }
+            if (!good || w.right > width-4 || w.top < 4) {
+                txt.setAttribute("font-size", psize + "px")
+                break
+            }
+            psize = nsize
+            ts++
+        }
     }
     document.body.removeChild(svg)
     return svg
