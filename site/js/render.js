@@ -1109,7 +1109,7 @@ function dealWithKeyboard(e) {
     if (e.keyCode == 27) {
         if (document.getElementById('splash').style.display == 'block') {
             document.getElementById('splash').style.display = "none"
-        } else {
+        } else if (location.href.search(/list\.html/) != -1) { // should only work for the list view
             toggleEmails_threaded(current_thread, true)
         }
     }
