@@ -1214,6 +1214,7 @@ function displaySingleThread(json) {
     var thread = document.getElementById('thread_0')
     thread.innerHTML = ""
     var helper = document.createElement('div')
+    helper.setAttribute("id", "helper_0")
     thread.appendChild(helper)
     var mid = json.thread.mid.replace(/[<>]/g, "")
     if (mid.length > 40) {
