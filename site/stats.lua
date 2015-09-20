@@ -185,7 +185,7 @@ function handle(r)
             cloud = {
                 significant_terms =  {
                     field =  "subject",
-                    size = 7,
+                    size = 10,
                     chi_square = {}
                 }
             }
