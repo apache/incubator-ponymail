@@ -412,6 +412,7 @@ function handle(r)
             email.references = nil
             email.to = nil
             email.private = nil
+            email['in-reply-to'] = nil
             table.insert(emls, email)
         else
             for k, v in pairs(top10) do
