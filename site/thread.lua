@@ -23,6 +23,8 @@ local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 
+local emls_thrd
+
 function fetchChildren(pdoc, c, biglist)
     c = (c or 0) + 1
     if c > 250 then
@@ -38,15 +40,36 @@ function fetchChildren(pdoc, c, biglist)
             local dc = {
                 tid = doc.mid,
                 mid = doc.mid,
+                subject = doc.subject,
+                from = doc.from,
+                id = doc.request_id,
                 epoch = doc.epoch,
                 children = mykids
             }
             table.insert(children, dc)
+            table.insert(emls_thrd, dc)
         else
             docs[k] = nil
         end
     end
     return children
+end
+
+
+function findParent(doc)
+    local step = 0
+    while step < 50 do
+        step = step + 1
+        if not doc['in-reply-to'] then
+            break
+        end
+        local docs = elastic.find('message-id:"' .. doc['in-reply-to']..'"', 1, "mbox")
+        if #docs == 0 then
+            break
+        end
+        doc = docs[1]
+    end
+    return doc
 end
 
 function handle(r)
@@ -55,13 +78,16 @@ function handle(r)
     local get = r:parseargs()
     local eid = (get.id or ""):gsub("\"", "")
     local doc = elastic.get("mbox", eid or "hmm")
-    
+    emls_thrd = {}
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.subject then
         local docs = elastic.find("message-id:\"" .. eid .. "\"", 1, "mbox")
         if #docs == 1 then
             doc = docs[1]
         end
+    end
+    if get.timetravel then
+        doc = findParent(doc)
     end
     local doclist = {}
     if doc then
@@ -86,12 +112,15 @@ function handle(r)
             canAccess = true
         end
         if canAccess and doc and doc.mid then
+            table.insert(emls_thrd, doc)
             doc.children = fetchChildren(doc, 1)
             doc.tid = doc.mid
+            doc.id = doc.request_id
             --doc.body = nil
             r:puts(JSON.encode({
                 took = r:clock() - now,
-                thread = doc
+                thread = doc,
+                emails = emls_thrd,
             }))
         else
             r:puts(JSON.encode{
