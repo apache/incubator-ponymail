@@ -25,7 +25,7 @@ local user = require 'lib/user'
 
 local emls_thrd
 
-function fetchChildren(pdoc, c, biglist)
+function fetchChildren(r, pdoc, c, biglist)
     c = (c or 0) + 1
     if c > 250 then
         return {}
@@ -36,7 +36,7 @@ function fetchChildren(pdoc, c, biglist)
     for k, doc in pairs(docs) do
         if not biglist[doc['message-id']] then
             biglist[doc['message-id']] = true
-            local mykids = fetchChildren(doc, c, biglist)
+            local mykids = fetchChildren(r, doc, c, biglist)
             local dc = {
                 tid = doc.mid,
                 mid = doc.mid,
@@ -57,7 +57,7 @@ function fetchChildren(pdoc, c, biglist)
 end
 
 
-function findParent(doc)
+function findParent(r, doc)
     local step = 0
     while step < 50 do
         step = step + 1
@@ -88,7 +88,7 @@ function handle(r)
         end
     end
     if get.timetravel then
-        doc = findParent(doc)
+        doc = findParent(r, doc)
     end
     local doclist = {}
     if doc then
