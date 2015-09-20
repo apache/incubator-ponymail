@@ -15,6 +15,19 @@ Pony Mail works in both public, private and mixed-mode, allowing you
 to have one unified place for all your communication, both public and 
 private.
 
+### Features include: ###
+* Public and private list viewing based on auth
+* Cross-list threading
+* In-browser reply to mailing lists
+* Fast and intuitive searching
+* Threaded and flat view modes
+* Notifications of replies to emails sent via Pony Mail
+* Email and list statistics
+* Multi-site, Multi-list handling
+* Word clouds (yay!)
+* Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
+* Supports both custom OAuth and Mozilla Persona
+
 ### Requirements: ###
 
 * ElasticSearch backend
