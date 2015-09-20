@@ -1234,22 +1234,24 @@ function compose(eid, lid) {
             btn.setAttribute("type", "button")
             btn.setAttribute("class", "btn btn-success")
             btn.style.background = "#51A351 !important"
-            btn.setAttribute("value", "Send reply")
+            btn.setAttribute("value", lid ? "Send email" : "Send reply")
             btn.setAttribute("onclick", "sendEmail(this.form)")
             obj.appendChild(btn)
             
             
             
             // reply-via-mua button
-            var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
-            var btn = document.createElement('input')
-            btn.setAttribute("type", "button")
-            btn.setAttribute("class", "btn btn-info")
-            btn.style.float = "right"
-            btn.style.background = "#51A351 !important"
-            btn.setAttribute("value", "reply via your own mail client")
-            btn.setAttribute("onclick", "location.href=\"" + xlink + "\";")
-            obj.appendChild(btn)
+            if (!lid) {
+                var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
+                var btn = document.createElement('input')
+                btn.setAttribute("type", "button")
+                btn.setAttribute("class", "btn btn-info")
+                btn.style.float = "right"
+                btn.style.background = "#51A351 !important"
+                btn.setAttribute("value", "reply via your own mail client")
+                btn.setAttribute("onclick", "location.href=\"" + xlink + "\";")
+                obj.appendChild(btn)
+            }
             
             area.focus()
         } else {
