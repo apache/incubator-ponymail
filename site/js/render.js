@@ -496,7 +496,6 @@ function sortByDate(tid) {
         for (var i in kiddos) {
             t.insertBefore(kiddos[i], t.firstChild)
         }
-        h.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + tid + ', true);toggleEmails_threaded(' + tid + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
     }
 }
 
@@ -1216,7 +1215,7 @@ function getSingleEmail(id) {
 
 
 function displaySingleThread(json) {
-    if (json) {
+    if (json && json.thread) {
         current_thread_json = [json.thread]
         current_flat_json = json.emails
     }
