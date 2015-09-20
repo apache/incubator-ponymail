@@ -491,8 +491,6 @@ function sortByDate(tid) {
                 return parseInt(a.getAttribute('epoch') - b.getAttribute('epoch'));
             })
         }
-
-
         for (var i in kiddos) {
             t.insertBefore(kiddos[i], t.firstChild)
         }
@@ -1170,7 +1168,7 @@ function compose(eid) {
             area.style.width = "660px"
             area.style.height = "400px";
             area.setAttribute("id", "reply_body")
-            var eml = "\n\nOn " + email.date + ", " + email.from.replace(/<.+>/, "") + " wrote: \n"
+            var eml = "\n\nOn " + email.date + ", " + email.from.replace(/</mg, "&lt;") + " wrote: \n"
             eml += email.body.replace(/([^\r\n]*)/mg, "&gt; $1")
 
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
@@ -1181,7 +1179,6 @@ function compose(eid) {
             txt.value = subject
             txt.setAttribute("id", "reply_subject")
             
-
             obj.appendChild(txt)
 
             area.innerHTML = eml
@@ -1195,6 +1192,10 @@ function compose(eid) {
             btn.setAttribute("value", "Send reply")
             btn.setAttribute("onclick", "sendEmail(this.form)")
             obj.appendChild(btn)
+            
+            var xsubject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</g, "&lt;")
+            var xlink = 'mailto:' + email.list.replace(/([^.]+)\./, "$1@") + "?subject=" + xsubject + "&amp;In-Reply-To=" + email['message-id']
+            obj.innerHTML += " <br/>OR<br/> <a style='color: #FFF;' class='btn btn-info' onclick='hideComposer(event);' href=\"" + xlink + "\">Reply via your own Mail Client</a>"
             area.focus()
         } else {
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
