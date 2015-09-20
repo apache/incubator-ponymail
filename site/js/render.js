@@ -98,7 +98,7 @@ function findEml(id) {
  
 // countSubs: counts the number of replies to an email   
 function countSubs(eml, state) {
-    n = 0;
+    var n = 0;
     if (!state) {
         n = -1
     }
