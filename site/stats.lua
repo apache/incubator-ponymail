@@ -298,7 +298,7 @@ function handle(r)
     local emails_full = {}
     local emls = {}
     local doc = elastic.raw {
-        _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw', 'private'},
+        _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private'},
         query = {
             bool = {
                 must = {
