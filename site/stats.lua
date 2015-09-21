@@ -223,7 +223,7 @@ function handle(r)
             cloud[y.key] = y.doc_count
         end
     end
-    -- Debug time point 4
+    -- Debug time point 5
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -291,7 +291,7 @@ function handle(r)
     end
     
     
-    -- Debug time point 5
+    -- Debug time point 6
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -331,7 +331,7 @@ function handle(r)
     }
     local h = #doc.hits.hits
     
-    -- Debug time point 6
+    -- Debug time point 7
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -429,7 +429,7 @@ function handle(r)
         end
     end
     
-    -- Debug time point 7
+    -- Debug time point 8
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -449,7 +449,7 @@ function handle(r)
     listdata.took = r:clock() - now
     
     
-    -- Debug time point 8
+    -- Debug time point 9
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
