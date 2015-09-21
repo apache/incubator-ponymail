@@ -186,7 +186,9 @@ class Archiver(object):
                 index=indexname,
                 doc_type="mbox_source",
                 id=mid,
-                body = msg.as_string()
+                body = {
+                    "source": msg.as_string()
+                }
             )
             
             # Is this a direct reply to a pony mail email?
