@@ -626,7 +626,8 @@ function toggleEmails_threaded(id, close, toverride) {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
         }
         // time travel magic!
-        if (!current_thread_json[id].magic && findEml(current_thread_json[id].tid).irt) {
+        var ml = findEml(current_thread_json[id].tid)
+        if (!current_thread_json[id].magic && ml.irt && ml.irt.length > 0) {
             helper.innerHTML += "<p id='magic_"+id+"'><i><b>Note:</b> You are viewing a search result/aggregation in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode. Or we can <a href='javascript:void(0);' onclick='timeTravelList("+id+")'>do some magic for you</a>.</i></p>"
             var btn = document.createElement('a')
             btn.setAttribute("href", "javascript:void(0);")
@@ -1337,15 +1338,22 @@ function timeTravelListRedirect(json, id) {
         }
     }
     if (json && json.thread) {
-        toggleEmails_threaded(id)
-        current_thread_json[id] = json.thread
-        toggleEmails_threaded(id)
-        var subs = countSubs(json.thread)
-        var parts = countParts(json.thread)
-        document.getElementById('subs_' + id).innerHTML = subs + " replies"
-        document.getElementById('people_' + id).innerHTML = parts + " people"
-        document.getElementById('people_' + id).style.visibility = parts > 1 ? "visible" : "hidden"
-        document.getElementById('magic_' + id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
+        var osubs = countSubs(current_thread_json[id])
+        var nsubs = countSubs(json.thread)
+        if (nsubs > osubs) {
+            toggleEmails_threaded(id)
+            current_thread_json[id] = json.thread
+            toggleEmails_threaded(id)
+            var subs = countSubs(json.thread)
+            var parts = countParts(json.thread)
+            document.getElementById('subs_' + id).innerHTML = subs + " replies"
+            document.getElementById('people_' + id).innerHTML = parts + " people"
+            document.getElementById('people_' + id).style.visibility = parts > 1 ? "visible" : "hidden"
+            document.getElementById('magic_' + id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
+        }
+        else {
+            document.getElementById('magic_' + id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
+        }
         current_thread_json[id].magic = true
     }
 }
