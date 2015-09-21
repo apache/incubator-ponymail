@@ -155,7 +155,9 @@ class Archiver(object):
                         body = None
         if body:
             private = False
-            if mlist.archive_policy is not ArchivePolicy.public:
+            if 'archive_public' in mlist:
+                private = False
+            elif 'archive_policy' in mlist and mlist.archive_policy is not ArchivePolicy.public:
                 private = True
             pmid = mid
             try:
@@ -246,7 +248,7 @@ if __name__ == '__main__':
     if 'list-id' in msg:
         if not msg.get('archived-at'):
             msg.add_header('archived-at', email.utils.formatdate())
-        msg_metadata = namedtuple('importmsg', ['list_id', 'archive_private'])(list_id = msg.get('list-id'), archive_private=False)
+        msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=True)
         
         foo.archive_message(msg_metadata, msg)
         print("Done archiving!")
