@@ -158,6 +158,18 @@ mappings = {
           "type" : "string"
         }
       }
+    },
+    "mbox_raw" : {
+      "_size" : {
+        "enabled" : True,
+        "store" : True
+      },
+      "properties" : {
+        "body" : {
+          "type" : "string",
+          "index" : "not_analyzed"
+        }
+      }
     }
   }
 
