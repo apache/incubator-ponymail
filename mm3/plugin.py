@@ -179,7 +179,7 @@ class Archiver(object):
                 'private': private,
                 'references': msg_metadata['references'],
                 'in-reply-to': msg_metadata['in-reply-to'],
-                'body': body.encode('utf-8')
+                'body': body.decode('utf-8') if type(body) is bytes else body
             }
         
             self.es.index(
