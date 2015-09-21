@@ -411,7 +411,6 @@ function handle(r)
             end
             email.references = nil
             email.to = nil
-            email.private = nil
             email['in-reply-to'] = nil
             table.insert(emls, email)
         else
