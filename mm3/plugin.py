@@ -82,10 +82,10 @@ class Archiver(object):
         """ Just initialize ES. """
         self.es = Elasticsearch([
             {
-                'host': 'pony-poc.apache.org',
-                'port': 443,
-                'use_ssl': True,
-                'url_prefix': 'archiver'
+                'host': 'localhost',
+                'port': 9200,
+                'use_ssl': False,
+                'url_prefix': ''
             }],
             max_retries=5,
             retry_on_timeout=True
