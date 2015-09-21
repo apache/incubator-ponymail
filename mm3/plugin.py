@@ -176,6 +176,13 @@ class Archiver(object):
                 body = ojson
             )
             
+            self.es.index(
+                index=indexname,
+                doc_type="mbox_source",
+                id=mid,
+                body = msg.as_string()
+            )
+            
             # Is this a direct reply to a pony mail email?
             if 'in-reply-to' in msg_metadata:
                 dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('in-reply-to'))
