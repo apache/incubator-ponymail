@@ -424,7 +424,7 @@ function handle(r)
     end
     
     for k, v in pairs(top10) do
-        if v.count == 0 then
+        if v.count <= 0 then
             top10[k] = nil
         end
     end
