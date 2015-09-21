@@ -165,7 +165,7 @@ mappings = {
         "store" : True
       },
       "properties" : {
-        "body" : {
+        "source" : {
           "type" : "string",
           "index" : "not_analyzed"
         }
