@@ -81,7 +81,7 @@ function handle(r)
     
     for x,y in pairs (doc.aggregations.from.buckets) do
         local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-        if not domain:match("%..-%..-%..-") and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
+        if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
             lists[domain] = lists[domain] or {}
             lists[domain][list] = y.doc_count
         end
