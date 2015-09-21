@@ -33,6 +33,7 @@ indexname = "ponymail_alpha"
 if __name__ != '__main__':
     from zope.interface import implements
     from mailman.interfaces.archiver import IArchiver
+    from mailman.interfaces.archiver import ArchivePolicy
 else:
     import sys
 
@@ -154,7 +155,7 @@ class Archiver(object):
                         body = None
         if body:
             private = False
-            if mlist.archive_private:
+            if mlist.archive_policy is not ArchivePolicy.public:
                 private = True
             pmid = mid
             try:
