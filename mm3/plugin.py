@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.4
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -32,7 +33,7 @@ sub someone to the list(s) and add this to their .forward file:
 # Change this index name to whatever you picked!!
 indexname = "ponymail_alpha"
 if __name__ != '__main__':
-    from zope.interface import implements
+    from zope.interface import implementer
     from mailman.interfaces.archiver import IArchiver
     from mailman.interfaces.archiver import ArchivePolicy
 else:
@@ -81,10 +82,10 @@ class Archiver(object):
         """ Just initialize ES. """
         self.es = Elasticsearch([
             {
-                'host': '127.0.0.1',
-                'port': 9200,
-                'use_ssl': False,
-                'url_prefix': ''
+                'host': 'pony-poc.apache.org',
+                'port': 443,
+                'use_ssl': True,
+                'url_prefix': 'archiver'
             }],
             max_retries=5,
             retry_on_timeout=True
@@ -122,13 +123,12 @@ class Archiver(object):
         :param msg: The message object.
         """
 
-        
-        format = lambda value: value and unicode(value) or ""
+        format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
-        lst_metadata = dict(list_name=mlist.list_name)
-        lid = "<%s>" % mlist.list_name.strip("<>")
+        lst_metadata = dict(list_name=mlist.list_id)
+        lid = "<%s>" % mlist.list_id.strip("<>")
         
-        mid = hashlib.sha224("%s-%s" % (mlist.list_name, msg_metadata['archived-at'])).hexdigest() + "@" + (mlist.list_name if mlist.list_name else "none")
+        mid = hashlib.sha224(str("%s-%s" % (mlist.list_id, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (mlist.list_id if mlist.list_id else "none")
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
         mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
@@ -140,7 +140,7 @@ class Archiver(object):
             if 'content-type' in message and message['content-type'].find("flowed") != -1:
                 body = convertToWrapped(body, character_set="utf-8")
             if isinstance(body, str):
-                body = body.decode('utf-8')
+                body = body.encode('utf-8')
         except Exception as err:
             try:
                 body = body.decode(chardet.detect(body)['encoding'])
@@ -150,9 +150,8 @@ class Archiver(object):
                 except:
                     try:
                         if isinstance(body, str):
-                            body = body.decode('utf-8')
+                            body = body.encode('utf-8')
                     except:
-                        baddies += 1
                         body = None
         if body:
             private = False
@@ -160,7 +159,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_name)
+                mid = "%s@%s@%s" % (hashlib.sha224(body.encode('utf-8')).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_id)
             except:
                 mid = pmid
             ojson = {
@@ -178,7 +177,7 @@ class Archiver(object):
                 'private': private,
                 'references': msg_metadata['references'],
                 'in-reply-to': msg_metadata['in-reply-to'],
-                'body': body
+                'body': body.encode('utf-8')
             }
         
             self.es.index(
@@ -211,7 +210,7 @@ class Archiver(object):
                             body = {
                                 'type': 'direct',
                                 'recipient': cid,
-                                'list': mlist.list_name,
+                                'list': lid,
                                 'date': msg_metadata['date'],
                                 'from': msg_metadata['from'],
                                 'to': msg_metadata['to'],
@@ -222,6 +221,7 @@ class Archiver(object):
                             }
                         )
             #im = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references'))
+    
             
     def list_url(self, mlist):
         """ Gots
