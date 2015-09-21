@@ -15,12 +15,13 @@
 
 """ Publish notifications about mails to pony mail.
 
-Enable this by adding the following to your mailman.cfg file::
+Copy this file to $mailman_plugin_dir/mailman_ponymail/__init__.py
+Enable the module by adding the following to your mailman.cfg file::
 
-    [archiver.ponymail]
-    # The class implementing the IArchiver interface.
-    class: mailman3_ponymail_plugin.Archiver
-    enable: yes
+[archiver.ponymail]
+# The class implementing the IArchiver interface.
+class: mailman3_ponymail_plugin.Archiver
+enable: yes
 
 OR, to use the STDIN version (non-MM3 mailing list managers),
 sub someone to the list(s) and add this to their .forward file:
@@ -56,7 +57,7 @@ def pm_charsets(msg):
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
     if __name__ != '__main__':
-        implements(IArchiver)
+        implementer(IArchiver)
     name = "ponymail"
 
     # This is a list of the headers we're interested in publishing.
