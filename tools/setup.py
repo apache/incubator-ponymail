@@ -159,7 +159,7 @@ mappings = {
         }
       }
     },
-    "mbox_raw" : {
+    "mbox_source" : {
       "_size" : {
         "enabled" : True,
         "store" : True
