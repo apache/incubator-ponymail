@@ -241,8 +241,7 @@ class Archiver(object):
     
 if __name__ == '__main__':
     foo = Archiver()
-    ip = sys.stdin.read()
-    msg = email.message_from_string(ip)
+    msg = email.message_from_file(sys.stdin)
     # We're reading from STDIN, so let's fake an MM3 call
     if 'list-id' in msg:
         if not msg.get('archived-at'):
