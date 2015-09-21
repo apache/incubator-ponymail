@@ -292,7 +292,7 @@ class SlurpThread(Thread):
                     if body and okay and mdate:
                         if mid == None or not mid:
                             try:
-                                mid = hashlib.sha256(body).hexdigest() + "@apache.org"
+                                mid = hashlib.sha256(body).hexdigest() + "@" + lid + "@apache.org"
                             except:
                                 if filebased:
                                     mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@apache.org"

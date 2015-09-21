@@ -124,6 +124,7 @@ class Archiver(object):
         format = lambda value: value and unicode(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         lst_metadata = dict(list_name=mlist.list_name)
+        
         mid = hashlib.sha224("%s-%s" % (mlist.list_name, msg_metadata['archived-at'])).hexdigest() + "@" + (mlist.list_name if mlist.list_name else "none")
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
@@ -151,6 +152,11 @@ class Archiver(object):
                         baddies += 1
                         body = None
         if body:
+            pmid = mid
+            try:
+                mid = hashlib.sha256(body).hexdigest() + "@" + mlist.list_name + "@apache.org"
+            except:
+                mid = pmid
             ojson = {
                 'from_raw': msg_metadata['from'],
                 'from': msg_metadata['from'],
