@@ -153,6 +153,9 @@ class Archiver(object):
                         baddies += 1
                         body = None
         if body:
+            private = False
+            if mlist.archive_private:
+                private = True
             pmid = mid
             try:
                 mid = "%s@%s@%s" % (hashlib.sha224(body).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_name)
@@ -170,7 +173,7 @@ class Archiver(object):
                 'list': lid,
                 'list_raw': lid,
                 'date': mdatestring,
-                'private': False,
+                'private': private,
                 'references': msg_metadata['references'],
                 'in-reply-to': msg_metadata['in-reply-to'],
                 'body': body
@@ -242,7 +245,7 @@ if __name__ == '__main__':
     if 'list-id' in msg:
         if not msg.get('archived-at'):
             msg.add_header('archived-at', email.utils.formatdate())
-        msg_metadata = namedtuple('importmsg', ['list_name'])(list_name = msg.get('list-id'))
+        msg_metadata = namedtuple('importmsg', ['list_name', 'archive_private'])(list_name = msg.get('list-id'), archive_private=False)
         
         foo.archive_message(msg_metadata, msg)
         print("Done archiving!")
