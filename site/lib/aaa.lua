@@ -28,13 +28,21 @@ function getPMCs(uid)
 end
     
 function isMember(uid)
-    local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
-    local data = ldapdata:read("*a")
-    for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
-        if match == uid then
-            return true
+    local nowish = math.floor(os.time() / 1800)
+    local t = tonumber(r:ivm_get("isMember_" .. nowish .. "_" .. uid))
+    if t then
+        return t == 1
+    else
+        local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
+        local data = ldapdata:read("*a")
+        for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
+            if match == uid then
+                r:ivm_set("isMember_" .. nowish .. "_" .. uid, "1")
+                return true
+            end
         end
     end
+    r:ivm_set("isMember_" .. nowish .. "_" .. uid, "0")
     return false
 end
 
