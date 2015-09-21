@@ -341,7 +341,7 @@ function handle(r)
         local canUse = true
         if email.private then
             if account and not rights then
-                rights = aaa.rights(account.credentials.uid or account.credentials.email)
+                rights = aaa.rights(r, account.credentials.uid or account.credentials.email)
             end
             canUse = false
             if account then

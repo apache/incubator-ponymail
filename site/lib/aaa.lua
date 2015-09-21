@@ -17,7 +17,7 @@
 
 -- This is aaa.lua - AAA filter for ASF.
 
-function getPMCs(uid)
+function getPMCs(r, uid)
     local groups = {}
     local ldapdata = io.popen( ([[ldapsearch -x -LLL "(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))" cn]]):format(uid,uid) )
     local data = ldapdata:read("*a")
@@ -27,7 +27,7 @@ function getPMCs(uid)
     return groups
 end
     
-function isMember(uid)
+function isMember(r, uid)
     local nowish = math.floor(os.time() / 1800)
     local t = tonumber(r:ivm_get("isMember_" .. nowish .. "_" .. uid))
     if t then
@@ -46,16 +46,16 @@ function isMember(uid)
     return false
 end
 
-function getRights(xuid)
+function getRights(r, xuid)
     uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
     if not uid or xuid ~= uid then
         return rights
     end
-    if isMember(uid) then
+    if isMember(r, uid) then
         table.insert(rights, "*")
     else
-        local list = getPMCs(uid)
+        local list = getPMCs(r, uid)
         for k, v in pairs(list) do
             table.insert(rights, v .. ".apache.org")
         end
