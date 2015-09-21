@@ -368,10 +368,10 @@ function handle(r)
                 }
             }
             
-            if not irt or #irt == 0 then
+            if not irt or irt == JSON.null or #irt == 0 then
                 irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
             end
-            if not emails[irt] then
+            if not emails[irt] and email.references and email.references ~= JSON.null then
                 for ref in email.references:gmatch("([^%s]+)") do
                     if emails[ref] then
                         irt = ref
@@ -394,7 +394,7 @@ function handle(r)
                     table.insert(emails[irt].children, emails[mid])
                 end
             else
-                if (#email['in-reply-to'] > 0) then
+                if (email['in-reply-to'] ~= JSON.null and #email['in-reply-to'] > 0) then
                     emails[irt] = {
                         children = {
                             emails[mid]
