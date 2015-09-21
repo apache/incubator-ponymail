@@ -21,12 +21,12 @@ Enable the module by adding the following to your mailman.cfg file::
 
 [archiver.ponymail]
 # The class implementing the IArchiver interface.
-class: mailman3_ponymail_plugin.Archiver
+class: mailman_ponymail_plugin.Archiver
 enable: yes
 
 OR, to use the STDIN version (non-MM3 mailing list managers),
 sub someone to the list(s) and add this to their .forward file:
-"|/usr/bin/python /path/to/plugin.py"
+"|/usr/bin/env python3.4 /path/to/plugin.py"
 
 """
 
