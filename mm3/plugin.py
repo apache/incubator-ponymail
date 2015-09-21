@@ -124,6 +124,7 @@ class Archiver(object):
         format = lambda value: value and unicode(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         lst_metadata = dict(list_name=mlist.list_name)
+        lid = "<%s>" % mlist.list_name.strip("<>")
         
         mid = hashlib.sha224("%s-%s" % (mlist.list_name, msg_metadata['archived-at'])).hexdigest() + "@" + (mlist.list_name if mlist.list_name else "none")
         if not msg_metadata.get('message-id'):
@@ -166,8 +167,8 @@ class Archiver(object):
                 'mid': mid,
                 'cc': msg_metadata.get('cc'),
                 'epoch': email.utils.mktime_tz(mdate),
-                'list': mlist.list_name,
-                'list_raw': mlist.list_name,
+                'list': lid,
+                'list_raw': lid,
                 'date': mdatestring,
                 'private': False,
                 'references': msg_metadata['references'],
