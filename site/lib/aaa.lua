@@ -29,9 +29,9 @@ end
     
 function isMember(r, uid)
     local nowish = math.floor(os.time() / 1800)
-    local t = tonumber(r:ivm_get("isMember_" .. nowish .. "_" .. uid))
+    local t = r:ivm_get("isMember_" .. nowish .. "_" .. uid)
     if t then
-        return t == 1
+        return tonumber(t) == 1
     else
         local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
         local data = ldapdata:read("*a")
