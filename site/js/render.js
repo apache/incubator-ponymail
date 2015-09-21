@@ -398,7 +398,7 @@ function displayEmail(json, id) {
         var fields = ['From', 'To', 'CC', 'Subject', 'Date']
         for (var i in fields) {
             var key = fields[i]
-            if (json[key.toLowerCase()] != undefined) {
+            if (json[key.toLowerCase()] != undefined && json[key.toLowerCase()].length > 0) {
                 thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
             }
         }
