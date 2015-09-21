@@ -154,7 +154,7 @@ class Archiver(object):
         if body:
             pmid = mid
             try:
-                mid = hashlib.sha256(body).hexdigest() + "@" + mlist.list_name + "@apache.org"
+                mid = "%s@%s@%s" % (hashlib.sha224(body).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_name)
             except:
                 mid = pmid
             ojson = {
