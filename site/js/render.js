@@ -1370,16 +1370,6 @@ function timeTravelListRedirect(json, state) {
         var osubs = countSubs(current_thread_json[state.id])
         var nsubs = countSubs(json.thread)
         var oid = current_thread_json[state.id].tid
-        if (state.jump) {
-            var thread = findEpoch(state.jump)
-            if (thread) {
-                thread.scrollIntoView()
-                thread.setAttribute("meme", "true")
-                thread.style.background = "rgba(200,200,255, 0.25)"
-            } else {
-                document.getElementById('magic_' + state.id).scrollIntoView();
-            }
-        }
         if (nsubs > osubs || !json.thread.irt) {
             toggleEmails_threaded(state.id)
             current_thread_json[state.id] = json.thread
@@ -1397,6 +1387,15 @@ function timeTravelListRedirect(json, state) {
             document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
         if (state.jump) {
+            var thread = findEpoch(state.jump)
+            if (thread) {
+                thread.setAttribute("meme", "true")
+                thread.style.background = "rgba(200,200,255, 0.25)"
+                var xyz = state.jump
+                window.setTimeout(function() { document.getElementById(xyz).scrollIntoView() }, 1000)
+            } else {
+                document.getElementById('magic_' + state.id).scrollIntoView();
+            }
             document.getElementById('magic_' + state.id).innerHTML = "Showing the thread in its entirety"
         }
         current_thread_json[state.id].magic = true
