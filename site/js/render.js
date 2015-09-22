@@ -194,14 +194,15 @@ function loadList_flat(mjson, limit, start, deep) {
             ld = 'warning'
             ti = "Has activity in the past 24 hours"
         }
+        var d = ""
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep && typeof eml.list != undefined && eml.list != null) {
             var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
-            var elist2 = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
-            d = "<a href='list.html?" + elist2 + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
+            var d = "<a href='list.html?" + elist2 + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
             if (eml.subject.length > 75) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
@@ -295,8 +296,8 @@ function loadList_threaded(mjson, limit, start, deep) {
         var d = ''
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep) {
-            var elist = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
-            var elist2 = eml.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
@@ -376,6 +377,10 @@ function permaLink(id, type) {
 
 // displayEmail: Shows an email inside a thread
 function displayEmail(json, id) {
+    if (!json.mid && !json.tid) {
+        alert("404: Could not find this email!")
+        return
+    }
     if (current_thread_mids[json.mid]) {
         return
     } else {
@@ -405,7 +410,7 @@ function displayEmail(json, id) {
         if (json.private) {
             thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
         }
-        var lid = json.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+        var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
         var ebody = json.body
         ebody = ebody.replace(/</, "&lt;")
@@ -460,7 +465,7 @@ function displaySingleEmail(json, id) {
         if (json.private) {
             thread.innerHTML += "<font color='#C00'><b>Private list: </b> YES</font><br/>"
         }
-        var lid = json.list_raw.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+        var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
 
         var ebody = json.body
         ebody = ebody.replace(/</, "&lt;")
@@ -526,12 +531,18 @@ function sortByDate(tid) {
 
 // displayEmailThreaded: Appends an email to a threaded display of a topic
 function displayEmailThreaded(json, state) {
+    var b = state.before
+    var obj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
+    if (!json.mid && !json.tid) {
+        if (obj) {
+            obj.innerHTML = "<h2>404!</h2><p>Sorry, we couldn't find this email :("
+        }
+        return
+    }
     if (state.main == json.mid || state.main == json.tid) {
         return
     }
     saved_emails[json.mid] = json
-    var b = state.before
-    var obj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
     if (obj) {
         var node = document.createElement('div')
         node.setAttribute("epoch", json.epoch.toString())
@@ -1197,7 +1208,7 @@ function compose(eid, lid) {
     if (email) {
         if (login.credentials) {
             
-            var listname = email['list_raw'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            var listname = email['list'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             compose_headers = {
                 'in-reply-to': email['message-id'],
                 'references': email['message-id'] + " " + (email['references'] ? email['references'] : ""),
