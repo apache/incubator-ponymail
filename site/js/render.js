@@ -499,9 +499,9 @@ function traverseThread(child) {
     for (var i in child.childNodes) {
         if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == 'DIV') {
             kiddos.push(child.childNodes[i])
-            if (child.childNodes[i].hasChildNodes()) {
-                traverseThread(child.childNodes[i])
-            }
+        }
+        if (child.childNodes[i].hasChildNodes()) {
+            traverseThread(child.childNodes[i])
         }
     }
 
@@ -1345,8 +1345,9 @@ function timeTravelSingleThread() {
 
 
 function findEpoch(epoch) {
-    var kiddos = []
+    kiddos = []
     traverseThread(document.body)
+    alert(kiddos.length)
     for (var i in kiddos) {
         if (kiddos[i].hasAttribute('epoch') && parseInt(kiddos[i].getAttribute('epoch')) == epoch) {
             alert("Found one!")
