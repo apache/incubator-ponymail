@@ -57,6 +57,7 @@ function handle(r)
             canAccess = true
         end
         if canAccess then
+            doc.tid = doc.request_id
             r:puts(JSON.encode(doc))
         else
             r:puts(JSON.encode{
