@@ -42,8 +42,8 @@ function renderNotifications(json) {
         current_flat_json = json.notifications
         
         var nest = "<ul style='text-align: left;'>"
-        for (var i in json.notifications) {
-            var notif = json.notifications[i]
+        for (var i in current_flat_json) {
+            var notif = current_flat_json[i]
             if (!notif.epoch) {
                 continue;
             }
@@ -80,7 +80,11 @@ function renderNotifications(json) {
             var subject = eml.subject.replace(/</mg, "&lt;")
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            nest += "<li class='list-group-item' style='font-weight: " + bold + ";' id='notif_" + i + "'> &nbsp; <a href='javascript:void(0);' onclick='hasSeen(\"" + pmid + "\", " + i + "); toggleEmails_threaded(" + i + ");'>" + subject + "</a> " + d + " <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
+            var extras = ""
+            if (json.seen == 0 ) {
+                extras = "hasSeen(\"" + pmid + "\", " + i + "); "
+            }
+            nest += "<li class='list-group-item' style='font-weight: " + bold + ";' id='notif_" + i + "'> &nbsp; <a href='javascript:void(0);' onclick='" + extras + "toggleEmails_threaded(" + i + ");'>" + subject + "</a> " + d + " <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
         }
         nest += "</ul>"
         document.getElementById('notifications').innerHTML = nest
