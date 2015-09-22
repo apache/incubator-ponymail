@@ -81,7 +81,7 @@ function renderNotifications(json) {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
             var extras = ""
-            if (json.seen == 0 ) {
+            if (eml.seen == 0 ) {
                 extras = "hasSeen(\"" + pmid + "\", " + i + "); "
             }
             nest += "<li class='list-group-item' style='font-weight: " + bold + ";' id='notif_" + i + "'> &nbsp; <a href='javascript:void(0);' onclick='" + extras + "toggleEmails_threaded(" + i + ");'>" + subject + "</a> " + d + " <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
