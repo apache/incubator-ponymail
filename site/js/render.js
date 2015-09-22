@@ -429,6 +429,7 @@ function displayEmail(json, id) {
         thread.innerHTML += "<br/><pre style='font-family: Hack;'>" + ebody + '</pre>'
         if (thread.hasAttribute("meme")) {
             thread.scrollIntoView()
+            thread.style.background = "rgba(200,200,255, 0.25)"
         }
     } else {
         alert("Error, " + id + " not found :(")
