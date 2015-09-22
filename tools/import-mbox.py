@@ -73,7 +73,7 @@ es = Elasticsearch([
     retry_on_timeout=True
     )
 
-rootURL = config.get("import", "mod_mbox") #http://mail-archives.eu.apache.org/mod_mbox/
+rootURL = ""
 
 def getcharsets(msg):
     charsets = set({})
