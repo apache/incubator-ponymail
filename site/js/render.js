@@ -1344,6 +1344,17 @@ function timeTravelSingleThread() {
 }
 
 
+function findEpoch(epoch) {
+    var kiddos = []
+    traverseThread(document.body)
+    for (var i in kiddos) {
+        if (kiddos[i].hasAttribute('epoch') && parseInt(kiddos[i].getAttribute('epoch')) == epoch) {
+            alert("Found one!")
+            return kiddos[i]
+        }
+    }
+}
+
 // time travel in list mode:
 function timeTravelListRedirect(json, state) {
     if (json && json.emails) {
@@ -1372,10 +1383,11 @@ function timeTravelListRedirect(json, state) {
             document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
         if (state.jump) {
-            var thread = document.getElementById('thread_' + state.jump.replace(/@<.+>/, ""))
+            var thread = findEpoch(state.jump)
             if (thread) {
                 thread.scrollIntoView();
-                thread.style.background = "rgba(200,200,255, 0.3)"
+                alert(state.jump)
+                thread.style.background = "rgba(200,200,255, 0.25)"
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
             }
