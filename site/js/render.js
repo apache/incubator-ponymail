@@ -1345,38 +1345,41 @@ function timeTravelSingleThread() {
 
 
 // time travel in list mode:
-function timeTravelListRedirect(json, id) {
+function timeTravelListRedirect(json, state) {
     if (json && json.emails) {
         for (var i in json.emails) {
             current_flat_json.push(json.emails[i])
         }
     }
     if (json && json.thread) {
-        var osubs = countSubs(current_thread_json[id])
+        var osubs = countSubs(current_thread_json[state.id])
         var nsubs = countSubs(json.thread)
         if (nsubs > osubs || !json.thread.irt) {
-            toggleEmails_threaded(id)
-            current_thread_json[id] = json.thread
-            toggleEmails_threaded(id)
+            toggleEmails_threaded(state.id)
+            current_thread_json[state.id] = json.thread
+            toggleEmails_threaded(state.id)
             var subs = countSubs(json.thread)
             var parts = countParts(json.thread)
-            if (document.getElementById('subs_' + id)) {
-                document.getElementById('subs_' + id).innerHTML = subs + " replies"
-                document.getElementById('people_' + id).innerHTML = parts + " people"
-                document.getElementById('people_' + id).style.visibility = parts > 1 ? "visible" : "hidden"
+            if (document.getElementById('subs_' + state.id)) {
+                document.getElementById('subs_' + state.id).innerHTML = subs + " replies"
+                document.getElementById('people_' + state.id).innerHTML = parts + " people"
+                document.getElementById('people_' + state.id).style.visibility = parts > 1 ? "visible" : "hidden"
             }
-            document.getElementById('magic_' + id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
+            document.getElementById('magic_' + state.id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         }
         else {
-            document.getElementById('magic_' + id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
+            document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
-        current_thread_json[id].magic = true
+        if (jump) {
+            document.getElementById('magic_' + state.id).scrollIntoView();
+        }
+        current_thread_json[state.id].magic = true
     }
 }
 
-function timeTravelList(id) {
+function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
-    GetAsync("/thread.lua?timetravel=true&id=" + mid, id, timeTravelListRedirect)
+    GetAsync("/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
 }
 
 // seedGetSingleThread: pre-caller for the above.
