@@ -20,6 +20,7 @@
 local http = require 'socket.http'
 local JSON = require 'cjson'
 local config = require 'lib/config'
+local default_doc = "mbox"
 
 function getHits(query, size, doc)
     doc = doc or "mbox"
@@ -49,7 +50,7 @@ function getDoc (ty, id)
 end
 
 function getHeaders(query, size, doc)
-    doc = doc or "ponymail_alpha"
+    doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
@@ -67,7 +68,7 @@ function getHeaders(query, size, doc)
 end
 
 function getHeadersReverse(query, size, doc)
-    doc = doc or "ponymail_alpha"
+    doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
@@ -84,9 +85,10 @@ function getHeadersReverse(query, size, doc)
     return out
 end
 
-function raw(query)
+function raw(query, doctype)
     local js = JSON.encode(query)
-    local url = config.es_url .. "_search"
+    doctype = doctype or default_doc
+    local url = config.es_url .. doctype .. "/_search"
     local result = http.request(url, js)
     local out = {}
     local json = JSON.decode(result)
@@ -105,11 +107,16 @@ function index(r, id, ty, body)
     return json or {}
 end
 
+function setDefault(typ)
+    default_doc = typ
+end
+
 return {
     find = getHits,
     findFast = getHeaders,
     findFastReverse = getHeadersReverse,
     get = getDoc,
     raw = raw,
-    index = index
+    index = index,
+    default = setDefault
 }
