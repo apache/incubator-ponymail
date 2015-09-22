@@ -427,6 +427,9 @@ function displayEmail(json, id) {
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
 
         thread.innerHTML += "<br/><pre style='font-family: Hack;'>" + ebody + '</pre>'
+        if (thread.hasAttribute("meme")) {
+            thread.scrollIntoView()
+        }
     } else {
         alert("Error, " + id + " not found :(")
     }
@@ -1385,7 +1388,8 @@ function timeTravelListRedirect(json, state) {
         if (state.jump) {
             var thread = findEpoch(state.jump)
             if (thread) {
-                window.setTimeout(thread.scrollIntoView, 500)
+                thread.scrollIntoView()
+                thread.setAttribute("meme", "true")
                 thread.style.background = "rgba(200,200,255, 0.25)"
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
