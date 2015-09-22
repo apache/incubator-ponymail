@@ -18,6 +18,7 @@
 function setupUserFromLua(json) {
     if (json.login) {
         setupUser(json.login)
+        login = json.login
     }
 }
 
