@@ -95,6 +95,16 @@ function raw(query, doctype)
     return json or {}, url
 end
 
+function update(doctype, id, query)
+    local js = JSON.encode({doc = query })
+    doctype = doctype or default_doc
+    local url = config.es_url .. doctype .. "/" .. id .. "/_update"
+    local result = http.request(url, js)
+    local out = {}
+    local json = JSON.decode(result)
+    return json or {}, url
+end
+
 function index(r, id, ty, body)
     local js = JSON.encode(query)
     if not id then
@@ -118,5 +128,6 @@ return {
     get = getDoc,
     raw = raw,
     index = index,
-    default = setDefault
+    default = setDefault,
+    update = update
 }
