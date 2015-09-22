@@ -219,6 +219,7 @@ class Archiver(object):
                                 'to': msg_metadata['to'],
                                 'subject': msg_metadata['subject'],
                                 'message-id': msg_metadata['message-id'],
+                                'in-reply-to': msg_metadata['in-reply-to'],
                                 'epoch': email.utils.mktime_tz(mdate),
                                 'mid': mid,
                                 'seen': 0
