@@ -45,7 +45,7 @@ var xlist = ""
 var domlist = {}
 var compose_headers = {}
 var login = {}
-
+var xyz
 
 var viewModes = {
     threaded: {
@@ -1376,7 +1376,7 @@ function timeTravelListRedirect(json, state) {
             toggleEmails_threaded(state.id)
             var subs = countSubs(json.thread)
             var parts = countParts(json.thread)
-            if (document.getElementById('subs_' + state.id)) {
+            if (document.getElementById('subs_' + state.id) != null) {
                 document.getElementById('subs_' + state.id).innerHTML = subs + " replies"
                 document.getElementById('people_' + state.id).innerHTML = parts + " people"
                 document.getElementById('people_' + state.id).style.visibility = parts > 1 ? "visible" : "hidden"
@@ -1391,7 +1391,7 @@ function timeTravelListRedirect(json, state) {
             if (thread) {
                 thread.setAttribute("meme", "true")
                 thread.style.background = "rgba(200,200,255, 0.25)"
-                var xyz = state.jump
+                xyz = state.jump
                 window.setTimeout(function() { document.getElementById(xyz).scrollIntoView() }, 1000)
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
