@@ -117,7 +117,8 @@ mappings = {
         "date" : {
           "type" : "date",
           "store" : True,
-          "format" : "yyyy/MM/dd HH:mm:ss"
+          "format" : "yyyy/MM/dd HH:mm:ss",
+          "index" : "not_analyzed"
         },
         "epoch" : {
           "type" : "double"

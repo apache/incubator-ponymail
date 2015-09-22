@@ -71,7 +71,7 @@ function getHeadersReverse(query, size, doc)
     doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
+    local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=epoch:desc&size=" .. size
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
@@ -92,7 +92,7 @@ function raw(query, doctype)
     local result = http.request(url, js)
     local out = {}
     local json = JSON.decode(result)
-    return json or {}
+    return json or {}, url
 end
 
 function index(r, id, ty, body)

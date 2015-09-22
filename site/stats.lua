@@ -232,7 +232,6 @@ function handle(r)
     local firstYear = r:ivm_get("firstYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
     if not firstYear or firstYear == "" then
         local doc = elastic.raw {
-    
             query = {
                 bool = {
                     must = {
@@ -248,7 +247,7 @@ function handle(r)
             
             sort = {
                 {
-                    date = {
+                    epoch = {
                         order = "asc"
                     }
                 }  
@@ -279,7 +278,7 @@ function handle(r)
             
             sort = {
                 {
-                    date = {
+                    epoch = {
                         order = "desc"
                     }
                 }  
@@ -322,7 +321,7 @@ function handle(r)
         
         sort = {
             {
-                date = {
+                epoch = {
                     order = "desc"
                 }
             }  
