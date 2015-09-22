@@ -1371,7 +1371,13 @@ function timeTravelListRedirect(json, state) {
             document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
         if (jump) {
-            document.getElementById('magic_' + state.id).scrollIntoView();
+            var thread = document.getElementById('thread_' + json.thread.tid.toString().replace(/@<.+>/, ""))
+            if (thread) {
+                thread.scrollIntoView();
+            } else {
+                document.getElementById('magic_' + state.id).scrollIntoView();
+            }
+            document.getElementById('magic_' + state.id).innerHTML = "Showing the thread in its entirety"
         }
         current_thread_json[state.id].magic = true
     }
