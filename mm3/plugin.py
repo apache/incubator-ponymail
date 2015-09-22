@@ -213,6 +213,7 @@ class Archiver(object):
                                 'type': 'direct',
                                 'recipient': cid,
                                 'list': lid,
+                                'private': private,
                                 'date': msg_metadata['date'],
                                 'from': msg_metadata['from'],
                                 'to': msg_metadata['to'],
