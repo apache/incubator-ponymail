@@ -80,7 +80,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    local daterange = {gt = "now-"..dd.."d" }
+    local daterange = {gt = "now-"..dd.."d", lte = "now" }
     if get.s and get.e then
         local em = tonumber(get.e:match("(%d+)$"))
         local ey = tonumber(get.e:match("^(%d+)"))
