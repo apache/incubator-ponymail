@@ -500,7 +500,7 @@ function traverseThread(child) {
         if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == 'DIV') {
             kiddos.push(child.childNodes[i])
         }
-        if (child.childNodes[i].hasChildNodes()) {
+        if (child.childNodes[i].nodeType && child.childNodes[i].hasChildNodes()) {
             traverseThread(child.childNodes[i])
         }
     }
@@ -1347,13 +1347,12 @@ function timeTravelSingleThread() {
 function findEpoch(epoch) {
     kiddos = []
     traverseThread(document.body)
-    alert(kiddos.length)
     for (var i in kiddos) {
         if (kiddos[i].hasAttribute('epoch') && parseInt(kiddos[i].getAttribute('epoch')) == epoch) {
-            alert("Found one!")
             return kiddos[i]
         }
     }
+    return null
 }
 
 // time travel in list mode:
@@ -1387,7 +1386,6 @@ function timeTravelListRedirect(json, state) {
             var thread = findEpoch(state.jump)
             if (thread) {
                 thread.scrollIntoView();
-                alert(state.jump)
                 thread.style.background = "rgba(200,200,255, 0.25)"
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
