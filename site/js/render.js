@@ -1393,6 +1393,7 @@ function timeTravelListRedirect(json, state) {
                 thread.style.background = "rgba(200,200,255, 0.25)"
                 xyz = thread.getAttribute("id")
                 window.setTimeout(function() { document.getElementById(xyz).scrollIntoView() }, 1000)
+                document.getElementById(xyz).scrollIntoView()
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
             }
