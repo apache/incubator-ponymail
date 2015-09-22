@@ -53,6 +53,7 @@ function handle(r)
                 if canUse then
                     doc.id = doc['message-id']
                     doc.tid = doc.id
+                    doc.irt = doc['in-reply-to']
                     table.insert(peml, doc)
                 end
             end
