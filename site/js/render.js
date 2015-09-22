@@ -1391,7 +1391,7 @@ function timeTravelListRedirect(json, state) {
             if (thread) {
                 thread.setAttribute("meme", "true")
                 thread.style.background = "rgba(200,200,255, 0.25)"
-                xyz = state.jump
+                xyz = thread.getAttribute("id")
                 window.setTimeout(function() { document.getElementById(xyz).scrollIntoView() }, 1000)
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
