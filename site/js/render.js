@@ -1374,6 +1374,7 @@ function timeTravelListRedirect(json, state) {
             var thread = document.getElementById('thread_' + json.thread.tid.toString().replace(/@<.+>/, ""))
             if (thread) {
                 thread.scrollIntoView();
+                thread.style.background = "rgba(200,200,255, 0.3)"
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
             }
