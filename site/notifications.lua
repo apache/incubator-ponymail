@@ -29,6 +29,19 @@ function handle(r)
     local get = r:parseargs()
     local account = user.get(r)
     if account then
+        if get.seen then
+            local mid = get.seen
+            if mid and #mid > 0 then
+                local docs = elastic.find("mid:\"" .. mid .. "\"", 1, "notifications")
+                if docs and #docs == 1 then
+                    elastic.update("notifications", docs[1].request_id, { seen = 1 })
+                    r:puts[[{"marked": true}]]
+                    return apache2.OK
+                end
+            end
+            r:puts[[{}]]
+            return apache2.OK
+        end
         local peml = {}
         local rights = nil
         if not doc or not doc.subject then

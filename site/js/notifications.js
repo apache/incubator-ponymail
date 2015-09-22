@@ -22,6 +22,19 @@ function setupUserFromLua(json) {
     }
 }
 
+function hasSeenResult(json, tid) {
+    // Only decrease number if backend says 'seen' has changed
+    if (json && json.marked) {
+        document.getElementById('notif_' + tid).style.fontWeight = "normal"
+        login.notifications--;
+        setupUser(login)
+    }
+}
+
+function hasSeen(mid, tid) {
+    GetAsync("/notifications.lua?seen=" + mid, tid, hasSeenResult)
+}
+
 function renderNotifications(json) {
     var now = new Date().getTime() / 1000
     var deep = true
@@ -40,8 +53,9 @@ function renderNotifications(json) {
             if (eml.subject.length > 90) {
                 eml.subject = eml.subject.substr(0, 90) + "..."
             }
+            var pmid = eml.mid
             eml.mid = eml.id
-    
+            var bold = eml.seen == 0 ? 'bold' : 'normal'
             var ld = 'default'
             var ti = ''
             if (eml.epoch > (now - 86400)) {
@@ -66,7 +80,7 @@ function renderNotifications(json) {
             var subject = eml.subject.replace(/</mg, "&lt;")
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            nest += "<li class='list-group-item'> &nbsp; <a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> " + d + " <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
+            nest += "<li class='list-group-item' style='font-weight: " + bold + ";' id='notif_" + i + "'> &nbsp; <a href='javascript:void(0);' onclick='hasSeen(\"" + pmid + "\", " + i + "); toggleEmails_threaded(" + i + ");'>" + subject + "</a> " + d + " <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
         }
         nest += "</ul>"
         document.getElementById('notifications').innerHTML = nest
