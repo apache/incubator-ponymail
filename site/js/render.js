@@ -1385,7 +1385,7 @@ function timeTravelListRedirect(json, state) {
         if (state.jump) {
             var thread = findEpoch(state.jump)
             if (thread) {
-                thread.scrollIntoView();
+                window.setTimeout(500, thread.scrollIntoView)
                 thread.style.background = "rgba(200,200,255, 0.25)"
             } else {
                 document.getElementById('magic_' + state.id).scrollIntoView();
