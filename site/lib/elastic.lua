@@ -22,10 +22,10 @@ local JSON = require 'cjson'
 local config = require 'lib/config'
 
 function getHits(query, size, doc)
-    doc = doc or "ponymail_alpha"
+    doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = config.es_url .. "_search?q="..query.."&sort=date:desc&size=" .. size
+    local url = config.es_url .. doc .. "/_search?q="..query.."&sort=date:desc&size=" .. size
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
