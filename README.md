@@ -33,7 +33,7 @@ private.
 
 * ElasticSearch backend
 * Apache HTTP Server frontend with mod_lua loaded
-* Python 2.7 for importing
+* Python 2.7 for importing (with elasticsearch and formatflowed via pip)
 * MailMan3 if you fancy that (we have an archive plugin)
 * OR any mailing list system of your choice (use mm3 plugin with stdin)
 * Lua 5.1 or 5.2 + lua-cjson, luasec and luasocket (optional)
