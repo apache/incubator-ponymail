@@ -299,7 +299,7 @@ class SlurpThread(Thread):
                                 else:
                                     mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@apache.org"
                             print("No MID found, setting to %s" % mid)
-                        mid2 = "%s@%s@%s" % (hashlib.sha224(body).hexdigest(), email.utils.mktime_tz(mdate), lid)
+                        mid2 = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
                         count += 1
                         mr = ""
                         if 'references' in message:

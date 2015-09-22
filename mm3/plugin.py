@@ -161,7 +161,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body.encode('utf-8')).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_id)
+                mid = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_id)
             except:
                 mid = pmid
             ojson = {
