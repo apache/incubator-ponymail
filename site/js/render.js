@@ -1370,7 +1370,7 @@ function timeTravelListRedirect(json, state) {
         else {
             document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
-        if (jump) {
+        if (state.jump) {
             var thread = document.getElementById('thread_' + json.thread.tid.toString().replace(/@<.+>/, ""))
             if (thread) {
                 thread.scrollIntoView();
