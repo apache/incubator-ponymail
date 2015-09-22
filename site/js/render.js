@@ -1360,9 +1360,11 @@ function timeTravelListRedirect(json, id) {
             toggleEmails_threaded(id)
             var subs = countSubs(json.thread)
             var parts = countParts(json.thread)
-            document.getElementById('subs_' + id).innerHTML = subs + " replies"
-            document.getElementById('people_' + id).innerHTML = parts + " people"
-            document.getElementById('people_' + id).style.visibility = parts > 1 ? "visible" : "hidden"
+            if (document.getElementById('subs_' + id)) {
+                document.getElementById('subs_' + id).innerHTML = subs + " replies"
+                document.getElementById('people_' + id).innerHTML = parts + " people"
+                document.getElementById('people_' + id).style.visibility = parts > 1 ? "visible" : "hidden"
+            }
             document.getElementById('magic_' + id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         }
         else {
