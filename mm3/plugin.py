@@ -60,7 +60,7 @@ def parse_attachment(part):
             attachment['size'] = len(fd)
             attachment['filename'] = None
             h = hashlib.sha256(fd).hexdigest()
-            b64 = str(base64.urlsafe_b64encode(fd))
+            b64 = fd.decode("base64")
             attachment['hash'] = h
             for param in dispositions[1:]:
                 key,val = param.split("=")
