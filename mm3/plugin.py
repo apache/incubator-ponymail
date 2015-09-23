@@ -63,7 +63,9 @@ def parse_attachment(part):
             for param in dispositions[1:]:
                 key,val = param.split("=")
                 if key.lower().strip() == "filename":
-                    attachment['filename'] = val.strip('"')
+                    val = val.strip(' "')
+                    print("Found attachment: %s" % val)
+                    attachment['filename'] = val
             if attachment['filename']:
                 return attachment, fd # Return meta data and contents separately
     return None, None
