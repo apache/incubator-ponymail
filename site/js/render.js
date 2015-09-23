@@ -47,6 +47,7 @@ var compose_headers = {}
 var login = {}
 var xyz
 var start = new Date().getTime()
+var latestEmailInThread = 0
 
 var viewModes = {
     threaded: {
@@ -215,7 +216,16 @@ function loadList_flat(mjson, limit, start, deep) {
         var subject = eml.subject.replace(/</mg, "&lt;")
         var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
         from = from.replace(/\"/g, "")
-        nest += "<li class='list-group-item'> &nbsp; <a href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        
+        // style based on view before or not??
+        var estyle = ""
+        if (typeof(window.localStorage) !== "undefined") {
+            if (! window.localStorage.getItem("viewed_" + eml.tid) ){
+                estyle = "font-weight: bold;"
+            }
+        }
+        
+        nest += "<li class='list-group-item' style='" + estyle + "'> &nbsp; <a href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -295,6 +305,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             ti = "Has activity in the past 24 hours"
         }
         var d = ''
+        var estyle = ""
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep) {
             var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
@@ -313,7 +324,14 @@ function loadList_threaded(mjson, limit, start, deep) {
             hour12: false
         })
         var pds = people > 1 ? "visible" : "hidden"
-        nest += "<li class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='toggleEmails_threaded(" + i + ");'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        
+        // style based on view before or not??
+        if (typeof(window.localStorage) !== "undefined") {
+            if (! window.localStorage.getItem("viewed_" + eml.tid) || parseInt(window.localStorage.getItem("viewed_" + eml.tid)) < latest ){
+                estyle = "font-weight: bold;"
+            }
+        }
+        nest += "<li style='" + estyle + "' class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -389,10 +407,20 @@ function displayEmail(json, id) {
         current_email_msgs.push(json)
     }
     saved_emails[json.mid] = json
+    var estyle = ""
+    
+    // color based on view before or not??
+    if (typeof(window.localStorage) !== "undefined") {
+        if (! window.localStorage.getItem("viewed_" + json.mid) ){
+            estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
+            window.localStorage.setItem("viewed_" + json.mid, latestEmailInThread)
+        }
+    }
     var cols = ['primary', 'success', 'info', 'default', 'warning', 'danger']
     var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
+        thread.style = estyle
         thread.innerHTML = ''
         thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
         thread.innerHTML += ' &nbsp; <label class="label label-warning" onclick="permaLink(\'' + json.mid + '\', \'' + prefs.groupBy + '\');" style="cursor: pointer; float: right;">Permalink</label>'
