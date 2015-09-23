@@ -334,6 +334,9 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
+    -- Sometimes ES screws up, so let's sort for it!
+    table.sort (doc.hits.hits, function (k1, k2) return k1.epoch < k2.epoch end )
+    
     for k = #doc.hits.hits, 1, -1 do
         local v = doc.hits.hits[k]
         local email = v._source
@@ -390,7 +393,6 @@ function handle(r)
                     irt = irt:gsub("^[a-zA-Z]+:%s+", "")
                 end
             end
-            
             if emails[irt] then
                 if emails[irt].nest < 50 then
                     emails[mid].nest = emails[irt].nest + 1
