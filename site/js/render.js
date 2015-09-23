@@ -1202,7 +1202,7 @@ function compose(eid, lid) {
     if (lid) {
         email = {
             'message-id': "",
-            'list_raw': xlist.replace("@", "."),
+            'list': xlist.replace("@", "."),
             'subject': "",
             'body': "",
             'from': "",
