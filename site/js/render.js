@@ -450,7 +450,13 @@ function displayEmail(json, id) {
         if (json.attachments && json.attachments.length > 0) {
             for (var a in json.attachments) {
                 var fd = json.attachments[a]
-                thread.innerHTML += "<b>Attached file: </b><a href='/attachment.lua?id=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a><br/>"
+                var size = parseInt(fd.size/1024)
+                if (size > 0) {
+                    size = size.toLocaleString() + " kb"
+                } else {
+                    size = size.toLocaleString() + " bytes"
+                }
+                thread.innerHTML += "<b>Attached file: </b><a href='/attachment.lua?id=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ")<br/>"
             }
         }
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
