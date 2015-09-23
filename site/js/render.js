@@ -454,7 +454,7 @@ function displayEmail(json, id) {
                 if (size > 0) {
                     size = size.toLocaleString() + " kb"
                 } else {
-                    size = size.toLocaleString() + " bytes"
+                    size = fd.size.toLocaleString() + " bytes"
                 }
                 thread.innerHTML += "<b>Attached file: </b><a href='/attachment.lua?id=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ")<br/>"
             }
