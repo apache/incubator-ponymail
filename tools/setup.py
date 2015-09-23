@@ -121,7 +121,8 @@ mappings = {
           "index" : "not_analyzed"
         },
         "epoch" : {
-          "type" : "double"
+          "type" : "double",
+          "index" : "not_analyzed"
         },
         "from" : {
           "type" : "string"
