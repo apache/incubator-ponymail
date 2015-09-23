@@ -46,6 +46,7 @@ start = time.time()
 quickmode = False
 lid_override = None
 private = False
+appender = "apache.org"
 
 
 source = "./"
@@ -221,7 +222,7 @@ class SlurpThread(Thread):
                     mid = message['message-id']
 
                     lid = message['list-id']
-                    if not lid or lid == "" or lid.find("incubator") != -1: # Guess list name in absence
+                    if not lid or lid == "": # Guess list name in absence
                         lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
                     
                     # Compact LID to <foo@domain>, discard rest
@@ -292,12 +293,12 @@ class SlurpThread(Thread):
                     if body and okay and mdate:
                         if mid == None or not mid:
                             try:
-                                mid = hashlib.sha256(body).hexdigest() + "@" + lid + "@apache.org"
+                                mid = hashlib.sha256(body).hexdigest() + "@" + lid + "@" + appender
                             except:
                                 if filebased:
-                                    mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@apache.org"
+                                    mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@" + appender
                                 else:
-                                    mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@apache.org"
+                                    mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@" + appender
                             print("No MID found, setting to %s" % mid)
                         mid2 = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
                         count += 1
@@ -374,6 +375,8 @@ parser.add_argument('--project', dest='project', type=str, nargs=1,
                    help='Optional project to look for ($project-* will be imported as well)')
 parser.add_argument('--ext', dest='ext', type=str, nargs=1,
                    help='Optional file extension (or call it with no args to not care)')
+parser.add_argument('--domain', dest='domain', type=str, nargs=1,
+                   help='Optional domain extension for MIDs and List ID reconstruction)')
 parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
 
@@ -385,6 +388,8 @@ if args.listid:
     list_override = args.listid[0]
 if args.project:
     project = args.project[0]
+if args.domain:
+    appender = args.domain[0]
 if args.recursive:
     recursive = args.recursive
 if args.interactive:
