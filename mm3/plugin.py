@@ -46,7 +46,7 @@ import datetime, time
 import json
 from collections import namedtuple
 import re
-import base64
+import codecs
 
 
 def parse_attachment(part):
@@ -60,7 +60,7 @@ def parse_attachment(part):
             attachment['size'] = len(fd)
             attachment['filename'] = None
             h = hashlib.sha256(fd).hexdigest()
-            b64 = fd.decode("base64")
+            b64 = codecs.encode(fd, "base64").decode('ascii')
             attachment['hash'] = h
             for param in dispositions[1:]:
                 key,val = param.split("=")
@@ -127,7 +127,7 @@ class Archiver(object):
                             attachments.append(part_meta)
                             contents[part_meta['hash']] = part_file
                 else:
-                    part_meta, part_file = parse_attachment(subpart)
+                    part_meta, part_file = parse_attachment(part)
                     if part_meta:
                         attachments.append(part_meta)
                         contents[part_meta['hash']] = part_file
