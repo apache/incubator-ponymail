@@ -32,9 +32,9 @@ function handle(r)
         if get.seen then
             local mid = get.seen
             if mid and #mid > 0 then
-                local docs = elastic.find("mid:\"" .. mid .. "\"", 1, "notifications")
-                if docs and #docs == 1 then
-                    elastic.update("notifications", docs[1].request_id, { seen = 1 })
+                local doc = elastic.getDoc("notifications", mid)
+                if doc and doc.seen then
+                    elastic.update("notifications", doc.request_id, { seen = 1 })
                     r:puts[[{"marked": true}]]
                     return apache2.OK
                 end
@@ -66,6 +66,7 @@ function handle(r)
                 if canUse then
                     doc.id = doc['message-id']
                     doc.tid = doc.id
+                    doc.nid = doc.request_id
                     doc.irt = doc['in-reply-to']
                     table.insert(peml, doc)
                 end

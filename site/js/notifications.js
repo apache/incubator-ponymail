@@ -53,7 +53,7 @@ function renderNotifications(json) {
             if (eml.subject.length > 90) {
                 eml.subject = eml.subject.substr(0, 90) + "..."
             }
-            var pmid = eml.mid
+            var pmid = eml.nid
             eml.mid = eml.id
             var bold = eml.seen == 0 ? 'bold' : 'normal'
             var ld = 'default'
