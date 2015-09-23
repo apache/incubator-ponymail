@@ -142,10 +142,12 @@ class Archiver(object):
                     for subpart in part.walk():
                         part_meta, part_file = parse_attachment(subpart)
                         if subpart.get_content_type() == 'text/plain':
-                                body = subpart.get_payload(decode=True) 
+                                body = subpart.get_payload(decode=True)
+                                break
         
                 elif part.get_content_type() == 'text/plain':
                     body = part.get_payload(decode=True)
+                    break
         
         elif msg.get_content_type() == 'text/plain':
             body = msg.get_payload(decode=True) 
