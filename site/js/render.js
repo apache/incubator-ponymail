@@ -1234,9 +1234,9 @@ function compose(eid, lid) {
             area.setAttribute("id", "reply_body")
             var eml = "\n\nOn " + email.date + ", " + email.from.replace(/</mg, "&lt;") + " wrote: \n"
             email.body = email.body.replace(/\r/mg, "")
-            eml += email.body.replace(/([^\n]*)/mg, "&gt; $1")
+            eml += email.body.replace(/^([^\n]*)/mg, "&gt; $1")
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
-            eml_raw += email.body.replace(/([^\n]*)/mg, "> $1")
+            eml_raw += email.body.replace(/^([^\n]*)/mg, "> $1")
 
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
             
