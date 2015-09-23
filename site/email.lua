@@ -58,7 +58,30 @@ function handle(r)
         end
         if canAccess then
             doc.tid = doc.request_id
-            r:puts(JSON.encode(doc))
+            if get.attachment then
+                local hash = r:escape_uri(get.file)
+                local fdoc = elastic.get("attachment", hash)
+                if fdoc and fdoc.source then
+                    local out = r:base64_decode(fdoc.source)
+                    local ct = "application/binary"
+                    local fn = "unknown"
+                    for k, v in pairs(doc.attachments or {}) do
+                        if v.hash == hash then
+                            ct = v.content_type or "application/binary"
+                            fn = v.filename
+                            break
+                        end
+                    end
+                    r.headers_out['Content-Type'] = ct
+                    if not (ct:match("image") or ct:match("text")) then
+                        r.headers_out['Content-Disposition'] = ("attachment; filename=\"%s\";"):format(fn)
+                    end
+                    r:write(out)
+                    return apache2.OK
+                end
+            else
+                r:puts(JSON.encode(doc))
+            end
         else
             r:puts(JSON.encode{
                     error = "You do not have access to view this email, sorry."
