@@ -46,7 +46,6 @@ import datetime, time
 import json
 from collections import namedtuple
 import re
-import StringIO
 
 
 def parse_attachment(part):
