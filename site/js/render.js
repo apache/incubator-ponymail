@@ -1762,5 +1762,5 @@ window.onpopstate = function(event) {
 
 // hide composer on email click
 if (document.getElementById('emails')) {
-    document.getElementById('emails').setAttribute("onclick", "hideComposer(event)")
+    //document.getElementById('emails').setAttribute("onclick", "hideComposer(event)")
 }
