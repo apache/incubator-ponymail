@@ -46,6 +46,7 @@ import datetime, time
 import json
 from collections import namedtuple
 import re
+import base64
 
 
 def parse_attachment(part):
@@ -59,6 +60,7 @@ def parse_attachment(part):
             attachment['size'] = len(fd)
             attachment['filename'] = None
             h = hashlib.sha256(fd).hexdigest()
+            b64 = base64.b64encode(fd)
             attachment['hash'] = h
             for param in dispositions[1:]:
                 key,val = param.split("=")
@@ -67,7 +69,7 @@ def parse_attachment(part):
                     print("Found attachment: %s" % val)
                     attachment['filename'] = val
             if attachment['filename']:
-                return attachment, fd # Return meta data and contents separately
+                return attachment, b64 # Return meta data and contents separately
     return None, None
 
 def pm_charsets(msg):
