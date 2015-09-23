@@ -46,7 +46,9 @@ function getDoc (ty, id)
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
-    json._source.request_id = json._id
+    if json and json._source then
+        json._source.request_id = json._id
+    end
     return (json and json._source) and json._source or {}
 end
 
