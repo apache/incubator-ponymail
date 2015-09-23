@@ -456,7 +456,7 @@ function displayEmail(json, id) {
                 } else {
                     size = fd.size.toLocaleString() + " bytes"
                 }
-                thread.innerHTML += "<b>Attached file: </b><a href='/attachment.lua?id=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ")<br/>"
+                thread.innerHTML += "<b>Attached file: </b><a href='/attachment.lua?eml=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ")<br/>"
             }
         }
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
