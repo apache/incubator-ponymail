@@ -62,8 +62,8 @@ def parse_attachment(part):
             attachment['hash'] = h
             for param in dispositions[1:]:
                 key,val = param.split("=")
-                if key.lower() == "filename":
-                    attachment['filename'] = val
+                if key.lower().strip() == "filename":
+                    attachment['filename'] = val.strip('"')
             if attachment['filename']:
                 return attachment, fd # Return meta data and contents separately
     return None, None
