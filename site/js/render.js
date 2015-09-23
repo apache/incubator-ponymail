@@ -226,7 +226,7 @@ function loadList_flat(mjson, limit, start, deep) {
         }
         var at = ""
         if (eml.attachments && eml.attachments > 0) {
-            at = "<img src='/images/attachment.png' style='float: left; title='This email has attachments'/> "
+            at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
         }
         nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
     }
@@ -446,6 +446,12 @@ function displayEmail(json, id) {
         }
         if (json.private) {
             thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
+        }
+        if (json.attachments && json.attachments > 0) {
+            for (var a in json.attachments) {
+                var fd = json.attachments[a]
+                thread.innerHTML += "<b>Attached file: </b>" + fd.filename.replace(/</g, "&lt;") + "<br/>"
+            }
         }
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
