@@ -123,11 +123,12 @@ class Archiver(object):
         :param msg: The message object.
         """
 
+        lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
         format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         lst_metadata = dict(list_name=mlist.list_id)
-        lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
         
+
         mid = hashlib.sha224(str("%s-%s" % (mlist.list_id, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (mlist.list_id if mlist.list_id else "none")
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
@@ -226,7 +227,7 @@ class Archiver(object):
                             }
                         )
             #im = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references'))
-    
+        return lid
             
     def list_url(self, mlist):
         """ Gots
@@ -257,8 +258,8 @@ if __name__ == '__main__':
             msg.add_header('archived-at', email.utils.formatdate())
         msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=True)
         
-        foo.archive_message(msg_metadata, msg)
-        print("Done archiving!")
+        lid = foo.archive_message(msg_metadata, msg)
+        print("Done archiving to %s!" % lid)
     else:
         print("Nothing to import (no list-id found!)")
         
