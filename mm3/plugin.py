@@ -126,7 +126,7 @@ class Archiver(object):
         format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         lst_metadata = dict(list_name=mlist.list_id)
-        lid = "<%s>" % mlist.list_id.strip("<>")
+        lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
         
         mid = hashlib.sha224(str("%s-%s" % (mlist.list_id, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (mlist.list_id if mlist.list_id else "none")
         if not msg_metadata.get('message-id'):
