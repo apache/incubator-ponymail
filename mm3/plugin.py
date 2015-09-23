@@ -140,7 +140,6 @@ class Archiver(object):
             for part in msg.walk():
                 if part.is_multipart(): 
                     for subpart in part.walk():
-                        part_meta, part_file = parse_attachment(subpart)
                         if subpart.get_content_type() == 'text/plain':
                                 body = subpart.get_payload(decode=True)
                                 break
