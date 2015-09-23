@@ -41,8 +41,6 @@ function handle(r)
     local listid = r:escape_html(get.list)
     local listraw = "<" .. listid:gsub("@", ".") .. ">"
     
-    local daterange = {gt = "now-"..dd.."d", lte = "now" }
-    
     local sterm = {
                     term = {
                         list_raw = listraw
@@ -59,11 +57,6 @@ function handle(r)
         query = {
             bool = {
                 must = {
-                    {
-                        range = {
-                            date = daterange
-                        }
-                    },
                     sterm,
                     {
                         query_string = {
