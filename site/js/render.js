@@ -850,6 +850,7 @@ function checkCalendar(json) {
 
 // buildPage: build the entire page!
 function buildPage(json, state) {
+    start = new Date().getTime()
     json = json ? json : old_json
     old_json = json
     old_state = state
