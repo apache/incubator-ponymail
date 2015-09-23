@@ -248,6 +248,10 @@ if __name__ == '__main__':
     foo = Archiver()
     msg = email.message_from_file(sys.stdin)
     # We're reading from STDIN, so let's fake an MM3 call
+    if 'altheader' in sys.argv:
+        altheader = sys.argv[len(sys.argv)-1]
+        if altheader in msg:
+            msg.add_header('list-id', msg.get(altheader))
     if 'list-id' in msg:
         if not msg.get('archived-at'):
             msg.add_header('archived-at', email.utils.formatdate())
