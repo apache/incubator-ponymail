@@ -72,7 +72,7 @@ function handle(r)
                             break
                         end
                     end
-                    r.headers_out['Content-Type'] = ct
+                    r.content_type = ct
                     if not (ct:match("image") or ct:match("text")) then
                         r.headers_out['Content-Disposition'] = ("attachment; filename=\"%s\";"):format(fn)
                     end
