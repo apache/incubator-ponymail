@@ -28,6 +28,7 @@ private.
 * Word clouds (yay!)
 * Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
 * Supports both custom OAuth and Mozilla Persona
+* Atom feeds for all lists (including private ones!)
 
 ### Requirements: ###
 
