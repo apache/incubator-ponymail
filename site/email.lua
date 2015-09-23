@@ -59,7 +59,7 @@ function handle(r)
         if canAccess then
             doc.tid = doc.request_id
             if get.attachment then
-                local hash = r:escape_uri(get.file)
+                local hash = r:escape(get.file)
                 local fdoc = elastic.get("attachment", hash)
                 if fdoc and fdoc.source then
                     local out = r:base64_decode(fdoc.source)
