@@ -46,6 +46,7 @@ var domlist = {}
 var compose_headers = {}
 var login = {}
 var xyz
+var start = new Date().getTime()
 
 var viewModes = {
     threaded: {
@@ -948,7 +949,8 @@ function buildPage(json, state) {
         document.getElementById('emails').innerHTML += "<h4>Looks like you don't have access to this archive. Maybe you need to be logged in?</h4>"
     }
     if (json.took) {
-        document.getElementById('emails').innerHTML += "<br/><br/><small><i>Rendered in " + parseInt(json.took / 1000) + "ms</i></small>"
+        var rtime = new Date().getTime() - start
+        document.getElementById('emails').innerHTML += "<br/><br/><small><i>Compiled in " + parseInt(json.took / 1000) + "ms, rendered in " + rtime + "ms</i></small>"
     }
     if (json.debug && pm_config.debug) {
         document.getElementById('emails').innerHTML += "<br/><br/><small><i>Debug times: " + json.debug.join(" + ") + "</i></small>"
