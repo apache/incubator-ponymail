@@ -62,7 +62,7 @@ function handle(r)
                 local hash = r:escape(get.file)
                 local fdoc = elastic.get("attachment", hash)
                 if fdoc and fdoc.source then
-                    local out = r:base64_decode(fdoc.source)
+                    local out = r:base64_decode(fdoc.source:gsub("\n", "")) -- bug in mod_lua?
                     local ct = "application/binary"
                     local fn = "unknown"
                     local fs = 0
