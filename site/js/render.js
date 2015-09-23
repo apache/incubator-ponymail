@@ -412,7 +412,7 @@ function displayEmail(json, id) {
     // color based on view before or not??
     if (typeof(window.localStorage) !== "undefined") {
         if (! window.localStorage.getItem("viewed_" + json.mid) ){
-            estyle = "background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
+            estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
             window.localStorage.setItem("viewed_" + json.mid, json.epoch)
             
         }
@@ -421,7 +421,7 @@ function displayEmail(json, id) {
     var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
-        thread.style = estyle
+        thread.style.background = estyle
         thread.innerHTML = ''
         thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
         thread.innerHTML += ' &nbsp; <label class="label label-warning" onclick="permaLink(\'' + json.mid + '\', \'' + prefs.groupBy + '\');" style="cursor: pointer; float: right;">Permalink</label>'
