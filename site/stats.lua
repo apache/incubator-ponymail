@@ -335,7 +335,7 @@ function handle(r)
     tnow = r:clock()
     
     -- Sometimes ES screws up, so let's sort for it!
-    table.sort (doc.hits.hits, function (k1, k2) return k1.epoch < k2.epoch end )
+    table.sort (doc.hits.hits, function (k1, k2) return k1._source.epoch < k2._source.epoch end )
     
     for k = #doc.hits.hits, 1, -1 do
         local v = doc.hits.hits[k]
