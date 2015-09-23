@@ -368,7 +368,7 @@ function handle(r)
             }
             
             if not irt or irt == JSON.null or #irt == 0 then
-                irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
+                irt = ""
             end
             if not emails[irt] and email.references and email.references ~= JSON.null then
                 for ref in email.references:gmatch("([^%s]+)") do
@@ -377,6 +377,10 @@ function handle(r)
                         break
                     end
                 end
+            end
+            
+            if not irt or irt == JSON.null or #irt == 0 then
+                irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
             end
             
             -- If we can't match by in-reply-to or references, match/group by subject, ignoring Re:/Fwd:/etc
