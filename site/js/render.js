@@ -413,7 +413,7 @@ function displayEmail(json, id) {
     if (typeof(window.localStorage) !== "undefined") {
         if (! window.localStorage.getItem("viewed_" + json.id) ){
             estyle = "background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
-            window.localStorage.setItem("viewed_" + json.id, latestEmailInThread)
+            window.localStorage.setItem("viewed_" + json.id, json.epoch)
         }
     }
     var cols = ['primary', 'success', 'info', 'default', 'warning', 'danger']
