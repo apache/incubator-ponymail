@@ -447,7 +447,7 @@ function displayEmail(json, id) {
         if (json.private) {
             thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
         }
-        if (json.attachments && json.attachments > 0) {
+        if (json.attachments && json.attachments.length > 0) {
             for (var a in json.attachments) {
                 var fd = json.attachments[a]
                 thread.innerHTML += "<b>Attached file: </b>" + fd.filename.replace(/</g, "&lt;") + "<br/>"
