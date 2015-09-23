@@ -447,6 +447,8 @@ function displayEmail(json, id) {
         if (json.private) {
             thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
         }
+        var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+        thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
         if (json.attachments && json.attachments.length > 0) {
             for (var a in json.attachments) {
                 var fd = json.attachments[a]
@@ -459,8 +461,6 @@ function displayEmail(json, id) {
                 thread.innerHTML += "<b>Attached file: </b><a href='/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ")<br/>"
             }
         }
-        var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
-        thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
         var ebody = json.body
         ebody = ebody.replace(/</, "&lt;")
         ebody = "\n" + ebody
