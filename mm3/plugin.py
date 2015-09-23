@@ -120,17 +120,10 @@ class Archiver(object):
         contents = {}
         if msg.is_multipart():    
             for part in msg.walk():
-                if part.is_multipart(): 
-                    for subpart in part.walk():
-                        part_meta, part_file = parse_attachment(subpart)
-                        if part_meta:
-                            attachments.append(part_meta)
-                            contents[part_meta['hash']] = part_file
-                else:
-                    part_meta, part_file = parse_attachment(part)
-                    if part_meta:
-                        attachments.append(part_meta)
-                        contents[part_meta['hash']] = part_file
+                part_meta, part_file = parse_attachment(part)
+                if part_meta:
+                    attachments.append(part_meta)
+                    contents[part_meta['hash']] = part_file
         return attachments, contents
     
     
