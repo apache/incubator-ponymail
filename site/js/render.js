@@ -220,7 +220,7 @@ function loadList_flat(mjson, limit, start, deep) {
         // style based on view before or not??
         var estyle = ""
         if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.tid) ){
+            if (! window.localStorage.getItem("viewed_" + eml.id) ){
                 estyle = "font-weight: bold;"
             }
         }
@@ -327,7 +327,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         
         // style based on view before or not??
         if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.tid) || parseInt(window.localStorage.getItem("viewed_" + eml.tid)) < latest ){
+            if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
                 estyle = "font-weight: bold;"
             }
         }
@@ -411,9 +411,9 @@ function displayEmail(json, id) {
     
     // color based on view before or not??
     if (typeof(window.localStorage) !== "undefined") {
-        if (! window.localStorage.getItem("viewed_" + json.mid) ){
+        if (! window.localStorage.getItem("viewed_" + json.id) ){
             estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
-            window.localStorage.setItem("viewed_" + json.mid, latestEmailInThread)
+            window.localStorage.setItem("viewed_" + json.id, latestEmailInThread)
         }
     }
     var cols = ['primary', 'success', 'info', 'default', 'warning', 'danger']
@@ -658,6 +658,10 @@ function toggleEmails_threaded(id, close, toverride) {
     var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         current_thread = id
+        if (typeof(window.localStorage) !== "undefined") {
+            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, latestEmailInThread)
+        }
+        
         thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
         var helper = document.getElementById('helper_' + id)
         if (!helper) {
