@@ -65,14 +65,17 @@ function handle(r)
                     local out = r:base64_decode(fdoc.source)
                     local ct = "application/binary"
                     local fn = "unknown"
+                    local fs = 0
                     for k, v in pairs(doc.attachments or {}) do
                         if v.hash == hash then
                             ct = v.content_type or "application/binary"
                             fn = v.filename
+                            fs = v.size
                             break
                         end
                     end
                     r.content_type = ct
+                    r.headers_out['Content-Length'] = fs
                     if not (ct:match("image") or ct:match("text")) then
                         r.headers_out['Content-Disposition'] = ("attachment; filename=\"%s\";"):format(fn)
                     end
