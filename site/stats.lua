@@ -300,7 +300,7 @@ function handle(r)
     local emails_full = {}
     local emls = {}
     local doc = elastic.raw {
-        _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private'},
+        _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private', 'attachments'},
         query = {
             bool = {
                 must = {
@@ -411,6 +411,11 @@ function handle(r)
             email.references = nil
             email.to = nil
             email['in-reply-to'] = nil
+            if email.attachments then
+                email.attachments = #email.attachments
+            else
+                email.attachments = 0
+            end
             table.insert(emls, email)
         else
             for k, v in pairs(top10) do
