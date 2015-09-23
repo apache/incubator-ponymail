@@ -1191,7 +1191,7 @@ function sendEmail(form) {
     request.send(f);
     
     var obj = document.getElementById('splash')
-    obj.innerHTML = "<h3>Email dispatched!</h3><p>Provided it passes spam checks, your email should be on its way to the mailing list now. Do note that some lists are always moderated, so your reply may be held for moderation for a while.</p>"
+    obj.innerHTML = "<h3>Email dispatched!</h3><p>Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.</p>"
     window.setTimeout(hideComposer, 4000)
 }
 
