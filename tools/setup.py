@@ -171,6 +171,17 @@ mappings = {
           "index" : "not_analyzed"
         }
       }
+    },
+    "attachment" : {
+      "_size" : {
+        "enabled" : True,
+        "store" : True
+      },
+      "properties" : {
+        "source" : {
+          "type" : "binary"
+        }
+      }
     }
   }
 
