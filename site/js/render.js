@@ -450,7 +450,7 @@ function displayEmail(json, id) {
         if (json.attachments && json.attachments.length > 0) {
             for (var a in json.attachments) {
                 var fd = json.attachments[a]
-                thread.innerHTML += "<b>Attached file: </b>" + fd.filename.replace(/</g, "&lt;") + "<br/>"
+                thread.innerHTML += "<b>Attached file: </b><a href='/attachment.lua?id=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a><br/>"
             }
         }
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
