@@ -225,7 +225,7 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
         
-        nest += "<li class='list-group-item' style='" + estyle + "'> &nbsp; <a href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        nest += "<li class='list-group-item'> &nbsp; <a style='" + estyle + "' href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -331,7 +331,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                 estyle = "font-weight: bold;"
             }
         }
-        nest += "<li style='" + estyle + "' class='list-group-item'>" + d + "<a href='javascript:void(0);' onclick='latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='javascript:void(0);' onclick='latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
