@@ -46,7 +46,28 @@ import datetime, time
 import json
 from collections import namedtuple
 import re
+import StringIO
 
+
+def parse_attachment(part):
+    cd = part.get("Content-Disposition", None)
+    if cd:
+        dispositions = cd.strip().split(";")
+        if dispositions[0].lower() == "attachment":
+            fd = part.get_payload(decode=True)
+            attachment = {}
+            attachment['content_type'] = part.get_content_type()
+            attachment['size'] = len(fd)
+            attachment['filename'] = None
+            h = hashlib.sha256(fd).hexdigest()
+            attachment['hash'] = h
+            for param in dispositions[1:]:
+                key,val = param.split("=")
+                if key.lower() == "filename":
+                    attachment['filename'] = val
+            if attachment['filename']:
+                return attachment, fd # Return meta data and contents separately
+    return None, None
 
 def pm_charsets(msg):
     charsets = set({})
@@ -91,14 +112,32 @@ class Archiver(object):
             retry_on_timeout=True
             )
 
+    def msgfiles(self, msg):
+        attachments = []
+        contents = {}
+        if msg.is_multipart():    
+            for part in msg.walk():
+                if part.is_multipart(): 
+                    for subpart in part.walk():
+                        part_meta, part_file = parse_attachment(subpart)
+                        if part_meta:
+                            attachments.append(part_meta)
+                            contents[part_meta['hash']] = part_file
+                else:
+                    part_meta, part_file = parse_attachment(subpart)
+                    if part_meta:
+                        attachments.append(part_meta)
+                        contents[part_meta['hash']] = part_file
+        return attachments, contents
+    
+    
     def msgbody(self, msg):
         body = None
         if msg.is_multipart():    
             for part in msg.walk():
-    
                 if part.is_multipart(): 
-    
                     for subpart in part.walk():
+                        part_meta, part_file = parse_attachment(subpart)
                         if subpart.get_content_type() == 'text/plain':
                                 body = subpart.get_payload(decode=True) 
         
@@ -155,6 +194,7 @@ class Archiver(object):
                     except:
                         body = None
         if body:
+            attachments, contents = self.msgfiles(msg)
             private = False
             if 'archive_public' in mlist:
                 private = False
@@ -180,8 +220,20 @@ class Archiver(object):
                 'private': private,
                 'references': msg_metadata['references'],
                 'in-reply-to': msg_metadata['in-reply-to'],
-                'body': body.decode('utf-8') if type(body) is bytes else body
+                'body': body.decode('utf-8') if type(body) is bytes else body,
+                'attachments': attachments
             }
+            
+            if contents:
+                for key in contents:
+                    self.es.index(
+                        index=indexname,
+                        doc_type="attachment",
+                        id=key,
+                        body = {
+                            'source': contents[key]
+                        }
+                    )
         
             self.es.index(
                 index=indexname,
