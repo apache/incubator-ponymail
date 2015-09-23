@@ -77,4 +77,5 @@ function handle(r)
     else
         r:puts[[{"error": "You need to be logged in before you can send emails"}]]
     end
+    return apache2.OK
 end
