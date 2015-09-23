@@ -224,8 +224,11 @@ function loadList_flat(mjson, limit, start, deep) {
                 estyle = "font-weight: bold;"
             }
         }
-        
-        nest += "<li class='list-group-item'> &nbsp; <a style='" + estyle + "' href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        var at = ""
+        if (eml.attachments && eml.attachments > 0) {
+            at = "<img src='/images/attachment.png' style='float: left; title='This email has attachments'/> "
+        }
+        nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='javascript:void(0);' onclick='loadEmails_flat(" + i + ");'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
