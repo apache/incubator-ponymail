@@ -116,7 +116,7 @@ function handle(r)
             email.references = nil
             email.to = nil
             email['in-reply-to'] = nil
-            table.insert(emls, email)
+            table.insert(emls, 1, email)
         end
     end
     local scheme = "https"
@@ -132,7 +132,7 @@ function handle(r)
 <id>%s/list.html?%s</id>
     ]]):format(listid, hostname, listid, hostname, listid, hostname, listid) )
     for k, eml in pairs(emls) do
-        local date = os.date("%Y-%m-%dT%H:%M:%S", epoch) .. "Z"
+        local date = os.date("%Y-%m-%dT%H:%M:%S", eml.epoch) .. "Z"
         r:puts(([[
 <entry>
 <title>%s</title>
