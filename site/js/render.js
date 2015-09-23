@@ -414,7 +414,11 @@ function displayEmail(json, id) {
         if (! window.localStorage.getItem("viewed_" + json.mid) ){
             estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
             window.localStorage.setItem("viewed_" + json.mid, json.epoch)
-            
+        }
+        if (window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
+            estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
+            var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
+            window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
         }
     }
     var cols = ['primary', 'success', 'info', 'default', 'warning', 'danger']
@@ -482,7 +486,7 @@ function displaySingleEmail(json, id) {
         if (typeof(window.localStorage) !== "undefined") {
             if (! window.localStorage.getItem("viewed_" + json.id) ){
                 estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
-                window.localStorage.setItem("viewed_" + json.id, latestEmailInThread)
+                window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
             }
         }
         thread.setAttribute("class", "reply bs-callout bs-callout-info")
@@ -666,7 +670,15 @@ function toggleEmails_threaded(id, close, toverride) {
     if (thread) {
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
-            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, latestEmailInThread)
+            var epoch = latestEmailInThread + "!"
+            var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+            if (xx) {
+                var yy = parseInt(xx)
+                if (yy >= parseInt(latestEmailInThread)) {
+                    epoch = yy
+                }
+            }
+            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
         }
         
         thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
