@@ -1121,7 +1121,7 @@ function getListInfo(list, xdomain, nopush) {
         }
         nopush = true
         dealtwithit = true
-        searchAll(current_query, xdomain)
+        search(current_query, 30, true, true)
     }
     else if (xdomain && xdomain != "") {
         if (xdomain.length <= 1) {
