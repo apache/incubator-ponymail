@@ -31,6 +31,8 @@ import argparse
 from os import listdir
 from os.path import isfile, join, isdir
 import glob
+import codecs
+
 try:
     from elasticsearch import Elasticsearch, helpers
     from formatflowed import convertToWrapped
