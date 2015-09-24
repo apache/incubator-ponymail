@@ -952,6 +952,12 @@ function buildPage(json, state) {
     d_at = 10
     current_thread_mids = []
     checkCalendar(json)
+    
+    // if we have xdomain, rewrite the wording in quick search.
+    var lcheckall = document.getElementById('lcheckall')
+    if (lcheckall) {
+        lcheckall.innerHTML = "Check all " + xdomain + " lists"
+    }
 
     var stats = document.getElementById('stats')
     
