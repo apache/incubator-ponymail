@@ -1240,7 +1240,7 @@ function getListInfo(list, xdomain, nopush) {
         }
 
     }
-
+    gxdomain = xdomain
     if (!dealtwithit) {
         kiddos = []
         traverseThread(document.getElementById('datepicker'), 'calmonth', 'LABEL')
@@ -1257,7 +1257,7 @@ function getListInfo(list, xdomain, nopush) {
             search(current_query, current_retention, nopush)
         }
     }
-    gxdomain = xdomain
+    
 }
 
 
