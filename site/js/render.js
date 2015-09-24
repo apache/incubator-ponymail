@@ -476,7 +476,7 @@ function displayEmail(json, id) {
         }
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
 
-        thread.innerHTML += "<br/><pre style='font-family: Hack; word-wrap: normal; white-space: pre-line;'>" + ebody + '</pre>'
+        thread.innerHTML += "<br/><pre style='font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
         if (thread.hasAttribute("meme")) {
             thread.scrollIntoView()
             thread.style.background = "rgba(200,200,255, 0.25)"
