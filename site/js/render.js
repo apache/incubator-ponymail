@@ -885,10 +885,12 @@ function search(q, d, nopush, all) {
     if (document.getElementById('checkall')) {
         all = document.getElementById('checkall').checked
     }
+    global_deep = false
     if (all == true) {
         listname = "*"
+        global_deep = true
     }
-    global_deep = false
+    
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
     GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
