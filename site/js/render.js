@@ -453,6 +453,7 @@ function displayEmail(json, id) {
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
         if (json.attachments && json.attachments.length > 0) {
+            thread.innerHTML += "<b>Attachments: </b>"
             for (var a in json.attachments) {
                 var fd = json.attachments[a]
                 var size = parseInt(fd.size/1024)
@@ -461,8 +462,9 @@ function displayEmail(json, id) {
                 } else {
                     size = fd.size.toLocaleString() + " bytes"
                 }
-                thread.innerHTML += "<b>Attached file: </b><a href='/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ")<br/>"
+                thread.innerHTML += "<a href='/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
             }
+            thread.innerHTML += "<br/>"
         }
         var ebody = json.body
         ebody = ebody.replace(/</mg, "&lt;")
