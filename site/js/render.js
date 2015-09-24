@@ -882,7 +882,7 @@ function search(q, d, nopush, all) {
     var listname = arr[0]
     var olist = listname
     var domain = arr[1]
-    if (document.getElementById('checkall')) {
+    if (document.getElementById('checkall') && !all) {
         all = document.getElementById('checkall').checked
     }
     global_deep = false
