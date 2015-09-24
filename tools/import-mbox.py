@@ -57,6 +57,7 @@ filebased = False
 fileToLID = {}
 interactive = False
 extension = "*.mbox"
+attachments = False
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -76,12 +77,47 @@ es = Elasticsearch([
 
 rootURL = ""
 
+def parse_attachment(part):
+    cd = part.get("Content-Disposition", None)
+    if cd:
+        dispositions = cd.strip().split(";")
+        if dispositions[0].lower() == "attachment":
+            fd = part.get_payload(decode=True)
+            attachment = {}
+            attachment['content_type'] = part.get_content_type()
+            attachment['size'] = len(fd)
+            attachment['filename'] = None
+            h = hashlib.sha256(fd).hexdigest()
+            b64 = codecs.encode(fd, "base64").decode('ascii')
+            attachment['hash'] = h
+            for param in dispositions[1:]:
+                key,val = param.split("=")
+                if key.lower().strip() == "filename":
+                    val = val.strip(' "')
+                    print("Found attachment: %s" % val)
+                    attachment['filename'] = val
+            if attachment['filename']:
+                return attachment, b64 # Return meta data and contents separately
+    return None, None
+
 def getcharsets(msg):
     charsets = set({})
     for c in msg.get_charsets():
         if c is not None:
             charsets.update([c])
     return charsets
+
+def msgfiles(msg):
+        attachments = []
+        contents = {}
+        if msg.is_multipart():    
+            for part in msg.walk():
+                part_meta, part_file = parse_attachment(part)
+                if part_meta:
+                    attachments.append(part_meta)
+                    contents[part_meta['hash']] = part_file
+        return attachments, contents
+    
 
 def msgbody(msg):
     body = None
@@ -132,8 +168,9 @@ class BulkThread(Thread):
         self.xes = xes
 
     def insert(self):
+        global config
         sys.stderr.flush()
-        iname = "ponymail_alpha"
+        iname = config.get("elasticsearch", "dbname")
         if not self.xes.indices.exists(iname):
             self.xes.indices.create(index = iname)
 
@@ -161,7 +198,7 @@ class BulkThread(Thread):
 class SlurpThread(Thread):
 
     def run(self):
-        global block, y, es, lists, baddies
+        global block, y, es, lists, baddies, config
         ja = []
         print("Thread started")
         mla = None
@@ -291,6 +328,7 @@ class SlurpThread(Thread):
                     except:
                         okay = False
                     if body and okay and mdate:
+                        attachments, contents = msgfiles(msg)
                         if mid == None or not mid:
                             try:
                                 mid = hashlib.sha256(body).hexdigest() + "@" + lid + "@" + appender
@@ -324,9 +362,22 @@ class SlurpThread(Thread):
                             'private': private,
                             'references': mr,
                             'in-reply-to': irt,
-                            'body': body
+                            'body': body,
+                            'attachments': attachments
                         }
                         ja.append(json)
+                        
+                        if contents:
+                            iname = config.get("elasticsearch", "dbname")
+                            for key in contents:
+                                es.index(
+                                    index=iname,
+                                    doc_type="attachment",
+                                    id=key,
+                                    body = {
+                                        'source': contents[key]
+                                    }
+                                )
                         if len(ja) >= 100:
                             bulk = BulkThread()
                             bulk.assign(ja, es)
@@ -379,6 +430,8 @@ parser.add_argument('--domain', dest='domain', type=str, nargs=1,
                    help='Optional domain extension for MIDs and List ID reconstruction)')
 parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
+parser.add_argument('--attachments', dest='attachments', action='store_true',
+                   help='Also iport attached files in emails')
 
 args = parser.parse_args()
 
@@ -398,6 +451,8 @@ if args.quick:
     quickmode = args.quick
 if args.private:
     private = args.private
+if args.attachments:
+    attachments = args.attachments
 if args.ext:
     extension = args.ext[0]
 
