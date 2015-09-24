@@ -1228,7 +1228,7 @@ function getListInfo(list, xdomain, nopush) {
             a.appendChild(t)
             li.appendChild(a)
             ll.appendChild(li)
-            if (!all_lists[xdomain][listname] && listname != "*") {
+            if (!all_lists[xdomain][listname]) {
                 listname = key
                 list = ln
                 xlist = ln
