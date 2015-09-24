@@ -22,14 +22,15 @@ function fastIntersect(x,y,nx,ny) {
     if (x.getAttribute("id") == y.getAttribute("id")) { // can't collide with itself
         return false
     }
+    var spacing = 2 // number of pixels to keep elements apart
     nx = nx ? nx : 0
     ny = ny ? ny : 0
     var a = x.getBoundingClientRect()
     var b = y.getBoundingClientRect()
-    return !(b.left-2 > (a.right+nx)
-        || b.right+2 < (a.left+nx)
-        || b.top-2 > (a.bottom+ny)
-        || b.bottom+2 < (a.top+ny));
+    return !(b.left-spacing > (a.right+nx)
+        || b.right+spacing < (a.left+nx)
+        || b.top-spacing > (a.bottom+ny)
+        || b.bottom+spacing < (a.top+ny));
 }
 
 function makeWord(word, size) {
