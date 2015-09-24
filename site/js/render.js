@@ -552,16 +552,18 @@ function displaySingleEmail(json, id) {
 var kiddos = []
 
 // traverseThread: finds all child divs inside an object
-function traverseThread(child) {
+function traverseThread(child, name) {
     if (!child) {
         return
     }
     for (var i in child.childNodes) {
         if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == 'DIV') {
-            kiddos.push(child.childNodes[i])
+            if (!name || child.childNodes[i].getAttribute("id").search(name) != -1) {
+                kiddos.push(child.childNodes[i])
+            }
         }
         if (child.childNodes[i].nodeType && child.childNodes[i].hasChildNodes()) {
-            traverseThread(child.childNodes[i])
+            traverseThread(child.childNodes[i], name)
         }
     }
 
@@ -573,7 +575,7 @@ function sortByDate(tid) {
     var t = document.getElementById("thread_" + tid)
     var h = document.getElementById("helper_" + tid)
     if (t) {
-        traverseThread(t)
+        traverseThread(t, 'thread')
         if (prefs.sortOrder == 'forward') {
             kiddos.sort(function(a, b) {
                 return parseInt(b.getAttribute('epoch') - a.getAttribute('epoch'));
