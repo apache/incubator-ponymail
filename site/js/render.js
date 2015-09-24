@@ -882,7 +882,7 @@ function search(q, d, nopush, all) {
     var listname = arr[0]
     var olist = listname
     var domain = arr[1]
-    if (document.getElementById('checkall') && !all) {
+    if (document.getElementById('checkall')) {
         all = document.getElementById('checkall').checked
     }
     global_deep = false
@@ -1119,6 +1119,9 @@ function getListInfo(list, xdomain, nopush) {
                 xdomain = kv[1]
                 xlist = "*@" + xdomain;
                 list = xlist;
+                if (document.getElementById('checkall')) {
+                    document.getElementById('checkall').checked = true
+                }
             }
         }
         nopush = true
