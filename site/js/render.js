@@ -948,6 +948,10 @@ function checkCalendar(json) {
     }
 }
 
+function addSearchEngine() {
+    window.external.AddSearchProvider("/websearch.lua?" + gxdomain)
+}
+
 // buildPage: build the entire page!
 function buildPage(json, state) {
     start = new Date().getTime()
@@ -962,6 +966,12 @@ function buildPage(json, state) {
     var lcheckall = document.getElementById('lcheckall')
     if (lcheckall && gxdomain) {
         lcheckall.innerHTML = "Check all " + gxdomain + " lists"
+    }
+    
+    // Add Opensearch title to OS image
+    var os = document.getElementById('opensearch')
+    if (os){
+        os.setAttribute("title", "Add " + gxdomain + " archives to your search engines")
     }
 
     var stats = document.getElementById('stats')

@@ -65,7 +65,7 @@
       <div class="row">
       <!-- Quick search -->
       <div class="bs-callout bs-callout-default" id="quicksearch" style="margin: 2px !important; padding: 5px;">
-      <form action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
+      <form id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
         Quick search: <input type="text" name="q" id="q"/>
         <select name="d" id='dp'>
           <option value="30">past month</option>
@@ -75,6 +75,7 @@
         </select>
         <input type="checkbox" value="all" id="checkall"><label for="checkall" id="lcheckall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
         <input type="submit" value="Search!" class="btn btn-primary"/> &nbsp;
+        <a href="javascript:void(0);" onclick="addSearchEngine();"><img src="/images/opensearch.png" id="opensearch" title="Add these MLs as a search engine in your browser"/></a>
         <input type="button" value="Switch to deep search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
       </form>
     </div>
