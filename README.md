@@ -19,6 +19,7 @@ private.
 ### Features include: ###
 * Public and private list viewing based on auth
 * Cross-list threading
+* OpenSearch support for browsers (can add as search engine)
 * In-browser reply to mailing lists
 * Fast and intuitive searching
 * Threaded and flat view modes
