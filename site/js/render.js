@@ -636,6 +636,9 @@ function displayEmailThreaded(json, state) {
             }
         }
         displayEmail(json, (json.tid ? json.tid : json.mid))
+        if (state.child.children && state.child.children.length > 0) {
+            getChildren(state.main, state.child)
+        }
     } else {
         alert("Could not find parent object, thread_" + state.main)
     }
@@ -667,7 +670,8 @@ function getChildren(main, email) {
                     GetAsync("/email.lua?id=" + child.tid, {
                         main: main,
                         before: email.tid,
-                        pchild: pchild
+                        pchild: pchild,
+                        child: child
                     }, displayEmailThreaded)
                 } else {
                     displayEmailThreaded(eml, {
@@ -675,10 +679,11 @@ function getChildren(main, email) {
                         before: email.tid,
                         pchild: pchild
                     })
+                    if (child.children && child.children.length > 0) {
+                        getChildren(main, child)
+                    }
                 }
-                if (child.children && child.children.length > 0) {
-                    getChildren(main, child)
-                }
+                
             }
             pchild = child.tid
         }
