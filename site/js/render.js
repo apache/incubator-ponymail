@@ -955,7 +955,7 @@ function buildPage(json, state) {
     
     // if we have xdomain, rewrite the wording in quick search.
     var lcheckall = document.getElementById('lcheckall')
-    if (lcheckall) {
+    if (lcheckall && xdomain) {
         lcheckall.innerHTML = "Check all " + xdomain + " lists"
     }
 
