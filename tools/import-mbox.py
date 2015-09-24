@@ -328,7 +328,7 @@ class SlurpThread(Thread):
                     except:
                         okay = False
                     if body and okay and mdate:
-                        attachments, contents = msgfiles(msg)
+                        attachments, contents = msgfiles(message)
                         if mid == None or not mid:
                             try:
                                 mid = hashlib.sha256(body).hexdigest() + "@" + lid + "@" + appender
