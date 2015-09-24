@@ -26,10 +26,10 @@ function fastIntersect(x,y,nx,ny) {
     ny = ny ? ny : 0
     var a = x.getBoundingClientRect()
     var b = y.getBoundingClientRect()
-    return !(b.left > (a.right+nx)
-        || b.right < (a.left+nx)
-        || b.top > (a.bottom+ny)
-        || b.bottom < (a.top+ny));
+    return !(b.left+2 > (a.right+nx)
+        || b.right-2 < (a.left+nx)
+        || b.top+2 > (a.bottom+ny)
+        || b.bottom-2 < (a.top+ny));
 }
 
 function makeWord(word, size) {
