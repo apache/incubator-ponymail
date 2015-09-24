@@ -636,7 +636,7 @@ function displayEmailThreaded(json, state) {
             }
         }
         displayEmail(json, (json.tid ? json.tid : json.mid))
-        if (state.child.children && state.child.children.length > 0) {
+        if (state.child && state.child.children && state.child.children.length > 0) {
             getChildren(state.main, state.child)
         }
     } else {
