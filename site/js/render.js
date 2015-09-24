@@ -1106,7 +1106,7 @@ function preGetListInfo(list, xdomain, nopush) {
 function getListInfo(list, xdomain, nopush) {
     current_query = ""
     var dealtwithit = false
-    if (xdomain.search("utm_source=opensearch") != -1) {
+    if (xdomain && xdomain.search("utm_source=opensearch") != -1) {
         var strs = xdomain.split(/&/)
         for (var i in strs) {
             var kv = strs[i].split(/=/)
