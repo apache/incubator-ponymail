@@ -202,7 +202,7 @@ function loadList_flat(mjson, limit, start, deep) {
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep && typeof eml.list != undefined && eml.list != null) {
             var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
-            var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            var elist2 = elist
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
@@ -315,7 +315,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         if ((qdeep || deep || global_deep) && current_query.length > 0) {
             eml.list = eml.list ? eml.list : eml.list_raw // Sometimes, .list isn't available
             var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
-            var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            var elist2 = elist
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
