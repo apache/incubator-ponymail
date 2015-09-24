@@ -49,6 +49,7 @@ var xyz
 var start = new Date().getTime()
 var latestEmailInThread = 0
 var composeType = "reply"
+var gxdomain = ""
 
 var viewModes = {
     threaded: {
@@ -955,8 +956,8 @@ function buildPage(json, state) {
     
     // if we have xdomain, rewrite the wording in quick search.
     var lcheckall = document.getElementById('lcheckall')
-    if (lcheckall && xdomain) {
-        lcheckall.innerHTML = "Check all " + xdomain + " lists"
+    if (lcheckall && gxdomain) {
+        lcheckall.innerHTML = "Check all " + gxdomain + " lists"
     }
 
     var stats = document.getElementById('stats')
@@ -1256,6 +1257,7 @@ function getListInfo(list, xdomain, nopush) {
             search(current_query, current_retention, nopush)
         }
     }
+    gxdomain = xdomain
 }
 
 
