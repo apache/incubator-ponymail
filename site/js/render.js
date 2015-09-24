@@ -1370,7 +1370,12 @@ function compose(eid, lid, type) {
                 obj.appendChild(btn)
             }
             
+            
+            // Focus on body or subject, depending on what's going on
             area.focus()
+            if (composeType == "new" && txt.value.length == 0) {
+                txt.focus()
+            }
         } else {
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
             eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
