@@ -224,6 +224,9 @@
     background-color: #E59019;
 }
 
+.label-hover:hover {
+    background-color: #E59019;
+}
 .phonebook_topletter {
     border-top: 1px solid #666;
     border-left: 1px solid #666;

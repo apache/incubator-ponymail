@@ -552,18 +552,19 @@ function displaySingleEmail(json, id) {
 var kiddos = []
 
 // traverseThread: finds all child divs inside an object
-function traverseThread(child, name) {
+function traverseThread(child, name, type) {
     if (!child) {
         return
     }
+    type = type ? type : 'DIV'
     for (var i in child.childNodes) {
-        if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == 'DIV') {
-            if (!name || child.childNodes[i].getAttribute("id").search(name) != -1) {
+        if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == type) {
+            if (!name || (child.childNodes[i].getAttribute("id") && child.childNodes[i].getAttribute("id").search(name) != -1)) {
                 kiddos.push(child.childNodes[i])
             }
         }
         if (child.childNodes[i].nodeType && child.childNodes[i].hasChildNodes()) {
-            traverseThread(child.childNodes[i], name)
+            traverseThread(child.childNodes[i], name, type)
         }
     }
 
@@ -794,6 +795,19 @@ function toggleEmail(year, mo, nopush) {
     var domain = arr[1]
     var s = year + "-" + mo
     var e = s
+    if (year && mo) {
+        kiddos = []
+        traverseThread(document.getElementById('datepicker'), 'calmonth', 'LABEL')
+        for (var n in kiddos) {
+            if (kiddos[n].getAttribute("id") == ("calmonth_" + year + "-" + mo)) {
+                kiddos[n].setAttribute("class", "label label-info")
+            } else {
+                kiddos[n].setAttribute("class", "label label-default label-hover")
+            }
+        }
+    }
+    
+    
     var xmo = mo ? parseInt(mo).toString() : ""
     if (mo.length > 0 && mo <= 9) {
         xmo = '0' + xmo
@@ -826,7 +840,7 @@ function buildCalendar(firstYear, lastYear) {
         var cale = "<div style='float: left; width: 90%; display: " + n + "; padding-left: 20px; margin-bottom: 15px;' id='cal_" + year + "'>"
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
-            cale += "<label style='width: 80px; float: left;cursor: pointer;' class='label label-default' onmouseout='this.setAttribute(\"class\", \"label label-default\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label><br/>"
+            cale += "<label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label><br/>"
         }
         cale += "</div>"
         dp.innerHTML += cale
@@ -847,6 +861,14 @@ function dailyStats(json) {
     return stats
 }
 
+function clearCalendarHover() {
+    kiddos = []
+    traverseThread(document.getElementById('datepicker'), 'calmonth', 'LABEL')
+    for (var n in kiddos) {
+        kiddos[n].setAttribute("class", "label label-default label-hover")
+    }
+}
+
 // search: run a search
 function search(q, d, nopush, all) {
     keywords = q
@@ -863,6 +885,7 @@ function search(q, d, nopush, all) {
         listname = "*"
     }
     global_deep = false
+    clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
     GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days)"
@@ -881,6 +904,7 @@ function searchAll(q, d) {
         deep: true
     }, buildPage)
     document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days"
+    clearCalendarHover()
     return false;
 }
 
@@ -900,6 +924,7 @@ function do_search(q, d, nopush, all) {
     }
     GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + " days)"
+    clearCalendarHover()
     return false;
 }
 
@@ -1209,6 +1234,11 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     if (!dealtwithit) {
+        kiddos = []
+        traverseThread(document.getElementById('datepicker'), 'calmonth', 'LABEL')
+        for (var n in kiddos) {
+            kiddos[n].setAttribute("class", "label label-default label-hover")
+        }
         document.getElementById('listtitle').innerHTML = list + ", last 30 days"
         if (current_query == "") {
             GetAsync("stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
