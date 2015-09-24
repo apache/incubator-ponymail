@@ -1270,7 +1270,7 @@ function sendEmail(form) {
     f.append("body", document.getElementById('reply_body').value)
     
     var request = new XMLHttpRequest();
-    request.open("POST", "compose.lua");
+    request.open("POST", "/compose.lua");
     request.send(f);
     
     var obj = document.getElementById('splash')
