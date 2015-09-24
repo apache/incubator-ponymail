@@ -312,7 +312,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         var d = ''
         var estyle = ""
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
-        if (qdeep || deep || global_deep) {
+        if ((qdeep || deep || global_deep) && current_query.length > 0) {
             eml.list = eml.list ? eml.list : eml.list_raw // Sometimes, .list isn't available
             var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
@@ -349,7 +349,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     } else {
         bulk.setAttribute("class", "well col-md-10 col-lg-7")
     }
-    var dp = (deep || global_deep) ? 'true' : 'false'
+    var dp = (deep || (global_deep && current_query.length > 0)) ? 'true' : 'false'
     
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
@@ -1274,6 +1274,8 @@ function getListInfo(list, xdomain, nopush) {
         }
         document.getElementById('listtitle').innerHTML = list + ", last 30 days"
         if (current_query == "") {
+            global_deep = false
+            current_query = ""
             GetAsync("stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
             if (!nopush) {
                 window.history.pushState({}, "", "list.html?" + xlist);
