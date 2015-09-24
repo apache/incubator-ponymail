@@ -214,6 +214,14 @@
     padding-bottom: 1px;
 }
 
+.label {
+    font-size: 12px;
+}
+
+.label-warning {
+    background-color: #E59019;
+}
+
 .phonebook_topletter {
     border-top: 1px solid #666;
     border-left: 1px solid #666;
