@@ -48,6 +48,7 @@ var login = {}
 var xyz
 var start = new Date().getTime()
 var latestEmailInThread = 0
+var composeType = "reply"
 
 var viewModes = {
     threaded: {
@@ -1235,6 +1236,15 @@ function dealWithKeyboard(e) {
 function hideComposer(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.getAttribute || !es.getAttribute("class") || (es.nodeName != 'A' && es.getAttribute("class").search(/label/) == -1))  {
+        
+        // If the user was composing a new thread, let's save the contents (if any) for next time
+        if (composeType == "new") {
+            if (typeof(window.sessionStorage) !== "undefined") {
+                window.sessionStorage.setItem("reply_body", document.getElementById('reply_body').innerHTML)
+                window.sessionStorage.setItem("reply_subject", document.getElementById('reply_subject').value)
+                window.sessionStorage.setItem("reply_list", xlist)
+            }
+        }
         document.getElementById('splash').style.display = "none"
     }
 }
@@ -1263,7 +1273,7 @@ function sendEmail(form) {
 
 
 // compose: render a compose dialog for a reply to an email
-function compose(eid, lid) {
+function compose(eid, lid, type) {
     var email
     if (lid) {
         email = {
@@ -1274,8 +1284,10 @@ function compose(eid, lid) {
             'from': "",
             'date': ""
         }
+        composeType = "new"
     }
     else {
+        composeType = "reply"
         email = saved_emails[eid]
     }
     if (email) {
@@ -1321,6 +1333,14 @@ function compose(eid, lid) {
 
             area.innerHTML = eml
             obj.appendChild(area)
+            
+            // Do we need to fetch cache here?
+            if (composeType == "new" && typeof(window.sessionStorage) !== "undefined" &&
+                window.sessionStorage.getItem("reply_list") &&
+                window.sessionStorage.getItem("reply_list") == xlist) {
+                area.innerHTML = window.sessionStorage.getItem("reply_body")
+                txt.value = window.sessionStorage.getItem("reply_subject")
+            }
 
             // submit button
             var btn = document.createElement('input')
