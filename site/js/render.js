@@ -1106,7 +1106,24 @@ function preGetListInfo(list, xdomain, nopush) {
 function getListInfo(list, xdomain, nopush) {
     current_query = ""
     var dealtwithit = false
-    if (xdomain && xdomain != "") {
+    if (xdomain.search("utm_source=opensearch") != -1) {
+        var strs = xdomain.split(/&/)
+        for (var i in strs) {
+            var kv = strs[i].split(/=/)
+            if (kv[0] == "websearch") {
+                current_query = kv[1]
+            }
+            if (kv[0] == "domain") {
+                xdomain = kv[1]
+                xlist = "*@" + xdomain;
+                list = xlist;
+            }
+        }
+        nopush = true
+        dealtwithit = true
+        searchAll(current_query, xdomain)
+    }
+    else if (xdomain && xdomain != "") {
         if (xdomain.length <= 1) {
             xdomain = null
         } else {
@@ -1206,7 +1223,7 @@ function getListInfo(list, xdomain, nopush) {
             a.appendChild(t)
             li.appendChild(a)
             ll.appendChild(li)
-            if (!all_lists[xdomain][listname]) {
+            if (!all_lists[xdomain][listname] && listname != "*") {
                 listname = key
                 list = ln
                 xlist = ln
@@ -1243,6 +1260,7 @@ function getListInfo(list, xdomain, nopush) {
 
     }
     gxdomain = xdomain
+    addSearchBar();
     if (!dealtwithit) {
         kiddos = []
         traverseThread(document.getElementById('datepicker'), 'calmonth', 'LABEL')
@@ -1882,6 +1900,15 @@ function showPreferences() {
     obj.appendChild(btn)
 }
 
+function addSearchBar() {
+    var h = document.getElementsByTagName('head')[0]
+    var sl = document.createElement('link')
+    sl.setAttribute("rel", "search")
+    sl.setAttribute("type", "application/opensearchdescription+xml")
+    sl.setAttribute("href", "/websearch.lua?" + gxdomain)
+    sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
+    h.appendChild(sl)
+}
 
 
 var footer = document.createElement('footer')
