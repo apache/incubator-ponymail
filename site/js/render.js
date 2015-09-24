@@ -1549,7 +1549,7 @@ function timeTravelListRedirect(json, state) {
         var osubs = countSubs(current_thread_json[state.id])
         var nsubs = countSubs(json.thread)
         var oid = current_thread_json[state.id].tid
-        if (nsubs > osubs || !json.thread.irt) {
+        if (nsubs > osubs || nsubs >= osubs && !json.thread.irt) {
             toggleEmails_threaded(state.id)
             current_thread_json[state.id] = json.thread
             toggleEmails_threaded(state.id)
