@@ -677,13 +677,10 @@ function getChildren(main, email) {
                     displayEmailThreaded(eml, {
                         main: main,
                         before: email.tid,
-                        pchild: pchild
+                        pchild: pchild,
+                        child: child
                     })
-                    if (child.children && child.children.length > 0) {
-                        getChildren(main, child)
-                    }
                 }
-                
             }
             pchild = child.tid
         }
