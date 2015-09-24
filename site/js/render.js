@@ -312,6 +312,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         var estyle = ""
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep) {
+            eml.list = eml.list ? eml.list : eml.list_raw // Sometimes, .list isn't available
             var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             if (pm_config.shortLists) {
