@@ -1237,8 +1237,8 @@ function saveDraft() {
     // If the user was composing a new thread, let's save the contents (if any) for next time
     if (composeType == "new") {
         if (typeof(window.sessionStorage) !== "undefined") {
-            window.sessionStorage.setItem("reply_body", document.getElementById('reply_body').value)
-            window.sessionStorage.setItem("reply_subject", document.getElementById('reply_subject').value)
+            window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
+            window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
             window.sessionStorage.setItem("reply_list", xlist)
         }
         composeType = ""
@@ -1341,10 +1341,9 @@ function compose(eid, lid, type) {
             
             // Do we need to fetch cache here?
             if (composeType == "new" && typeof(window.sessionStorage) !== "undefined" &&
-                window.sessionStorage.getItem("reply_list") &&
-                window.sessionStorage.getItem("reply_list") == xlist) {
-                area.innerHTML = window.sessionStorage.getItem("reply_body")
-                txt.value = window.sessionStorage.getItem("reply_subject")
+                window.sessionStorage.getItem("reply_subject_" + xlist)) {
+                area.innerHTML = window.sessionStorage.getItem("reply_body_" + xlist)
+                txt.value = window.sessionStorage.getItem("reply_subject_" + xlist)
             }
 
             // submit button
