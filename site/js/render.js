@@ -1226,9 +1226,22 @@ function dealWithKeyboard(e) {
     if (e.keyCode == 27) {
         if (document.getElementById('splash').style.display == 'block') {
             document.getElementById('splash').style.display = "none"
+            saveDraft()
         } else if (location.href.search(/list\.html/) != -1) { // should only work for the list view
             toggleEmails_threaded(current_thread, true)
         }
+    }
+}
+
+function saveDraft() {
+    // If the user was composing a new thread, let's save the contents (if any) for next time
+    if (composeType == "new") {
+        if (typeof(window.sessionStorage) !== "undefined") {
+            window.sessionStorage.setItem("reply_body", document.getElementById('reply_body').value)
+            window.sessionStorage.setItem("reply_subject", document.getElementById('reply_subject').value)
+            window.sessionStorage.setItem("reply_list", xlist)
+        }
+        composeType = ""
     }
 }
 
@@ -1236,15 +1249,7 @@ function dealWithKeyboard(e) {
 function hideComposer(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.getAttribute || !es.getAttribute("class") || (es.nodeName != 'A' && es.getAttribute("class").search(/label/) == -1))  {
-        
-        // If the user was composing a new thread, let's save the contents (if any) for next time
-        if (composeType == "new") {
-            if (typeof(window.sessionStorage) !== "undefined") {
-                window.sessionStorage.setItem("reply_body", document.getElementById('reply_body').innerHTML)
-                window.sessionStorage.setItem("reply_subject", document.getElementById('reply_subject').value)
-                window.sessionStorage.setItem("reply_list", xlist)
-            }
-        }
+        saveDraft()
         document.getElementById('splash').style.display = "none"
     }
 }
