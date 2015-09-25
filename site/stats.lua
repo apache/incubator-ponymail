@@ -127,7 +127,7 @@ function handle(r)
             from = {
                 terms = {
                     field = "from_raw",
-                    size = 100
+                    size = 10
                 }
             }
         },
