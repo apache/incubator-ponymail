@@ -216,7 +216,8 @@ local config = {
     es_url = "http://%s:%u/%s/",
     mailserver = "%s",
     accepted_domains = "%s",
-    wordcloud = %s
+    wordcloud = %s,
+    slow_count = false
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))

@@ -118,62 +118,64 @@ function handle(r)
         maxresults = 1000
     end
     
-    -- Debug time point 2
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
-    
-    local doc = elastic.raw {
-        aggs = {
-            from = {
-                terms = {
-                    field = "from_raw",
-                    size = 10
-                }
-            }
-        },
-        
-        query = {
-            
-            bool = {
-                must = {
-                    
-                    {
-                        range = {
-                            date = daterange
-                        }
-                    },
-                    {
-                        query_string = {
-                            default_field = "subject",
-                            query = qs
-                        }
-                    },
-                    sterm
-                    
-            }}
-            
-        }
-    }
     local top10 = {}
-
-    -- Debug time point 3
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if config.slow_count then
+        -- Debug time point 2
+        table.insert(t, r:clock() - tnow)
+        tnow = r:clock()
+        
+        local doc = elastic.raw {
+            aggs = {
+                from = {
+                    terms = {
+                        field = "from_raw",
+                        size = 10
+                    }
+                }
+            },
+            
+            query = {
+                
+                bool = {
+                    must = {
+                        
+                        {
+                            range = {
+                                date = daterange
+                            }
+                        },
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = qs
+                            }
+                        },
+                        sterm
+                        
+                }}
+                
+            }
+        }
+        
     
-    for x,y in pairs (doc.aggregations.from.buckets) do
-        local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
-        local gravatar = r:md5(eml)
-        local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+")
-        name = name:gsub("\"", "")
-        table.insert(top10, {
-            id = y.key,
-            email = eml,
-            gravatar = gravatar,
-            name = name,
-            count = y.doc_count
-        })
+        -- Debug time point 3
+        table.insert(t, r:clock() - tnow)
+        tnow = r:clock()
+        
+        for x,y in pairs (doc.aggregations.from.buckets) do
+            local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
+            local gravatar = r:md5(eml)
+            local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+")
+            name = name:gsub("\"", "")
+            table.insert(top10, {
+                id = y.key,
+                email = eml,
+                gravatar = gravatar,
+                name = name,
+                count = y.doc_count
+            })
+        end
     end
-    
     
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
@@ -299,6 +301,7 @@ function handle(r)
     local emails = {}
     local emails_full = {}
     local emls = {}
+    local senders = {}
     local doc = elastic.raw {
         _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private', 'attachments'},
         query = {
@@ -357,6 +360,20 @@ function handle(r)
             end
         end
         if canUse then
+            
+            if not config.slow_count then
+                local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
+                local gravatar = r:md5(eml)
+                local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+")
+                name = name:gsub("\"", "")
+                senders[gravatar] = senders[gravatar] or {
+                    email = eml,
+                    gravatar = gravatar,
+                    name = name,
+                    count = 0
+                }
+                senders[gravatar].count = senders[gravatar].count + 1
+            end
             local mid = email['message-id']
             local irt = email['in-reply-to']
             email.id = v._id
@@ -423,7 +440,7 @@ function handle(r)
                 email.attachments = 0
             end
             table.insert(emls, email)
-        else
+        elseif config.slow_count then
             for k, v in pairs(top10) do
                 local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
                 if v.email == eml then
@@ -433,6 +450,20 @@ function handle(r)
         end
     end
     
+    if not config.slow_count then
+        local stable = {}
+        for k, v in pairs(senders) do
+            table.insert(stable, v)
+        end
+        table.sort(stable, function(a,b) return a.count > b.count end )
+        for k, v in pairs(stable) do
+            if k <= 10 then
+                table.insert(top10, v)
+            else
+                break
+            end
+        end
+    end
     for k, v in pairs(top10) do
         if v.count <= 0 then
             top10[k] = nil
