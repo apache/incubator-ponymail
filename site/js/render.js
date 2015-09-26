@@ -396,7 +396,7 @@ function permaLink(id, type) {
     if (eml) { // This is so, in case you move to another list software, you'll keep back compat
         id = eml['message-id']
     }
-    location.href = "/" + t + ".html/" + id
+    window.open("/" + t + ".html/" + id, "_new")
 }
 
 
