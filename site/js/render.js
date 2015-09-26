@@ -206,7 +206,7 @@ function loadList_flat(mjson, limit, start, deep) {
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
-            var d = "<a href='list.html?" + elist2 + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
+            var d = "<a href='list.html?" + elist2 + "'><label class='label label-warning' style='width: 150px;'>" + elist + "</label></a> &nbsp;"
             if (eml.subject.length > 75) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
@@ -319,7 +319,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
-            d = "<a href='list.html?" + elist2 + "'><label class='label label-warning'>" + elist + "</label></a> &nbsp;"
+            d = "<a href='list.html?" + elist2 + "'><label class='label label-warning' style='width: 150px;'>" + elist + "</label></a> &nbsp;"
             if (eml.subject.length > 75) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
@@ -967,7 +967,7 @@ function buildPage(json, state) {
     // if we have xdomain, rewrite the wording in quick search.
     var lcheckall = document.getElementById('lcheckall')
     if (lcheckall && gxdomain) {
-        lcheckall.innerHTML = "Check all " + gxdomain + " lists"
+        lcheckall.innerHTML = "Search all " + gxdomain + " lists"
     }
     
     // Add Opensearch title to OS image

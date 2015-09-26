@@ -19,29 +19,33 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body style="margin: 20px;" onload="listNotifications()">
-    <nav class="navbar navbar-default" style="margin-bottom: 5px;">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header" style="min-width: 200px;">
-      <a class="navbar-brand" href="/"><span><img src="images/logo.png" style="margin-top: -10px !important;" height="27" width="32"/>&nbsp;Pony Mail!</span></a>
-      </div>
-    
-    
-      <ul class="nav navbar-nav" id="userprefs" style="float: right;">
-      <li class="dropdown navbar-right" id="listchoice">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img id="uimg" src="images/user_loggedout.png" title="Not logged in"/>
-            <span class="caret"></span></a>
-            <ul class="dropdown-menu" id="prefs_dropdown">
-            <li><a href="oauth.html">Log in</a></li>
-          </ul>
-      </li>
-      </ul>
-      
-    </div>
-    
-    </div>
-    </nav>
+  <body style="margin: 0px;" onload="listNotifications()">
+        <header class="navbar navbar-default" style="margin-bottom: 5px; background: linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(191,191,191,1) 100%);">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" style="min-width: 200px;">
+                <a class="navbar-brand" href="/">
+                    <span>
+                    <img src="images/logo.png" style="margin-top: -10px !important;" height="27" width="32" />&#160;Pony Mail!</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="float: left;">
+                <ul class="nav navbar-nav" id="userprefs" style="position: fixed; right: 8px;">
+                    <li class="dropdown navbar-right" id="listchoice">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <img id="uimg" src="images/user_loggedout.png" title="Not logged in" />
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" id="prefs_dropdown">
+                            <li>
+                                <a href="oauth.html">Log in</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
     
     <div class="container-fluid">
     

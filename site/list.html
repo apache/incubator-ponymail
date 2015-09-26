@@ -19,8 +19,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body onload="preGetListInfo(null, document.location.search.substr(1))" style="margin: 20px;">
-    <nav class="navbar navbar-default" style="margin-bottom: 5px;">
+  <body onload="preGetListInfo(null, document.location.search.substr(1))">
+    <header class="navbar navbar-default" style="margin-bottom: 5px; background: linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(191,191,191,1) 100%);">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header" style="min-width: 200px;">
@@ -28,12 +28,26 @@
       </div>
     
     
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <!-- Quick search -->
+      <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid; id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
+        <label for="q">Search:&nbsp;</label><input type="text" name="q" id="q" style="width: 150px;"/>
+        <select name="d" id='dp'>
+          <option value="30">past month</option>
+          <option value="180">past 6 months</option>
+          <option value="365">past year</option>
+          <option value="99999">forever</option>
+        </select>
+        <input type="checkbox" value="all" id="checkall"><label for="checkall" id="lcheckall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
+        <input type="submit" value="Search!" class="btn btn-primary"/>&nbsp;
+        <a href="javascript:void(0);" onclick="addSearchEngine();"><img src="/images/opensearch.png" id="opensearch" title="Add these MLs as a search engine in your browser"/></a> &nbsp;
+        <input type="button" value="Advanced" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
+      </form>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="float: left;">
       <ul class="nav navbar-nav" id="listslist">
 
       </ul>
       <ul class="nav navbar-nav" id="otherstuff">
-      <li id="listtitle" style="font-size: 16pt; padding-top: 10px; padding-left: 30px;"><a href="#">dev@httpd.apache.org:</a></li>
       <li class="dropdown navbar-right" id="listchoice">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Available projects: <span class="caret"></span></a>
             <ul class="dropdown-menu should-scroll" id="lc_dropdown">
@@ -42,7 +56,7 @@
       </li>
       </ul>
       
-      <ul class="nav navbar-nav" id="userprefs" style="float: right;">
+      <ul class="nav navbar-nav" id="userprefs" style="position: fixed; right: 8px;">
       <li class="dropdown navbar-right" id="listchoice">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img id="uimg" src="images/user_loggedout.png" title="Not logged in"/>
             <span class="caret"></span></a>
@@ -55,7 +69,7 @@
     </div>
     
     </div>
-    </nav>
+    </header>
     <div class="container-fluid">
        <noscript>
           <div class="bs-callout bs-callout-alert">
@@ -63,22 +77,7 @@
           </div>
       </noscript>
       <div class="row">
-      <!-- Quick search -->
-      <div class="bs-callout bs-callout-default" id="quicksearch" style="margin: 2px !important; padding: 5px;">
-      <form id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
-        Quick search: <input type="text" name="q" id="q"/>
-        <select name="d" id='dp'>
-          <option value="30">past month</option>
-          <option value="180">past 6 months</option>
-          <option value="365">past year</option>
-          <option value="99999">since the dawn of time</option>
-        </select>
-        <input type="checkbox" value="all" id="checkall"><label for="checkall" id="lcheckall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
-        <input type="submit" value="Search!" class="btn btn-primary"/> &nbsp;
-        <a href="javascript:void(0);" onclick="addSearchEngine();"><img src="/images/opensearch.png" id="opensearch" title="Add these MLs as a search engine in your browser"/></a>
-        <input type="button" value="Switch to deep search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
-      </form>
-    </div>
+      
       
       <!-- Advanced search -->
       <div style="display: none;" class="bs-callout bs-callout-danger" id="advanced" style="margin: 2px !important; padding: 5px;">
@@ -95,6 +94,9 @@
         <input type="button" value="Switch to quick search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
       </form>
     </div>
+      <div>
+        <h3 id="listtitle" style="text-align: center; margin: 6px; padding: 0px;"><a href="#">dev@httpd.apache.org:</a></h3>
+      </div>
     </div>
       
     <div class="row">
