@@ -434,7 +434,7 @@ function displayEmail(json, id) {
         thread.style.background = estyle
         thread.innerHTML = ''
         thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
-        thread.innerHTML += ' &nbsp; <label class="label label-warning" onclick="permaLink(\'' + json.mid + '\', \'' + prefs.groupBy + '\');" style="cursor: pointer; float: right;">Permalink</label>'
+        thread.innerHTML += ' &nbsp; <a href="/thread.html/'+json.mid+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
         thread.innerHTML += "<br/>"
         //thread.style.border = "1px dotted #666"
         thread.style.padding = "5px"
