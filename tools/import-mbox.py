@@ -503,10 +503,12 @@ elif source[0] == "h":
             mldata = urllib.urlopen("%s%s/" % (source, ml)).read()
             present = re.search(r"<th colspan=\"3\">Year 20[\d]{2}</th>", mldata) # Check that year 2014-2017 exists, otherwise why keep it?
             if present:
+                qn = 0
                 for mbox in re.finditer(r"(\d+\.mbox)/thread", mldata):
+                    qn += 1
                     mboxfile = mbox.group(1)
                     lists.append([ml, mboxfile])
-                    if quickmode:
+                    if quickmode and qn >= 2:
                         break
     
 threads = []
