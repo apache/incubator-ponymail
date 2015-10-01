@@ -94,7 +94,7 @@ def parse_attachment(part):
                 b64 = codecs.encode(fd, "base64").decode('ascii')
                 attachment['hash'] = h
                 for param in dispositions[1:]:
-                    key,val = param.split("=")
+                    key,val = param.split("=", 2)
                     if key.lower().strip() == "filename":
                         val = val.strip(' "')
                         print("Found attachment: %s" % val)
