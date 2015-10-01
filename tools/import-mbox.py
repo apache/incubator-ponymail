@@ -85,21 +85,22 @@ def parse_attachment(part):
         dispositions = cd.strip().split(";")
         if dispositions[0].lower() == "attachment":
             fd = part.get_payload(decode=True)
-            attachment = {}
-            attachment['content_type'] = part.get_content_type()
-            attachment['size'] = len(fd)
-            attachment['filename'] = None
-            h = hashlib.sha256(fd).hexdigest()
-            b64 = codecs.encode(fd, "base64").decode('ascii')
-            attachment['hash'] = h
-            for param in dispositions[1:]:
-                key,val = param.split("=")
-                if key.lower().strip() == "filename":
-                    val = val.strip(' "')
-                    print("Found attachment: %s" % val)
-                    attachment['filename'] = val
-            if attachment['filename']:
-                return attachment, b64 # Return meta data and contents separately
+            if fd:
+                attachment = {}
+                attachment['content_type'] = part.get_content_type()
+                attachment['size'] = len(fd)
+                attachment['filename'] = None
+                h = hashlib.sha256(fd).hexdigest()
+                b64 = codecs.encode(fd, "base64").decode('ascii')
+                attachment['hash'] = h
+                for param in dispositions[1:]:
+                    key,val = param.split("=")
+                    if key.lower().strip() == "filename":
+                        val = val.strip(' "')
+                        print("Found attachment: %s" % val)
+                        attachment['filename'] = val
+                if attachment['filename']:
+                    return attachment, b64 # Return meta data and contents separately
     return None, None
 
 def getcharsets(msg):
