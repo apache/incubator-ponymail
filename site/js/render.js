@@ -1308,7 +1308,24 @@ function dealWithKeyboard(e) {
             document.getElementById('splash').style.display = "none"
             saveDraft()
         } else if (location.href.search(/list\.html/) != -1) { // should only work for the list view
-            toggleEmails_threaded(current_thread, true)
+            
+            
+            var thread = document.getElementById('thread_' + current_thread.toString().replace(/@<.+>/, ""))
+            if (thread) {
+                    // Close one thread?
+                if (thread.style.display != 'none') {
+                    toggleEmails_threaded(current_thread, true)
+                } else {
+                    // Close all threads?
+                    kiddos = []
+                    traverseThread(document.body, 'thread_', 'DIV')
+                    for (var i in kiddos) {
+                        kiddos[i].style.display = "none"
+                    }
+                }
+            
+            
+            
         }
     }
 }
