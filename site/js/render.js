@@ -1323,9 +1323,7 @@ function dealWithKeyboard(e) {
                         kiddos[i].style.display = "none"
                     }
                 }
-            
-            
-            
+            }
         }
     }
 }
