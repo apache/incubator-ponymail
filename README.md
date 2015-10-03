@@ -43,13 +43,12 @@ private.
 
 ### Getting started ###
 
-* Install Apache httpd + mod_lua and the lua libs
-* Install ElasticSearch
-* go to tools/ and run python setup.py
-  * Follow the instructions and enter info
-* Fiddle a bit with site/js/config.js for now
-* import mbox data with import-mbox.py if need be
-* All done :)
+1. Install Apache httpd + mod_lua and the lua libs
+2. Install ElasticSearch
+3. go to tools/ and run python setup.py - follow the instructions and enter info
+4. Fiddle a bit with site/js/config.js for now
+5. import mbox data with import-mbox.py if need be
+6. All done :)
 
 
 ### TODO: ###
@@ -62,5 +61,7 @@ private.
 * ~~Have reply feature actually work~~ (*DONE*)
 * Start on documentation
 * Rework JS, turn those ugly innerHTML hacks into proper DOM handling
-* Set up notification system (depends on reply system) (*WIP!*)
+* Set up notification system (depends on reply system) (Sort of works, but still *WIP!*)
+* Have it work with ES with auth mode or via HTTPS
+* Split JS into smaller files for development, bundle together for releases
 
