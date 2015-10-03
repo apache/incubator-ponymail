@@ -1321,6 +1321,7 @@ function dealWithKeyboard(e) {
                     traverseThread(document.body, 'thread_', 'DIV')
                     for (var i in kiddos) {
                         kiddos[i].style.display = "none"
+                        kiddos[i].innerHTML = "" // clear contents as well (buttons etc)
                     }
                 }
             }
