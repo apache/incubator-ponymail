@@ -37,7 +37,7 @@ function savePreferences() {
             prefs[key] = val
         }
     }
-    GetAsync("preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
+    GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
 }
 
 // showPreferences: show the account prefs in the splash window
