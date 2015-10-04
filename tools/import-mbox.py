@@ -187,7 +187,7 @@ class BulkThread(Thread):
             js_arr.append({
                 '_op_type': 'index',
                 '_index': iname,
-                '_type': dtype,
+                '_type': self.dtype,
                 '_id': js['mid'],
                 'doc': js,
                 '_source': js
