@@ -93,7 +93,29 @@ function loadList_threaded(mjson, limit, start, deep) {
 
 
     var bulk = document.getElementById('emails')
-    bulk.innerHTML = nest
+    bulk.innerHTML = ""
+    
+    // Top nav buttons
+    if (start > 0) {
+        var nstart = Math.max(0, start - limit)
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+    } else {
+        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
+    }
+    
+    if (login && login.credentials) {
+        bulk.innerHTML += '<div style="width: 33%; float: left; text-align: center;"><a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a></div>'
+    } else {
+        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
+    }
+    
+    if (json.length > (start + limit)) {
+        remain = Math.min(15, json.length - (start + limit))
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+    }
+    
+    // Emails
+    bulk.innerHTML += nest
     if (prefs.hideStats == 'yes') {
         bulk.setAttribute("class", "well col-md-10 col-lg-10")
     } else {
@@ -101,6 +123,8 @@ function loadList_threaded(mjson, limit, start, deep) {
     }
     var dp = (deep || (global_deep && current_query.length > 0)) ? 'true' : 'false'
     
+    
+    // Bottom nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
