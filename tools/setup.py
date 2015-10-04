@@ -183,6 +183,17 @@ mappings = {
           "type" : "binary"
         }
       }
+    },
+    "mbox_source" : {
+      "_size" : {
+        "enabled" : True,
+        "store" : True
+      },
+      "properties" : {
+        "source" : {
+          "type" : "binary"
+        }
+      }
     }
   }
 
