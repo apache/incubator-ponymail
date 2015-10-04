@@ -374,7 +374,7 @@ class SlurpThread(Thread):
                             json_source = {
                                 'mid': mid2,
                                 'message-id': mid,
-                                'source': message.as_string().decode('utf8')
+                                'source': unicode(message.as_string(), errors='ignore')
                             }
                             ja.append(json)
                             jas.append(json_source)
