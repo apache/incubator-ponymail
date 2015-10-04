@@ -96,7 +96,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     bulk.innerHTML = ""
     
     // Top nav buttons
-    var tnav = "<div>"
+    var tnav = "<div style='float: left; width: 100%'>"
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
         tnav += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
