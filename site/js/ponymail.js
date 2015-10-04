@@ -1345,7 +1345,7 @@ function buildPage(json, state) {
             var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
             document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
         }
-        stats.setAttribute("class", "hidden-xs col-lg-3")
+        stats.setAttribute("class", "hidden-xs hidden-sm hidden-md col-lg-3")
         stats.removeAttribute("onclick")
         stats.style.display = "block"
         if (json.cloud) {
