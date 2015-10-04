@@ -76,9 +76,8 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
         var subject = eml.subject.replace(/</mg, "&lt;")
         var mdate = new Date(latest * 1000)
-        mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
-            hour12: false
-        })
+        
+        mdate = formatDate(mdate)
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??

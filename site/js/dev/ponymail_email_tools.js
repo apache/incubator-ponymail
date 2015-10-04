@@ -153,3 +153,8 @@ function getSingleEmail(id) {
 function seedGetSingleThread(id) {
     GetAsync("/api/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
+
+
+function formatDate(date){
+    return date.getFullYear() + "-" + (((date.getMonth()+1)<10?'0':'') + (date.getMonth()+1)) + "-" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+}

@@ -59,7 +59,7 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
         mdate = new Date(eml.epoch * 1000)
-        mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
+        mdate = formatDate(mdate)
             hour12: false
         })
         var subject = eml.subject.replace(/</mg, "&lt;")
