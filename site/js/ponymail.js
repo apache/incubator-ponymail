@@ -340,7 +340,7 @@ function findEpoch(epoch) {
         }
     }
     return null
-
+}
 // displayEmail: Shows an email inside a thread
 function displayEmail(json, id) {
     if (!json.mid && !json.tid) {
@@ -1736,7 +1736,7 @@ function showStats(json) {
     }
     ts += "</tr></table>"
     obj.innerHTML += ts
-
+}
 
 function timeTravelSingleThreadRedirect(json) {
     if (json && json.thread) {
@@ -1798,7 +1798,7 @@ function timeTravelListRedirect(json, state) {
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
     GetAsync("/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
-
+}
 
 // logout: log out a user
 function logout() {
