@@ -245,7 +245,7 @@ class Archiver(object):
                 id=mid,
                 body = {
                     "message-id": msg_metadata['message-id'],
-                    "source": msg.as_string()
+                    "source": msg.as_string().decode('utf8')
                 }
             )
             
