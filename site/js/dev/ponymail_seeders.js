@@ -47,7 +47,7 @@ function seedPrefs(json, state) {
 }
 // preGetListInfo: Callback that fetches preferences and sets up list data
 function preGetListInfo(list, xdomain, nopush) {
-    GetAsync("preferences.lua", {
+    GetAsync("/api/preferences.lua", {
         l: list,
         x: xdomain,
         n: nopush

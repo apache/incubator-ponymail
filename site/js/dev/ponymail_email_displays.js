@@ -78,7 +78,7 @@ function displayEmail(json, id) {
                 } else {
                     size = fd.size.toLocaleString() + " bytes"
                 }
-                thread.innerHTML += "<a href='/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
             }
             thread.innerHTML += "<br/>"
         }
@@ -280,7 +280,7 @@ function toggleEmails_threaded(id, close, toverride) {
         }
         var eml = saved_emails[current_thread_json[id].tid]
         if (!eml || !eml.from) {
-            GetAsync("email.lua?id=" + current_thread_json[id].tid, {
+            GetAsync("/api/email.lua?id=" + current_thread_json[id].tid, {
                 blockid: id,
                 thread: current_thread_json[id]
             }, loadEmails_threaded)
@@ -331,5 +331,5 @@ function displaySingleThread(json) {
 
 // getSingleThread: fetch a thread from ES and go to callback
 function getSingleThread(id) {
-    GetAsync("/thread.lua?id=" + id, null, displaySingleThread)
+    GetAsync("/api/thread.lua?id=" + id, null, displaySingleThread)
 }

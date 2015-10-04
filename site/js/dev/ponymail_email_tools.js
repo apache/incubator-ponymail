@@ -145,11 +145,11 @@ function permaLink(id, type) {
 
 // getSingleEmail: fetch an email from ES and go to callback
 function getSingleEmail(id) {
-    GetAsync("/email.lua?id=" + id, null, displaySingleEmail)
+    GetAsync("/api/email.lua?id=" + id, null, displaySingleEmail)
 }
 
 
 // seedGetSingleThread: pre-caller for the above.
 function seedGetSingleThread(id) {
-    GetAsync("/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
+    GetAsync("/api/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }

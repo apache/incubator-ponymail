@@ -131,7 +131,7 @@ function loadEmails_flat(id, close) {
         }
         var eml = saved_emails[current_flat_json[id].id]
         if (!eml || !eml.from) {
-            GetAsync("email.lua?id=" + current_flat_json[id].id, id, displayEmail)
+            GetAsync("/api/email.lua?id=" + current_flat_json[id].id, id, displayEmail)
         } else {
             displayEmail(eml, id)
         }

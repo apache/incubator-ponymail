@@ -24,7 +24,7 @@ function timeTravelSingleThreadRedirect(json) {
 
 function timeTravelSingleThread() {
     var mid = current_thread_json[0].mid
-    GetAsync("/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
+    GetAsync("/api/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
 }
 
 
@@ -75,5 +75,5 @@ function timeTravelListRedirect(json, state) {
 
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
-    GetAsync("/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
+    GetAsync("/api/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
 }

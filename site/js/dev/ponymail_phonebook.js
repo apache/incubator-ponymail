@@ -114,6 +114,6 @@ function seedDomains(json) {
 
 // listDomains: fetch prefs and ML stats
 function listDomains() {
-    GetAsync("preferences.lua", null, seedDomains)
-    GetAsync("pminfo.lua", null, showStats)
+    GetAsync("/api/preferences.lua", null, seedDomains)
+    GetAsync("/api/pminfo.lua", null, showStats)
 }

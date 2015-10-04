@@ -393,7 +393,7 @@ function getListInfo(list, xdomain, nopush) {
         if (current_query == "") {
             global_deep = false
             current_query = ""
-            GetAsync("stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
+            GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
             if (!nopush) {
                 window.history.pushState({}, "", "list.html?" + xlist);
             }

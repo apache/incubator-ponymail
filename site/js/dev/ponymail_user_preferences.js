@@ -18,7 +18,7 @@
 
 // logout: log out a user
 function logout() {
-    GetAsync("preferences.lua?logout=true", null, function() { location.href = document.location; })
+    GetAsync("/api/preferences.lua?logout=true", null, function() { location.href = document.location; })
 }
 
 

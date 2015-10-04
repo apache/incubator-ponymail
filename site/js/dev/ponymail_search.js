@@ -43,7 +43,7 @@ function toggleEmail(year, mo, nopush) {
         xmo = '0' + xmo
     }
     if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
-    GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")"
 }
 
@@ -69,7 +69,7 @@ function search(q, d, nopush, all) {
     
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
-    GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days)"
     xlist = olist + "@" + domain
     return false;
@@ -82,7 +82,7 @@ function searchAll(q, d) {
     current_query = q
     global_deep = true
     //    if (!nopush) window.history.pushState({},"", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
-    GetAsync("stats.lua?list=*&domain=*&q=" + q + "&d=" + d, {
+    GetAsync("/api/stats.lua?list=*&domain=*&q=" + q + "&d=" + d, {
         deep: true
     }, buildPage)
     document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days"
@@ -104,7 +104,7 @@ function do_search(q, d, nopush, all) {
         listname = "*"
         domain = "*"
     }
-    GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + " days)"
     clearCalendarHover()
     return false;
@@ -112,7 +112,7 @@ function do_search(q, d, nopush, all) {
 
 
 function addSearchEngine() {
-    window.external.AddSearchProvider("/websearch.lua?" + gxdomain)
+    window.external.AddSearchProvider("/api/websearch.lua?" + gxdomain)
 }
 
 
@@ -121,7 +121,7 @@ function addSearchBar() {
     var sl = document.createElement('link')
     sl.setAttribute("rel", "search")
     sl.setAttribute("type", "application/opensearchdescription+xml")
-    sl.setAttribute("href", "/websearch.lua?" + gxdomain)
+    sl.setAttribute("href", "/api/websearch.lua?" + gxdomain)
     sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
     h.appendChild(sl)
 }
