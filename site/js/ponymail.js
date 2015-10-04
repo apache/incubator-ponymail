@@ -116,7 +116,7 @@ function sendEmail(form) {
     f.append("body", document.getElementById('reply_body').value)
     
     var request = new XMLHttpRequest();
-    request.open("POST", "/compose.lua");
+    request.open("POST", "/api/compose.lua");
     request.send(f);
     
     var obj = document.getElementById('splash')
@@ -421,7 +421,7 @@ function displayEmail(json, id) {
                 } else {
                     size = fd.size.toLocaleString() + " bytes"
                 }
-                thread.innerHTML += "<a href='/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
             }
             thread.innerHTML += "<br/>"
         }
@@ -623,7 +623,7 @@ function toggleEmails_threaded(id, close, toverride) {
         }
         var eml = saved_emails[current_thread_json[id].tid]
         if (!eml || !eml.from) {
-            GetAsync("email.lua?id=" + current_thread_json[id].tid, {
+            GetAsync("/api/email.lua?id=" + current_thread_json[id].tid, {
                 blockid: id,
                 thread: current_thread_json[id]
             }, loadEmails_threaded)
@@ -674,7 +674,7 @@ function displaySingleThread(json) {
 
 // getSingleThread: fetch a thread from ES and go to callback
 function getSingleThread(id) {
-    GetAsync("/thread.lua?id=" + id, null, displaySingleThread)
+    GetAsync("/api/thread.lua?id=" + id, null, displaySingleThread)
 }
 // Fetched from ponymail_email_tools.js
 
@@ -808,13 +808,13 @@ function permaLink(id, type) {
 
 // getSingleEmail: fetch an email from ES and go to callback
 function getSingleEmail(id) {
-    GetAsync("/email.lua?id=" + id, null, displaySingleEmail)
+    GetAsync("/api/email.lua?id=" + id, null, displaySingleEmail)
 }
 
 
 // seedGetSingleThread: pre-caller for the above.
 function seedGetSingleThread(id) {
-    GetAsync("/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
+    GetAsync("/api/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
 // Fetched from ponymail_helperfuncs.js
 
@@ -962,7 +962,7 @@ function loadEmails_flat(id, close) {
         }
         var eml = saved_emails[current_flat_json[id].id]
         if (!eml || !eml.from) {
-            GetAsync("email.lua?id=" + current_flat_json[id].id, id, displayEmail)
+            GetAsync("/api/email.lua?id=" + current_flat_json[id].id, id, displayEmail)
         } else {
             displayEmail(eml, id)
         }
@@ -1470,7 +1470,7 @@ function getListInfo(list, xdomain, nopush) {
         if (current_query == "") {
             global_deep = false
             current_query = ""
-            GetAsync("stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
+            GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
             if (!nopush) {
                 window.history.pushState({}, "", "list.html?" + xlist);
             }
@@ -1582,8 +1582,8 @@ function seedDomains(json) {
 
 // listDomains: fetch prefs and ML stats
 function listDomains() {
-    GetAsync("preferences.lua", null, seedDomains)
-    GetAsync("pminfo.lua", null, showStats)
+    GetAsync("/api/preferences.lua", null, seedDomains)
+    GetAsync("/api/pminfo.lua", null, showStats)
 }
 // Fetched from ponymail_search.js
 
@@ -1615,7 +1615,7 @@ function toggleEmail(year, mo, nopush) {
         xmo = '0' + xmo
     }
     if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
-    GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")"
 }
 
@@ -1641,7 +1641,7 @@ function search(q, d, nopush, all) {
     
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
-    GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days)"
     xlist = olist + "@" + domain
     return false;
@@ -1654,7 +1654,7 @@ function searchAll(q, d) {
     current_query = q
     global_deep = true
     //    if (!nopush) window.history.pushState({},"", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
-    GetAsync("stats.lua?list=*&domain=*&q=" + q + "&d=" + d, {
+    GetAsync("/api/stats.lua?list=*&domain=*&q=" + q + "&d=" + d, {
         deep: true
     }, buildPage)
     document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days"
@@ -1676,7 +1676,7 @@ function do_search(q, d, nopush, all) {
         listname = "*"
         domain = "*"
     }
-    GetAsync("stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + " days)"
     clearCalendarHover()
     return false;
@@ -1684,7 +1684,7 @@ function do_search(q, d, nopush, all) {
 
 
 function addSearchEngine() {
-    window.external.AddSearchProvider("/websearch.lua?" + gxdomain)
+    window.external.AddSearchProvider("/api/websearch.lua?" + gxdomain)
 }
 
 
@@ -1693,7 +1693,7 @@ function addSearchBar() {
     var sl = document.createElement('link')
     sl.setAttribute("rel", "search")
     sl.setAttribute("type", "application/opensearchdescription+xml")
-    sl.setAttribute("href", "/websearch.lua?" + gxdomain)
+    sl.setAttribute("href", "/api/websearch.lua?" + gxdomain)
     sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
     h.appendChild(sl)
 }
@@ -1731,7 +1731,7 @@ function seedPrefs(json, state) {
 }
 // preGetListInfo: Callback that fetches preferences and sets up list data
 function preGetListInfo(list, xdomain, nopush) {
-    GetAsync("preferences.lua", {
+    GetAsync("/api/preferences.lua", {
         l: list,
         x: xdomain,
         n: nopush
@@ -1774,7 +1774,7 @@ function timeTravelSingleThreadRedirect(json) {
 
 function timeTravelSingleThread() {
     var mid = current_thread_json[0].mid
-    GetAsync("/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
+    GetAsync("/api/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
 }
 
 
@@ -1825,13 +1825,13 @@ function timeTravelListRedirect(json, state) {
 
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
-    GetAsync("/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
+    GetAsync("/api/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
 }// Fetched from ponymail_user_preferences.js
 
 
 // logout: log out a user
 function logout() {
-    GetAsync("preferences.lua?logout=true", null, function() { location.href = document.location; })
+    GetAsync("/api/preferences.lua?logout=true", null, function() { location.href = document.location; })
 }
 
 
@@ -1850,7 +1850,7 @@ function savePreferences() {
             prefs[key] = val
         }
     }
-    GetAsync("preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
+    GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
 }
 
 // showPreferences: show the account prefs in the splash window
