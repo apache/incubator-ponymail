@@ -80,7 +80,7 @@
       
       
       <!-- Advanced search -->
-      <div style="display: none;" class="bs-callout bs-callout-danger" id="advanced" style="margin: 2px !important; padding: 5px;">
+      <div style="display: none;" class="bs-callout bs-callout-danger fade-in" id="advanced" style="margin: 2px !important; padding: 5px;">
       <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['ad'].value, false);">
         <p>This search allows you to search all archives you have access to at once. Use with care.</p>
         Deep search: <input type="text" name="aq" id="aq"/>
@@ -94,6 +94,11 @@
         <input type="button" value="Switch to quick search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
       </form>
     </div>
+      
+      <!-- Popup box for various notices -->
+      <div style="display: none;" class="bs-callout bs-callout-success" id="popupper" style="margin: 2px !important; padding: 5px;">
+      </div>
+      
       <div>
         <h3 id="listtitle" style="text-align: center; margin: 6px; padding: 0px;"><a href="#">dev@httpd.apache.org:</a></h3>
       </div>

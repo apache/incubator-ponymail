@@ -120,8 +120,8 @@ function sendEmail(form) {
     request.send(f);
     
     var obj = document.getElementById('splash')
-    obj.innerHTML = "<h3>Email dispatched!</h3><p>Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.</p>"
-    window.setTimeout(hideComposer, 4000)
+    hideComposer()
+    popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.")
 }
 
 
@@ -359,6 +359,16 @@ function findEpoch(epoch) {
         }
     }
     return null
+}
+
+function popup(title, body) {
+    var obj = document.getElementById('popupper')
+    if (obj) {
+        obj.innerHTML = ""
+        obj.style.display = 'block'
+        obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='toggleView(\"popupper\")'>Got it!</a></p>"
+        window.setTimeout(4000, function() { toggleView('popupper')})
+    }
 }// Fetched from ponymail_email_displays.js
 
 // displayEmail: Shows an email inside a thread
