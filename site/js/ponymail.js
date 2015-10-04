@@ -1044,7 +1044,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                 estyle = "font-weight: bold;"
             }
         }
-        nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' class='label label-" + ls + "'>" + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "' id='people_"+i+"' class='label label-" + lp + "'>" + people + " participants</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " replies</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
