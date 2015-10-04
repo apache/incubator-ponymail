@@ -34,7 +34,7 @@ function handle(r)
             doc = docs[1]
         end
     end
-    if doc then
+    if doc and doc.source then
         local canAccess = false
         if doc.private then
             local account = user.get(r)
