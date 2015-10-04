@@ -44,6 +44,7 @@ var prefs = {
     compactQuotes: 'yes',           // Show quotes from original email as compacted blocks?
     notifications: 'direct',        // Notify on direct or indirect replies to your posts?
     hideStats: 'no',                // Hide the email statistics window?
+    social: 'no',                   // Show threads in social mode
     loggedIn: false
 }
 

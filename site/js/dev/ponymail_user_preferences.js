@@ -78,6 +78,12 @@ function showPreferences() {
         no: "No"
     }, prefs.compactQuotes))
     
+    // social mode
+    section.appendChild(generateFormDivs('social', 'Show threads in social mode:', 'select', {
+        yes: "Yes",
+        no: "No"
+    }, prefs.social))
+    
     // hideStats mode
     section.appendChild(generateFormDivs('hideStats', 'Hide statistics window:', 'select', {
         yes: "Yes",

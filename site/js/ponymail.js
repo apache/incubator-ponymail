@@ -400,64 +400,87 @@ function displayEmail(json, id) {
             window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
         }
     }
-    var cols = ['primary', 'success', 'info', 'default', 'warning', 'danger']
+    var cols = ['primary', 'success', 'info', 'warning', 'danger']
     var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
-        thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
-        thread.style.background = estyle
-        thread.innerHTML = ''
-        thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
-        thread.innerHTML += ' &nbsp; <a href="/thread.html/'+json.mid+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
-        thread.innerHTML += ' &nbsp; <a href="/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
-        thread.innerHTML += "<br/>"
-        //thread.style.border = "1px dotted #666"
-        thread.style.padding = "5px"
-        thread.style.fontFamily = "Hack"
         json.date = new Date(json.epoch*1000).toLocaleString();
-        var fields = ['From', 'To', 'CC', 'Subject', 'Date']
-        for (var i in fields) {
-            var key = fields[i]
-            if (json[key.toLowerCase()] != undefined && json[key.toLowerCase()].length > 0) {
-                thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
-            }
-        }
-        if (json.private) {
-            thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
-        }
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
-        thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
-        if (json.attachments && json.attachments.length > 0) {
-            thread.innerHTML += "<b>Attachments: </b>"
-            for (var a in json.attachments) {
-                var fd = json.attachments[a]
-                var size = parseInt(fd.size/1024)
-                if (size > 0) {
-                    size = size.toLocaleString() + " kb"
-                } else {
-                    size = fd.size.toLocaleString() + " bytes"
-                }
-                thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
-            }
-            thread.innerHTML += "<br/>"
-        }
         var ebody = json.body
         ebody = ebody.replace(/</mg, "&lt;")
         ebody = "\n" + ebody
         if (prefs.compactQuotes == 'yes') {
             ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                 var rnd = (Math.random() * 100).toString()
-                var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
+                var html = "<div class='bs-callout bs-callout-default' style='margin: 3px; padding: 2px;' id='parent_" + rnd + "'>" +
                     "<img src='/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
                     "<div style='display: none;' id='quote_" + rnd + "'>" + inner + "</div></div>"
                 return html
             })
         }
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
-
-        thread.innerHTML += "<br/><pre style='font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
-        if (thread.hasAttribute("meme")) {
-            thread.scrollIntoView()
-            thread.style.background = "rgba(200,200,255, 0.25)"
+        
+        
+        if (prefs.social && prefs.social == "yes") {
+            var sdate = formatDate(new Date(json.epoch*1000))
+            var fr = json['from'].replace(/</g, "&lt;")
+            thread.style.background = estyle
+            thread.style.marginLeft = "40px"
+            thread.style.marginTop = "20px"
+            thread.innerHTML = "<img src='https://secure.gravatar.com/avatar/" + json['gravatar'] + ".jpg?s=32&r=g&d=mm' style='vertical-align:middle'/> &nbsp; <b>" + fr + "</b> - " + sdate
+            thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
+            thread.innerHTML += "<br/><br/>"
+            var bclass = "bubble-" + cols[parseInt(Math.random() * cols.length - 0.01)]
+            thread.innerHTML += "<div class='" + bclass + "' style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</div>'
+            if (thread.hasAttribute("meme")) {
+                thread.scrollIntoView()
+                thread.style.background = "rgba(200,200,255, 0.25)"
+            }
+        }
+        else {
+            thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
+            thread.style.background = estyle
+            thread.innerHTML = ''
+            thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
+            thread.innerHTML += ' &nbsp; <a href="/thread.html/'+json.mid+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
+            thread.innerHTML += ' &nbsp; <a href="/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
+            thread.innerHTML += "<br/>"
+            //thread.style.border = "1px dotted #666"
+            thread.style.padding = "5px"
+            thread.style.fontFamily = "Hack"
+            
+            var fields = ['From', 'To', 'CC', 'Subject', 'Date']
+            for (var i in fields) {
+                var key = fields[i]
+                if (json[key.toLowerCase()] != undefined && json[key.toLowerCase()].length > 0) {
+                    thread.innerHTML += "<b>" + key + ": </b>" + json[key.toLowerCase()].replace(/</g, "&lt;") + "<br/>"
+                }
+            }
+            if (json.private) {
+                thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
+            }
+            
+            thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
+            if (json.attachments && json.attachments.length > 0) {
+                thread.innerHTML += "<b>Attachments: </b>"
+                for (var a in json.attachments) {
+                    var fd = json.attachments[a]
+                    var size = parseInt(fd.size/1024)
+                    if (size > 0) {
+                        size = size.toLocaleString() + " kb"
+                    } else {
+                        size = fd.size.toLocaleString() + " bytes"
+                    }
+                    thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                }
+                thread.innerHTML += "<br/>"
+            }
+            
+               
+            thread.innerHTML += "<pre style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
+            if (thread.hasAttribute("meme")) {
+                thread.scrollIntoView()
+                thread.style.background = "rgba(200,200,255, 0.25)"
+            }
         }
     } else {
         alert("Error, " + id + " not found :(")
@@ -541,7 +564,6 @@ function displayEmailThreaded(json, state) {
         var node = document.createElement('div')
         node.setAttribute("epoch", json.epoch.toString())
         node.style.marginBottom = "20px";
-        node.style.borderBottom = "3px groove #666"
         node.setAttribute("id", "thread_" + (json.mid ? json.mid : json.tid).toString().replace(/@<.+>/, ""))
         if (state.pchild && document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))) {
             var pc = document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))
@@ -1968,6 +1990,12 @@ function showPreferences() {
         yes: "Yes",
         no: "No"
     }, prefs.compactQuotes))
+    
+    // social mode
+    section.appendChild(generateFormDivs('social', 'Show threads in social mode:', 'select', {
+        yes: "Yes",
+        no: "No"
+    }, prefs.social))
     
     // hideStats mode
     section.appendChild(generateFormDivs('hideStats', 'Hide statistics window:', 'select', {
