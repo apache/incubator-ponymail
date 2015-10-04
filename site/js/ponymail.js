@@ -129,6 +129,9 @@ function sendEmail(form) {
 function compose(eid, lid, type) {
     var email
     if (lid) {
+        if (lid == "xlist") {
+            lid = xlist;
+        }
         email = {
             'message-id': "",
             'list': xlist.replace("@", "."),
@@ -1943,6 +1946,17 @@ function setupUser(login) {
     
     var pd = document.getElementById('prefs_dropdown')
     pd.innerHTML = ""
+    
+    // thread item
+    var li = document.createElement("li")
+    var a = document.createElement("a")
+    var t = document.createTextNode("Start a new discussion")
+    a.setAttribute("href", "javascript:void(0);")
+    a.setAttribute("onclick", "compose(null, 'xlist')")
+    a.appendChild(t)
+    li.appendChild(a)
+    pd.appendChild(li)
+    
     
     // Prefs item
     var li = document.createElement("li")

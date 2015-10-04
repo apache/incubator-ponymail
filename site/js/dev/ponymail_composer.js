@@ -71,6 +71,9 @@ function sendEmail(form) {
 function compose(eid, lid, type) {
     var email
     if (lid) {
+        if (lid == "xlist") {
+            lid = xlist;
+        }
         email = {
             'message-id': "",
             'list': xlist.replace("@", "."),
