@@ -38,12 +38,13 @@ private.
 * Python 2.7 for importing (with elasticsearch and formatflowed via pip)
 * MailMan3 if you fancy that (we have an archive plugin)
 * OR any mailing list system of your choice (use mm3 plugin with stdin)
-* Lua 5.1 or 5.2 + lua-cjson, luasec and luasocket (optional)
+* Python 3.x for the archiver plugin (yes yes, we know..!)
+* Lua 5.1 or 5.2 + lua-cjson, luasec and luasocket
 
 
 ### Getting started ###
 
-1. Install Apache httpd + mod_lua and the lua libs
+1. Install Apache httpd + mod_lua and the lua libs (see http://modlua.org/gs/installing if need be)
 2. Install ElasticSearch
 3. go to tools/ and run python setup.py - follow the instructions and enter info
 4. Fiddle a bit with site/js/config.js for now
