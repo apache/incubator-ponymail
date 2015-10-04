@@ -73,6 +73,20 @@ function displayEmail(json, id) {
             thread.innerHTML += "<br/><br/>"
             var bclass = "bubble-" + cols[parseInt(Math.random() * cols.length - 0.01)]
             thread.innerHTML += "<div class='" + bclass + "' style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</div>'
+            if (json.attachments && json.attachments.length > 0) {
+                thread.innerHTML += "<b>Attachments: </b>"
+                for (var a in json.attachments) {
+                    var fd = json.attachments[a]
+                    var size = parseInt(fd.size/1024)
+                    if (size > 0) {
+                        size = size.toLocaleString() + " kb"
+                    } else {
+                        size = fd.size.toLocaleString() + " bytes"
+                    }
+                    thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                }
+                thread.innerHTML += "<br/>"
+            }
             if (thread.hasAttribute("meme")) {
                 thread.scrollIntoView()
                 thread.style.background = "rgba(200,200,255, 0.25)"
