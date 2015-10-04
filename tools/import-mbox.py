@@ -394,9 +394,9 @@ class SlurpThread(Thread):
                             bulk.insert()
                             ja = []
                             
-                            bulk = BulkThread()
-                            bulk.assign(jas, es, 'mbox_source')
-                            bulk.insert()
+                            bulks = BulkThread()
+                            bulks.assign(jas, es, 'mbox_source')
+                            bulks.insert()
                             jas = []
                 else:
                     baddies += 1
@@ -412,9 +412,9 @@ class SlurpThread(Thread):
             bulk.insert()
             ja = []
             
-            bulk = BulkThread()
-            bulk.assign(jas, es, 'mbox_source')
-            bulk.insert()
+            bulks = BulkThread()
+            bulks.assign(jas, es, 'mbox_source')
+            bulks.insert()
             jas = []
 
 tlpname = "foo"
