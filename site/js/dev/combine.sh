@@ -15,8 +15,10 @@ echo '/*
  See the License for the specific language governing permissions and
  limitations under the License.
 */
+// THIS IS AN AUTOMATICALLY COMBINED FILE. PLEASE EDIT dev/*.js!!
 ' > ../ponymail.js
 for f in `ls *.js`; do
+    printf "// Fetched from ${f}\n" >> ../ponymail.js
     sed -s -e '/^\/\*/,/\*\//d' ${f} >> ../ponymail.js
 done
 echo "Done!"

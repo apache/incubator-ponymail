@@ -14,7 +14,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
+// THIS IS AN AUTOMATICALLY COMBINED FILE. PLEASE EDIT dev/*.js!!
 
+// Fetched from ponymail_assign_vars.js
 
 // These are all variables needed at some point during our work.
 // They keep track of the JSON we have received, storing it in the browser,
@@ -68,6 +70,7 @@ var viewModes = {
         list: loadList_flat
     }
 }
+// Fetched from ponymail_composer.js
 
 
 function saveDraft() {
@@ -225,6 +228,7 @@ function compose(eid, lid, type) {
         }
     }
 }
+// Fetched from ponymail_dom_helpers.js
 
 
 
@@ -340,7 +344,8 @@ function findEpoch(epoch) {
         }
     }
     return null
-}
+}// Fetched from ponymail_email_displays.js
+
 // displayEmail: Shows an email inside a thread
 function displayEmail(json, id) {
     if (!json.mid && !json.tid) {
@@ -658,6 +663,7 @@ function displaySingleThread(json) {
 function getSingleThread(id) {
     GetAsync("/thread.lua?id=" + id, null, displaySingleThread)
 }
+// Fetched from ponymail_email_tools.js
 
 
 // findEml: Finds and returns an email object based on message ID
@@ -797,6 +803,7 @@ function getSingleEmail(id) {
 function seedGetSingleThread(id) {
     GetAsync("/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
+// Fetched from ponymail_helperfuncs.js
 
 // GetAsync: func for getting a doc async with a callback
 function GetAsync(theUrl, xstate, callback) {
@@ -824,6 +831,7 @@ function GetAsync(theUrl, xstate, callback) {
         }
     }
 }
+// Fetched from ponymail_listview_flat.js
 
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
@@ -949,6 +957,7 @@ function loadEmails_flat(id, close) {
         alert("no such thread ID: " + id)
     }
 }
+// Fetched from ponymail_listview_threaded.js
 
 
 // loadList_threaded: Same as above, but threaded display
@@ -1068,6 +1077,7 @@ function loadEmails_threaded(json, state) {
     })
     getChildren(state.blockid, state.thread)
 }
+// Fetched from ponymail_pagebuilder.js
 
 
 // toggleCalendar: Expands/contracts years in the calendar (to show/hide months)
@@ -1458,6 +1468,7 @@ function getListInfo(list, xdomain, nopush) {
     
 }
 
+// Fetched from ponymail_phonebook.js
 
 // showDomains: Show domains in the phone book display
 function showDomains(l) {
@@ -1561,6 +1572,7 @@ function listDomains() {
     GetAsync("preferences.lua", null, seedDomains)
     GetAsync("pminfo.lua", null, showStats)
 }
+// Fetched from ponymail_search.js
 
 
 // toggleEmail: Fetch a list of emails from an ML in a specific year/month
@@ -1672,6 +1684,7 @@ function addSearchBar() {
     sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
     h.appendChild(sl)
 }
+// Fetched from ponymail_seeders.js
 
 // seedGetListInfo: Callback that seeds the list index and sets up account stuff
 function seedGetListInfo(json, state) {
@@ -1712,6 +1725,7 @@ function preGetListInfo(list, xdomain, nopush) {
     }, seedGetListInfo)
 }
 
+// Fetched from ponymail_stats.js
 
 
 // showStats: Show the ML stats on the front page
@@ -1736,7 +1750,8 @@ function showStats(json) {
     }
     ts += "</tr></table>"
     obj.innerHTML += ts
-}
+}// Fetched from ponymail_timetravel.js
+
 
 function timeTravelSingleThreadRedirect(json) {
     if (json && json.thread) {
@@ -1798,7 +1813,8 @@ function timeTravelListRedirect(json, state) {
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
     GetAsync("/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
-}
+}// Fetched from ponymail_user_preferences.js
+
 
 // logout: log out a user
 function logout() {
@@ -1952,6 +1968,7 @@ function setupUser(login) {
     pd.appendChild(li)
 }
 
+// Fetched from ponymail_zzz.js
 
 
 // dealWithKeyboard: Handles what happens when you hit the escape key
