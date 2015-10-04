@@ -83,7 +83,7 @@ function loadList_flat(mjson, limit, start, deep) {
 
 
     var bulk = document.getElementById('emails')
-    bulk.innerHTML = ""
+    bulk.innerHTML = "<div>"
     
     // Top nav buttons
     if (start > 0) {
@@ -97,7 +97,7 @@ function loadList_flat(mjson, limit, start, deep) {
         remain = Math.min(15, json.length - (start + limit))
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
     }
-    
+    bulk.innerHTML += "</div>"
     
     bulk.innerHTML += nest
     if (prefs.hideStats == 'yes') {
