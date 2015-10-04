@@ -822,10 +822,10 @@ function seedGetSingleThread(id) {
 
 
 function formatDate(date){
-    return date.getFullYear() + "-" + ((date.getMonth()+1)<10?'0':'') +
+    return (date.getFullYear() + "-" + ((date.getMonth()+1)<10?'0':'') +
         (date.getMonth()+1) + "-" + date.getDate() + " " +
         date.getHours() + ":" + (date.getMinutes()<10?'0':'') +
-        date.getMinutes()
+        date.getMinutes())
 }// Fetched from ponymail_helperfuncs.js
 
 // GetAsync: func for getting a doc async with a callback
@@ -901,8 +901,7 @@ function loadList_flat(mjson, limit, start, deep) {
         }
         mdate = new Date(eml.epoch * 1000)
         mdate = formatDate(mdate)
-            hour12: false
-        })
+            
         var subject = eml.subject.replace(/</mg, "&lt;")
         var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
         from = from.replace(/\"/g, "")
