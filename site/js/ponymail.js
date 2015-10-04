@@ -822,10 +822,11 @@ function seedGetSingleThread(id) {
 
 
 function formatDate(date){
-    return (date.getFullYear() + "-" + ((date.getMonth()+1)<10?'0':'') +
-        (date.getMonth()+1) + "-" + date.getDate() + " " +
-        date.getHours() + ":" + (date.getMinutes()<10?'0':'') +
-        date.getMinutes())
+    return (date.getFullYear() + "-" +
+        date.getMonth().toPrecision(2) + "-" +
+        date.getDate().toPrecision(2) + " " +
+        date.getHours().toPrecision(2) + ":" +
+        date.getMinutes().toPrecision(2))        
 }// Fetched from ponymail_helperfuncs.js
 
 // GetAsync: func for getting a doc async with a callback
