@@ -44,6 +44,7 @@ var current_json = {}
 var current_thread_json = {}
 var current_flat_json = {}
 var current_email_msgs = []
+var current_reply_eid = null
 var firstVisit = true
 var global_deep = false
 var old_state = {}
@@ -80,6 +81,13 @@ function saveDraft() {
             window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
             window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
             window.sessionStorage.setItem("reply_list", xlist)
+        }
+        composeType = ""
+    } else if (composeType == "reply" && current_reply_eid) {
+        if (typeof(window.sessionStorage) !== "undefined") {
+            window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
+            window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
+            window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
         }
         composeType = ""
     }
@@ -137,7 +145,7 @@ function compose(eid, lid, type) {
     }
     if (email) {
         if (login.credentials) {
-            
+            current_reply_eid = eid
             var listname = email['list'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             compose_headers = {
                 'in-reply-to': email['message-id'],
@@ -184,8 +192,12 @@ function compose(eid, lid, type) {
                 window.sessionStorage.getItem("reply_subject_" + xlist)) {
                 area.innerHTML = window.sessionStorage.getItem("reply_body_" + xlist)
                 txt.value = window.sessionStorage.getItem("reply_subject_" + xlist)
+            } else if (composeType == "reply" && typeof(window.sessionStorage) !== "undefined" &&
+                window.sessionStorage.getItem("reply_subject_eid_" + eid)) {
+                area.innerHTML = window.sessionStorage.getItem("reply_body_eid_" + eid)
+                txt.value = window.sessionStorage.getItem("reply_subject_eid_" + eid)
             }
-
+            
             // submit button
             var btn = document.createElement('input')
             btn.setAttribute("type", "button")
