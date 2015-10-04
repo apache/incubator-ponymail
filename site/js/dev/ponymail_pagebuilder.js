@@ -195,6 +195,11 @@ function buildPage(json, state) {
     } else {
         var sw = 180 + stats.offsetWidth;
         document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
+        // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
+        window.onresize = function() {
+            var sw = 180 + document.getElementById('stats').offsetWidth
+            document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
+        }
         stats.setAttribute("class", "hidden-md col-lg-3")
         stats.removeAttribute("onclick")
         stats.style.display = "block"

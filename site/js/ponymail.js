@@ -1330,11 +1330,21 @@ function buildPage(json, state) {
     stats.appendChild(btn)
     if (prefs.hideStats == 'yes') {
         document.getElementById('emails').style.width = "calc(100% - 175px)"
+        
+        // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
+        window.onresize = function() {
+            document.getElementById('emails').style.width = "calc(100% - 175px)"
+        }
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildPage(old_json, old_state);\">Show stats panel..</div>"
     } else {
         var sw = 180 + stats.offsetWidth;
         document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
+        // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
+        window.onresize = function() {
+            var sw = 180 + document.getElementById('stats').offsetWidth
+            document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
+        }
         stats.setAttribute("class", "hidden-md col-lg-3")
         stats.removeAttribute("onclick")
         stats.style.display = "block"
