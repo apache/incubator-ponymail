@@ -922,7 +922,7 @@ function loadList_flat(mjson, limit, start, deep) {
     // Top nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
@@ -944,7 +944,7 @@ function loadList_flat(mjson, limit, start, deep) {
     // Bottom nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
@@ -1075,7 +1075,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     // Top nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
@@ -1099,7 +1099,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     // Bottom nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp '
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
