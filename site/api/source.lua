@@ -17,9 +17,9 @@
 
 -- This is source.lua - a script for displaying the source of an email
 
-local elastic = require 'lib/elastic'
-local aaa = require 'lib/aaa'
-local user = require 'lib/user'
+local elastic = require 'api/lib/elastic'
+local aaa = require 'api/lib/aaa'
+local user = require 'api/lib/user'
 
 function handle(r)
     r.content_type = "text/plain"

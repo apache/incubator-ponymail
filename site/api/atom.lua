@@ -18,10 +18,10 @@
 -- This is atom.lua - the Atom feed for lists
 
 local JSON = require 'cjson'
-local elastic = require 'lib/elastic'
-local user = require 'lib/user'
-local aaa = require 'lib/aaa'
-local config = require 'lib/config'
+local elastic = require 'api/lib/elastic'
+local user = require 'api/lib/user'
+local aaa = require 'api/lib/aaa'
+local config = require 'api/lib/config'
 
 function handle(r)
     r.content_type = "application/xhtml+xml"

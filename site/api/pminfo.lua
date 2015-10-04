@@ -18,7 +18,7 @@
 ]]--
 
 local JSON = require 'cjson'
-local elastic = require 'lib/elastic'
+local elastic = require 'api/lib/elastic'
 
 function handle(r)
     r.content_type = "application/json"

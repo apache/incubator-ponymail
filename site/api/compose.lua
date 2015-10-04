@@ -18,9 +18,9 @@
 -- This is compose.lua - a script for sending replies or new topics to lists
 
 local JSON = require 'cjson'
-local elastic = require 'lib/elastic'
-local user = require 'lib/user'
-local config = require 'lib/config'
+local elastic = require 'api/lib/elastic'
+local user = require 'api/lib/user'
+local config = require 'api/lib/config'
 local smtp = require 'socket.smtp'
 
 function handle(r)

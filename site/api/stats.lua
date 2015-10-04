@@ -18,10 +18,10 @@
 -- This is stats.lua - the main stats/ML rendering script for the web.
 
 local JSON = require 'cjson'
-local elastic = require 'lib/elastic'
-local user = require 'lib/user'
-local aaa = require 'lib/aaa'
-local config = require 'lib/config'
+local elastic = require 'api/lib/elastic'
+local user = require 'api/lib/user'
+local aaa = require 'api/lib/aaa'
+local config = require 'api/lib/config'
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
