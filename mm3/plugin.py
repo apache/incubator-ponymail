@@ -244,6 +244,7 @@ class Archiver(object):
                 doc_type="mbox_source",
                 id=mid,
                 body = {
+                    "message-id": msg_metadata['message-id'],
                     "source": msg.as_string()
                 }
             )
