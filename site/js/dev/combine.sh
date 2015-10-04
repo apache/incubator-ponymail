@@ -16,5 +16,7 @@ echo '/*
  limitations under the License.
 */
 ' > ../ponymail.js
-cat *.js | sed -s -e '/\/\*/,/\*\//d' >> ../ponymail.js
+for f in `ls *.js`; do
+    sed -s -e '/^\/\*/,/\*\//d' ${f} >> ../ponymail.js
+done
 echo "Done!"
