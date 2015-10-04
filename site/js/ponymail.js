@@ -396,7 +396,7 @@ function displayEmail(json, id) {
         thread.innerHTML = ''
         thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
         thread.innerHTML += ' &nbsp; <a href="/thread.html/'+json.mid+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
-        thread.innerHTML += ' &nbsp; <a href="/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right;">View Source</label></a> &nbsp; '
+        thread.innerHTML += ' &nbsp; <a href="/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
         thread.innerHTML += "<br/>"
         //thread.style.border = "1px dotted #666"
         thread.style.padding = "5px"
