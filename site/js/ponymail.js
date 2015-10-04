@@ -770,7 +770,7 @@ function getChildren(main, email) {
             if (child.tid != email.mid) {
                 var eml = saved_emails[child.tid]
                 if (!eml || !eml.from) {
-                    GetAsync("/email.lua?id=" + child.tid, {
+                    GetAsync("/api/email.lua?id=" + child.tid, {
                         main: main,
                         before: email.tid,
                         pchild: pchild,
