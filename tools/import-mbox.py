@@ -166,9 +166,10 @@ def msgfactory(fp):
 
 
 class BulkThread(Thread):
-    def assign(self, json, xes):
+    def assign(self, json, xes, dtype = 'mbox'):
         self.json = json
         self.xes = xes
+        self.dtype = dtype
 
     def insert(self):
         global config
@@ -186,7 +187,7 @@ class BulkThread(Thread):
             js_arr.append({
                 '_op_type': 'index',
                 '_index': iname,
-                '_type': 'mbox',
+                '_type': dtype,
                 '_id': js['mid'],
                 'doc': js,
                 '_source': js
@@ -203,6 +204,7 @@ class SlurpThread(Thread):
     def run(self):
         global block, y, es, lists, baddies, config
         ja = []
+        jas = []
         print("Thread started")
         mla = None
         ml = ""
@@ -368,8 +370,13 @@ class SlurpThread(Thread):
                             'body': body,
                             'attachments': attachments
                         }
+                        json_source = {
+                            'mid': mid2,
+                            'message-id': mid,
+                            'source': message.as_string()
+                        }
                         ja.append(json)
-                        
+                        jas.append(json_source)
                         if contents:
                             iname = config.get("elasticsearch", "dbname")
                             for key in contents:
@@ -383,9 +390,14 @@ class SlurpThread(Thread):
                                 )
                         if len(ja) >= 100:
                             bulk = BulkThread()
-                            bulk.assign(ja, es)
+                            bulk.assign(ja, es, 'mbox')
                             bulk.insert()
                             ja = []
+                            
+                            bulk = BulkThread()
+                            bulk.assign(jas, es, 'mbox_source')
+                            bulk.insert()
+                            jas = []
                 else:
                     baddies += 1
             if filebased:
@@ -399,6 +411,11 @@ class SlurpThread(Thread):
             bulk.assign(ja, es)
             bulk.insert()
             ja = []
+            
+            bulk = BulkThread()
+            bulk.assign(jas, es, 'mbox_source')
+            bulk.insert()
+            jas = []
 
 tlpname = "foo"
 if len(sys.argv) == 2:
