@@ -1710,7 +1710,7 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days)"
+    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days) <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
 }
@@ -1725,7 +1725,7 @@ function searchAll(q, d) {
     GetAsync("/api/stats.lua?list=*&domain=*&q=" + q + "&d=" + d, {
         deep: true
     }, buildPage)
-    document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days"
+    document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }
@@ -1745,7 +1745,7 @@ function do_search(q, d, nopush, all) {
         domain = "*"
     }
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + " days)"
+    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + " days) <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }
