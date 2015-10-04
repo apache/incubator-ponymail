@@ -60,9 +60,9 @@ private.
 * ~~Import, fix archiver~~ (*DONE*)
 * ~~Add license headers (ALv2) to everything~~ (*DONE(?)*)
 * ~~Have reply feature actually work~~ (*DONE*)
+* ~~Split JS into smaller files for development, bundle together for releases~~ (*DONE*)
 * Start on documentation
 * Rework JS, turn those ugly innerHTML hacks into proper DOM handling
 * Set up notification system (depends on reply system) (Sort of works, but still *WIP!*)
 * Have it work with ES with auth mode or via HTTPS
-* Split JS into smaller files for development, bundle together for releases
 
