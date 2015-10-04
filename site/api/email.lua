@@ -83,6 +83,8 @@ function handle(r)
                     return apache2.OK
                 end
             else
+                local eml = doc.from:match("<(.-)>") or doc.from:match("%S+@%S+") or "unknown"
+                doc.gravatar = r:md5(eml)
                 r:puts(JSON.encode(doc))
             end
         else
