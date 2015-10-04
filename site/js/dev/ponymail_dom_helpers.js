@@ -137,6 +137,8 @@ function popup(title, body) {
         obj.innerHTML = ""
         obj.style.display = 'block'
         obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='toggleView(\"popupper\")'>Got it!</a></p>"
-        window.setTimeout(4000, function() { toggleView('popupper')})
+        window.setTimeout(5000, function() {
+            document.getElementById('popupper').style.display = 'none'
+            })
     }
 }
