@@ -19,9 +19,9 @@
 -- that is in said thread.
 
 local JSON = require 'cjson'
-local elastic = require 'api/lib/elastic'
-local aaa = require 'api/lib/aaa'
-local user = require 'api/lib/user'
+local elastic = require 'lib/elastic'
+local aaa = require 'lib/aaa'
+local user = require 'lib/user'
 
 function handle(r)
     r.content_type = "application/json"

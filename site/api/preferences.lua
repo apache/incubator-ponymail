@@ -18,8 +18,8 @@
 -- This is preferences.lua - an account info agent
 
 local JSON = require 'cjson'
-local elastic = require 'api/lib/elastic'
-local user = require 'api/lib/user'
+local elastic = require 'lib/elastic'
+local user = require 'lib/user'
 
 function handle(r)
     local now = r:clock()

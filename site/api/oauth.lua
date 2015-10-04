@@ -19,9 +19,9 @@
 
 local JSON = require 'cjson'
 local http = require 'socket.http'
-local elastic = require 'api/lib/elastic'
+local elastic = require 'lib/elastic'
 local https = require 'ssl.https'
-local user = require 'api/lib/user'
+local user = require 'lib/user'
 
 
 function handle(r)
