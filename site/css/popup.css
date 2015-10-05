@@ -416,6 +416,12 @@ border: #5cb85c solid 2px;
     text-indent: 24px;
 }
 
+#popupper {
+    position: fixed;
+    top: 30px;
+    margin: 0 auto;
+}
+
 .bubble-success:after {
      content: "";
      display: block;
