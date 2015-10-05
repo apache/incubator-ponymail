@@ -27,11 +27,11 @@ You will need the following software installed on your machine:
 ## Setting up the archiver ##
 If your mailing list supports feeding emails to a program, feed the incoming new emails to `python3.4 /path/to/mm3/plugin.py`
 and it will use STDIN as the transport mechanism. If you are simply using aliases or dot-forwards and no ML system, you can
-add `| "python3.4 /path/to/mm3/plugin.py"` to your alias file to enable archiving.
+add (for example) `"|/usr/bin/python3.4 /path/to/mm3/plugin.py"` to your alias file to enable archiving.
 
 If you are using MailMan 3, you can add the plugin.py as an archive by following the instructions inside the python script:
-- Copy this file to $mailman_plugin_dir/mailman_ponymail/__init__.py
-- Enable the module by adding the following to your mailman.cfg file::
+- Copy the python file to `$mailman_plugin_dir/mailman_ponymail/__init__.py`
+- Enable the module by adding the following to your `mailman.cfg` file::
 ```
   [archiver.ponymail]
   # Pony Mail
