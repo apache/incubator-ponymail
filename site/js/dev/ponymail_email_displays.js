@@ -70,7 +70,7 @@ function displayEmail(json, id, level) {
         }
         if (prefs.theme && prefs.theme == "social") {
             var sdate = formatDate(new Date(json.epoch*1000))
-            var fr = json['from'].replace(/"/, "").replace(/<.+>/, "").replace(/</g, "&lt;")
+            var fr = json['from'].replace(/"/g, "").replace(/<.+>/, "").replace(/</g, "&lt;")
             thread.style.background = estyle
             
             // Don't indent if we're too deeply nested, it gets weird
