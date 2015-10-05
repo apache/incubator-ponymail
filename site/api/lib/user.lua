@@ -84,7 +84,11 @@ function logoutUser(r, usr)
         js.internal.cookie = 'nil'
         elastic.index(r, r:sha1(usr.cid), 'account', JSON.encode(js))
     end
-    r:setcookie("ponymail", "----")
+    r:setcookie{
+        key = "ponymail",
+        value = "-----",
+        path = "/"
+    }
 end
 
 
