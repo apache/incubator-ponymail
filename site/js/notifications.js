@@ -32,7 +32,7 @@ function hasSeenResult(json, tid) {
 }
 
 function hasSeen(mid, tid) {
-    GetAsync("/notifications.lua?seen=" + mid, tid, hasSeenResult)
+    GetAsync("/api/notifications.lua?seen=" + mid, tid, hasSeenResult)
 }
 
 function renderNotifications(json) {
@@ -91,6 +91,6 @@ function renderNotifications(json) {
     }
 }
 function listNotifications() {
-    GetAsync("/notifications.lua", null, renderNotifications)
-    GetAsync("/preferences.lua", null, setupUserFromLua)
+    GetAsync("/api/notifications.lua", null, renderNotifications)
+    GetAsync("/api/preferences.lua", null, setupUserFromLua)
 }
