@@ -69,7 +69,7 @@ function displayEmail(json, id, level) {
             }
         }
         if (prefs.theme && prefs.theme == "social") {
-            var sdate = formatDate(new Date(json.epoch*1000))
+            var sdate = new Date(json.epoch*1000).toLocaleString('en-US',  { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })
             var fr = json['from'].replace(/"/g, "").replace(/<.+>/, "").replace(/</g, "&lt;")
             thread.style.background = estyle
             
@@ -79,7 +79,7 @@ function displayEmail(json, id, level) {
             }
             
             thread.style.marginTop = "20px"
-            thread.innerHTML = "<img src='https://secure.gravatar.com/avatar/" + json['gravatar'] + ".jpg?s=32&r=g&d=mm' style='vertical-align:middle'/> &nbsp; <b>" + fr + "</b> - " + sdate
+            thread.innerHTML = "<img src='https://secure.gravatar.com/avatar/" + json['gravatar'] + ".jpg?s=48&r=g&d=mm' style='vertical-align:middle'/> &nbsp; <b>" + fr + "</b> - " + sdate
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
             thread.innerHTML += "<br/><br/>"
             var bclass = "bubble-" + cols[parseInt(Math.random() * cols.length - 0.01)]
