@@ -428,6 +428,10 @@ border: #5cb85c solid 2px;
     background-color: #FFF;
 }
 
+.list-group-item:hover {
+    background-color: #F7F8F9;
+}
+
 select {
     padding:2px;
     margin: 0;
