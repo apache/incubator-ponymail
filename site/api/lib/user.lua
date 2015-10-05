@@ -69,7 +69,11 @@ function updateUser(r, cid, data)
         cid = cid,
         preferences = prefs
     })
-    r:setcookie("ponymail",cookie .. "==" .. (cid))
+    r:setcookie{
+        key = "ponymail",
+        value = cookie .. "==" .. (cid),
+        path = "/"
+    }
 end
 
 
