@@ -162,7 +162,7 @@ function buildStats(json, state, show) {
     btn.style.marginRight = "10px"
     btn.innerHTML = "Hide me!"
     stats.appendChild(btn)
-    if (prefs.hideStats == 'yes' || show == true) {
+    if (prefs.hideStats == 'yes' || show == false) {
         document.getElementById('emails').style.width = "calc(100% - 175px)"
         
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
@@ -172,7 +172,7 @@ function buildStats(json, state, show) {
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
     }
-    if (prefs.hideStats == 'no' || show == false) {
+    if (prefs.hideStats == 'no' || show == true) {
         var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
         document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
