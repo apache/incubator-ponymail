@@ -421,6 +421,7 @@ border: #5cb85c solid 2px;
     top: 30px;
     margin: 0 auto;
     z-index: 100;
+    background-color: #FFF;
 }
 
 .bubble-success:after {
