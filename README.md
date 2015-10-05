@@ -43,6 +43,7 @@ private.
 
 
 ### Getting started ###
+(Optionally see the [detailed installation instructions](docs/INSTALLING.md) for more information)
 
 1. Install Apache httpd + mod_lua and the lua libs (see http://modlua.org/gs/installing if need be)
 2. Install ElasticSearch
