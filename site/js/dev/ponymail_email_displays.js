@@ -299,7 +299,7 @@ function toggleEmails_threaded(id, close, toverride) {
         // time travel magic!
         var ml = findEml(current_thread_json[id].tid)
         if (!current_thread_json[id].magic && ml.irt && ml.irt.length > 0) {
-            helper.innerHTML += "<p id='magic_"+id+"'><i><b>Note:</b> You are viewing a search result/aggregation in threaded mode. Only results matching your keywords are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode. Or we can <a href='javascript:void(0);' onclick='timeTravelList("+id+")'>do some magic for you</a>.</i></p>"
+            helper.innerHTML += "<p id='magic_"+id+"'><i><b>Note:</b> You are viewing a search result/aggregation in threaded mode. Only results matching your keywords or dates are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode. Or we can <a href='javascript:void(0);' onclick='timeTravelList("+id+")'>do some magic for you</a>.</i></p>"
             var btn = document.createElement('a')
             btn.setAttribute("href", "javascript:void(0);")
             btn.setAttribute("class", "btn btn-success")
