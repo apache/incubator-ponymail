@@ -409,6 +409,13 @@ border-radius: 15px;
 border: #5cb85c solid 2px;
 }
 
+#q {
+    background-position: center left;
+    background-image: url(/images/search.png);
+    background-repeat: no-repeat;
+    text-indent: 24px;
+}
+
 .bubble-success:after {
      content: "";
      display: block;
