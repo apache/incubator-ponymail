@@ -249,6 +249,8 @@ class Archiver(object):
                 }
             )
             
+            oldrefs = []
+            
             # Is this a direct reply to a pony mail email?
             if 'in-reply-to' in msg_metadata:
                 dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('in-reply-to'))
@@ -257,6 +259,7 @@ class Archiver(object):
                     mid = dm.group(2)
                     doc = self.es.get(index = indexname, doc_type = 'account', id = cid)
                     if doc:
+                        oldrefs.append(cid)
                         self.es.index(
                             index=indexname,
                             doc_type="notifications",
@@ -285,7 +288,8 @@ class Archiver(object):
                     doc = self.es.get(index = indexname, doc_type = 'account', id = cid)
                     
                     # does the user want to be notified of indirect replies?
-                    if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect':
+                    if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
+                        oldrefs.append(cid)
                         self.es.index(
                             index=indexname,
                             doc_type="notifications",
