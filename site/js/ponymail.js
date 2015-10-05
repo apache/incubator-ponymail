@@ -567,8 +567,8 @@ function displaySingleEmail(json, id) {
 
 
 // displayEmailThreaded: Appends an email to a threaded display of a topic
-function displayEmailThreaded(json, state, level) {
-    level = level ? level : 1
+function displayEmailThreaded(json, state) {
+    level = state.level ? state.level : 1
     var b = state.before
     var obj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
     if (!json.mid && !json.tid) {
