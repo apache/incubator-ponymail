@@ -26,6 +26,7 @@
 // They keep track of the JSON we have received, storing it in the browser,
 // Thus lightening the load on the backend (caching and such)
 
+var _VERSION_ = "0.2a"
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_at = 10;
 var d_ppp = 15;
@@ -2183,7 +2184,7 @@ footer.style.height = "32px"
 footer.style.width = "90%"
 var fd = document.createElement('div')
 fd.setAttribute("class", "container")
-fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href='https://github.com/Humbedooh/ponymail'>Pony Mail v/0.1a</a>.</p>"
+fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href='https://github.com/Humbedooh/ponymail'>Pony Mail v/" + _VERSION_ + "</a>.</p>"
 footer.appendChild(fd)
 document.body.appendChild(footer)
 
