@@ -276,7 +276,35 @@ class Archiver(object):
                                 'seen': 0
                             }
                         )
-            #im = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references'))
+                        
+            # Are there indirect replies to pony emails?
+            if msg_metadata.get('references'):
+                for im in re.finditer(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references')):
+                    cid = im.group(1)
+                    mid = im.group(2)
+                    doc = self.es.get(index = indexname, doc_type = 'account', id = cid)
+                    
+                    # does the user want to be notified of indirect replies?
+                    if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect':
+                        self.es.index(
+                            index=indexname,
+                            doc_type="notifications",
+                            body = {
+                                'type': 'indirect',
+                                'recipient': cid,
+                                'list': lid,
+                                'private': private,
+                                'date': msg_metadata['date'],
+                                'from': msg_metadata['from'],
+                                'to': msg_metadata['to'],
+                                'subject': msg_metadata['subject'],
+                                'message-id': msg_metadata['message-id'],
+                                'in-reply-to': msg_metadata['in-reply-to'],
+                                'epoch': email.utils.mktime_tz(mdate),
+                                'mid': mid,
+                                'seen': 0
+                            }
+                        )
         return lid
             
     def list_url(self, mlist):
