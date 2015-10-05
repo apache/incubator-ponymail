@@ -865,7 +865,7 @@ function getSingleEmail(id) {
 
 // seedGetSingleThread: pre-caller for the above.
 function seedGetSingleThread(id) {
-    GetAsync("/api/preferences.lua", {docall:["/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
+    GetAsync("/api/preferences.lua", {docall:["/api/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
 
 Number.prototype.pad = function(size) {
