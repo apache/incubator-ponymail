@@ -96,7 +96,8 @@ function sortIt(json) {
 
 
 // getChildren: fetch all replies to a topic from ES
-function getChildren(main, email) {
+function getChildren(main, email, level) {
+    level = level ? level : 1
     var pchild = null
     if (email.children && email.children.sort) {
         email.children.sort(function(a, b) {
@@ -111,14 +112,16 @@ function getChildren(main, email) {
                         main: main,
                         before: email.tid,
                         pchild: pchild,
-                        child: child
+                        child: child,
+                        level: level+1
                     }, displayEmailThreaded)
                 } else {
                     displayEmailThreaded(eml, {
                         main: main,
                         before: email.tid,
                         pchild: pchild,
-                        child: child
+                        child: child,
+                        level: level+1
                     })
                 }
             }

@@ -374,7 +374,8 @@ function popup(title, body) {
 }// Fetched from ponymail_email_displays.js
 
 // displayEmail: Shows an email inside a thread
-function displayEmail(json, id) {
+function displayEmail(json, id, level) {
+    level = level ? level : 1
     if (!json.mid && !json.tid) {
         alert("404: Could not find this email!")
         return
@@ -424,7 +425,12 @@ function displayEmail(json, id) {
             var sdate = formatDate(new Date(json.epoch*1000))
             var fr = json['from'].replace(/</g, "&lt;")
             thread.style.background = estyle
-            thread.style.marginLeft = "40px"
+            
+            // Don't indent if we're too deeply nested, it gets weird
+            if (level <= 6) {
+                thread.style.marginLeft = "40px"
+            }
+            
             thread.style.marginTop = "20px"
             thread.innerHTML = "<img src='https://secure.gravatar.com/avatar/" + json['gravatar'] + ".jpg?s=32&r=g&d=mm' style='vertical-align:middle'/> &nbsp; <b>" + fr + "</b> - " + sdate
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
@@ -561,7 +567,8 @@ function displaySingleEmail(json, id) {
 
 
 // displayEmailThreaded: Appends an email to a threaded display of a topic
-function displayEmailThreaded(json, state) {
+function displayEmailThreaded(json, state, level) {
+    level = level ? level : 1
     var b = state.before
     var obj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
     if (!json.mid && !json.tid) {
@@ -600,7 +607,7 @@ function displayEmailThreaded(json, state) {
         }
         displayEmail(json, (json.tid ? json.tid : json.mid))
         if (state.child && state.child.children && state.child.children.length > 0) {
-            getChildren(state.main, state.child)
+            getChildren(state.main, state.child, level)
         }
     } else {
         alert("Could not find parent object, thread_" + state.main)
@@ -810,7 +817,8 @@ function sortIt(json) {
 
 
 // getChildren: fetch all replies to a topic from ES
-function getChildren(main, email) {
+function getChildren(main, email, level) {
+    level = level ? level : 1
     var pchild = null
     if (email.children && email.children.sort) {
         email.children.sort(function(a, b) {
@@ -825,14 +833,16 @@ function getChildren(main, email) {
                         main: main,
                         before: email.tid,
                         pchild: pchild,
-                        child: child
+                        child: child,
+                        level: level+1
                     }, displayEmailThreaded)
                 } else {
                     displayEmailThreaded(eml, {
                         main: main,
                         before: email.tid,
                         pchild: pchild,
-                        child: child
+                        child: child,
+                        level: level+1
                     })
                 }
             }
