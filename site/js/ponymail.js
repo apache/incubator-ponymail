@@ -421,7 +421,7 @@ function displayEmail(json, id, level) {
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
         
-        if (prefs.social && prefs.social == "yes") {
+        if (prefs.theme && prefs.theme == "social") {
             var sdate = formatDate(new Date(json.epoch*1000))
             var fr = json['from'].replace(/</g, "&lt;")
             thread.style.background = estyle
@@ -2016,10 +2016,10 @@ function showPreferences() {
     }, prefs.compactQuotes))
     
     // social mode
-    section.appendChild(generateFormDivs('social', 'Show threads in social mode:', 'select', {
-        yes: "Yes",
-        no: "No"
-    }, prefs.social))
+    section.appendChild(generateFormDivs('theme', 'Email view theme:', 'select', {
+        social: "Social theme",
+        default: "Default theme"
+    }, prefs.theme))
     
     // hideStats mode
     section.appendChild(generateFormDivs('hideStats', 'Hide statistics window:', 'select', {

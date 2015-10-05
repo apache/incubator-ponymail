@@ -79,10 +79,10 @@ function showPreferences() {
     }, prefs.compactQuotes))
     
     // social mode
-    section.appendChild(generateFormDivs('social', 'Show threads in social mode:', 'select', {
-        yes: "Yes",
-        no: "No"
-    }, prefs.social))
+    section.appendChild(generateFormDivs('theme', 'Email view theme:', 'select', {
+        social: "Social theme",
+        default: "Default theme"
+    }, prefs.theme))
     
     // hideStats mode
     section.appendChild(generateFormDivs('hideStats', 'Hide statistics window:', 'select', {

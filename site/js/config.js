@@ -50,4 +50,4 @@ var prefs = {
 
 // array of prefs we have now. This is needed in case we change/break the existing
 // structure saved in elasticsearch for users. Update when needed!
-var pref_keys = ['displayMode','groupBy','sortOrder','compactQuotes','notifications','hideStats','social']
+var pref_keys = ['displayMode','groupBy','sortOrder','compactQuotes','notifications','hideStats','theme']

@@ -63,7 +63,7 @@ function displayEmail(json, id, level) {
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
         
-        if (prefs.social && prefs.social == "yes") {
+        if (prefs.theme && prefs.theme == "social") {
             var sdate = formatDate(new Date(json.epoch*1000))
             var fr = json['from'].replace(/</g, "&lt;")
             thread.style.background = estyle
