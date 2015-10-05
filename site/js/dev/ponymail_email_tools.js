@@ -168,7 +168,7 @@ Number.prototype.pad = function(size) {
 
 function formatDate(date){
     return (date.getFullYear() + "-" +
-        date.getMonth().pad(2) + "-" +
+        (date.getMonth()+1).pad(2) + "-" +
         date.getDate().pad(2) + " " +
         date.getHours().pad(2) + ":" +
         date.getMinutes().pad(2))        
