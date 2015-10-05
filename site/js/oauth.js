@@ -91,7 +91,7 @@ function oauthWelcome(args) {
         }
         if (key && key.length > 0 && pm_config.oauth[key]) {
             document.getElementById('oauthtypes').innerHTML = "Logging you in, hang on..!"
-            GetAsync("oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {}, parseOauthResponse)
+            GetAsync("/api/oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {}, parseOauthResponse)
         } else {
             alert("Key missing or invalid! " + key)
         }

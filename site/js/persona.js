@@ -15,7 +15,7 @@
  limitations under the License.
 */
 
-GetAsync("preferences.lua", null, setupPersona)
+GetAsync("/api/preferences.lua", null, setupPersona)
 
 
 function setupPersona(json) {
@@ -25,7 +25,7 @@ function setupPersona(json) {
     onlogin: function(assertion) {
       $.ajax({ 
         type: 'POST',
-        url: '/oauth.lua?mode=persona',
+        url: '/api/oauth.lua?mode=persona',
         data: {assertion: assertion},
         success: function(res, status, xhr) { location.href = "/"; },
         error: function(xhr, status, err) {
@@ -37,7 +37,7 @@ function setupPersona(json) {
     onlogout: function() {
       $.ajax({
         type: 'POST',
-        url: '/persona.lua?mode=logout', // This does nothing atm!
+        url: '/api/persona.lua?mode=logout', // This does nothing atm!
         success: function(res, status, xhr) { }
       });
     }
