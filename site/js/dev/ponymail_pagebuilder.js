@@ -97,29 +97,8 @@ function checkCalendar(json) {
     }
 }
 
-
-// buildPage: build the entire page!
-function buildPage(json, state) {
-    start = new Date().getTime()
-    json = json ? json : old_json
-    old_json = json
-    old_state = state
-    d_at = 10
-    current_thread_mids = []
-    checkCalendar(json)
-    
-    // if we have xdomain, rewrite the wording in quick search.
-    var lcheckall = document.getElementById('lcheckall')
-    if (lcheckall && gxdomain) {
-        lcheckall.innerHTML = "Search all " + gxdomain + " lists"
-    }
-    
-    // Add Opensearch title to OS image
-    var os = document.getElementById('opensearch')
-    if (os){
-        os.setAttribute("title", "Add " + gxdomain + " archives to your search engines")
-    }
-
+// buildStats: build the stats window
+function buildStats(json, state, show) {
     var stats = document.getElementById('stats')
     
     stats.style.width = "300px"
@@ -179,11 +158,11 @@ function buildPage(json, state) {
     var btn = document.createElement('a')
     btn.setAttribute("href", "javascript:void(0);")
     btn.setAttribute("class", "btn btn-warning")
-    btn.setAttribute("onclick", "prefs.hideStats='yes'; buildPage(old_json, old_state);")
+    btn.setAttribute("onclick", "prefs.hideStats='yes'; buildStats(old_json, old_state, false);")
     btn.style.marginRight = "10px"
     btn.innerHTML = "Hide me!"
     stats.appendChild(btn)
-    if (prefs.hideStats == 'yes') {
+    if (prefs.hideStats == 'yes' || show == true) {
         document.getElementById('emails').style.width = "calc(100% - 175px)"
         
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
@@ -191,8 +170,9 @@ function buildPage(json, state) {
             document.getElementById('emails').style.width = "calc(100% - 175px)"
         }
         stats.setAttribute("class", "col-md-1 vertical-text")
-        stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildPage(old_json, old_state);\">Show stats panel..</div>"
-    } else {
+        stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
+    }
+    if (prefs.hideStats == 'no' || show == false) {
         var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
         document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
@@ -211,6 +191,31 @@ function buildPage(json, state) {
             }
         }
     }
+}
+
+// buildPage: build the entire page!
+function buildPage(json, state) {
+    start = new Date().getTime()
+    json = json ? json : old_json
+    old_json = json
+    old_state = state
+    d_at = 10
+    current_thread_mids = []
+    checkCalendar(json)
+    
+    // if we have xdomain, rewrite the wording in quick search.
+    var lcheckall = document.getElementById('lcheckall')
+    if (lcheckall && gxdomain) {
+        lcheckall.innerHTML = "Search all " + gxdomain + " lists"
+    }
+    
+    // Add Opensearch title to OS image
+    var os = document.getElementById('opensearch')
+    if (os){
+        os.setAttribute("title", "Add " + gxdomain + " archives to your search engines")
+    }
+
+    buildStats(json, state, null)
     
     nest = ""
 
