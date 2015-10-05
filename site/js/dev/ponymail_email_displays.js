@@ -62,7 +62,12 @@ function displayEmail(json, id, level) {
         }
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
-        
+        if (typeof(window.localStorage) !== "undefined") {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
+            }
+        }
         if (prefs.theme && prefs.theme == "social") {
             var sdate = formatDate(new Date(json.epoch*1000))
             var fr = json['from'].replace(/</g, "&lt;")

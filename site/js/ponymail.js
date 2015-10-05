@@ -420,7 +420,12 @@ function displayEmail(json, id, level) {
         }
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
-        
+        if (typeof(window.localStorage) !== "undefined") {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
+            }
+        }
         if (prefs.theme && prefs.theme == "social") {
             var sdate = formatDate(new Date(json.epoch*1000))
             var fr = json['from'].replace(/</g, "&lt;")
@@ -2122,7 +2127,13 @@ function setupUser(login) {
     pd.appendChild(li)
 }
 
-// Fetched from ponymail_zzz.js
+
+function setTheme(theme) {
+    prefs.theme = theme
+    if (typeof(window.localStorage) !== "undefined") {
+        window.localStorage.setItem("pm_theme", theme)
+    }
+}// Fetched from ponymail_zzz.js
 
 
 // dealWithKeyboard: Handles what happens when you hit the escape key

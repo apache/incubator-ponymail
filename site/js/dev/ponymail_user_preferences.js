@@ -185,3 +185,10 @@ function setupUser(login) {
     pd.appendChild(li)
 }
 
+
+function setTheme(theme) {
+    prefs.theme = theme
+    if (typeof(window.localStorage) !== "undefined") {
+        window.localStorage.setItem("pm_theme", theme)
+    }
+}
