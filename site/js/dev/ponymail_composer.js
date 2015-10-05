@@ -63,6 +63,13 @@ function sendEmail(form) {
     
     var obj = document.getElementById('splash')
     hideComposer()
+    
+    // Clear the draft stuff
+    if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
+        window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
+        window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
+    }
+    
     popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.")
 }
 
@@ -93,6 +100,7 @@ function compose(eid, lid, type) {
             current_reply_eid = eid
             var listname = email['list'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             compose_headers = {
+                'eid': eid,
                 'in-reply-to': email['message-id'],
                 'references': email['message-id'] + " " + (email['references'] ? email['references'] : ""),
                 'to': listname
