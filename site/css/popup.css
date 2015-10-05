@@ -547,7 +547,7 @@ position: relative;
 min-width: 250px;
 padding: 8px;
 background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
-border-radius: 10px;
+border-radius: 8px;
 border: #5bc0de solid 2px;
 }
 
