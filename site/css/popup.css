@@ -411,8 +411,12 @@ border: #5cb85c solid 2px;
 
 #q {
     background-position: center left;
-    background-image: url(/images/search.png);
+    
+    
+    
+    background: url(/images/search.png) center left, linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(255,255,255,1) 100%);
     background-repeat: no-repeat;
+    border: 1px inset #999;
     text-indent: 24px;
 }
 
@@ -422,6 +426,24 @@ border: #5cb85c solid 2px;
     margin: 0 auto;
     z-index: 100;
     background-color: #FFF;
+}
+
+select {
+    padding:3px;
+    margin: 0;
+    border-radius:4px;
+    box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+    background: url(/images/arrow.png) center right, linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(255,255,255,1) 100%);;
+    background-repeat: no-repeat;
+    color:#555;
+    border: 1px inset #999;
+    padding-right: 16px;
+    outline:none;
+    display: inline-block;
+    appearance: none;
+    -moz-appearance: none; /* hrmpf! */
+    -webkit-appearance: none;
+    cursor:pointer;
 }
 
 .bubble-success:after {
