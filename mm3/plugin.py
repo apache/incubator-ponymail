@@ -38,6 +38,7 @@ if __name__ != '__main__':
     from mailman.interfaces.archiver import ArchivePolicy
 else:
     import sys
+    import argparse
 
 from elasticsearch import Elasticsearch
 import hashlib
@@ -328,17 +329,31 @@ class Archiver(object):
         return None
     
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Command line options.')
+    parser.add_argument('--altheader', dest='altheader', type=str, nargs=1,
+                       help='Alternate header for list ID')
+    parser.add_argument('--private', dest='private', action='store_true', 
+                       help='This is a private archive')
+    args = parser.parse_args()
+    
     foo = Archiver()
     msg = email.message_from_file(sys.stdin)
     # We're reading from STDIN, so let's fake an MM3 call
-    if 'altheader' in sys.argv:
+    ispublic = True
+    if args.altheader:
+        altheader = args.altheader[0]
+        if altheader in msg:
+            msg.add_header('list-id', msg.get(altheader))
+    elif 'altheader' in sys.argv:
         altheader = sys.argv[len(sys.argv)-1]
         if altheader in msg:
             msg.add_header('list-id', msg.get(altheader))
+    if args.private == True:
+        ispublic = False
     if 'list-id' in msg:
         if not msg.get('archived-at'):
             msg.add_header('archived-at', email.utils.formatdate())
-        msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=True)
+        msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
         
         lid = foo.archive_message(msg_metadata, msg)
         print("Done archiving to %s!" % lid)
