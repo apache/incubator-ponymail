@@ -28,6 +28,11 @@ You will need the following software installed on your machine:
 If your mailing list supports feeding emails to a program, feed the incoming new emails to `python3.4 /path/to/tools/archiver.py`
 and it will use STDIN as the transport mechanism. If you are simply using aliases or dot-forwards and no ML system, you can
 add (for example) `"|/usr/bin/python3.4 /path/to/tools/archiver.py"` to your alias file to enable archiving.
+If you are not using a Mailing List manager, you will need to tell Pony Mail which email header determines the
+list ID using the --altheader argument, for instance:
+```
+    foolist: "|/usr/bin/python3.4 /path/to/tools/archiver.py --altheader delivered-to"
+```
 
 If you are using MailMan 3, you can add the plugin.py as an archive by following the instructions inside the python script:
 - Copy the python file to `$mailman_plugin_dir/mailman_ponymail/__init__.py`
@@ -38,4 +43,12 @@ If you are using MailMan 3, you can add the plugin.py as an archive by following
   # Pony Mail
   class: mailman_ponymail.Archiver
   enable: yes
+```
+
+## Public versus private lists ##
+In MailMan 3, this should be auto-detected and is not a concern.
+When using other ML systems via piping to STDIN, you should add
+the --private arg to the python script, as such:
+```
+    foolist: "|/usr/bin/python3.4 /path/to/tools/archiver.py --private"
 ```
