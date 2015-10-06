@@ -34,8 +34,8 @@ list ID using the --altheader argument, for instance:
     foolist: "|/usr/bin/python3.4 /path/to/tools/archiver.py --altheader delivered-to"
 ```
 
-If you are using MailMan 3, you can add the plugin.py as an archive by following the instructions inside the python script:
-- Copy the python file to `$mailman_plugin_dir/mailman_ponymail/__init__.py`
+If you are using MailMan 3, you can add archiver.py as an archive by following the instructions inside the python script:
+- Copy the archiver.py file to `$mailman_plugin_dir/mailman_ponymail/__init__.py`
 - Copy ponymail.cfg to the same dir (for ES configuration)
 - Enable the module by adding the following to your `mailman.cfg` file::
 ```
