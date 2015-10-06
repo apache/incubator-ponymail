@@ -37,7 +37,7 @@ function handle(r)
                 local headers = {
                     ['X-PonyMail-Sender'] = r:sha1(account.cid),
                     ['X-PonyMail-Agent'] = "PonyMail/0.1a",
-                    ['message-id'] = ("<pony-%s-%s@%s>"):format(r:sha1(account.cid), r:sha1(r:clock() .. os.time() .. r.useragent_ip), post.to),
+                    ['message-id'] = ("<pony-%s-%s@%s>"):format(r:sha1(account.cid), r:sha1(r:clock() .. os.time() .. r.useragent_ip), post.to:gsub("@", ".")),
                     to = to,
                     subject = post.subject,
                     from = fr,
