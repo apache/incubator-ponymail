@@ -119,12 +119,15 @@ class Archiver(object):
             ssl = True
         if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
             self.cropout = config.get("debug", "cropout")
+        uri = ""
+        if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
+            uri = config.get("elasticsearch", "uri")
         self.es = es = Elasticsearch([
             {
                 'host': config.get("elasticsearch", "hostname"),
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
-                'url_prefix': ''
+                'url_prefix': uri
             }],
             max_retries=5,
             retry_on_timeout=True
