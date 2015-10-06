@@ -221,8 +221,10 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body.decode('ascii', errors='ignore') if type(body) is bytes else body).hexdigest(), email.utils.mktime_tz(mdate), lid)
-            except:
+                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
+            except Exception as err:
+                if logger:
+                    logger.warn("Could not generate MID: %s" % err)
                 mid = pmid
             ojson = {
                 'from_raw': msg_metadata['from'],
