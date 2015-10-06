@@ -215,6 +215,7 @@ with open("ponymail.cfg", "w") as f:
 hostname:               %s
 dbname:                 %s
 port:                   %u
+ssl:                    false
 
 ###############################################################
             """ % (hostname, dbname, port))
