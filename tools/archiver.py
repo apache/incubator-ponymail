@@ -17,6 +17,7 @@
 """ Publish notifications about mails to pony mail.
 
 Copy this file to $mailman_plugin_dir/mailman_ponymail/__init__.py
+Also copy ponymail.cfg to that dir.
 Enable the module by adding the following to your mailman.cfg file::
 
 [archiver.ponymail]
@@ -26,7 +27,7 @@ enable: yes
 
 OR, to use the STDIN version (non-MM3 mailing list managers),
 sub someone to the list(s) and add this to their .forward file:
-"|/usr/bin/env python3.4 /path/to/plugin.py"
+"|/usr/bin/env python3.4 /path/to/archiver.py"
 
 """
 
