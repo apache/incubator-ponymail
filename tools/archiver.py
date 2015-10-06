@@ -49,6 +49,7 @@ from collections import namedtuple
 import re
 import codecs
 import configparser
+import os
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
