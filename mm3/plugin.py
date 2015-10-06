@@ -48,7 +48,12 @@ import json
 from collections import namedtuple
 import re
 import codecs
+import configparser
 
+# Fetch config
+path = os.path.dirname(os.path.realpath(__file__))
+config = configparser.RawConfigParser()
+config.read("%s/ponymail.cfg" % path)
 
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
@@ -105,11 +110,18 @@ class Archiver(object):
 
     def __init__(self):
         """ Just initialize ES. """
-        self.es = Elasticsearch([
+        global config
+        ssl = False
+        self.cropout = None
+        if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
+            ssl = True
+        if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
+            self.cropout = config.get("debug", "cropout")
+        self.es = es = Elasticsearch([
             {
-                'host': 'localhost',
-                'port': 9200,
-                'use_ssl': False,
+                'host': config.get("elasticsearch", "hostname"),
+                'port': int(config.get("elasticsearch", "port")),
+                'use_ssl': ssl,
                 'url_prefix': ''
             }],
             max_retries=5,
@@ -161,12 +173,12 @@ class Archiver(object):
         """
 
         lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+        if self.cropout:
+            lid = lid.replace(self.cropout, "")
         format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
-        lst_metadata = dict(list_name=mlist.list_id)
         
-
-        mid = hashlib.sha224(str("%s-%s" % (mlist.list_id, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (mlist.list_id if mlist.list_id else "none")
+        mid = hashlib.sha224(str("%s-%s" % (lid, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (lid if lid else "none")
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
         mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
@@ -200,7 +212,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), mlist.list_id)
+                mid = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
             except:
                 mid = pmid
             ojson = {
