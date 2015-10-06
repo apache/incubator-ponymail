@@ -48,7 +48,8 @@ If you are using MailMan 3, you can add archiver.py as an archive by following t
 ## Public versus private lists ##
 In MailMan 3, this should be auto-detected and is not a concern.
 When using other ML systems via piping to STDIN, you should add
-the --private arg to the python script, as such:
+the --private arg to the python script to mark an email as private:
 ```
-    foolist: "|/usr/bin/python3.4 /path/to/tools/archiver.py --private"
+    foolist-private: "|/usr/bin/python3.4 /path/to/tools/archiver.py --private"
+    foolist-public: "|/usr/bin/python3.4 /path/to/tools/archiver.py"
 ```
