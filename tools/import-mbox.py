@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.4
 # -*- coding: utf-8 -*-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -22,11 +22,11 @@ import os
 from threading import Thread, Lock
 import mailbox
 import email.errors, email.utils, email.header
-import urllib
+from urllib.request import urlopen
 import re
 import chardet
 import datetime
-import ConfigParser as configparser
+import configparser
 import argparse
 from os import listdir
 from os.path import isfile, join, isdir
@@ -84,31 +84,27 @@ def parse_attachment(part):
     if cd:
         dispositions = cd.strip().split(";")
         if dispositions[0].lower() == "attachment":
-            fd = part.get_payload(decode=True)
-            if fd:
-                attachment = {}
-                attachment['content_type'] = part.get_content_type()
-                attachment['size'] = len(fd)
-                attachment['filename'] = None
-                h = hashlib.sha256(fd).hexdigest()
-                b64 = codecs.encode(fd, "base64").decode('ascii')
-                attachment['hash'] = h
-                for param in dispositions[1:]:
-                    key,val = param.split("=", 1)
-                    if key.lower().strip() == "filename":
-                        val = val.strip(' "')
-                        print("Found attachment: %s" % val)
-                        attachment['filename'] = val
-                if attachment['filename']:
-                    return attachment, b64 # Return meta data and contents separately
+            try:
+                fd = part.get_payload(decode=True)
+                if fd:
+                    attachment = {}
+                    attachment['content_type'] = part.get_content_type()
+                    attachment['size'] = len(fd)
+                    attachment['filename'] = None
+                    h = hashlib.sha256(fd).hexdigest()
+                    b64 = codecs.encode(fd, "base64").decode('ascii')
+                    attachment['hash'] = h
+                    for param in dispositions[1:]:
+                        key,val = param.split("=", 1)
+                        if key.lower().strip() == "filename":
+                            val = val.strip(' "')
+                            print("Found attachment: %s" % val)
+                            attachment['filename'] = val
+                    if attachment['filename']:
+                        return attachment, b64 # Return meta data and contents separately
+            except:
+                pass
     return None, None
-
-def getcharsets(msg):
-    charsets = set({})
-    for c in msg.get_charsets():
-        if c is not None:
-            charsets.update([c])
-    return charsets
 
 def msgfiles(msg):
         attachments = []
@@ -121,48 +117,49 @@ def msgfiles(msg):
                     contents[part_meta['hash']] = part_file
         return attachments, contents
     
+def pm_charsets(msg):
+    charsets = set({})
+    for c in msg.get_charsets():
+        if c is not None:
+            charsets.update([c])
+    return charsets
 
 def msgbody(msg):
     body = None
-    #Walk through the parts of the email to find the text body.
     if msg.is_multipart():
         for part in msg.walk():
-
-            # If part is multipart, walk through the subparts.
-            if part.is_multipart():
-
-                for subpart in part.walk():
-                    if subpart.get_content_type() == 'text/plain':
-                        # Get the subpart payload (i.e the message body)
-                        body = subpart.get_payload(decode=True)
-                        #charset = subpart.get_charset()
-
-            # Part isn't multipart so get the email body
-            elif part.get_content_type() == 'text/plain':
-                body = part.get_payload(decode=True)
-                #charset = part.get_charset()
-
-    # If this isn't a multi-part message then get the payload (i.e the message body)
+            try:
+                if part.is_multipart(): 
+                    for subpart in part.walk():
+                        if subpart.get_content_type() == 'text/plain':
+                                body = subpart.get_payload(decode=True)
+                                break
+        
+                elif part.get_content_type() == 'text/plain':
+                    body = part.get_payload(decode=True)
+                    break
+            except:
+                pass
     elif msg.get_content_type() == 'text/plain':
-        body = msg.get_payload(decode=True)
+        body = msg.get_payload(decode=True) 
 
-   # No checking done to match the charset with the correct part.
-    for charset in getcharsets(msg):
+    for charset in pm_charsets(msg):
         try:
             body = body.decode(charset)
         except:
             body = None
-
-    return body
+            
+    return body  
 
 
 def msgfactory(fp):
     try:
         return email.message_from_file(fp)
-    except email.Errors.MessageParseError:
+    except Exception as err:
         # Don't return None since that will
         # stop the mailbox iterator
-        return ''
+        print("hmm: %s" % err)
+        return None
 
 
 class BulkThread(Thread):
@@ -211,216 +208,210 @@ class SlurpThread(Thread):
         mboxfile = ""
         filename = ""
         xlist_override = None
-        try:
-            while len(lists) > 0:
-                print("%u elements left to slurp" % len(lists))
-                block.acquire()
-                try:
-                    mla = lists.pop(0)
-                except Exception as err:
-                    print("Could not pop list: %s" % err)
-                    block.release()
-                    return
-                if not mla:
-                    print("Nothing more to do here")
-                    block.release()
-                    return
-                block.release()
-                y += 1
-                EY = 1980
-                EM = 1
-                stime = time.time()
-                if filebased:
-                    
-                    tmpname = mla[0]
-                    filename = mla[0]
-                    xlist_override = mla[1]
-                    print("Slurping %s" % filename)
-                else:
-                    ml = mla[0]
-                    mboxfile = mla[1]
-                    xlist_override = list_override
-                    print("Slurping %s/%s" % (ml, mboxfile))
-                    m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
-                    EY = 1997
-                    EM = 1
-                    if m:
-                        EY = int(m.group(1))
-                        EM = int(m.group(2))
-                    inp = urllib.urlopen("%s%s/%s" % (source, ml, mboxfile )).read()
-        
-                    tmpname = hashlib.sha224("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()
-                    with open(tmpname, "w") as f:
-                        f.write(inp)
-                        f.close()
-        
-                count = 0
-                LEY = EY
-                for message in mailbox.mbox(tmpname, factory=msgfactory):
-                    if (time.time() - stime > 120):
-                        print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
-                        break
-                    if 'subject' in message:
-                        subject = message['subject']       # Could possibly be None.
-                        mid = message['message-id']
     
-                        lid = message['list-id']
-                        if not lid or lid == "": # Guess list name in absence
-                            lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
-                        
-                        # Compact LID to <foo@domain>, discard rest
-                        m = re.search(r"(<.+>)", lid)
-                        if m:
-                            lid = m.group(1)
-                        if xlist_override and len(xlist_override) > 3:
-                            lid = xlist_override
-                        lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
-                        date = message['date']
-                        fro = message['from']
-                        to = message['to']
-                        body = msgbody(message)
+        while len(lists) > 0:
+            print("%u elements left to slurp" % len(lists))
+            block.acquire()
+            try:
+                mla = lists.pop(0)
+            except Exception as err:
+                print("Could not pop list: %s" % err)
+                block.release()
+                return
+            if not mla:
+                print("Nothing more to do here")
+                block.release()
+                return
+            block.release()
+            y += 1
+            EY = 1980
+            EM = 1
+            stime = time.time()
+            if filebased:
+                
+                tmpname = mla[0]
+                filename = mla[0]
+                xlist_override = mla[1]
+                print("Slurping %s" % filename)
+            else:
+                ml = mla[0]
+                mboxfile = mla[1]
+                xlist_override = list_override
+                print("Slurping %s/%s" % (ml, mboxfile))
+                m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
+                EY = 1997
+                EM = 1
+                if m:
+                    EY = int(m.group(1))
+                    EM = int(m.group(2))
+                inp = urlopen("%s%s/%s" % (source, ml, mboxfile )).read().decode('utf-8')
+    
+                tmpname = hashlib.sha224(("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile)).encode('utf-8') ).hexdigest()
+                with open(tmpname, "w") as f:
+                    f.write(inp)
+                    f.close()
+    
+            count = 0
+            LEY = EY
+            for message in mailbox.mbox(tmpname):
+                if (time.time() - stime > 120):
+                    print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
+                    break
+                if 'subject' in message:
+                    subject = message['subject']       # Could possibly be None.
+                    mid = message['message-id']
+
+                    lid = message['list-id']
+                    if not lid or lid == "": # Guess list name in absence
+                        lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
+                    
+                    # Compact LID to <foo@domain>, discard rest
+                    m = re.search(r"(<.+>)", lid)
+                    if m:
+                        lid = m.group(1)
+                    if xlist_override and len(xlist_override) > 3:
+                        lid = xlist_override
+                    lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
+                    date = message['date']
+                    fro = message['from']
+                    to = message['to']
+                    body = msgbody(message)
+                    try:
+                        if 'content-type' in message and message['content-type'].find("flowed") != -1:
+                            body = convertToWrapped(body, character_set="utf-8")
+                        if isinstance(body, str):
+                            body = body.encode('utf-8')
+                    except Exception as err:
                         try:
-                            if 'content-type' in message and message['content-type'].find("flowed") != -1:
-                                body = convertToWrapped(body, character_set="utf-8")
-                            if isinstance(body, str):
-                                body = body.decode('utf-8')
+                            body = body.decode(chardet.detect(body)['encoding'])
                         except Exception as err:
                             try:
-                                body = body.decode(chardet.detect(body)['encoding'])
-                            except Exception as err:
+                                body = body.decode('latin-1')
+                            except:
                                 try:
-                                    body = body.decode('latin-1')
+                                    if isinstance(body, str):
+                                        body = body.encode('utf-8')
                                 except:
-                                    try:
-                                        if isinstance(body, str):
-                                            body = body.decode('utf-8')
-                                    except Exception as err:
-                                        print("Could not decode %s message from %s, ignoring: %s" % (type(body), message.get('from'), err))
-                                        baddies += 1
-                                        body = None
-    
-                        okay = True
-                        dheader = {}
-                        for key in ['to','from','subject','message-id']:
-                            try:
-                                default_charset = 'latin-1'
-                                hval = ''.join([ unicode(t[0], t[1] or default_charset) for t in email.header.decode_header(message[key]) ])
-                                dheader[key] = hval
-                            except Exception as err:
-                                try:
-                                    hval = u""
-                                    default_charset = 'latin-1'
-                                    hval = ''.join([ unicode(t[0], t[1] or default_charset) for t in email.header.decode_header(message[key]) ])
-                                    dheader[key] = hval
-                                except Exception as err:
-                                    print("Could not decode headers, ignoring..")
-                                    okay = False
-                        mdt = ""
-                        if not 'date' in message and 'received' in message:
-                            m = re.search(r"(\d+ \S+ \d{4} \d\d:\d\d:\d\d ([-+]\d{4})?)", message['received'])
-                            if m:
-                                mdt = m.group(1)
-                        else:
-                            mdt = message['date']
-                        mdate = email.utils.parsedate_tz(mdt)
-                        if not mdate or mdate[0] < (LEY-1):
-                            print("Date is wrong or missing here, setting to %s" % ( LEY))
-                            mdate = datetime.datetime(LEY, EM, 1).timetuple()
-                        else:
-                            LEY = mdate[0] # Gather evidence 'n'stuff!
-                        mdatestring = ""
-                        try:
-                            mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
-                        except:
-                            okay = False
-                        if body and okay and mdate:
-                            attachments, contents = msgfiles(message)
-                            if mid == None or not mid:
-                                try:
-                                    mid = hashlib.sha256(body).hexdigest() + "@" + lid + "@" + appender
-                                except:
-                                    if filebased:
-                                        mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@" + appender
-                                    else:
-                                        mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@" + appender
-                                print("No MID found, setting to %s" % mid)
-                            mid2 = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
-                            count += 1
-                            mr = ""
-                            if 'references' in message:
-                                mr = message['references']
-                            irt = ""
-                            if 'in-reply-to' in message:
-                                irt = message['in-reply-to']
-    
-                            json = {
-                                'from_raw': dheader['from'],
-                                'from': dheader['from'],
-                                'to': dheader['to'],
-                                'subject': dheader['subject'],
-                                'cc': message.get('cc'),
-                                'message-id': mid,
-                                'mid': mid2,
-                                'epoch': email.utils.mktime_tz(mdate),
-                                'list': lid,
-                                'list_raw': lid,
-                                'date': mdatestring,
-                                'private': private,
-                                'references': mr,
-                                'in-reply-to': irt,
-                                'body': body,
-                                'attachments': attachments
-                            }
-                            json_source = {
-                                'mid': mid2,
-                                'message-id': mid,
-                                'source': unicode(message.as_string(), errors='ignore')
-                            }
-                            ja.append(json)
-                            jas.append(json_source)
-                            if contents:
-                                iname = config.get("elasticsearch", "dbname")
-                                for key in contents:
-                                    es.index(
-                                        index=iname,
-                                        doc_type="attachment",
-                                        id=key,
-                                        body = {
-                                            'source': contents[key]
-                                        }
-                                    )
-                            if len(ja) >= 100:
-                                bulk = BulkThread()
-                                bulk.assign(ja, es, 'mbox')
-                                bulk.insert()
-                                ja = []
-                                
-                                bulks = BulkThread()
-                                bulks.assign(jas, es, 'mbox_source')
-                                bulks.insert()
-                                jas = []
-                    else:
-                        baddies += 1
-                if filebased:
-                    print("Parsed %u records from %s" % (count, filename))
-                else:
-                    print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
-                    os.unlink(tmpname)
-                    
-                y += count
-                bulk = BulkThread()
-                bulk.assign(ja, es)
-                bulk.insert()
-                ja = []
-                
-                bulks = BulkThread()
-                bulks.assign(jas, es, 'mbox_source')
-                bulks.insert()
-                jas = []
-            print("Done, %u elements left to slurp" % len(lists))
-        except Exception as err:
-            print("error: %s" % err)
+                                    body = None
 
+                    okay = True
+                    dheader = {}
+                    for key in ['to','from','subject','message-id']:
+                        try:
+                            hval = ""
+                            for t in email.header.decode_header(message[key]):
+                                if t[1] == None:
+                                    hval += t[0]
+                                else:
+                                    hval += t[0].encode(t[1],errors='ignore')
+                            dheader[key] = hval
+                        except Exception as err:
+                            print("Could not decode headers, ignoring..: %s" % err)
+                            okay = False
+                    mdt = ""
+                    if not 'date' in message and 'received' in message:
+                        m = re.search(r"(\d+ \S+ \d{4} \d\d:\d\d:\d\d ([-+]\d{4})?)", message['received'])
+                        if m:
+                            mdt = m.group(1)
+                    else:
+                        mdt = message['date']
+                    mdate = email.utils.parsedate_tz(mdt)
+                    if not mdate or mdate[0] < (LEY-1):
+                        print("Date is wrong or missing here, setting to %s" % ( LEY))
+                        mdate = datetime.datetime(LEY, EM, 1).timetuple()
+                    else:
+                        LEY = mdate[0] # Gather evidence 'n'stuff!
+                    mdatestring = ""
+                    try:
+                        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
+                    except:
+                        okay = False
+                    if body and okay and mdate:
+                        attachments, contents = msgfiles(message)
+                        if mid == None or not mid:
+                            try:
+                                mid = hashlib.sha256(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest() + "@" + lid + "@" + appender
+                            except:
+                                if filebased:
+                                    mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@" + appender
+                                else:
+                                    mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@" + appender
+                            print("No MID found, setting to %s" % mid)
+                        mid2 = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
+                        count += 1
+                        mr = ""
+                        if 'references' in message:
+                            mr = message['references']
+                        irt = ""
+                        if 'in-reply-to' in message:
+                            irt = message['in-reply-to']
+
+                        json = {
+                            'from_raw': dheader['from'],
+                            'from': dheader['from'],
+                            'to': dheader['to'],
+                            'subject': dheader['subject'],
+                            'cc': message.get('cc'),
+                            'message-id': mid,
+                            'mid': mid2,
+                            'epoch': email.utils.mktime_tz(mdate),
+                            'list': lid,
+                            'list_raw': lid,
+                            'date': mdatestring,
+                            'private': private,
+                            'references': mr,
+                            'in-reply-to': irt,
+                            'body': body.decode('utf-8') if type(body) is bytes else body,
+                            'attachments': attachments
+                        }
+                        json_source = {
+                            'mid': mid2,
+                            'message-id': mid,
+                            'source': message.as_bytes().decode(encoding='UTF-8')
+                        }
+                        ja.append(json)
+                        jas.append(json_source)
+                        if contents:
+                            iname = config.get("elasticsearch", "dbname")
+                            for key in contents:
+                                es.index(
+                                    index=iname,
+                                    doc_type="attachment",
+                                    id=key,
+                                    body = {
+                                        'source': contents[key]
+                                    }
+                                )
+                        if len(ja) >= 100:
+                            bulk = BulkThread()
+                            bulk.assign(ja, es, 'mbox')
+                            bulk.insert()
+                            ja = []
+                            
+                            bulks = BulkThread()
+                            bulks.assign(jas, es, 'mbox_source')
+                            bulks.insert()
+                            jas = []
+                else:
+                    baddies += 1
+            if filebased:
+                print("Parsed %u records from %s" % (count, filename))
+            else:
+                print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
+                os.unlink(tmpname)
+                
+            y += count
+            bulk = BulkThread()
+            bulk.assign(ja, es)
+            bulk.insert()
+            ja = []
+            
+            bulks = BulkThread()
+            bulks.assign(jas, es, 'mbox_source')
+            bulks.insert()
+            jas = []
+        print("Done, %u elements left to slurp" % len(lists))
+        
 tlpname = "foo"
 if len(sys.argv) == 2:
     tlpname = sys.argv[1]
@@ -511,7 +502,7 @@ if source[0] == "/" or source[0] == ".":
 
 # HTTP(S) based import?
 elif source[0] == "h":
-    data = urllib.urlopen(source).read()
+    data = urlopen(source).read().decode('utf-8')
     print("Fetched %u bytes of main data, parsing month lists" % len(data))
     
     ns = r"<a href='(%s[-a-z0-9]+)/'" % project
@@ -521,7 +512,7 @@ elif source[0] == "h":
     if args.modmbox:
         for mlist in re.finditer(ns, data):
             ml = mlist.group(1)
-            mldata = urllib.urlopen("%s%s/" % (source, ml)).read()
+            mldata = urlopen("%s%s/" % (source, ml)).read().decode('utf-8')
             present = re.search(r"<th colspan=\"3\">Year 20[\d]{2}</th>", mldata) # Check that year 2014-2017 exists, otherwise why keep it?
             if present:
                 qn = 0
