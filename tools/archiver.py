@@ -221,7 +221,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
+                mid = "%s@%s@%s" % (hashlib.sha224(body.decode('ascii', errors='ignore') if type(body) is bytes else body).hexdigest(), email.utils.mktime_tz(mdate), lid)
             except:
                 mid = pmid
             ojson = {
