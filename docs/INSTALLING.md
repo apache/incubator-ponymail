@@ -4,8 +4,7 @@
 You will need the following software installed on your machine:
 
 - ElasticSearch >= 1.3 (2.0 is not supported yet)
-- Python 2.7 if you plan to import from old mbox files
-- Python 3.x for the archiver plugin (setup.py will handle dependencies)
+- Python 3.x for the archiver plugin (setup.py will handle dependencies) and importer
 - Apache HTTP Server 2.4.x with mod_lua (see http://modlua.org/gs/installing if you need to build mod_lua manually)
 - Lua 5.2 or 5.1 with the following modules: cjson, luasec, luasocket
 

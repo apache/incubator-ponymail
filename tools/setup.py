@@ -35,7 +35,7 @@ elif dopip:
     print("Before we get started, we need to install some modules")
     print("Hang on!")
     try:
-        subprocess.check_call(('pip','install','elasticsearch','formatflowed'))
+        subprocess.check_call(('pip3','install','elasticsearch','formatflowed'))
     except:
         print("Oh dear, looks like this failed :(")
         print("Please install elasticsearch and formatflowed before you try again:")
