@@ -72,7 +72,8 @@ function handle(r)
             end
         else
             r:puts(JSON.encode{
-                    error = "Invalid or missing headers"
+                    error = "Invalid or missing headers",
+                    headers = post
                 })
         end
     else
