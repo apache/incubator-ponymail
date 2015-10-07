@@ -58,7 +58,7 @@ function ngstart(handler)
                 return str:match(pat)
             end,
             useragent_ip = ngx.var.remote_addr,
-            decode_base64 = function(r, foo) return ngx.decode_base64(foo) end,
+            base64_decode = function(r, foo) return ngx.decode_base64(foo) end,
             port = 443 -- I don't know where to fetch this in nginx :(
         }
         handler(r)
