@@ -23,6 +23,9 @@ function setContentType(r, foo)
     end
 end
 
+apr = nil
+pcall(function() apr = require 'apr' end)
+
 function ngstart()
     if ngx then
         _G.apache2 = {
@@ -31,14 +34,17 @@ function ngstart()
         local r = {
             puts = function(r, ...) ngx.say(...) end,
             write = function(r, ...) ngx.say(...) end,
-            md5 = ngx.md5,
+            md5 = function(r, foo) return ngx.md5(foo) end,
             clock = ngx.time,
             parseargs = function() return ngx.req.get_uri_args() end,
             getcookie = function(r, name) return ngx.var['cookie_' .. name] end,
             setcookie = function(r, tbl)
                 ngx.header["Set-Cookie"] = ("%s=%s; Path=/;"):format(tbl.key, tbl.value)
             end,
-            unescape = function(r, foo) return ngx.unescape_uri(foo) end
+            unescape = function(r, foo) return ngx.unescape_uri(foo) end,
+            sha1 = apr and apr.sha1 or function(r, foo) return ngx.md5(foo) end,
+            ivm_set = function(r, key, val) ngx.var['ivm_' + key] = val end,
+            ivm_get = function(r, key) return ngx.var['ivm_' + key] end,
         }
         handle(r)
     end
