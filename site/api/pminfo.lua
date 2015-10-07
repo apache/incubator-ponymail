@@ -350,4 +350,4 @@ function handle(r)
     return cross.OK
 end
 
-cross.start()
+cross.start(handle)
