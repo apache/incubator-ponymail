@@ -55,6 +55,20 @@
      padding: 15px;
  }
  
+#spinner {
+     background-color: rgba(0,0,0,0.15);
+     position: fixed;
+     top: calc(50% - 64px);
+     left: calc(50% - 64px);
+     width: 128px;
+     min-height: 128px;
+     z-index: 998;
+     text-align: left;
+     color: #FFE;
+     display: none;
+     padding: 15px;
+ }
+ 
  .splash textarea, select {
     color: #333;
     background: rgba(255,255,255,0.9)

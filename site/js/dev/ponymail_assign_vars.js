@@ -58,6 +58,7 @@ var composeType = "reply"
 var gxdomain = ""
 var fl = null
 var kiddos = []
+var pending_urls = {}
 
 var viewModes = {
     threaded: {

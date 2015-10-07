@@ -23,9 +23,40 @@ function GetAsync(theUrl, xstate, callback) {
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
+    if (pending_urls) {
+        pending_urls[theUrl] = new Date().getTime() / 1000;
+    }
     xmlHttp.open("GET", theUrl, true);
     xmlHttp.send(null);
+    xmlHttp.onprogress = function() {
+        var slows = 0
+        var now = new Date().getTime / 1000;
+        for (var x in pending_urls) {
+            if ((now - pending_urls[x]) > 1) {
+                showSpinner(true);
+                slows++;
+            }
+        }
+        if (slows == 0) {
+            showSpinner(false)
+        }
+    }
     xmlHttp.onreadystatechange = function(state) {
+        if (xmlHttp.readyState == 4) {
+            delete pending_urls[theUrl]
+        } else {
+            var slows = 0
+            var now = new Date().getTime / 1000;
+            for (var x in pending_urls) {
+                if ((now - pending_urls[x]) > 1) {
+                    showSpinner(true);
+                    slows++;
+                }
+            }
+            if (slows == 0) {
+                showSpinner(false)
+            }
+        }
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             if (callback) {
                 try {
@@ -39,5 +70,21 @@ function GetAsync(theUrl, xstate, callback) {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 404) {
             alert("404'ed: " + theUrl)
         }
+    }
+}
+
+
+function showSpinner(show) {
+    var obj = document.getElementById('spinner')
+    if (!obj) {
+        obj = document.createElement('div')
+        obj.setAttribute("id", "spinner")
+        obj.innerHTML = "<img src='/images/spinner.gif'><br/>Loading results, please wait..."
+        document.body.appendChild(obj)
+    }
+    if (show) {
+        obj.style.display = "block"
+    } else {
+        obj.style.display = "none"
     }
 }
