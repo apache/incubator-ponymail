@@ -50,14 +50,19 @@ function hideComposer(evt) {
 // sendEmail: send an email
 function sendEmail(form) {
     
-    var f = new FormData();
+    
+    // We have a bit of a mix here due to nginx not supporting multipart form data
+    //var f = new FormData();
     var of = []
     for (var k in compose_headers) {
-        f.append(k, compose_headers[k])
+//        f.append(k, compose_headers[k])
         of.push(k + "=" + encodeURIComponent(compose_headers[k]))
     }
-    f.append("subject", document.getElementById('reply_subject').value)
-    f.append("body", document.getElementById('reply_body').value)
+//    f.append("subject", document.getElementById('reply_subject').value)
+//    f.append("body", document.getElementById('reply_body').value)
+    
+    of.push("subject=" + encodeURIComponent(document.getElementById('reply_subject').value))
+    of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
     
     var request = new XMLHttpRequest();
     request.open("POST", "/api/compose.lua");
