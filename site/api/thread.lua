@@ -74,7 +74,7 @@ function findParent(r, doc)
     return doc
 end
 
-local function handle(r)
+function handle(r)
     r.content_type = "application/json"
     local now = r:clock()
     local get = r:parseargs()

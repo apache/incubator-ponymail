@@ -23,7 +23,7 @@ local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
 
-local function handle(r)
+function handle(r)
     r.content_type = "application/json"
     local get = r:parseargs()
     local eid = (get.id or ""):gsub("\"", "")
