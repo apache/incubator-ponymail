@@ -55,7 +55,10 @@ function ngstart(handler)
             strcmp_match = function(str, pat)
                 pat = pat:gsub("%.", "%%."):gsub("*", ".+")
                 return str:match(pat)
-            end
+            end,
+            client_ip = ngx.var.remote_addr,
+            decode_base64 = function(r, foo) return ngx.decode_base64(foo) end,
+            port = 443 -- I don't know where to fetch this in nginx :(
         }
         handler(r)
     end
