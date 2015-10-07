@@ -47,6 +47,7 @@ function ngstart(handler)
             setcookie = function(r, tbl)
                 ngx.header["Set-Cookie"] = ("%s=%s; Path=/;"):format(tbl.key, tbl.value)
             end,
+            escape = function(r, foo) return ngx.unescape_uri(foo) end,
             unescape = function(r, foo) return ngx.unescape_uri(foo) end,
             sha1 = function(r, foo) return apr and apr.sha1(foo) or ngx.md5(foo) end,
             ivm_set = function(r, key, val) _M['ivm_' .. key] = val end,
