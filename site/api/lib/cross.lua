@@ -16,7 +16,7 @@
 ]]--
 
 function setContentType(r, foo)
-    if ngx then
+    if ngx and ngx.header then
         ngx.header['Content-Type'] = foo
     else
         r.content_type = foo
@@ -33,7 +33,11 @@ function ngstart()
             write = function(r, ...) ngx.say(...) end,
             md5 = ngx.md5,
             clock = ngx.time,
-            parseargs = function() return ngx.req.get_uri_args() end
+            parseargs = function() return ngx.req.get_uri_args() end,
+            getcookie = function(r, name) return ngx.var['cookie_' .. name] end,
+            setcookie = function(r, tbl)
+                ngx.header["Set-Cookie"] = ("%s=%s; Path=/;"):format(tbl.key, tbl.value)
+            end
         }
         handle(r)
     end
