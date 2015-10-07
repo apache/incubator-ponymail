@@ -163,11 +163,11 @@ function buildStats(json, state, show) {
     btn.innerHTML = "Hide me!"
     stats.appendChild(btn)
     if (prefs.hideStats == 'yes' || show == false) {
-        document.getElementById('emails').style.width = "calc(100% - 175px)"
+        document.getElementById('emails').style.width = "calc(100% - 190px)"
         
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
-            document.getElementById('emails').style.width = "calc(100% - 175px)"
+            document.getElementById('emails').style.width = "calc(100% - 190px)"
         }
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
