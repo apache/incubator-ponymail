@@ -135,3 +135,5 @@ function handle(r)
     end
     return cross.OK
 end
+
+cross.start()
