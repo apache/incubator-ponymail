@@ -127,6 +127,10 @@ function sendEmail(form) {
     if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
         window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
         window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
+        if (composeType == "new") {
+            window.sessionStorage.removeItem("reply_subject__" + xlist)
+            window.sessionStorage.removeItem("reply_body_" + xlist)
+        }
     }
     
     popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.")
