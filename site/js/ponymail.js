@@ -927,7 +927,7 @@ function formatDate(date){
 
 function checkForSlows() {
     var slows = 0
-    var now = new Date().getTime / 1000;
+    var now = new Date().getTime() / 1000;
     for (var x in pending_urls) {
         if ((now - pending_urls[x]) > 1) {
             slows++;
@@ -954,6 +954,10 @@ function GetAsync(theUrl, xstate, callback) {
     xmlHttp.open("GET", theUrl, true);
     xmlHttp.send(null);
     xmlHttp.onprogress = function() {
+        checkForSlows()
+    }
+    xmlHttp.onerror = function() {
+        delete pending_urls[theUrl]
         checkForSlows()
     }
     xmlHttp.onreadystatechange = function(state) {

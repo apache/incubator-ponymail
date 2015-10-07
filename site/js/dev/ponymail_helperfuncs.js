@@ -47,6 +47,10 @@ function GetAsync(theUrl, xstate, callback) {
     xmlHttp.onprogress = function() {
         checkForSlows()
     }
+    xmlHttp.onerror = function() {
+        delete pending_urls[theUrl]
+        checkForSlows()
+    }
     xmlHttp.onreadystatechange = function(state) {
         if (xmlHttp.readyState == 4) {
             delete pending_urls[theUrl]
