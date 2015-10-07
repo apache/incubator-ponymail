@@ -56,7 +56,7 @@
  }
  
 #spinner {
-     background-color: rgba(1,1,1,0.15);
+     background-color: rgba(1,1,1,0.25);
      position: fixed;
      top: calc(50% - 64px);
      left: calc(50% - 64px);
@@ -64,7 +64,7 @@
      min-height: 128px;
      z-index: 998;
      text-align: left;
-     color: #FFE;
+     color: #000;
      display: none;
      padding: 15px;
  }
