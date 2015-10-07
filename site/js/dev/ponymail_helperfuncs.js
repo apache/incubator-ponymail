@@ -15,6 +15,22 @@
  limitations under the License.
 */
 
+
+function checkForSlows() {
+    var slows = 0
+    var now = new Date().getTime / 1000;
+    for (var x in pending_urls) {
+        if ((now - pending_urls[x]) > 1) {
+            slows++;
+            break
+        }
+    }
+    if (slows == 0) {
+        showSpinner(false)
+    } else {
+        showSpinner(true);
+    }
+}
 // GetAsync: func for getting a doc async with a callback
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
@@ -29,33 +45,13 @@ function GetAsync(theUrl, xstate, callback) {
     xmlHttp.open("GET", theUrl, true);
     xmlHttp.send(null);
     xmlHttp.onprogress = function() {
-        var slows = 0
-        var now = new Date().getTime() / 1000;
-        for (var x in pending_urls) {
-            if ((now - pending_urls[x]) > 1) {
-                showSpinner(true);
-                slows++;
-            }
-        }
-        if (slows == 0) {
-            showSpinner(false)
-        }
+        checkForSlows()
     }
     xmlHttp.onreadystatechange = function(state) {
         if (xmlHttp.readyState == 4) {
             delete pending_urls[theUrl]
         }
-        var slows = 0
-        var now = new Date().getTime / 1000;
-        for (var x in pending_urls) {
-            if ((now - pending_urls[x]) > 1) {
-                showSpinner(true);
-                slows++;
-            }
-        }
-        if (slows == 0) {
-            showSpinner(false)
-        }
+        checkForSlows()
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             if (callback) {
                 try {
