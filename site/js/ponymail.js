@@ -1740,9 +1740,18 @@ function seedDomains(json) {
         document.getElementById('login_disclaimer').style.display = "block"
     }
     var doms = []
-    for (var key in json.lists) {
-        doms.push(key)
+    if (pm_config.indexMode == 'phonebook_short') {
+        for (var key in json.lists) {
+            for (var list in json.lists[key]) {
+                doms.push(list + '@' + key)
+            }
+        }
+    } else {
+        for (var key in json.lists) {
+            doms.push(key)
+        }
     }
+    
     doms.sort()
     var lu = {}
     var pg;
