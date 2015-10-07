@@ -64,7 +64,7 @@ function handle(r)
         for k, v in pairs({'from','subject','body'}) do
             y = {}
             for word in q:gmatch("(%S+)") do
-                table.insert(y, ("(%s:%s)"):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
+                table.insert(y, ("(%s:\"%s\")"):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
             end
             table.insert(x, "(" .. table.concat(y, " AND ") .. ")")
         end
