@@ -19,9 +19,18 @@ You will need the following software installed on your machine:
       ...[follow instructions in the setup script]
 ```
 - Edit `site/js/config.js` to suit your needs (usually very little editing is needed)
+
+### Using Apache HTTP Server: ###
 - Set up a VirtualHost block in Apache httpd that points to the `site/` directory in Pony Mail
 - Add the configuration snippets from `configs/ponymail_httpd.conf` to the virtual host
 - Start Apache httpd to enable the user-facing interface
+
+### Using nginx: ###
+- Make sure lua-apr is installed
+- Set up a Server block in nginx that points to the `site/` directory in Pony Mail
+- Add the configuration snippets from `configs/ponymail_nginx.conf` to the server config
+- Start nginx to enable the user-facing interface
+
 
 ## Setting up the archiver ##
 If your mailing list supports feeding emails to a program, feed the incoming new emails to `python3.4 /path/to/tools/archiver.py`
