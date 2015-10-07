@@ -22,6 +22,7 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
+local cross = require 'lib/cross'
 
 function handle(r)
     r.content_type = "application/json"
@@ -36,11 +37,11 @@ function handle(r)
                 if doc and doc.seen then
                     elastic.update("notifications", doc.request_id, { seen = 1 })
                     r:puts[[{"marked": true}]]
-                    return apache2.OK
+                    return cross.OK
                 end
             end
             r:puts[[{}]]
-            return apache2.OK
+            return cross.OK
         end
         local peml = {}
         local rights = nil
@@ -78,5 +79,5 @@ function handle(r)
     else
         r:puts[[{}]]
     end
-    return apache2.OK
+    return cross.OK
 end

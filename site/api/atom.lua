@@ -22,16 +22,17 @@ local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local config = require 'lib/config'
+local cross = require 'lib/cross'
 
 function handle(r)
-    r.content_type = "application/xhtml+xml"
+    cross.contentType(r, "application/xhtml+xml")
     local t = {}
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
     if not get.list then
         r:puts("<>")
-        return apache2.OK
+        return cross.OK
     end
     local qs = "*"
     local dd = 30
@@ -152,5 +153,7 @@ function handle(r)
            ))
     end
     r:puts[[</feed>]]
-    return apache2.OK
+    return cross.OK
 end
+
+cross.start()

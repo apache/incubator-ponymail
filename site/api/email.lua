@@ -21,6 +21,7 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
+local cross = require 'lib/cross'
 
 function handle(r)
     r.content_type = "application/json"
@@ -51,7 +52,7 @@ function handle(r)
                 r:puts(JSON.encode{
                     error = "You must be logged in to view this email"
                 })
-                return apache2.OK
+                return cross.OK
             end
         else
             canAccess = true
@@ -80,7 +81,7 @@ function handle(r)
                         r.headers_out['Content-Disposition'] = ("attachment; filename=\"%s\";"):format(fn)
                     end
                     r:write(out)
-                    return apache2.OK
+                    return cross.OK
                 end
             else
                 local eml = doc.from:match("<(.-)>") or doc.from:match("%S+@%S+") or "unknown"
@@ -91,10 +92,10 @@ function handle(r)
             r:puts(JSON.encode{
                     error = "You do not have access to view this email, sorry."
                 })
-            return apache2.OK
+            return cross.OK
         end
     else
         r:puts[[{}]]
     end
-    return apache2.OK
+    return cross.OK
 end

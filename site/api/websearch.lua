@@ -16,6 +16,7 @@
 ]]--
 
 -- This is websearch.lua - a script for adding OpenSearch engines
+local cross = require 'lib/cross'
 
 function handle(r)
     local domain = r:escape_html(r.args)
@@ -35,5 +36,7 @@ function handle(r)
   <Query role="example" searchTerms="cat" />
 </OpenSearchDescription>
 ]]):format(domain, domain, hostname, hostname, domain))
-    return apache2.OK
+    return cross.OK
 end
+
+cross.start()

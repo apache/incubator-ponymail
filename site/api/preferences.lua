@@ -20,6 +20,7 @@
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local user = require 'lib/user'
+local cross = require 'lib/cross'
 
 function handle(r)
     local now = r:clock()
@@ -41,7 +42,7 @@ function handle(r)
     if get.logout and account then
         user.logout(r, account)
         r:puts[[{"logut": true}]]
-        return apache2.OK
+        return cross.OK
     end
 
     -- Or are you saving your preferences?
@@ -55,7 +56,7 @@ function handle(r)
         account.preferences = prefs
         user.save(r, account)
         r:puts[[{"saved": true}]]
-        return apache2.OK
+        return cross.OK
     end
        
     
@@ -108,5 +109,5 @@ function handle(r)
         took = r:clock() - now
     })
     
-    return apache2.OK
+    return cross.OK
 end

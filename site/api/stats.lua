@@ -22,6 +22,8 @@ local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local config = require 'lib/config'
+local cross = require 'lib/cross'
+
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
@@ -41,14 +43,14 @@ end
 
 
 function handle(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local t = {}
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
     if not get.list or not get.domain then
         r:puts("{}")
-        return apache2.OK
+        return cross.OK
     end
     local qs = "*"
     local dd = 30
@@ -498,5 +500,7 @@ function handle(r)
     
     r:puts(JSON.encode(listdata))
     
-    return apache2.OK
+    return cross.OK
 end
+
+cross.start()

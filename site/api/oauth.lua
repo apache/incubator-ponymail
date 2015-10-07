@@ -22,7 +22,7 @@ local http = require 'socket.http'
 local elastic = require 'lib/elastic'
 local https = require 'ssl.https'
 local user = require 'lib/user'
-
+local cross = require 'lib/cross'
 
 function handle(r)
     r.content_type = "application/json"
@@ -70,5 +70,5 @@ function handle(r)
     else
         r:puts[[{"okay": false, "msg": "Invalid oauth response!"}]]
     end
-    return apache2.OK
+    return cross.OK
 end

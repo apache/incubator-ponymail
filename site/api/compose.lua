@@ -22,6 +22,7 @@ local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local config = require 'lib/config'
 local smtp = require 'socket.smtp'
+local cross = require 'lib/cross'
 
 function handle(r)
     local account = user.get(r)
@@ -77,5 +78,5 @@ function handle(r)
     else
         r:puts[[{"error": "You need to be logged in before you can send emails"}]]
     end
-    return apache2.OK
+    return cross.OK
 end

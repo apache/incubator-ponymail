@@ -20,6 +20,7 @@
 local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
+local cross = require 'lib/cross'
 
 function handle(r)
     r.content_type = "text/plain"
@@ -48,7 +49,7 @@ function handle(r)
                 end
             else
                 r:puts("You must be logged in to view this email")
-                return apache2.OK
+                return cross.OK
             end
         else
             canAccess = true
@@ -62,5 +63,5 @@ function handle(r)
     else
         r:puts[[No such email, sorry!]]
     end
-    return apache2.OK
+    return cross.OK
 end

@@ -19,6 +19,7 @@
 
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
+local cross = require 'lib/cross'
 
 function handle(r)
     r.content_type = "application/json"
@@ -41,7 +42,7 @@ function handle(r)
     local cache = r:ivm_get("pminfo_cache_" ..r.hostname .."-" .. nowish)
     if cache then
         r:puts(cache)
-        return apache2.OK
+        return cross.OK
     end
 
     -- Debug time point 1
@@ -346,5 +347,5 @@ function handle(r)
     r:ivm_set("pminfo_cache_" ..r.hostname .."-" .. nowish, output)
     r:puts(output)
     
-    return apache2.OK
+    return cross.OK
 end
