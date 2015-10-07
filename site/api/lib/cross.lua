@@ -37,7 +37,8 @@ function ngstart()
             getcookie = function(r, name) return ngx.var['cookie_' .. name] end,
             setcookie = function(r, tbl)
                 ngx.header["Set-Cookie"] = ("%s=%s; Path=/;"):format(tbl.key, tbl.value)
-            end
+            end,
+            unescape = function(r, foo) return ngx.unescape_uri(foo) end
         }
         handle(r)
     end
