@@ -22,7 +22,7 @@ local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
 
-function handle(r)
+local function handle(r)
     r.content_type = "text/plain"
     local get = r:parseargs()
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")

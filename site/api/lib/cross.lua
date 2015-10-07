@@ -28,7 +28,7 @@ _M = {}
 apr = nil
 pcall(function() apr = require 'apr' end)
 
-function ngstart()
+function ngstart(handler)
     if ngx then
         _G.apache2 = {
             OK = 0
@@ -49,7 +49,7 @@ function ngstart()
             ivm_get = function(r, key) return _M['ivm_' .. key] end,
             hostname = ngx.var['http_host']
         }
-        handle(r)
+        handler(r)
     end
 end
 

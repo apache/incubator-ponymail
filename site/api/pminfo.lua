@@ -21,7 +21,7 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local cross = require 'lib/cross'
 
-function handle(r)
+local function handle(r)
     r.content_type = "application/json"
     local t = {}
     local now = r:clock()

@@ -24,7 +24,7 @@ local aaa = require 'lib/aaa'
 local config = require 'lib/config'
 local cross = require 'lib/cross'
 
-function handle(r)
+local function handle(r)
     cross.contentType(r, "application/xhtml+xml")
     local t = {}
     local now = r:clock()

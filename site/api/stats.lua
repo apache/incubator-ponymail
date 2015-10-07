@@ -42,7 +42,7 @@ function leapYear(year)
 end
 
 
-function handle(r)
+local function handle(r)
     cross.contentType(r, "application/json")
     local t = {}
     local now = r:clock()

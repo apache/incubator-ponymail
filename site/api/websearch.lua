@@ -18,7 +18,7 @@
 -- This is websearch.lua - a script for adding OpenSearch engines
 local cross = require 'lib/cross'
 
-function handle(r)
+local function handle(r)
     local domain = r:escape_html(r.args)
     local scheme = "https"
     if r.port == 80 then

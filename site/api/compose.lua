@@ -24,7 +24,7 @@ local config = require 'lib/config'
 local smtp = require 'socket.smtp'
 local cross = require 'lib/cross'
 
-function handle(r)
+local function handle(r)
     local account = user.get(r)
     r.content_type = "application/json"
     

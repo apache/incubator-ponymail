@@ -24,7 +24,7 @@ local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
 
-function handle(r)
+local function handle(r)
     r.content_type = "application/json"
     local now = r:clock()
     local get = r:parseargs()
