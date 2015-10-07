@@ -244,7 +244,8 @@ class SlurpThread(Thread):
                 if m:
                     EY = int(m.group(1))
                     EM = int(m.group(2))
-                inp = urlopen("%s%s/%s" % (source, ml, mboxfile )).read().decode('utf-8')
+                ctx = urlopen("%s%s/%s" % (source, ml, mboxfile ))
+                inp = ctx.read().decode(ctx.headers.get_content_charset() or 'utf-8', errors='ignore')
     
                 tmpname = hashlib.sha224(("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile)).encode('utf-8') ).hexdigest()
                 with open(tmpname, "w") as f:
