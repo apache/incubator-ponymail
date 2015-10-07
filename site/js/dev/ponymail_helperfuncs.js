@@ -44,18 +44,17 @@ function GetAsync(theUrl, xstate, callback) {
     xmlHttp.onreadystatechange = function(state) {
         if (xmlHttp.readyState == 4) {
             delete pending_urls[theUrl]
-        } else {
-            var slows = 0
-            var now = new Date().getTime / 1000;
-            for (var x in pending_urls) {
-                if ((now - pending_urls[x]) > 1) {
-                    showSpinner(true);
-                    slows++;
-                }
+        }
+        var slows = 0
+        var now = new Date().getTime / 1000;
+        for (var x in pending_urls) {
+            if ((now - pending_urls[x]) > 1) {
+                showSpinner(true);
+                slows++;
             }
-            if (slows == 0) {
-                showSpinner(false)
-            }
+        }
+        if (slows == 0) {
+            showSpinner(false)
         }
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             if (callback) {
