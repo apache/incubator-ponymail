@@ -47,6 +47,7 @@ function ngstart()
             sha1 = function(r, foo) return apr and apr.sha1(foo) or ngx.md5(foo) end,
             ivm_set = function(r, key, val) _M['ivm_' .. key] = val end,
             ivm_get = function(r, key) return _M['ivm_' .. key] end,
+            hostname = ngx.var['http_host']
         }
         handle(r)
     end
