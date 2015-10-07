@@ -15,6 +15,7 @@
  limitations under the License.
 */
 
+/* Comment this out for now - breaks Safari 
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
 .fade-in {
@@ -36,6 +37,7 @@
     animation-delay: 0.1s;
 }
 
+*/
 
 .splash {
      background-color: rgba(0,0,0,0.65);
@@ -437,7 +439,7 @@ select {
     margin: 0;
     border-radius:4px;
     box-shadow: 0 1px 0 #ccc, 0 -1px #fff inset;
-    background: url(/images/arrow.png) center right, linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(255,255,255,1) 100%);;
+    background: url(/images/arrow.png) center right, linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(255,255,255,1) 100%);
     background-repeat: no-repeat;
     color:#555;
     border: 1px inset #999;
