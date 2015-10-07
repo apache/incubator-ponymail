@@ -18,7 +18,7 @@
 
 function checkForSlows() {
     var slows = 0
-    var now = new Date().getTime / 1000;
+    var now = new Date().getTime() / 1000;
     for (var x in pending_urls) {
         if ((now - pending_urls[x]) > 1) {
             slows++;
