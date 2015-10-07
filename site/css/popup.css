@@ -60,13 +60,15 @@
      position: fixed;
      top: calc(50% - 64px);
      left: calc(50% - 64px);
-     width: 128px;
-     min-height: 256px;
+     width: 256px;
+     min-height: 128px;
      z-index: 998;
      text-align: left;
      color: #000;
      display: none;
-     padding: 15px;
+     padding: 10px;
+     font: sans-serif;
+     font-size: larger;
  }
  
  .splash textarea, select {
