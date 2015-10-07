@@ -113,7 +113,7 @@ function sendEmail(form) {
     var of = []
     for (var k in compose_headers) {
         f.append(k, compose_headers[k])
-        of.append(k + "=" + encodeURIComponent(compose_headers[k]))
+        of.push(k + "=" + encodeURIComponent(compose_headers[k]))
     }
     f.append("subject", document.getElementById('reply_subject').value)
     f.append("body", document.getElementById('reply_body').value)
