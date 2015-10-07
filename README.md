@@ -35,7 +35,7 @@ private.
 
 * ElasticSearch backend
 * Apache HTTP Server frontend with mod_lua loaded OR
-* * Nginx with nginx-extras (ng-lua module) AND lua-apr installed
+  * Nginx with nginx-extras (ng-lua module) AND lua-apr installed
 * Python 3.x for importing (with elasticsearch and formatflowed via pip)
 * MailMan3 if you fancy that (we have a python3 archive plugin)
 * OR any mailing list system of your choice (use archiver plugin with stdin)
