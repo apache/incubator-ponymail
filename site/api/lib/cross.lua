@@ -39,7 +39,10 @@ function ngstart(handler)
             md5 = function(r, foo) return ngx.md5(foo) end,
             clock = ngx.time,
             parseargs = function() return ngx.req.get_uri_args() end,
-            parsebody = function() return ngx.req.get_post_args() end,
+            parsebody = function()
+                ngx.req.read_body()
+                return ngx.req.get_post_args()
+                end,
             getcookie = function(r, name) return ngx.var['cookie_' .. name] end,
             setcookie = function(r, tbl)
                 ngx.header["Set-Cookie"] = ("%s=%s; Path=/;"):format(tbl.key, tbl.value)
