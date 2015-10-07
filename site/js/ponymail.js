@@ -124,8 +124,8 @@ function sendEmail(form) {
     of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
     
     var request = new XMLHttpRequest();
-    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.open("POST", "/api/compose.lua");
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send(of.join("&"))
     
     var obj = document.getElementById('splash')
