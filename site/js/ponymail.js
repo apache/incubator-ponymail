@@ -995,7 +995,9 @@ function showSpinner(show) {
     } else {
         obj.style.display = "none"
     }
-}// Fetched from ponymail_listview_flat.js
+}
+
+window.setInterval(checkForSlows, 500)// Fetched from ponymail_listview_flat.js
 
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list

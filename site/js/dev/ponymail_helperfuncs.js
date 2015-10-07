@@ -87,3 +87,5 @@ function showSpinner(show) {
         obj.style.display = "none"
     }
 }
+
+window.setInterval(checkForSlows, 500)
