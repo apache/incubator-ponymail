@@ -56,7 +56,7 @@
  }
  
 #spinner {
-     background-color: rgba(200,200,250,0.25);
+     background-color: rgba(200,200,250,0.5);
      border-radius: 10px;
      border: 1px solid #666;
      position: fixed;
