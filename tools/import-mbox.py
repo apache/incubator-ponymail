@@ -303,7 +303,7 @@ class SlurpThread(Thread):
                             if message.get(key):
                                 for t in email.header.decode_header(message[key]):
                                     if t[1] == None:
-                                        hval += str(t[0])
+                                        hval += t[0].decode('utf-8', errors='replace') if type(t[0]) is bytes else t[0]
                                     else:
                                         hval += t[0].decode(t[1],errors='ignore')
                                 dheader[key] = hval
