@@ -191,4 +191,7 @@ function setTheme(theme) {
     if (typeof(window.localStorage) !== "undefined") {
         window.localStorage.setItem("pm_theme", theme)
     }
+    if (document.getElementById('emails')) {
+        buildPage()
+    }
 }
