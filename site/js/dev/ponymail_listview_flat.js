@@ -18,6 +18,11 @@
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
+    if (prefs.theme && prefs.theme == "social") {
+        d_ppp = 10
+    } else {
+        d_ppp = 15
+    }
     open_emails = []
     limit = limit ? limit : d_ppp;
     var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
