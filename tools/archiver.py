@@ -186,8 +186,19 @@ class Archiver(object):
             lid = lid.replace(self.cropout, "")
         format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
-        
         mid = hashlib.sha224(str("%s-%s" % (lid, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (lid if lid else "none")
+        for key in ['to','from','subject','message-id']:
+            try:
+                hval = ""
+                if msg_metadata.get(key):
+                    for t in email.header.decode_header(msg_metadata[key]):
+                        if t[1] == None:
+                            hval += str(t[0])
+                        else:
+                            hval += t[0].decode(t[1],errors='ignore')
+                    msg_metadata[key] = hval
+            except Exception as err:
+                print("Could not decode headers, ignoring..: %s" % err)
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
         mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
