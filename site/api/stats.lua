@@ -312,7 +312,7 @@ function handle(r)
     local emls = {}
     local senders = {}
     local doc = elastic.raw {
-        _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private', 'attachments'},
+        _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private', 'attachments', 'body'},
         query = {
             bool = {
                 must = {
@@ -374,6 +374,7 @@ function handle(r)
                 local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
                 local gravatar = r:md5(eml)
                 local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+")
+                email.gravatar = gravatar
                 name = name:gsub("\"", "")
                 senders[gravatar] = senders[gravatar] or {
                     email = eml,
@@ -439,6 +440,7 @@ function handle(r)
                 else
                     table.insert(threads, emails[mid])
                 end
+                threads[#threads].body = #email.body < 300 and email.body or email.body:sub(1,300) .. "..."
             end
             email.references = nil
             email.to = nil
@@ -448,6 +450,7 @@ function handle(r)
             else
                 email.attachments = 0
             end
+            email.body = nil
             table.insert(emls, email)
         elseif config.slow_count then
             for k, v in pairs(top10) do
