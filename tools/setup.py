@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -17,6 +17,7 @@
 import sys, os, json, re, time
 import getpass
 import subprocess
+import readline
 
 dopip = False
 try:
@@ -57,28 +58,22 @@ wc = ""
 wce = False
 
 while hostname == "":
-    sys.stdout.write("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
-    hostname = sys.stdin.readline().strip()
+    hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
     
 while port < 1:
-    sys.stdout.write("What port is ElasticSearch listening on? (normally 9200): ")
-    port = int(sys.stdin.readline().strip())
+    port = int(input("What port is ElasticSearch listening on? (normally 9200): "))
 
 while dbname == "":
-    sys.stdout.write("What would you like to call the mail index (e.g. ponymail): ")
-    dbname = sys.stdin.readline().strip()
+    dbname = input("What would you like to call the mail index (e.g. ponymail): ")
 
 while mlserver == "":
-    sys.stdout.write("What is the hostname of the outgoing mailserver? (e.g. mail.foo.org): ")
-    mlserver = sys.stdin.readline().strip()
+    mlserver = input("What is the hostname of the outgoing mailserver? (e.g. mail.foo.org): ")
     
 while mldom == "":
-    sys.stdout.write("Which domains would you accept mail to from web-replies? (e.g. foo.org or *): ")
-    mldom = sys.stdin.readline().strip()
+    mldom = input("Which domains would you accept mail to from web-replies? (e.g. foo.org or *): ")
 
 while wc == "":
-    sys.stdout.write("Would you like to enable the word cloud feature? (Y/N): ")
-    wc = sys.stdin.readline().strip()
+    wc = input("Would you like to enable the word cloud feature? (Y/N): ")
     if wc.lower() == "y":
         wce = True
 
