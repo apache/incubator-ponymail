@@ -1249,7 +1249,11 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "<div style='width: 64px; float: left;'>" +
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
-                    "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "</div>" +
+                    "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "<br/>" +
+                    "<a class='label label-info' href='javascript:void(0);' style='font-size: 85%;' onclick='latestEmailInThread = " +
+                    latest +
+                    "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>Read more..</a>" +
+                    "</div>" +
                     "</div>" +
                     "<div id='thread_" + i + "' style='display:none';></div></div></li>"
         } else {
