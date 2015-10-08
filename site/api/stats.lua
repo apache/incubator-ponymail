@@ -376,13 +376,14 @@ function handle(r)
                 local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+")
                 email.gravatar = gravatar
                 name = name:gsub("\"", "")
-                senders[gravatar] = senders[gravatar] or {
+                local eid = ("%s <%s>"):format(name, eml)
+                senders[eid] = senders[eid] or {
                     email = eml,
                     gravatar = gravatar,
                     name = name,
                     count = 0
                 }
-                senders[gravatar].count = senders[gravatar].count + 1
+                senders[eid].count = senders[eid].count + 1
             end
             local mid = email['message-id']
             local irt = email['in-reply-to']
