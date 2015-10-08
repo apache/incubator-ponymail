@@ -375,7 +375,7 @@ function handle(r)
                 local gravatar = r:md5(eml)
                 local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+")
                 email.gravatar = gravatar
-                name = name:gsub("\"", "")
+                name = name:gsub("\"", ""):gsub("%s+$", "")
                 local eid = ("%s <%s>"):format(name, eml)
                 senders[eid] = senders[eid] or {
                     email = eml,
