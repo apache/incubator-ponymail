@@ -18,6 +18,12 @@
 
 // loadList_threaded: Same as above, but threaded display
 function loadList_threaded(mjson, limit, start, deep) {
+    if (typeof(window.localStorage) !== "undefined") {
+        var th = window.localStorage.getItem("pm_theme")
+        if (th) {
+            prefs.theme = th
+        }
+    }
     if (prefs.theme && prefs.theme == "social") {
         d_ppp = 10
     } else {
