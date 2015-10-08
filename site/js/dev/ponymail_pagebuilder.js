@@ -345,7 +345,7 @@ function getListInfo(list, xdomain, nopush) {
 
             var key = listnames[i]
             var collapse = ''
-            if (i >= 5) {
+            if (i >= 4) {
                 collapse = 'hidden-xs hidden-sm hidden-md hidden-lg'
                 overlaps.push(key)
             }
