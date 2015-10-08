@@ -115,7 +115,7 @@ if makePublic:
 if makePrivate:
     print("  - Action: Mark all emails private")
 if deleteEmails:
-    print("  - Action: Delete emails")
+    print("  - Action: Delete emails (sources will be kept!)")
 
 count = 0
 
