@@ -42,7 +42,7 @@ makePrivate = None
 sourceLID = None
 targetLID = None
 deleteEmails = None
-
+wildcard = None
 
 ssl = False
 dbname = config.get("elasticsearch", "dbname")
@@ -75,6 +75,8 @@ parser.add_argument('--public', dest='public', action='store_true',
                    help='Make all emails in list public')
 parser.add_argument('--delete', dest='delete', action='store_true', 
                    help='Delete emails from this list')
+parser.add_argument('--wildcard', dest='glob', action='store_true', 
+                   help='Allow wildcards in --source')
 
 args = parser.parse_args()
 
@@ -88,6 +90,8 @@ if args.public:
     makePublic = args.public
 if args.delete:
     deleteEmails = args.delete
+if args.glob:
+    wildcard = args.glob
     
 if not sourceLID:
     print("No source list ID specified!")
@@ -133,7 +137,7 @@ page = es.search(
             'bool': {
                 'must': [
                     {
-                        'term': {
+                        'wildcard' if wildcard else 'term': {
                             'list_raw': sourceLID
                         }
                     }
