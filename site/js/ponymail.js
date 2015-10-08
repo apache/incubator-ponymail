@@ -1260,7 +1260,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     var tnav = "<div style='float: left; width: 100%'>"
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + nstart + ');">Show previous '+d_ppp+'</a> &nbsp </div>'
+        bulk.innerHTML += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + nstart + ');">Show previous '+d_ppp+'</a> &nbsp </div>'
     } else {
         tnav += '<div style="width: 50%; float: left;">&nbsp;</div>'
     }
