@@ -252,7 +252,7 @@ class Archiver(object):
                 'private': private,
                 'references': msg_metadata['references'],
                 'in-reply-to': msg_metadata['in-reply-to'],
-                'body': body.decode('utf-8') if type(body) is bytes else body,
+                'body': body.decode('utf-8', errors='replace') if type(body) is bytes else body,
                 'attachments': attachments
             }
             

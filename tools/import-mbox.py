@@ -363,13 +363,13 @@ class SlurpThread(Thread):
                             'private': private,
                             'references': mr,
                             'in-reply-to': irt,
-                            'body': body.decode('utf-8') if type(body) is bytes else body,
+                            'body': body.decode('utf-8', errors='replace') if type(body) is bytes else body,
                             'attachments': attachments
                         }
                         json_source = {
                             'mid': mid2,
                             'message-id': mid,
-                            'source': message.as_bytes().decode('utf-8', errors='ignore')
+                            'source': message.as_bytes().decode('utf-8', errors='replace')
                         }
                         ja.append(json)
                         jas.append(json_source)
