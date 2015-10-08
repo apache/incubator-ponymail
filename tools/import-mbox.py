@@ -300,12 +300,13 @@ class SlurpThread(Thread):
                     for key in ['to','from','subject','message-id']:
                         try:
                             hval = ""
-                            for t in email.header.decode_header(message[key]):
-                                if t[1] == None:
-                                    hval += t[0]
-                                else:
-                                    hval += t[0].encode(t[1],errors='ignore')
-                            dheader[key] = hval
+                            if message.get(key):
+                                for t in email.header.decode_header(message[key]):
+                                    if t[1] == None:
+                                        hval += str(t[0])
+                                    else:
+                                        hval += t[0].decode(t[1],errors='ignore')
+                                dheader[key] = hval
                         except Exception as err:
                             print("Could not decode headers, ignoring..: %s" % err)
                             okay = False
@@ -368,7 +369,7 @@ class SlurpThread(Thread):
                         json_source = {
                             'mid': mid2,
                             'message-id': mid,
-                            'source': message.as_bytes().decode(encoding='UTF-8')
+                            'source': message.as_bytes().decode('utf-8', errors='ignore')
                         }
                         ja.append(json)
                         jas.append(json_source)
