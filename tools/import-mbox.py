@@ -67,12 +67,20 @@ config = configparser.RawConfigParser()
 config.read('ponymail.cfg')
 
 
+
+ssl = False
+dbname = config.get("elasticsearch", "dbname")
+if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
+    ssl = True
+uri = ""
+if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
+    uri = config.get("elasticsearch", "uri")
 es = Elasticsearch([
     {
         'host': config.get("elasticsearch", "hostname"),
-        'port': 9200,
-        'use_ssl': False,
-        'url_prefix': ''
+        'port': int(config.get("elasticsearch", "port")),
+        'use_ssl': ssl,
+        'url_prefix': uri
     }],
     max_retries=5,
     retry_on_timeout=True

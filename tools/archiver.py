@@ -126,7 +126,7 @@ class Archiver(object):
         uri = ""
         if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
             uri = config.get("elasticsearch", "uri")
-        self.es = es = Elasticsearch([
+        self.es = Elasticsearch([
             {
                 'host': config.get("elasticsearch", "hostname"),
                 'port': int(config.get("elasticsearch", "port")),
