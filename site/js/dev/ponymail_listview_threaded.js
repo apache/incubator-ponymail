@@ -127,17 +127,17 @@ function loadList_threaded(mjson, limit, start, deep) {
     bulk.innerHTML = ""
     
     // Top nav buttons
-    var tnav = "<div style='float: left; width: 100%'>"
+    var tnav = "<div style='float: left; width: 100%; height: 50px;'>"
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + nstart + ');">Show previous '+d_ppp+'</a> &nbsp </div>'
+        tnav += '<div style="width: 40%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + nstart + ');">Show previous '+d_ppp+'</a> &nbsp </div>'
     } else {
-        tnav += '<div style="width: 50%; float: left;">&nbsp;</div>'
+        tnav += '<div style="width: 40%; float: left;">&nbsp;</div>'
     }
     
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
-        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
+        tnav += '<div style="width: 40%; float: right;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
     tnav += "</div><br/><br>"
     
