@@ -93,7 +93,7 @@ if not sourceLID:
     print("No source list ID specified!")
     parser.print_help()
     sys.exit(-1)
-if not (targetLID or makePrivate or makePublic):
+if not (targetLID or makePrivate or makePublic or deleteEmails):
     print("Nothing to do! No target list ID or action specified")
     parser.print_help()
     sys.exit(-1)
