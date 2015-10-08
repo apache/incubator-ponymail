@@ -700,9 +700,11 @@ function toggleEmails_threaded(id, close, toverride) {
             helper.style.display = 'none'
             prefs.groupBy = 'thread' // hack for now
             thread.innerHTML = ""
+            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'block'
             return
         } else {
             helper.style.display = 'block'
+            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'none'
         }
         if (!open_emails[id]) {
             open_emails[id] = true
@@ -1146,6 +1148,11 @@ function loadEmails_flat(id, close) {
 
 // loadList_threaded: Same as above, but threaded display
 function loadList_threaded(mjson, limit, start, deep) {
+    if (prefs.theme && prefs.theme == "social") {
+        d_ppp = 10
+    } else {
+        d_ppp = 15
+    }
     open_emails = []
     limit = limit ? limit : d_ppp;
     var fjson = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
@@ -1214,7 +1221,34 @@ function loadList_threaded(mjson, limit, start, deep) {
                 estyle = "font-weight: bold;"
             }
         }
-        nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        if (prefs.theme && prefs.theme == "social") {
+            var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
+            from = from.replace(/\"/g, "")
+            nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
+                    d +
+                    "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " +
+                    latest +
+                    "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" +
+                    subject +
+                    "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" +
+                    mdate +
+                    "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> " +
+                    "<span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " +
+                    "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp +
+                    "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" +
+                    "<br/>By " + from + "</div>" 
+                    
+                    
+            nest += "<div style='width: 100%; float: left; min-height: 64px;' id='bubble_"+i+"'>" +
+                    "<div style='width: 64px; float: left;'>" +
+                    "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
+                    "</div>" +
+                    "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "</div>" +
+                    "</div>" +
+                    "<div id='thread_" + i + "' style='display:none';></div></div></li>"
+        } else {
+            nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        }
     }
     nest += "</ul>"
 
@@ -1226,14 +1260,14 @@ function loadList_threaded(mjson, limit, start, deep) {
     var tnav = "<div style='float: left; width: 100%'>"
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + nstart + ');">Show previous '+d_ppp+'</a> &nbsp </div>'
     } else {
         tnav += '<div style="width: 50%; float: left;">&nbsp;</div>'
     }
     
     if (json.length > (start + limit)) {
-        remain = Math.min(15, json.length - (start + limit))
-        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+        remain = Math.min(d_ppp, json.length - (start + limit))
+        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
     tnav += "</div><br/><br>"
     
@@ -1250,7 +1284,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     // Bottom nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + nstart + ');">Show previous '+d_ppp+'</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
@@ -1263,7 +1297,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     }
     
     if (json.length > (start + limit)) {
-        remain = Math.min(15, json.length - (start + limit))
+        remain = Math.min(d_ppp, json.length - (start + limit))
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
     }
 
@@ -2217,6 +2251,9 @@ function setTheme(theme) {
     prefs.theme = theme
     if (typeof(window.localStorage) !== "undefined") {
         window.localStorage.setItem("pm_theme", theme)
+    }
+    if (document.getElementById('emails')) {
+        buildPage()
     }
 }// Fetched from ponymail_zzz.js
 

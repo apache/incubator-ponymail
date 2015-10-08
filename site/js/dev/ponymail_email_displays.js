@@ -318,9 +318,11 @@ function toggleEmails_threaded(id, close, toverride) {
             helper.style.display = 'none'
             prefs.groupBy = 'thread' // hack for now
             thread.innerHTML = ""
+            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'block'
             return
         } else {
             helper.style.display = 'block'
+            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'none'
         }
         if (!open_emails[id]) {
             open_emails[id] = true
