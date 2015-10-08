@@ -41,6 +41,7 @@ makePublic = None
 makePrivate = None
 sourceLID = None
 targetLID = None
+deleteEmails = None
 
 
 ssl = False
@@ -72,6 +73,8 @@ parser.add_argument('--private', dest='private', action='store_true',
                    help='Make all emails in list private')
 parser.add_argument('--public', dest='public', action='store_true', 
                    help='Make all emails in list public')
+parser.add_argument('--delete', dest='delete', action='store_true', 
+                   help='Delete emails from this list')
 
 args = parser.parse_args()
 
@@ -83,7 +86,9 @@ if args.private:
     makePrivate = args.private
 if args.public:
     makePublic = args.public
-
+if args.delete:
+    deleteEmails = args.delete
+    
 if not sourceLID:
     print("No source list ID specified!")
     parser.print_help()
@@ -109,30 +114,10 @@ if makePublic:
     print("  - Action: Mark all emails public")
 if makePrivate:
     print("  - Action: Mark all emails private")
+if deleteEmails:
+    print("  - Action: Delete emails")
 
 count = 0
-
-
-def bulkupdate():
-    js_arr = []
-    i = 0
-    for entry in self.json:
-        js = entry
-        js['@version'] = 1
-        js['@import_timestamp'] = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime())
-        js_arr.append({
-            '_op_type': 'index',
-            '_index': iname,
-            '_type': self.dtype,
-            '_id': js['mid'],
-            'doc': js,
-            '_source': js
-        })
-    try:
-        helpers.bulk(self.xes, js_arr)
-    except Exception as err:
-        print("Warning: Could not bulk insert: %s" % err)
-    #print("Inserted %u entries" % len(js_arr))
 
 
 print("Updating docs...")
@@ -175,7 +160,7 @@ while (scroll_size > 0):
         if makePublic:
             body['private'] = False
         js_arr.append({
-            '_op_type': 'update',
+            '_op_type': 'delete' if deleteEmails else 'update',
             '_index': dbname,
             '_type': 'mbox',
             '_id': doc,
