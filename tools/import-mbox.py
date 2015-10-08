@@ -328,7 +328,7 @@ class SlurpThread(Thread):
                         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
                     except:
                         okay = False
-                    if body and okay and mdate:
+                    if body and okay and mdate and ('to','from','subject') in dheader:
                         attachments, contents = msgfiles(message)
                         if mid == None or not mid:
                             try:
