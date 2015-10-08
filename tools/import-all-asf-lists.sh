@@ -6,7 +6,7 @@ for tlp in `ls -1 ${DIR}`; do
         TLPN=`echo ${tlp} | cut -d. -f1`
         if [ "${TLPN}" != "${list}" ]; then
         printf "\n*** Importing ${tlp}/${list} ***\n"
-          python ./import-mbox.py --source ${DIR}/${tlp}/${list} --ext "" --lid "<${list}.${tlp}>" --attachments;
+          python3 ./import-mbox.py --source ${DIR}/${tlp}/${list} --ext "" --lid "<${list}.${tlp}>" --attachments;
         fi
     fi
   done
