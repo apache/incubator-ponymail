@@ -52,7 +52,7 @@ function displayEmail(json, id, level) {
         ebody = ebody.replace(/</mg, "&lt;")
         ebody = "\n" + ebody
         if (prefs.compactQuotes == 'yes') {
-            ebody = ebody.replace(/((?:\r?\n)((on .+ wrote:\r?\n*)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+/mgi, function(inner) {
+            ebody = ebody.replace(/((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+/mgi, function(inner) {
                 var rnd = (Math.random() * 100).toString()
                 inner = inner.replace(/>/g, "&gt;")
                 var html = "<div class='bs-callout bs-callout-default' style='margin: 3px; padding: 2px;' id='parent_" + rnd + "'>" +
