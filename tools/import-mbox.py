@@ -32,6 +32,7 @@ from os import listdir
 from os.path import isfile, join, isdir
 import glob
 import codecs
+import multiprocessing
 
 try:
     from elasticsearch import Elasticsearch, helpers
@@ -527,8 +528,8 @@ elif source[0] == "h":
                         break
     
 threads = []
-print("Starting up to 6 threads to fetch the %u %s lists" % (len(lists), project))
-for i in range(1,7):
+print("Starting up to %u threads to fetch the %u %s lists" % (multiprocessing.cpu_count(), len(lists), project))
+for i in range(1,multiprocessing.cpu_count()+1):
     t = SlurpThread()
     threads.append(t)
     t.start()
