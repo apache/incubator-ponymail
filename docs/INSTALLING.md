@@ -61,3 +61,11 @@ the --private arg to the python script to mark an email as private:
     foolist-private: "|/usr/bin/python3.4 /path/to/tools/archiver.py --private"
     foolist-public: "|/usr/bin/python3.4 /path/to/tools/archiver.py"
 ```
+
+
+## Bulk editing lists ##
+You can use `edit-list.py` to perform bulk operations:
+- Rename lists
+- Mark entire lists are private or public
+
+RUn `python3 edit-list.py --help` for CLI args.
