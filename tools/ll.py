@@ -20,6 +20,7 @@ import random, time
 import os
 import configparser
 import argparse
+import json
 
 try:
     from elasticsearch import Elasticsearch, helpers
@@ -90,21 +91,26 @@ page = es.search(
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--pretty', dest='pretty', action='store_true', 
                    help='Convert List IDs to email addresses')
+parser.add_argument('--debug', dest='debug', action='store_true', 
+                   help='Output the result JSON instead, very noisy!')
 
 args = parser.parse_args()
 pretty = args.pretty
 plist = {}
 
-for domain in page['aggregations']['lists']['buckets']:
-    if pretty:
-        if domain['key'].find(".") != -1:
-            l, d = domain['key'].strip("<>").split(".", 1)
-            plist[d] = plist[d] if d in plist else []
-            plist[d].append(l)
-    else:
-        print(domain['key'])
-
-for dom in sorted(plist):
-    for ln in sorted(plist[dom]):
-        print("%s@%s" % (ln, dom))
-        
+if args.debug:
+    print(json.dumps(page['aggregations']))
+else:
+    for domain in page['aggregations']['lists']['buckets']:
+        if pretty:
+            if domain['key'].find(".") != -1:
+                l, d = domain['key'].strip("<>").split(".", 1)
+                plist[d] = plist[d] if d in plist else []
+                plist[d].append(l)
+        else:
+            print(domain['key'])
+    
+    for dom in sorted(plist):
+        for ln in sorted(plist[dom]):
+            print("%s@%s" % (ln, dom))
+            
