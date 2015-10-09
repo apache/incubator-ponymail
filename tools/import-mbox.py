@@ -326,7 +326,11 @@ class SlurpThread(Thread):
                             mdt = m.group(1)
                     else:
                         mdt = message['date']
-                    mdate = email.utils.parsedate_tz(mdt)
+                    mdate = None
+                    try:
+                        mdate = email.utils.parsedate_tz(mdt)
+                    except:
+                        pass
                     if not mdate or mdate[0] < (LEY-1):
                         print("Date is wrong or missing here, setting to %s" % ( LEY))
                         mdate = datetime.datetime(LEY, EM, 1).timetuple()
