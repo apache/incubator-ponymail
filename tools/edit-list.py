@@ -23,7 +23,7 @@ import configparser
 import argparse
 from os import listdir
 from os.path import isfile, join, isdir
-
+import json
 
 try:
     from elasticsearch import Elasticsearch, helpers
@@ -43,6 +43,8 @@ sourceLID = None
 targetLID = None
 deleteEmails = None
 wildcard = None
+debug = False
+notag = False
 
 ssl = False
 dbname = config.get("elasticsearch", "dbname")
@@ -77,6 +79,10 @@ parser.add_argument('--delete', dest='delete', action='store_true',
                    help='Delete emails from this list')
 parser.add_argument('--wildcard', dest='glob', action='store_true', 
                    help='Allow wildcards in --source')
+parser.add_argument('--debug', dest='debug', action='store_true', 
+                   help='Debug output - very noisy!')
+parser.add_argument('--notag', dest='notag', action='store_true', 
+                   help='List IDs do not have <> in them')
 
 args = parser.parse_args()
 
@@ -92,6 +98,10 @@ if args.delete:
     deleteEmails = args.delete
 if args.glob:
     wildcard = args.glob
+if args.debug:
+    debug = args.debug
+if args.notag:
+    notag = args.notag
     
 if not sourceLID:
     print("No source list ID specified!")
@@ -106,7 +116,7 @@ if makePublic and makePrivate:
     parser.print_help()
     sys.exit(-1)
 
-sourceLID = "<%s>" % sourceLID.replace("@", ".").strip("<>")
+sourceLID = ("%s" if notag else "<%s>")  % sourceLID.replace("@", ".").strip("<>")
 if targetLID:
     targetLID = "<%s>" % targetLID.replace("@", ".").strip("<>")
     
@@ -148,9 +158,13 @@ page = es.search(
     )
 sid = page['_scroll_id']
 scroll_size = page['hits']['total']
+if debug:
+        print(json.dumps(page))
 js_arr = []
 while (scroll_size > 0):
     page = es.scroll(scroll_id = sid, scroll = '30m')
+    if debug:
+        print(json.dumps(page))
     sid = page['_scroll_id']
     scroll_size = len(page['hits']['hits'])
     for hit in page['hits']['hits']:
