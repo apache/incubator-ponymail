@@ -97,9 +97,10 @@ plist = {}
 
 for domain in page['aggregations']['lists']['buckets']:
     if pretty:
-        l, d = domain['key'].strip("<>").split(".", 1)
-        plist[d] = plist[d] if d in plist else []
-        plist[d].append(l)
+        if domain.find(".") != -1:
+            l, d = domain['key'].strip("<>").split(".", 1)
+            plist[d] = plist[d] if d in plist else []
+            plist[d].append(l)
     else:
         print(domain['key'])
 
