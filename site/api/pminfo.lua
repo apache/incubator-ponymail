@@ -49,7 +49,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    local daterange = {gt = "now-"..dd.."d" }
+    local daterange = {gt = "now-"..dd.."d", lt = "now+1d" }
     
     local sterm = {
             wildcard = {
