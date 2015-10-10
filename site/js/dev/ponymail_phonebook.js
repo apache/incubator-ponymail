@@ -15,6 +15,8 @@
  limitations under the License.
 */
 
+var phonebook_json
+
 // showDomains: Show domains in the phone book display
 function showDomains(l) {
     var pg = document.getElementById('active_domlist')
@@ -30,8 +32,16 @@ function showDomains(l) {
         var li = document.createElement("li")
         li.style.padding = "2px"
         //li.setAttribute("class", "phonebook_entry")
+        var extend =  ""
+        if (pm_config.indexMode == 'phonebook_short' && phonebook_json && phonebook_json.descriptions) {
+            for (var g in phonebook_json.descriptions) {
+                if (phonebook_json.descriptions[g] == '<'+dom+'>') {
+                    extend = ": " + phonebook_json.descriptions[g].description
+                }
+            }
+        }
         var a = document.createElement("a")
-        var t = document.createTextNode(dom)
+        var t = document.createTextNode(dom + extend)
         a.setAttribute("href", "list.html?" + dom)
         a.appendChild(t)
         li.appendChild(a)
@@ -53,7 +63,7 @@ function showDomains(l) {
 
 // seedDomains: get account info and seed the phonebook
 function seedDomains(json) {
-    
+    phonebook_json = json
     var obj = document.getElementById('domains')
     if (!obj) {
         return
