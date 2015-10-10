@@ -300,7 +300,8 @@ class Archiver(object):
                     body = {
                         'list': lid,
                         'name': mlist.list_name,
-                        'description': mlist.description
+                        'description': mlist.description,
+                        'private': private
                     }
                 )
             
