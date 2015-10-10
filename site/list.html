@@ -96,17 +96,33 @@
       
       <!-- Advanced search -->
       <div style="display: none;" class="bs-callout bs-callout-danger fade-in" id="advanced" style="margin: 2px !important; padding: 5px;">
-      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['ad'].value, false);">
+      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['ad'].value, false, this.elements['header_from'].value, this.elements['header_subject'].value);">
         <p>This search allows you to search all archives you have access to at once. Use with care.</p>
-        Deep search: <input type="text" name="aq" id="aq"/>
-        <select name="ad" id='adp'>
-          <option value="30">past month</option>
-          <option value="180">past 6 months</option>
-          <option value="365">past year</option>
-          <option value="99999">since the dawn of time</option>
-        </select>
+        <div style="float: left; width: 100%;">
+          <div style="width: 120px; float: left;">When:</div>
+          <div style="width: 300px; float: left;">
+            <select name="ad" id='adp'>
+              <option value="30">past month</option>
+              <option value="180">past 6 months</option>
+              <option value="365">past year</option>
+              <option value="99999">since the dawn of time</option>
+            </select>
+          </div>
+        </div>
+        <div style="float: left; width: 100%;">
+          <div style="width: 120px; float: left;">Quick query:</div>
+          <div style="width: 300px; float: left; page-break-after: always;"><input type="text" name="aq" id="aq"/></div>
+        </div>
+        <div style="float: left; width: 100%;">
+          <div style="width: 120px; float: left;">From:</div>
+          <div style="width: 300px; float: left;"><input type="text" name="header_from" id="header_from"/></div>
+        </div>
+        <div style="float: left; width: 100%;">
+          <div style="width: 120px; float: left;">Subject:</div>
+          <div style="width: 300px; float: left;"><input type="text" name="header_subject" id="header_subject"/></div>
+        </div>
         <input type="submit" value="Search!" class="btn btn-primary"/> &nbsp;
-        <input type="button" value="Switch to quick search" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
+        <input type="button" value="Hide this panel" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
       </form>
     </div>
       

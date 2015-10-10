@@ -72,11 +72,27 @@ function handle(r)
         end
         qs = table.concat(x, " OR ")
     end
+    
     local listraw = "<" .. get.list .. "." .. get.domain .. ">"
     local listdata = {
         name = get.list,
         domain = get.domain
     }
+
+    z = {}
+    for k, v in pairs({'from','subject','body'}) do
+        if get['header_' .. v] then
+            local word = get['header_' .. v]
+            table.insert(z, ("(%s:\"%s\")"):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
+        end
+    end
+    if #z > 0 then
+        if #qs > 0 and qs ~= "*" then
+            qs = qs .. " AND (" .. table.concat(z, " AND ") .. ")"
+        else
+            qs = table.concat(z, " AND ")
+        end
+    end
     
     -- Debug time point 1
     table.insert(t, r:clock() - tnow)

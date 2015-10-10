@@ -76,13 +76,21 @@ function search(q, d, nopush, all) {
 }
 
 // searchAll: run a deep search of all lists
-function searchAll(q, d) {
+function searchAll(q, d, foo, from, subject) {
     keywords = q
     current_retention = d
     current_query = q
     global_deep = true
-    //    if (!nopush) window.history.pushState({},"", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
-    GetAsync("/api/stats.lua?list=*&domain=*&q=" + q + "&d=" + d, {
+    var url = "/api/stats.lua?list=*&domain=*&q=" + escape(q) + "&d=" + escape(d)
+    if (from) {
+        url += "&header_from=" + escape(from)
+        current_query += " FROM:" + escape('"' + from + '"')
+    }
+    if (subject) {
+        url += "&header_subject=" + escape(subject)
+        current_query += " SUBJECT:" + escape('"' + subject + '"')
+    }
+    GetAsync(url, {
         deep: true
     }, buildPage)
     document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
