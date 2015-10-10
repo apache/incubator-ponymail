@@ -98,9 +98,11 @@ function handle(r)
     end
      
     account = account or {}
+    local descs = elastic.find("*", 9999, "mailinglists")
     
     r:puts(JSON.encode{
         lists = lists,
+        descriptions = descs,
         preferences = account.preferences,
         login = {
             credentials = account.credentials,

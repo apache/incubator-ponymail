@@ -518,8 +518,6 @@ function handle(r)
     tnow = r:clock()
     
     
-    local descs = elastic.find("*", 9999, "mailinglists")
-    
     -- Debug time point 9
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
@@ -538,7 +536,6 @@ function handle(r)
     listdata.participants = top10
     listdata.cloud = cloud
     listdata.took = r:clock() - now
-    listdata.descriptions = descs
     
     
     -- Debug time point 9
