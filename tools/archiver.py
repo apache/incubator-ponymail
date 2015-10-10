@@ -201,9 +201,16 @@ class Archiver(object):
                 print("Could not decode headers, ignoring..: %s" % err)
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
-        mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
-        if not mdate:
+        mdate = None
+        try:
+            mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
+        except:
+            pass
+        if not mdate and msg_metadata.get('archived-at'):
             mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
+        elif not mdate:
+            print("Date seems totally wrong, setting to _now_ instead.")
+            mdate = time.gmtime()
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
