@@ -302,8 +302,8 @@ function getListInfo(list, xdomain, nopush) {
         if (dp[i].value == current_retention) dp.selectedIndex = i;
     }
     
-    document.getElementById('q').value = current_query
-    document.getElementById('aq').value = current_query
+    document.getElementById('q').value = unescape(current_query)
+    document.getElementById('aq').value = unescape(current_query)
     xlist = list;
     var arr = list.split('@', 2)
     var listname = arr[0]
