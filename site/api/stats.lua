@@ -517,6 +517,13 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
+    
+    local descs = elastic.find("*", 9999, "mailinglists")
+    
+    -- Debug time point 9
+    table.insert(t, r:clock() - tnow)
+    tnow = r:clock()
+    
     JSON.encode_max_depth(500)
     listdata.max = maxresults
     listdata.using_wc = wc
@@ -531,6 +538,7 @@ function handle(r)
     listdata.participants = top10
     listdata.cloud = cloud
     listdata.took = r:clock() - now
+    listdata.descriptions = descs
     
     
     -- Debug time point 9
