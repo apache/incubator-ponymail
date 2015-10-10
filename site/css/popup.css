@@ -48,7 +48,7 @@
      left: 0;
      width: 700px;
      min-height: 360px;
-     z-index: 999;
+     z-index: 9999;
      text-align: left;
      color: #FFE;
      display: none;
