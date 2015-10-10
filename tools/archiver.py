@@ -292,7 +292,7 @@ class Archiver(object):
             )
             
             # If MailMan and list info is present, save/update it in ES:
-            if hasattr(mlist, 'description') and hasattr(mlist, 'name') and mlist.description and mlist.name:
+            if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
                 self.es.index(
                     index=self.dbname,
                     doc_type="mailinglists",
