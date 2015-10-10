@@ -22,11 +22,12 @@ local JSON = require 'cjson'
 local config = require 'lib/config'
 local default_doc = "mbox"
 
-function getHits(query, size, doc)
+function getHits(query, size, doc, sitem)
     doc = doc or "mbox"
+    sitem = sitem or "epoch"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = config.es_url .. doc .. "/_search?q="..query.."&sort=epoch:desc&size=" .. size
+    local url = config.es_url .. doc .. "/_search?q="..query.."&sort=" .. sitem .. ":desc&size=" .. size
     local result = http.request(url)
     local out = {}
     local json = JSON.decode(result)
