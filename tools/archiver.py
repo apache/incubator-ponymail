@@ -290,6 +290,20 @@ class Archiver(object):
                     "source": msg.as_string()
                 }
             )
+            
+            # If MailMan and list info is present, save/update it in ES:
+            if hasattr(mlist, 'description') and hasattr(mlist, 'name') and mlist.description and mlist.name:
+                self.es.index(
+                    index=self.dbname,
+                    doc_type="mailinglists",
+                    id=lid,
+                    body = {
+                        'list': lid,
+                        'name': mlist.name,
+                        'description': mlist.description
+                    }
+                )
+                    
             if logger:
                 logger.info("Pony Mail archived message %s successfully" % mid)
             oldrefs = []
