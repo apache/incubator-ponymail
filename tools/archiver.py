@@ -299,11 +299,11 @@ class Archiver(object):
                     id=lid,
                     body = {
                         'list': lid,
-                        'name': mlist.name,
+                        'name': mlist.list_name,
                         'description': mlist.description
                     }
                 )
-                    
+            
             if logger:
                 logger.info("Pony Mail archived message %s successfully" % mid)
             oldrefs = []
