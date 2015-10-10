@@ -53,7 +53,22 @@ private.
 6. All done :)
 
 
+### Contributing to Pony Mail ###
+We'd LOVE if if more people would contribute to Pony Mail!
+Any form of contribution is most welcome, whether it be programming,
+documentation, evangelism, marketing, or helping out other users.
+
+To contribute to Pony Mail, follow these steps:
+
+- Subscribe to the Pony Mail dev list:
+  - Either send an email to dev-subscribe@ponymail.info OR
+  - Visit http://ponymail.info/list.html?dev@ponymail.info (You can use Persona)
+- Find something to fix or help out with
+- Let us know what you want to do, and we'll add you to our contributors list!
+
+
 ### TODO: ###
+This is a list of what mr. Humbedooh would love to get done:
 * ~~Set up dir structure~~ (*DONE*)
 * ~~Import site data~~ (*DONE*)
 * ~~Import tools~~ (*DONE*)
