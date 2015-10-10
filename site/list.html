@@ -96,19 +96,35 @@
       
       <!-- Advanced search -->
       <div style="display: none;" class="bs-callout bs-callout-danger fade-in" id="advanced" style="margin: 2px !important; padding: 5px;">
-      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['ad'].value, false, this.elements['header_from'].value, this.elements['header_subject'].value);">
+      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['dfrom'].value, this.elements['dto'].value, this.elements['header_from'].value, this.elements['header_subject'].value);">
         <p>This search allows you to search all archives you have access to at once. Use with care.</p>
         <div style="float: left; width: 100%;">
-          <div style="width: 120px; float: left;">When:</div>
-          <div style="width: 300px; float: left;">
-            <select name="ad" id='adp'>
-              <option value="30">past month</option>
-              <option value="180">past 6 months</option>
-              <option value="365">past year</option>
-              <option value="99999">since the dawn of time</option>
+          <div style="width: 120px; float: left;">Date:</div>
+          <div style="width: 500px; float: left;">
+            From: 
+            <select name="dfrom" id='dfrom'>
+              <option value="30">one month ago</option>
+              <option value="180">6 months ago</option>
+              <option value="365">1 year ago</option>
+              <option value="730">2 years ago</option>
+              <option value="1825">5 years ago</option>
+              <option value="3650">10 years ago</option>
+              <option value="7300">20 years ago</option>
+              <option value="9125">25 years ago</option>
+              <option value="99999">dawn of time</option>
+            </select> &nbsp;
+            To: 
+            <select name="dto" id='dto'>
+              <option value="30">one month later</option>
+              <option value="180">6 months later</option>
+              <option value="365">1 year later</option>
+              <option value="730">2 years later</option>
+              <option value="1825">5 years later</option>
+              <option value="now" selected="selected">today</option>
             </select>
           </div>
         </div>
+        
         <div style="float: left; width: 100%;">
           <div style="width: 120px; float: left;">Quick query:</div>
           <div style="width: 300px; float: left; page-break-after: always;"><input type="text" name="aq" id="aq"/></div>

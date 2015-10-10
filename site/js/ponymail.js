@@ -1912,12 +1912,12 @@ function search(q, d, nopush, all) {
 }
 
 // searchAll: run a deep search of all lists
-function searchAll(q, d, foo, from, subject) {
+function searchAll(q, dfrom, dto, from, subject, age) {
     keywords = q
-    current_retention = d
+    current_retention = parseInt(dto)
     current_query = q
     global_deep = true
-    var url = "/api/stats.lua?list=*&domain=*&q=" + escape(q) + "&d=" + escape(d)
+    var url = "/api/stats.lua?list=*&domain=*&q=" + escape(q) + "&dfrom=" + escape(dfrom)+ "&dto=" + escape(dto)
     if (from) {
         url += "&header_from=" + escape(from)
         current_query += " FROM:" + escape('"' + from + '"')
@@ -1929,7 +1929,7 @@ function searchAll(q, d, foo, from, subject) {
     GetAsync(url, {
         deep: true
     }, buildPage)
-    document.getElementById('listtitle').innerHTML = "Deep Search, last " + d + " days <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    document.getElementById('listtitle').innerHTML = "Deep Search, " + dto + " day view <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }

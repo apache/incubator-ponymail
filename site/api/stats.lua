@@ -99,6 +99,20 @@ function handle(r)
     tnow = r:clock()
     
     local daterange = {gt = "now-"..dd.."d", lte = "now+1d" }
+    if get.dfrom and get.dto then
+        local ef = tonumber(get.dfrom:match("(%d+)$")) or 0
+        local et = tonumber(get.dto:match("^(%d+)")) or 0
+        if ef > 0 and et > 0 then
+            if et > ef then
+                et = ef
+            end
+            daterange = {
+                gte = "now-" .. ef .. "d",
+                lte = "now-" .. (ef-et) .. "d"
+            }
+        end
+    end
+    
     if get.s and get.e then
         local em = tonumber(get.e:match("(%d+)$"))
         local ey = tonumber(get.e:match("^(%d+)"))
