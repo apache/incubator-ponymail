@@ -38,9 +38,8 @@ function handle(r)
     end
     if doc then
         local canAccess = false
-        local account = nil
+        local account = user.get(r)
         if doc.private then
-            account = user.get(r)
             if account then
                 local lid = doc.list_raw:match("<[^.]+%.(.-)>")
                 for k, v in pairs(aaa.rights(r, account.credentials.uid or account.credentials.email)) do
