@@ -369,6 +369,14 @@ function generateFormDivs(id, title, type, options, selval) {
         inp.setAttribute("value", options)
         td2.appendChild(inp)
     }
+    if (type == 'text') {
+        var inp = document.createElement('input')
+        inp.setAttribute("type", "text")
+        inp.setAttribute("name", id)
+        inp.setAttribute("id", id)
+        inp.setAttribute("value", options)
+        td2.appendChild(inp)
+    }
     mf.appendChild(td2)
     return mf
 }
@@ -2142,6 +2150,16 @@ function showPreferences() {
     obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here<big> &#x2612;</big></a></p><h3>User preferences:</h3>"
     obj.innerHTML += "<p>You can change your preferences here. Some changes may not take place til you refresh your view.</p>"
     
+    
+    // set up account section
+    var section = document.createElement('div')
+    section.setAttribute("class", "bs-callout bs-callout-success prefs")
+    section.innerHTML = "<h4>Account information:</h4>"
+    
+    // full name
+    section.appendChild(generateFormDivs('fullname', 'Full name:', 'text', login.credentials.fullname))
+    
+    obj.appendChild(section)
     
     // set up view section
     var section = document.createElement('div')

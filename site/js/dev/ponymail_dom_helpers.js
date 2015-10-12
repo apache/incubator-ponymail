@@ -115,6 +115,14 @@ function generateFormDivs(id, title, type, options, selval) {
         inp.setAttribute("value", options)
         td2.appendChild(inp)
     }
+    if (type == 'text') {
+        var inp = document.createElement('input')
+        inp.setAttribute("type", "text")
+        inp.setAttribute("name", id)
+        inp.setAttribute("id", id)
+        inp.setAttribute("value", options)
+        td2.appendChild(inp)
+    }
     mf.appendChild(td2)
     return mf
 }

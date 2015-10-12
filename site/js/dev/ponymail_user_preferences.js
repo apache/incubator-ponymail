@@ -48,6 +48,16 @@ function showPreferences() {
     obj.innerHTML += "<p>You can change your preferences here. Some changes may not take place til you refresh your view.</p>"
     
     
+    // set up account section
+    var section = document.createElement('div')
+    section.setAttribute("class", "bs-callout bs-callout-success prefs")
+    section.innerHTML = "<h4>Account information:</h4>"
+    
+    // full name
+    section.appendChild(generateFormDivs('fullname', 'Full name:', 'text', login.credentials.fullname))
+    
+    obj.appendChild(section)
+    
     // set up view section
     var section = document.createElement('div')
     section.setAttribute("class", "bs-callout bs-callout-primary prefs")
