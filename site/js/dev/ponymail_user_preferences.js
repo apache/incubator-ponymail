@@ -161,7 +161,7 @@ function setupUser(login) {
     // Prefs item
     var li = document.createElement("li")
     var a = document.createElement("a")
-    var t = document.createTextNode(login.credentials.fullname + "'s preferences")
+    var t = document.createTextNode(prefs.fullname ? prefs.fullname : login.credentials.fullname + "'s preferences")
     a.setAttribute("href", "javascript:void(0);")
     a.setAttribute("onclick", "showPreferences()")
     a.appendChild(t)
