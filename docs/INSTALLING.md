@@ -97,3 +97,9 @@ backend to supply the following JSON data on success:
         "isMember": true/false (optional, specifies whether the person is a privileged user with access to all lists)
     }
 ~~~
+
+For private list browsing, Pony Mail supplies an example AAA library in
+`api/lib/aaa.lua` that does LDAP lookups to determine which groups a person
+belongs to, and thus which lists said person has access to. Again, this is
+modelled on the Apache LDAP structure, so you may wish to change this to suit
+your need.
