@@ -91,6 +91,16 @@ end
 
 function raw(query, doctype)
     local js = JSON.encode(query)
+    
+    -- UTF-8 fix for bytes >=128.
+    js = js:gsub("(.)",
+            function(a)
+                if a:byte() >= 128 then
+                    a = ("\\u%04X"):format(a)
+                end
+                return a
+            end
+                 )
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search"
     local result = http.request(url, js)
