@@ -15,7 +15,7 @@ You will need the following software installed on your machine:
 - Run setup.py in the `tools` dir:
 ```
       $cd toosl
-      $python3.4 setup.py
+      $python3 setup.py
       ...[follow instructions in the setup script]
 ```
 - Edit `site/js/config.js` to suit your needs (usually very little editing is needed)
@@ -33,13 +33,13 @@ You will need the following software installed on your machine:
 
 
 ## Setting up the archiver ##
-If your mailing list supports feeding emails to a program, feed the incoming new emails to `python3.4 /path/to/tools/archiver.py`
+If your mailing list supports feeding emails to a program, feed the incoming new emails to `python3 /path/to/tools/archiver.py`
 and it will use STDIN as the transport mechanism. If you are simply using aliases or dot-forwards and no ML system, you can
-add (for example) `"|/usr/bin/python3.4 /path/to/tools/archiver.py"` to your alias file to enable archiving.
+add (for example) `"|/usr/bin/python3 /path/to/tools/archiver.py"` to your alias file to enable archiving.
 If you are not using a Mailing List manager, you will need to tell Pony Mail which email header determines the
 list ID using the --altheader argument, for instance:
 ```
-    foolist: "|/usr/bin/python3.4 /path/to/tools/archiver.py --altheader delivered-to"
+    foolist: "|/usr/bin/python3 /path/to/tools/archiver.py --altheader delivered-to"
 ```
 
 If you are using MailMan 3, you can add archiver.py as an archive by following the instructions inside the python script:
@@ -58,8 +58,8 @@ In MailMan 3, this should be auto-detected and is not a concern.
 When using other ML systems via piping to STDIN, you should add
 the --private arg to the python script to mark an email as private:
 ```
-    foolist-private: "|/usr/bin/python3.4 /path/to/tools/archiver.py --private"
-    foolist-public: "|/usr/bin/python3.4 /path/to/tools/archiver.py"
+    foolist-private: "|/usr/bin/python3 /path/to/tools/archiver.py --private"
+    foolist-public: "|/usr/bin/python3 /path/to/tools/archiver.py"
 ```
 
 
@@ -68,4 +68,4 @@ You can use `edit-list.py` to perform bulk operations:
 - Rename lists
 - Mark entire lists are private or public
 
-RUn `python3 edit-list.py --help` for CLI args.
+Run `python3 edit-list.py --help` for CLI args.
