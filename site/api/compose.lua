@@ -33,7 +33,20 @@ function handle(r)
         if post.to and post.subject and post.body then
             to = ("<%s>"):format(post.to)
             local fp, lp = post.to:match("([^@]+)@([^@]+)")
-            if r.strcmp_match(lp, config.accepted_domains) or config.accepted_domains == "*" then
+            local domainIsOkay = false
+            if type(config.accepted_domains) == "string" then
+                if r.strcmp_match(lp, config.accepted_domains) or config.accepted_domains == "*" then
+                    domainIsOkay = true
+                end
+            elseif type(config.accepted_domains) == "table" then
+                for k, ad in pairs(config.accepted_domains) do
+                    if r.strcmp_match(lp, ad) or ad == "*" then
+                        domainIsOkay = true
+                        break
+                    end
+                end
+            end
+            if domainIsOkay then
                 local fname = nil
                 if account.preferences then
                     fname = account.preferences.fullname
