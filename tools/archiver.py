@@ -181,6 +181,7 @@ class Archiver(object):
         :param msg: The message object.
         """
 
+        lid = None
         m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
         if m:
             lid = m.group(1)
