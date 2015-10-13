@@ -1378,7 +1378,8 @@ function buildCalendar(firstYear, lastYear) {
         var cale = "<div style='float: left; width: 90%; display: " + n + "; padding-left: 20px; margin-bottom: 15px;' id='cal_" + year + "'>"
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
-            cale += "<label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label><br/>"
+            var url = "/list.html?" + xlist + ":" + (year+"-"+(y+1))
+            cale += "<a href='" + url + "' onclick='return false;'><label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label></a><br/>"
         }
         cale += "</div>"
         dp.innerHTML += cale
