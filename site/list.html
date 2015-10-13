@@ -96,7 +96,7 @@
       
       <!-- Advanced search -->
       <div style="display: none;" class="bs-callout bs-callout-danger fade-in" id="advanced" style="margin: 2px !important; padding: 5px;">
-      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['dfrom'].value, this.elements['dto'].value, this.elements['header_from'].value, this.elements['header_subject'].value);">
+      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['dfrom'].value, this.elements['dto'].value, this.elements['header_from'].value, this.elements['header_subject'].value, this.elements['lookwhere'].value);">
         <p>This search allows you to search all archives you have access to at once. Use with care.</p>
         <div style="float: left; width: 100%;">
           <div style="width: 120px; float: left;">Date:</div>
@@ -136,6 +136,13 @@
         <div style="float: left; width: 100%;">
           <div style="width: 120px; float: left;">Subject:</div>
           <div style="width: 300px; float: left;"><input type="text" name="header_subject" id="header_subject"/></div>
+        </div>
+        <div style="float: left; width: 100%;">
+          <div style="width: 120px; float: left;">Look in:</div>
+          <div style="width: 300px; float: left;">
+            <input type="radio" name="lookwhere" id="lookwhere_this" value="xlist"/> <label for="lookwhere_this">Current list</label>
+            <input type="radio" name="lookwhere" id="lookwhere_all" value="*"/> <label for="lookwhere_all">All list</label> 
+          </div>
         </div>
         <input type="submit" value="Search!" class="btn btn-primary"/> &nbsp;
         <input type="button" value="Hide this panel" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>

@@ -1930,12 +1930,19 @@ function search(q, d, nopush, all) {
 }
 
 // searchAll: run a deep search of all lists
-function searchAll(q, dfrom, dto, from, subject, age) {
+function searchAll(q, dfrom, dto, from, subject, where) {
     keywords = q
     current_retention = parseInt(dto)
     current_query = q
     global_deep = true
-    var url = "/api/stats.lua?list=*&domain=*&q=" + escape(q) + "&dfrom=" + escape(dfrom)+ "&dto=" + escape(dto)
+    var wherel = "*"
+    var whered = "*"
+    if (where && where == 'xlist') {
+        var a = xlist.split(/@/)
+        wherel = a[0]
+        whered = a[1]
+    }
+    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + escape(q) + "&dfrom=" + escape(dfrom)+ "&dto=" + escape(dto)
     if (from) {
         url += "&header_from=" + escape(from)
         current_query += " FROM:" + escape('"' + from + '"')
