@@ -69,7 +69,7 @@ function search(q, d, nopush, all) {
     
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
-    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + escape(q) + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days) <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
