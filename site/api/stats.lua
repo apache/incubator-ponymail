@@ -530,8 +530,9 @@ function handle(r)
     -- Debug time point 9
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
-    
-    JSON.encode_max_depth(500)
+    if JSON.encode_max_depth then
+        JSON.encode_max_depth(500)
+    end
     listdata.max = maxresults
     listdata.using_wc = wc
     listdata.no_threads = #threads
