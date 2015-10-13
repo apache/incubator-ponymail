@@ -86,7 +86,7 @@ function handle(r)
             sort = {
             {
                 epoch = {
-                    order = "desc"
+                    order = "asc"
                 }
             }  
         },
