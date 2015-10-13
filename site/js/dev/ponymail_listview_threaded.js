@@ -102,9 +102,9 @@ function loadList_threaded(mjson, limit, start, deep) {
             from = from.replace(/\"/g, "")
             nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
                     d +
-                    "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " +
+                    "<a style='" + estyle + "' href='/thread.html/" + eml.id + "' onclick='this.style=\"\"; latestEmailInThread = " +
                     latest +
-                    "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" +
+                    "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" +
                     subject +
                     "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" +
                     mdate +
@@ -120,14 +120,14 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
                     "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "<br/>" +
-                    "<a class='label label-info' href='javascript:void(0);' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
+                    "<a class='label label-info' href='/thread.html/" + eml.id + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
                     latest +
-                    "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>Read more..</a>" +
+                    "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
                     "</div>" +
                     "</div>" +
                     "<div id='thread_" + i + "' style='display:none';></div></div></li>"
         } else {
-            nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='javascript:void(0);' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0;'>" + subject + "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+            nest += "<li class='list-group-item'>" + d + "<a style='" + estyle + "' href='/thread.html/" + eml.id + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject + "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         }
     }
     nest += "</ul>"
