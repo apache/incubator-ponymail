@@ -69,3 +69,31 @@ You can use `edit-list.py` to perform bulk operations:
 - Mark entire lists are private or public
 
 Run `python3 edit-list.py --help` for CLI args.
+
+
+## Setting up OAuth for Pony Mail ##
+If you want people to be able to log in and reply via the Web UI, you can either
+use the default Persona login (works for all email addresses) or specify an
+OAuth provider.
+
+### Setting up or disabling Persona ###
+Persona is enabled by default, as it's a fast and convenient way to enable
+logins for *public* lists. Should you wish to disable Persona, set the
+`enabled` variable to `false` in the persona section of `site/js/config.js`.
+Persona will only ever work for public lists. For private lists, you will need
+to specify and implement an OAuth provider.
+
+### Setting up an OAuth provider ###
+Pony Mail comes with a default `Apache` OAuth example in `site/js/config.js`,
+that enables the ASF Oauth. You probably don't want this, so comment it out or
+edit it to suit your own needs. This is a standard OAuth that expects the
+backend to supply the following JSON data on success:
+
+~~~
+    {
+        "fullname": "The full name of the authed user",
+        "email": "The user's email address",
+        "uid": "(optional) The unique user ID of the logged in user (for instance, LDAP UID)",
+        "isMember": true/false (optional, specifies whether the person is a privileged user with access to all lists)
+    }
+~~~
