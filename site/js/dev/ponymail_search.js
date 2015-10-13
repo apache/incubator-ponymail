@@ -68,7 +68,7 @@ function search(q, d, nopush, all) {
     }
     
     clearCalendarHover()
-    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + q);
+    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + escape(q) + "&d=" + d, null, buildPage)
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days) <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
@@ -114,7 +114,7 @@ function do_search(q, d, nopush, all) {
     var arr = xlist.split('@', 2)
     var listname = arr[0]
     var domain = arr[1]
-    if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + d + ":" + q);
+    if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + d + ":" + escape(q));
     if (global_deep == true) {
         listname = "*"
         domain = "*"
