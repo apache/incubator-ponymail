@@ -66,7 +66,7 @@ To contribute to Pony Mail, follow these steps:
   - Visit http://ponymail.info/list.html?dev@ponymail.info (You can use Persona)
 - Find something to fix or help out with
 - Let us know what you want to do, and we'll add you to our contributors list!
-
+- Join us on #ponymail on the Freenode IRC network
 
 ### Development Benchmarking ###
 Pony Mail has been built for and tested with the mail archives of the Apache

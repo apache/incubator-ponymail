@@ -16,3 +16,6 @@ Bugs list:
     - subscribe addr: bugs-subscribe@ponymail.info
     - Online version: http://ponymail.info/list.html?bugs@ponymail.info
     
+IRC:
+    - #ponymail on Freenode
+    
