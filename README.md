@@ -16,6 +16,7 @@ Pony Mail works in both public, private and mixed-mode, allowing you
 to have one unified place for all your communication, both public and 
 private.
 
+
 ### Features include: ###
 * Public and private list viewing based on auth
 * Cross-list threading
@@ -66,6 +67,14 @@ To contribute to Pony Mail, follow these steps:
 - Find something to fix or help out with
 - Let us know what you want to do, and we'll add you to our contributors list!
 
+
+### Development Benchmarking ###
+Pony Mail has been built for and tested with the mail archives of the Apache
+Software Foundation, which span more than 15 million emails sent across more
+than 20 years. To put things into perspective, importing all this on a modern
+machine (2xSSD with 64GB RAM) took around 12 hours and resulted in a performance
+at around 100 archive search requests per second per ES node, depending on mailing
+list size and available bandwidth.
 
 ### TODO: ###
 This is a list of what mr. Humbedooh would love to get done:
