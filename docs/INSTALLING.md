@@ -103,3 +103,16 @@ For private list browsing, Pony Mail supplies an example AAA library in
 belongs to, and thus which lists said person has access to. Again, this is
 modelled on the Apache LDAP structure, so you may wish to change this to suit
 your need.
+
+
+### Whitelisting replies via the Web UI ###
+To have Pony Mail accept replies done via the Web UI, you must make sure
+that `site/api/lib/config.lua` contains the appropriate string (or array of strings) matching the domain(s) you wish to allow new email for. To allow replies to everything, set this to `* `(NOT RECOMMENDED).
+You can also allow based on GLOBs or an array of accepted domains and sub-domains:
+
+~~~
+    accepted_domains = "*" -- This would allow posts to any email address, baaaad choice.
+    accepted_domains = "foo.org" -- Allow only to *@foo.org
+    accepted_domains = "*.foo.org" -- Allow only posts to *@*.foo.org, but not *@foo.org
+    accepted_domains = { "foo.org", "*.foo.org" } -- Allow posts both to *.foo.org and foo.org
+~~~
