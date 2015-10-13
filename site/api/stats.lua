@@ -28,6 +28,15 @@ local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
 
+function sortEmail(thread)
+    if thread.children and type(thread.children) == "table" then
+        table.sort (thread.children, function (k1, k2) return k1.epoch > k2.epoch end )
+        for k, v in pairs(thread.children) do
+            sortEmail(v)
+        end
+    end
+end
+
 function leapYear(year)
     if (year % 4 == 0) then
         if (year%100 == 0)then                
@@ -516,7 +525,7 @@ function handle(r)
     -- Debug time point 8
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
-    
+    sortEmail(threads)
     
     -- Debug time point 9
     table.insert(t, r:clock() - tnow)
