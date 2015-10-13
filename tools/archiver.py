@@ -181,9 +181,14 @@ class Archiver(object):
         :param msg: The message object.
         """
 
-        lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+        m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
+        if m:
+            lid = m.group(1)
+        else:
+            lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
         if self.cropout:
             lid = lid.replace(self.cropout, "")
+        
         format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
         mid = hashlib.sha224(str("%s-%s" % (lid, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (lid if lid else "none")
