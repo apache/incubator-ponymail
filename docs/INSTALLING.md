@@ -26,7 +26,7 @@ You will need the following software installed on your machine:
 - Start Apache httpd to enable the user-facing interface
 
 ### Using nginx: ###
-- Make sure lua-apr is installed
+- To use nginx, you will also need to install the `lua-apr` module from your distro.
 - Set up a Server block in nginx that points to the `site/` directory in Pony Mail
 - Add the configuration snippets from `configs/ponymail_nginx.conf` to the server config
 - Start nginx to enable the user-facing interface
