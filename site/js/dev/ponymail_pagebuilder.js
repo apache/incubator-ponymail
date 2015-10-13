@@ -174,6 +174,7 @@ function buildStats(json, state, show) {
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
     }
     if (prefs.hideStats == 'no' || show == true) {
+        stats.setAttribute("class", "hidden-xs hidden-sm hidden-md col-lg-3")
         var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
         document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
@@ -181,9 +182,8 @@ function buildStats(json, state, show) {
             var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
             document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
         }
-        stats.setAttribute("class", "hidden-xs hidden-sm hidden-md col-lg-3")
         stats.removeAttribute("onclick")
-        stats.style.display = "block"
+        //stats.style.display = "block"
         if (json.cloud) {
             for (var i in json.cloud) {
                 stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
