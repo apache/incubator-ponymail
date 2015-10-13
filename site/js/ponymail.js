@@ -1603,7 +1603,7 @@ function getListInfo(list, xdomain, nopush) {
                     dealtwithit = true
                 } else {
                     current_retention = parseInt(arr[1])
-                    current_query = arr[2]
+                    current_query = unescape(arr[2])
                 }
             }
             if (xdomain.search(/@/) != -1) {
