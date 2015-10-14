@@ -109,7 +109,7 @@ function searchAll(q, dfrom, dto, from, subject, where) {
         deep: true
     }, buildPage)
     dto = parseInt(dto)
-    dfrom = parseInt(from)
+    dfrom = parseInt(dfrom)
     howlong = (dto < dfrom) ? dto : dfrom
     if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year"
