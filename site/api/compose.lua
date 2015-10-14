@@ -69,7 +69,7 @@ function handle(r)
                 local msgbody = post.body
                 if config.email_footer then
                     local subs = {
-                        list = to,
+                        list = to:gsub("[<>]", ""),
                         domain = r.hostname,
                         port = r.port,
                         msgid = headers['message-id']
