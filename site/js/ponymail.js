@@ -1936,7 +1936,7 @@ function search(q, d, nopush, all) {
     } else {
         howlong = howlong + " days"
     }
-    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
 }
@@ -2002,7 +2002,7 @@ function do_search(q, d, nopush, all) {
         howlong = howlong + " days"
     }
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }
