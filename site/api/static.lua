@@ -271,7 +271,9 @@ function handle(r)
         
         for x,y in pairs (doc.aggregations.from.buckets) do
             local list, domain = y.key:match("<(%S-)%.(.-)>")
-            lists[domain] = (lists[domain] or 0) + y.doc_count
+            if domain then
+                lists[domain] = (lists[domain] or 0) + y.doc_count
+            end
         end
         local a = 0
         for k, v in pairs(lists) do
