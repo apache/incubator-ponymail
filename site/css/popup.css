@@ -702,7 +702,7 @@ top: 17px;
 
 .calendarpicker {
      position: fixed;
-     width: 280px;
+     min-width: 280px;
      min-height: 220px;
      border: 2px inset #666;
      background: #FCFCF8;
@@ -736,17 +736,20 @@ top: 17px;
      background: linear-gradient(to bottom, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%);
      color: #333;
      padding: 2px;
-     width: 28px;
+     width: 38px;
      height: 22px;
      font-family: sans-serif;
+     font-size: 0.9em;
+     text-align: center;
 }
 
 .calendarpicker td {
+     font-size: 1em;
      width: 16px;
      height: 16px;
      text-align: right;
-     padding: 2px;
-     width: 28px;
+     padding: 3px;
+     width: 38px;
      height: 22px;
      cursor: pointer;
      font-family: sans-serif;
