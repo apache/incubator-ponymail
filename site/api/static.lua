@@ -278,7 +278,7 @@ function handle(r)
         local a = 0
         for k, v in pairs(lists) do
             a = a + 1
-            r:puts(([[<a href="/api/static.lua/%s">%s lists: %u new emails in the past month</a><br/>]]):format(k, k, v))
+            r:puts(([[<a href="/api/static.lua/%s">%s lists: %u new emails here.</a><br/>]]):format(k, k, v))
         end
         if a == 0 then
             r:puts("Hm, no activity found on any list matching any domains")
