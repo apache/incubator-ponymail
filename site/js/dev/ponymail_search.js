@@ -70,7 +70,15 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + escape(q) + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + " days) <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    howlong = d
+    if (howlong >= 365) {
+        howlong = parseInt(howlong/365) + " year"
+    } else if (howlong >= 30) {
+        howlong = parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
+    } else {
+        howlong = howlong + " days"
+    }
+    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, last " + d + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
 }
@@ -100,7 +108,15 @@ function searchAll(q, dfrom, dto, from, subject, where) {
     GetAsync(url, {
         deep: true
     }, buildPage)
-    document.getElementById('listtitle').innerHTML = "Deep Search, " + dto + " day view <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    howlong = (dto > dfrom) ? dfrom : dto
+    if (howlong >= 365) {
+        howlong = parseInt(howlong/365) + " year"
+    } else if (howlong > 30) {
+        howlong = parseInt(howlong/30) + " month"
+    } else {
+        howlong = howlong + " day"
+    }
+    document.getElementById('listtitle').innerHTML = "Deep Search, " + howlong + " view <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }
@@ -119,8 +135,16 @@ function do_search(q, d, nopush, all) {
         listname = "*"
         domain = "*"
     }
+    howlong = d
+    if (howlong >= 365) {
+        howlong = parseInt(howlong/365) + " year"
+    } else if (howlong >= 30) {
+        howlong = parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
+    } else {
+        howlong = howlong + " days"
+    }
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + " days) <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + d + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }
