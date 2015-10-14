@@ -34,13 +34,8 @@
     <!-- Quick search -->
       <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid; id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
         <input type="text" name="q" id="q" placeholder="Search list..." style="width: 150px;"/>
-        <select name="d" id='dp'>
-          <option value="2">past 48 hours</option>
-          <option value="7">past week</option>
+        <select name="d" id='dp' onclick="datePicker(this)">
           <option selected="selected" value="30">past month</option>
-          <option value="180">past 6 months</option>
-          <option value="365">past year</option>
-          <option value="99999">forever</option>
         </select>
         <input type="checkbox" value="all" id="checkall"><label for="checkall" id="lcheckall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
         <input type="submit" value="Search!" class="btn btn-primary"/>&nbsp;
@@ -99,32 +94,14 @@
       
       <!-- Advanced search -->
       <div style="display: none;" class="bs-callout bs-callout-danger fade-in" id="advanced" style="margin: 2px !important; padding: 5px;">
-      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['dfrom'].value, this.elements['dto'].value, this.elements['header_from'].value, this.elements['header_subject'].value, this.elements['lookwhere'].value);">
+      <form action="list.html" method="get" onsubmit="return searchAll(this.elements['aq'].value,this.elements['dp'].value, this.elements['header_from'].value, this.elements['header_subject'].value, this.elements['lookwhere'].value);">
         <p>This search allows you to search all archives you have access to at once. Use with care.</p>
         <div style="float: left; width: 100%;">
-          <div style="width: 120px; float: left;">Date:</div>
-          <div style="width: 500px; float: left;">
-            From: 
-            <select name="dfrom" id='dfrom'>
-              <option value="30">one month ago</option>
-              <option value="180">6 months ago</option>
-              <option value="365">1 year ago</option>
-              <option value="730">2 years ago</option>
-              <option value="1825">5 years ago</option>
-              <option value="3650">10 years ago</option>
-              <option value="7300">20 years ago</option>
-              <option value="9125">25 years ago</option>
-              <option value="99999">dawn of time</option>
-            </select> &nbsp;
-            To: 
-            <select name="dto" id='dto'>
-              <option value="30">one month later</option>
-              <option value="180">6 months later</option>
-              <option value="365">1 year later</option>
-              <option value="730">2 years later</option>
-              <option value="1825">5 years later</option>
-              <option value="999999" selected="selected">today</option>
-            </select>
+          <div style="width: 120px; float: left;">When:</div>
+          <div style="width: 300px; float: left; page-break-after: always;">
+            <select name="dp" id='dp' onclick="datePicker(this)">
+            <option selected="selected" value="30">past month</option>
+          </select>
           </div>
         </div>
         

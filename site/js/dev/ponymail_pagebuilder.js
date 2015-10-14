@@ -272,7 +272,7 @@ function getListInfo(list, xdomain, nopush) {
                 var arr = xdomain.split(/:/)
                 xdomain = arr[0]
                 xlist = xdomain
-                if (arr[1].search(/-/) != -1) {
+                if (arr[1].search(/-/) != -1 && arr[1].search("|") == -1) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
                     dealtwithit = true
