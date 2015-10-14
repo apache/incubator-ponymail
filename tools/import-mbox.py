@@ -346,7 +346,6 @@ class SlurpThread(Thread):
                     except:
                         okay = False
                     if body and okay and mdate and {'to','from','subject'} <= set(dheader):
-                        print(yy)
                         attachments, contents = msgfiles(message)
                         if mid == None or not mid:
                             try:
