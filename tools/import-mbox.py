@@ -158,9 +158,9 @@ def msgbody(msg):
 
     for charset in pm_charsets(msg):
         try:
-            body = body.decode(charset)
+            body = body.decode(charset) if type(body) is bytes else body
         except:
-            body = None
+            body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
             
     return body  
 
@@ -346,6 +346,7 @@ class SlurpThread(Thread):
                     except:
                         okay = False
                     if body and okay and mdate and {'to','from','subject'} <= set(dheader):
+                        print(yy)
                         attachments, contents = msgfiles(message)
                         if mid == None or not mid:
                             try:

@@ -172,9 +172,9 @@ class Archiver(object):
     
         for charset in pm_charsets(msg):
             try:
-                body = body.decode(charset)
+                body = body.decode(charset) if type(body) is bytes else body
             except:
-                body = None
+                body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
                 
         return body   
 
