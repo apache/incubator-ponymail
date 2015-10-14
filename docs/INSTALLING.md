@@ -20,6 +20,16 @@ You will need the following software installed on your machine:
 ```
 - Edit `site/js/config.js` to suit your needs (usually very little editing is needed)
 
+### Using auth for ElasticSearch ###
+If your ElasticSearch instance requires authentication for the importer/archiver, please
+add the following lines in the `elasticsearch` block of `ponymail.cfg` once generated:
+
+~~~
+user:           [username for ES]
+password:       [password for ES]
+~~~
+
+
 ### Using Apache HTTP Server: ###
 - Set up a VirtualHost block in Apache httpd that points to the `site/` directory in Pony Mail
 - Add the configuration snippets from `configs/ponymail_httpd.conf` to the virtual host
