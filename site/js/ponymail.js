@@ -366,10 +366,14 @@ function calcTimespan(what) {
 
 function datePicker(parent, seedPeriod) {
     datepicker_spawner = parent
-    var div = document.createElement('div')
-    var id = parseInt(Math.random() * 10000).toString(16)
-    div.setAttribute("id", "datepicker_popup")
-    div.setAttribute("class", "datepicker")
+    var div = document.getElementById('datepicker_popup')
+    if (!div) {
+        div = document.createElement('div')
+        var id = parseInt(Math.random() * 10000).toString(16)
+        div.setAttribute("id", "datepicker_popup")
+        div.setAttribute("class", "datepicker")
+    }
+    div.style.display = "block"
     var bb = parent.getBoundingClientRect()
     div.style.top = (bb.bottom + 8) + "px"
     div.style.left = (bb.right - 32) + "px"
