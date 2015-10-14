@@ -248,36 +248,31 @@ function drawCalendarPicker(obj, date) {
     var tm = mat.getMonth()
     
     var a = document.createElement('a')
-    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()-1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≪"
     obj.appendChild(a)
-    obj.appendChild(document.createTextNode("  "))
     
     a = document.createElement('a')
-    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&lt;"
     obj.appendChild(a)
-    obj.appendChild(document.createTextNode("  "))
     
     a = document.createElement('a')
-    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()+2) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&gt;"
     obj.appendChild(a)
-    obj.appendChild(document.createTextNode(" "))
     
     a = document.createElement('a')
-    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()+1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≫"
     obj.appendChild(a)
     obj.appendChild(document.createElement('br'))
+    
+    
     var table = document.createElement('table')
     
     table.setAttribute("border", "1")
@@ -286,8 +281,6 @@ function drawCalendarPicker(obj, date) {
     var tr = document.createElement('tr');
     for (var m in days) {
         var td = document.createElement('th')
-        td.style.background = "#DFD"
-        td.style.width="32px"
         td.innerHTML = days[m]
         tr.appendChild(td)
     }
@@ -300,7 +293,6 @@ function drawCalendarPicker(obj, date) {
     weekday--;
     for (var i = 0; i < weekday; i++) {
         var td = document.createElement('td')
-        td.style.width="32px"
         tr.appendChild(td)
     }
     while (mat.getMonth() == tm) {
@@ -314,8 +306,6 @@ function drawCalendarPicker(obj, date) {
             tr = document.createElement('tr');
         }
         td = document.createElement('td')
-        td.style.width="32px"
-        td.style.cursor = "pointer"
         td.setAttribute("onclick", "setCalendarDate('" + mat.getFullYear() + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
         td.innerHTML = mat.getDate()
         mat.setDate(mat.getDate()+1)

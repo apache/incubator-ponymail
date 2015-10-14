@@ -703,7 +703,7 @@ top: 17px;
 .calendarpicker {
      position: fixed;
      width: 280px;
-     height: 220px;
+     min-height: 220px;
      border: 2px inset #666;
      background: #FCFCF8;
      top: 32px;
@@ -711,19 +711,48 @@ top: 17px;
      padding: 10px;
      z-index: 1200;
      text-align: center;
+     font-family: monospace;
 }
 
 .calendarpicker h3 {
-     margin: 5px;
+     margin: 0px;
+     font-family: sans-serif;
+     width: 100%;
+     background: linear-gradient(to bottom, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%);
+     color: #EEE;
+}
+
+.calendarpicker a {
+     margin-left: 16px;
+     margin-right: 16px;
+     font-weight: bold;
+     color: #FFF;
+     padding-right: 8px;
+     padding-left: 8px;
+     background: linear-gradient(to bottom, rgba(0,183,234,1) 0%,rgba(0,158,195,1) 100%);
+     border-radius: 4px;
+}
+.calendarpicker th {
+     background: linear-gradient(to bottom, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%);
+     color: #333;
+     padding: 2px;
+     width: 28px;
+     height: 22px;
+     font-family: sans-serif;
 }
 
 .calendarpicker td {
      width: 16px;
      height: 16px;
      text-align: right;
+     padding: 2px;
+     width: 28px;
+     height: 22px;
+     cursor: pointer;
+     font-family: sans-serif;
 }
 
 .calendarpicker td:hover {
      font-weight: bold;
-     background: #DDF;
+     background: linear-gradient(to bottom, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 100%);
 }
