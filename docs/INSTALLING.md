@@ -116,3 +116,16 @@ You can also allow based on GLOBs or an array of accepted domains and sub-domain
     accepted_domains = "*.foo.org" -- Allow only posts to *@*.foo.org, but not *@foo.org
     accepted_domains = { "foo.org", "*.foo.org" } -- Allow posts both to *.foo.org and foo.org
 ~~~
+
+
+### Setting email footers ###
+It is possible to set email footers in each email sent via the Web UI.
+This is done by configuring the `email_footer` variable in  `site/api/lib/config.lua`.
+You may use the following variables in the footer:
+
+~~~
+    $list: The mailing list being sent to (foo@bar.tld)
+    $hostname: The hostname of the server
+    $port: The port of the server (80, 443 etc)
+    $msgid: The message ID of the email (for permalinks etc)
+~~~
