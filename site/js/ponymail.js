@@ -1928,7 +1928,7 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + escape(q) + "&d=" + d, null, buildPage)
-    howlong = d
+    howlong = parseInt(d)
     if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year"
     } else if (howlong >= 30) {
@@ -1966,6 +1966,8 @@ function searchAll(q, dfrom, dto, from, subject, where) {
     GetAsync(url, {
         deep: true
     }, buildPage)
+    dto = parseInt(dto)
+    dfrom = parseInt(from)
     howlong = (dto < dfrom) ? dto : dfrom
     if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year"
@@ -1993,6 +1995,7 @@ function do_search(q, d, nopush, all) {
         listname = "*"
         domain = "*"
     }
+    howlong = parseInt(d)
     howlong = d
     if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year"
