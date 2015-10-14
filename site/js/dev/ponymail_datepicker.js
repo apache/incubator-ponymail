@@ -224,7 +224,7 @@ function findParent(el, name) {
 function blurDatePicker(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.parentNode || !findParent(es, "datepicker_popup"))  {
-        if (!es) document.getElementById('datepicker_popup').parentNode.removeChild(document.getElementById('datepicker_popup'))
+        if (!es) document.getElementById('datepicker_popup').style.display = "none"
     }
 }
 
