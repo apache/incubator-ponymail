@@ -66,9 +66,19 @@ function handle(r)
                 if post['in-reply-to'] then
                     headers['in-reply-to'] = post['in-reply-to']
                 end
+                local msgbody = post.body
+                if config.email_footer then
+                    local subs = {
+                        list = to,
+                        domain = r.hostname,
+                        port = r.port,
+                        msgid = headers['message-id']
+                    }
+                    msgbody = msgbody .. "\n" .. config.email_footer:gsub("$([a-z]+)", function(a) return subs[a] or a end)
+                end
                 local source = smtp.message{
                         headers = headers,
-                        body = post.body
+                        body = msgbody
                     }
                 local rv, er = smtp.send{
                     from = fr,

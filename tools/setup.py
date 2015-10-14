@@ -224,7 +224,8 @@ local config = {
     mailserver = "%s",
     accepted_domains = "%s",
     wordcloud = %s,
-    slow_count = false
+    slow_count = false,
+    email_footer = nil -- see the docs for how to set this up.
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
