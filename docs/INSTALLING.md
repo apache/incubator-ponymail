@@ -129,3 +129,14 @@ You may use the following variables in the footer:
     $port: The port of the server (80, 443 etc)
     $msgid: The message ID of the email (for permalinks etc)
 ~~~
+
+An example footer could be:
+
+~~~
+    --------
+    Sent via Pony Mail for $list.
+    To view this list online, visit: https://my.tld/list.html?$list
+    To view this email (and subsequent replies), visit:
+    https://my.tld/thread.html/$msgid
+    --------
+~~~
