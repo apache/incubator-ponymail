@@ -59,6 +59,9 @@ import os
 path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.RawConfigParser()
 config.read("%s/ponymail.cfg" % path)
+auth = None
+if config.has_option('elasticsearch', 'user'):
+    auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
@@ -115,7 +118,7 @@ class Archiver(object):
 
     def __init__(self):
         """ Just initialize ES. """
-        global config
+        global config, auth
         ssl = False
         self.cropout = None
         self.dbname = config.get("elasticsearch", "dbname")
@@ -131,7 +134,8 @@ class Archiver(object):
                 'host': config.get("elasticsearch", "hostname"),
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
-                'url_prefix': uri
+                'url_prefix': uri,
+                'http_auth': auth
             }],
             max_retries=5,
             retry_on_timeout=True

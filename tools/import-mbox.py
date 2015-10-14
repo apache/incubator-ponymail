@@ -65,6 +65,9 @@ attachments = False
 # Fetch config
 config = configparser.RawConfigParser()
 config.read('ponymail.cfg')
+auth = None
+if config.has_option('elasticsearch', 'user'):
+    auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
 
 
@@ -80,7 +83,8 @@ es = Elasticsearch([
         'host': config.get("elasticsearch", "hostname"),
         'port': int(config.get("elasticsearch", "port")),
         'use_ssl': ssl,
-        'url_prefix': uri
+        'url_prefix': uri,
+        'http_auth': auth
     }],
     max_retries=5,
     retry_on_timeout=True
