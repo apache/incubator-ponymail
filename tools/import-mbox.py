@@ -392,24 +392,27 @@ class SlurpThread(Thread):
                         jas.append(json_source)
                         if contents:
                             iname = config.get("elasticsearch", "dbname")
-                            for key in contents:
-                                es.index(
-                                    index=iname,
-                                    doc_type="attachment",
-                                    id=key,
-                                    body = {
-                                        'source': contents[key]
-                                    }
-                                )
+                            if not args.dry:
+                                for key in contents:
+                                    es.index(
+                                        index=iname,
+                                        doc_type="attachment",
+                                        id=key,
+                                        body = {
+                                            'source': contents[key]
+                                        }
+                                    )
                         if len(ja) >= 100:
-                            bulk = BulkThread()
-                            bulk.assign(ja, es, 'mbox')
-                            bulk.insert()
+                            if not args.dry:
+                                bulk = BulkThread()
+                                bulk.assign(ja, es, 'mbox')
+                                bulk.insert()
                             ja = []
                             
-                            bulks = BulkThread()
-                            bulks.assign(jas, es, 'mbox_source')
-                            bulks.insert()
+                            if not args.dry:
+                                bulks = BulkThread()
+                                bulks.assign(jas, es, 'mbox_source')
+                                bulks.insert()
                             jas = []
                 else:
                     baddies += 1
@@ -466,6 +469,8 @@ parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
 parser.add_argument('--attachments', dest='attachments', action='store_true',
                    help='Also iport attached files in emails')
+parser.add_argument('--dry', dest='dry', action='store_true',
+                   help='Do not save emails to elasticsearch, only test importing')
 
 args = parser.parse_args()
 
