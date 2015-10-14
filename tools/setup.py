@@ -225,7 +225,8 @@ local config = {
     accepted_domains = "%s",
     wordcloud = %s,
     slow_count = false,
-    email_footer = nil -- see the docs for how to set this up.
+    email_footer = nil, -- see the docs for how to set this up.
+    full_headers = false
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))

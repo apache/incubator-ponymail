@@ -150,3 +150,8 @@ An example footer could be:
     https://my.tld/thread.html/$msgid
     --------
 ~~~
+
+
+### A note on email headers ###
+By default, headers such as to/cc are not shown in the normal email view.
+To enable these headers, set `full_headers` to `true` in the `site/api/lib/config.lua` file.
