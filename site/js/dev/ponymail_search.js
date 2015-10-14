@@ -108,7 +108,7 @@ function searchAll(q, dfrom, dto, from, subject, where) {
     GetAsync(url, {
         deep: true
     }, buildPage)
-    howlong = (dto > dfrom) ? dfrom : dto
+    howlong = (dto < dfrom) ? dto : dfrom
     if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year"
     } else if (howlong > 30) {
