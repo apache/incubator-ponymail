@@ -122,6 +122,36 @@ function handle(r)
         end
     end
     
+    if get.d and get.d:match("lte=.+") then
+        local lte = get.d:match("lte=([wMyd0-9]+)")
+        if lte then
+            daterange.lte = "now+1d"
+            daterange.gte = "now-" .. lte
+            daterange.gt = nil
+        end
+    end
+    if get.d and get.d:match("gte=.+") then
+        local gte = get.d:match("gte=([wMyd0-9]+)")
+        if gte then
+            daterange.gte = nil
+            daterange.gt = nil
+            daterange.lte = "now-" .. gte
+        end
+    end
+    if get.d and get.d:match("dfr=.+") then
+        local y,m,d = get.d:match("dfr=(%d+)%-(%d+)%-(%d+)")
+        if y and m and d then
+            daterange.gte = ("%04u/%02u/%02u 00:00:00"):format(y,m,d)
+            daterange.gt = nil
+        end
+    end
+    if get.d and get.d:match("dto=.+") then
+        local y,m,d = get.d:match("dto=(%d+)%-(%d+)%-(%d+)")
+        if y and m and d then
+            daterange.lte = ("%04u/%02u/%02u 23:59:59"):format(y,m,d)
+            daterange.gt = nil
+        end
+    end
     if get.s and get.e then
         local em = tonumber(get.e:match("(%d+)$"))
         local ey = tonumber(get.e:match("^(%d+)"))
