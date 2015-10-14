@@ -497,7 +497,7 @@ function drawCalendarPicker(obj, date) {
     var tm = mat.getMonth()
     
     var a = document.createElement('a')
-    a.style.marginRight = "8px"
+    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()-1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≪"
@@ -505,7 +505,7 @@ function drawCalendarPicker(obj, date) {
     obj.appendChild(document.createTextNode("  "))
     
     a = document.createElement('a')
-    a.style.marginRight = "8px"
+    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&lt;"
@@ -513,7 +513,7 @@ function drawCalendarPicker(obj, date) {
     obj.appendChild(document.createTextNode("  "))
     
     a = document.createElement('a')
-    a.style.marginRight = "8px"
+    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()+2) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&gt;"
@@ -521,7 +521,7 @@ function drawCalendarPicker(obj, date) {
     obj.appendChild(document.createTextNode(" "))
     
     a = document.createElement('a')
-    a.style.marginRight = "8px"
+    a.style.marginRight = "12px"
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()+1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≫"

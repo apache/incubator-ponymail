@@ -702,15 +702,19 @@ top: 17px;
 
 .calendarpicker {
      position: fixed;
-     width: 320px;
-     height: 240px;
+     width: 280px;
+     height: 220px;
      border: 2px inset #666;
-     background: #F8FCF8;
+     background: #FCFCF8;
      top: 32px;
      left: 20px;
      padding: 10px;
      z-index: 1200;
      text-align: center;
+}
+
+.calendarpicker h3 {
+     margin: 5px;
 }
 
 .calendarpicker td {
