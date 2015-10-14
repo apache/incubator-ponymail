@@ -423,14 +423,16 @@ class SlurpThread(Thread):
                 os.unlink(tmpname)
                 
             y += count
-            bulk = BulkThread()
-            bulk.assign(ja, es)
-            bulk.insert()
+            if not args.dry:
+                bulk = BulkThread()
+                bulk.assign(ja, es)
+                bulk.insert()
             ja = []
             
-            bulks = BulkThread()
-            bulks.assign(jas, es, 'mbox_source')
-            bulks.insert()
+            if not args.dry:
+                bulks = BulkThread()
+                bulks.assign(jas, es, 'mbox_source')
+                bulks.insert()
             jas = []
         print("Done, %u elements left to slurp" % len(lists))
         
