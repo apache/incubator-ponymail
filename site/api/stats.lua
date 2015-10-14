@@ -160,6 +160,7 @@ function handle(r)
     end
     
     local top10 = {}
+    local allparts = 0
     if config.slow_count then
         -- Debug time point 2
         table.insert(t, r:clock() - tnow)
@@ -508,6 +509,7 @@ function handle(r)
             table.insert(stable, v)
         end
         table.sort(stable, function(a,b) return a.count > b.count end )
+        allparts = #stable
         for k, v in pairs(stable) do
             if k <= 10 then
                 table.insert(top10, v)
@@ -546,6 +548,7 @@ function handle(r)
     listdata.participants = top10
     listdata.cloud = cloud
     listdata.took = r:clock() - now
+    listdata.numparts = allparts
     
     
     -- Debug time point 9

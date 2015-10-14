@@ -1442,8 +1442,11 @@ function buildStats(json, state, show) {
     if (json.emails && json.emails.length >= json.max) {
         stats.innerHTML += "<font color='#FA0'>More than " + json.max.toLocaleString() + " emails found, truncating!</font><br/>"
     }
-
-    stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent, divided into " + json.no_threads + " topics.<br/>"
+    var ap = ""
+    if (json.allparts && json.allparts > 1) {
+        ap = "by " + json.allparts + " people"
+    }
+    stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics.<br/>"
 
     var ts = "<table border='0'><tr>"
     var ms = dailyStats(json.emails)
