@@ -373,6 +373,7 @@ function datePicker(parent, seedPeriod) {
         div.setAttribute("id", "datepicker_popup")
         div.setAttribute("class", "datepicker")
     }
+    div.innerHTML = ""
     div.style.display = "block"
     var bb = parent.getBoundingClientRect()
     div.style.top = (bb.bottom + 8) + "px"
