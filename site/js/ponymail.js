@@ -1930,7 +1930,7 @@ function search(q, d, nopush, all) {
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + escape(q) + "&d=" + d, null, buildPage)
     howlong = parseInt(d)
     if (howlong >= 365) {
-        howlong = parseInt(howlong/365) + " year"
+        howlong = parseInt(howlong/365) + " year" + (howlong>365 ? "s" : "")
     } else if (howlong >= 30) {
         howlong = parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
     } else {
