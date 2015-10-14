@@ -115,8 +115,8 @@ function buildStats(json, state, show) {
         stats.innerHTML += "<font color='#FA0'>More than " + json.max.toLocaleString() + " emails found, truncating!</font><br/>"
     }
     var ap = ""
-    if (json.allparts && json.allparts > 1) {
-        ap = "by " + json.allparts + " people"
+    if (json.numparts && json.numparts > 1) {
+        ap = "by " + json.numparts + " people"
     }
     stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics.<br/>"
 
