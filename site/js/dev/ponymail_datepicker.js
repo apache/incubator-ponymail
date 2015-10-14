@@ -276,6 +276,7 @@ function drawCalendarPicker(obj, date) {
     var table = document.createElement('table')
     
     table.setAttribute("border", "1")
+    table.style.margin = "0 auto"
     
     var tr = document.createElement('tr');
     for (var m in days) {
