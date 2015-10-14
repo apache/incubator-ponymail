@@ -35,7 +35,9 @@
       <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid; id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
         <input type="text" name="q" id="q" placeholder="Search list..." style="width: 150px;"/>
         <select name="d" id='dp'>
-          <option value="30">past month</option>
+          <option value="2">past 48 hours</option>
+          <option value="7">past week</option>
+          <option selected="selected" value="30">past month</option>
           <option value="180">past 6 months</option>
           <option value="365">past year</option>
           <option value="99999">forever</option>
