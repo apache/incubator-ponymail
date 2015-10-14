@@ -710,6 +710,7 @@ top: 17px;
      left: 20px;
      padding: 10px;
      z-index: 1200;
+     text-align: center;
 }
 
 .calendarpicker td {
