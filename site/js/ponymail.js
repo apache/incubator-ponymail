@@ -370,8 +370,9 @@ function datePicker(parent, seedPeriod) {
     var id = parseInt(Math.random() * 10000).toString(16)
     div.setAttribute("id", "datepicker_popup")
     div.setAttribute("class", "datepicker")
-    div.style.top = (parent.offsetHeight + 8 + parseInt(parent.style.height ? parent.style.height : "24")) + "px"
-    div.style.left = (parent.offsetWidth - 32 + parseInt(parent.style.width ? parent.style.width : "0"))+ "px"
+    var bb = parent.getBoundingClientRect()
+    div.style.top = (bb.bottom + 8) + "px"
+    div.style.left = (bb.right - 32) + "px"
     
     
     // -- Less than N $units ago
@@ -452,8 +453,7 @@ function datePicker(parent, seedPeriod) {
     parent.parentNode.appendChild(div)
     document.body.setAttribute("onclick", "")
     window.setTimeout(function() { document.body.setAttribute("onclick", "blurDatePicker(event)") }, 200)
-    parent.blur()
-    div.focus()
+    lti.focus()
 }
 
 function setDatepickerDate() {
