@@ -1444,7 +1444,7 @@ function buildStats(json, state, show) {
     }
     var ap = ""
     if (json.numparts && json.numparts > 1) {
-        ap = "by " + json.numparts + " people"
+        ap = " by " + json.numparts + " people"
     }
     stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics.<br/>"
 
