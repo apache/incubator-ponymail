@@ -87,14 +87,13 @@ function handle(r)
             else
                 local eml = doc.from:match("<(.-)>") or doc.from:match("%S+@%S+") or "unknown"
                 if not account then -- anonymize email address if not logged in
-                    doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
-                    
-                    -- Anonymize to/cc if full_headers is false
-                    if not config.full_headers then
-                        doc.to = nil
-                        doc.cc = nil
-                    end                        
+                    doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)                  
                 end
+                -- Anonymize to/cc if full_headers is false
+                if not config.full_headers then
+                    doc.to = nil
+                    doc.cc = nil
+                end      
                 doc.gravatar = r:md5(eml)
                 r:puts(JSON.encode(doc))
             end
