@@ -205,6 +205,51 @@ function datePicker(parent, seedPeriod) {
     document.body.setAttribute("onclick", "")
     window.setTimeout(function() { document.body.setAttribute("onclick", "blurDatePicker(event)") }, 200)
     lti.focus()
+    
+    var ptype = ""
+    if (parent.value.search(/=/) != -1) {
+        if (parent.value.match(/lte/)) {
+            var m = parent.value.match(/lte=(\d+)([dMyw])/)
+            ptype = 'lt'
+            if (m) {
+                document.getElementById('datepicker_lti').value = m[1]
+                var sel = document.getElementById('datepicker_lts')
+                for (var i in sel.options) {
+                    if (sel.options[i].value == m[2]) {
+                        sel.options[i].selected = "selected"
+                    } else {
+                        sel.options[i].selected = null
+                    }
+                }
+            }
+            
+        }
+        if (parent.value.match(/gte/)) {
+            ptype = 'mt'
+            var m = parent.value.match(/gte=(\d+)([dMyw])/)
+            if (m) {
+                document.getElementById('datepicker_mti').value = m[1]
+                var sel = document.getElementById('datepicker_mts')
+                for (var i in sel.options) {
+                    if (sel.options[i].value == m[2]) {
+                        sel.options[i].selected = "selected"
+                    } else {
+                        sel.options[i].selected = null
+                    }
+                }
+            }
+        }
+        if (parent.value.match(/dfr/)) {
+            ptype = 'cd'
+            var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
+            var mt = parent.value.match(/dto=(\d+-\d+-\d+)/)
+            if (mf && mt) {
+                document.getElementById('datepicker_cfrom').value = mf[1]
+                document.getElementById('datepicker_cto').value = mt[1]
+            }
+        }
+        calcTimespan(ptype)
+    }
 }
 
 function setDatepickerDate() {
@@ -326,6 +371,13 @@ function setCalendarDate(what) {
 
 function showCalendarPicker(parent, seedDate) {
     calendarpicker_spawner = parent
+    if (!seedDate) {
+        var m = parent.value.match(/(\d+-\d+-\d+)/)
+        if (m) {
+            seedDate = m[1]
+        }
+    }
+    
     var div = document.getElementById('calendarpicker_popup')
     if (!div) {
         div = document.createElement('div')
