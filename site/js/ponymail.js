@@ -382,7 +382,7 @@ function datePicker(parent, seedPeriod) {
     div.style.display = "block"
     var bb = parent.getBoundingClientRect()
     div.style.top = (bb.bottom + 8) + "px"
-    div.style.left = (bb.right - 32) + "px"
+    div.style.left = (bb.left + 32) + "px"
     
     
     // -- Less than N $units ago
