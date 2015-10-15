@@ -17,4 +17,5 @@
 - Added list editor for moving/editing/deleting lists
 - Added Google Auth support
 - Added custom date picker support for searches
+- Added list editing tool, edit-list.py
 
