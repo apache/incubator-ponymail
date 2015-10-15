@@ -19,13 +19,26 @@ var pm_config = {
     debug: false, // set to true for some debug output
     oauth: {
         // OAuth settings
-        apache: {
+        
+        /* Apache OAuth example
+         apache: {
             name: "Apache OAuth",
             oauth_portal: "https://oauth.apache.org/",
             oauth_url: "https://oauth.apache.org/token",
             fullname_key: 'fullname',
             email_key: 'email'
+        },
+        */
+        /* Google example 
+        google: {
+            name: "Google OAuth",
+            oauth_portal: "https://accounts.google.com/o/oauth2/auth",
+            oauth_url: "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=",
+            fullname_key: 'name',
+            email_key: 'email',
+            client_id: 'your.google.app.id.here'
         }
+        */
     },
     persona: {
         enabled: true // Is Mozilla Persona something we'd use?
