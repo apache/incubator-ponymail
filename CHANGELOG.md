@@ -1,3 +1,7 @@
+## CHANGES in 0.3a:
+
+- None yet
+
 ## CHANGES in 0.2a:
 
 - Social theme
