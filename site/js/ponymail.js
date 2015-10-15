@@ -359,8 +359,13 @@ function calcTimespan(what) {
     
     if (datepicker_spawner && what && wat.length > 0) {
         document.getElementById('datepicker_radio_' + what).checked = true
-        datepicker_spawner.options[0].value = tval
-        datepicker_spawner.options[0].text = wat
+        if (datepicker_spawner.options) {
+            datepicker_spawner.options[0].value = tval
+            datepicker_spawner.options[0].text = wat
+        } else if (datepicker_spawner.value) {
+            datepicker_spawner.value = tval
+        }
+        
     }
 }
 
