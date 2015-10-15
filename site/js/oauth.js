@@ -44,7 +44,11 @@ function GetAsync(theUrl, xstate, callback) {
 function oauthPortal(key) {
     var ot = pm_config.oauth[key]
     var state = parseInt(Math.random()*1000000000) + '' + parseInt(Math.random()*1000000000)
-    location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state)
+    if (key == 'google') {
+        location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(window.location)
+    } else {
+        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state)
+    }
 }
 
 
@@ -54,20 +58,23 @@ function parseOauthResponse(json) {
     }
 }
 
+
 function oauthOptions() {
     var oobj = document.getElementById('oauthtypes')
     oobj.innerHTML = ""
     for (var key in pm_config.oauth) {
         var ot = pm_config.oauth[key]
-        var img = document.createElement('img')
-        img.setAttribute("src", "images/oauth_" + key + ".png")
-        img.setAttribute("title", "Log on with " + ot.name)
-        img.setAttribute("onclick", "oauthPortal('" + key + "');")
-        img.style.cursor = "pointer"
-        oobj.appendChild(img)
-        oobj.appendChild(document.createElement('br'))
-        oobj.appendChild(document.createTextNode(' '))
-        oobj.appendChild(document.createElement('br'))
+        if (true) {
+            var img = document.createElement('img')
+            img.setAttribute("src", "images/oauth_" + key + ".png")
+            img.setAttribute("title", "Log on with " + ot.name)
+            img.setAttribute("onclick", "oauthPortal('" + key + "');")
+            img.style.cursor = "pointer"
+            oobj.appendChild(img)
+            oobj.appendChild(document.createElement('br'))
+            oobj.appendChild(document.createTextNode(' '))
+            oobj.appendChild(document.createElement('br'))
+        }
     }
     
     if (pm_config.persona.enabled) {
@@ -84,10 +91,17 @@ function oauthOptions() {
 }
 
 function oauthWelcome(args) {
+    // google thingy
+    if (!args || args.length == 0) {
+        args = window.location.hash.substring(1)
+    }
     if (args && args.length > 64) {
         var key = args.match(/key=([a-z]+)/i)
         if (key) {
             key = key[1]
+        }
+        if (args.match(/id_token=/)) {
+            key = 'google'
         }
         if (key && key.length > 0 && pm_config.oauth[key]) {
             document.getElementById('oauthtypes').innerHTML = "Logging you in, hang on..!"

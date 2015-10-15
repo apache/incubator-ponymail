@@ -38,15 +38,18 @@ function handle(r)
         r:err(("assertion=%s&audience=%s://ponymail:443/"):format(post.assertion, scheme))
         r:err(result)
         valid, json = pcall(function() return JSON.decode(result) end)
-        
-    end
-    if get.state and get.code and get.oauth_token then
+    elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.id_token then
+        local result = https.request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" .. r:escape(get.id_token))
+        r:err(result)
+        r:err(r:escape(get.id_token))
+        valid, json = pcall(function() return JSON.decode(result) end)
+    elseif get.state and get.code and get.oauth_token then
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
     end
     if valid and json then
         local eml = json.email
-        local fname = json.fullname or json.email
+        local fname = json.fullname or json.name or json.email
         local admin = json.isMember
         if eml and fname then
             local cid = json.uid or json.email
@@ -58,6 +61,7 @@ function handle(r)
             else
                 usr.preferences = {}
             end
+            usr.gauth = get.id_token
             usr.fullname = fname
             usr.admin = admin
             usr.email = eml
