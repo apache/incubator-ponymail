@@ -73,6 +73,6 @@ Once this is done, you should now have a *working copy* of Pony Mail!
 You may wish to tweak the settings in `site/js/config.js` and your
 elasticsearch settings once Pony mail is up and running.
 
-Refer to the (general installation documentation)[INSTALLING.md] for
+Refer to the [eneral installation documentation](INSTALLING.md) for
 detailed information about archiving messages, OAuth, mail settings and
 much more.
