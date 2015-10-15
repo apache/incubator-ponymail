@@ -29,7 +29,7 @@ private.
 * Multi-site, Multi-list handling
 * Word clouds (yay!)
 * Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
-* Supports both custom OAuth and Mozilla Persona
+* Supports both custom OAuth, Google Auth and Mozilla Persona
 * Atom feeds for all lists (including private ones!)
 
 ### Requirements: ###
