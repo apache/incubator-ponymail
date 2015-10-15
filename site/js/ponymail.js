@@ -2746,7 +2746,10 @@ function dealWithKeyboard(e) {
             
             
             var thread = document.getElementById('thread_' + current_thread.toString().replace(/@<.+>/, ""))
-            if (thread) {
+            if (document.getElementById('datepicker_popup') && document.getElementById('datepicker_popup').style.display == "block") {
+                document.getElementById('datepicker_popup').style.display = "none"
+            }
+            else if (thread) {
                     // Close one thread?
                 if (thread.style.display != 'none') {
                     toggleEmails_threaded(current_thread, true)
