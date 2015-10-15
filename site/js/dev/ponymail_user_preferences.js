@@ -132,7 +132,7 @@ function showPreferences() {
 
 
 // setupUser: Set up the user dropdown (top right)
-function setupUser(login) {
+function setupUser() {
     var uimg = document.getElementById('uimg')
     if (!uimg) {
         return
@@ -143,7 +143,6 @@ function setupUser(login) {
         uimg.setAttribute("src", "/images/user_notif.png")
         uimg.setAttribute("title", "Logged in as " + login.credentials.fullname + " - You have " + login.notifications + " new notifications!")
     }
-    
     var pd = document.getElementById('prefs_dropdown')
     pd.innerHTML = ""
     

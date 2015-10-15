@@ -72,6 +72,7 @@ function seedDomains(json) {
     if (json.login && json.login.credentials && json.login.credentials.fullname) {
         document.getElementById('welcome').innerHTML = "Welcome, " + json.login.credentials.fullname.split(/ /)[0] + "!"
         document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.credentials.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
+        login = json.login
         setupUser(json.login)
     } else {
         document.getElementById('login_disclaimer').style.display = "block"

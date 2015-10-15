@@ -2194,6 +2194,7 @@ function seedDomains(json) {
     if (json.login && json.login.credentials && json.login.credentials.fullname) {
         document.getElementById('welcome').innerHTML = "Welcome, " + json.login.credentials.fullname.split(/ /)[0] + "!"
         document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.credentials.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
+        login = json.login
         setupUser(json.login)
     } else {
         document.getElementById('login_disclaimer').style.display = "block"
@@ -2442,6 +2443,7 @@ function seedPrefs(json, state) {
     }
     if (typeof json.login != undefined && json.login) {
         login = json.login
+        alert("moo")
         if (login.credentials) {
             setupUser(login)
         }
@@ -2666,7 +2668,7 @@ function showPreferences() {
 
 
 // setupUser: Set up the user dropdown (top right)
-function setupUser(login) {
+function setupUser() {
     var uimg = document.getElementById('uimg')
     if (!uimg) {
         return
@@ -2677,7 +2679,6 @@ function setupUser(login) {
         uimg.setAttribute("src", "/images/user_notif.png")
         uimg.setAttribute("title", "Logged in as " + login.credentials.fullname + " - You have " + login.notifications + " new notifications!")
     }
-    
     var pd = document.getElementById('prefs_dropdown')
     pd.innerHTML = ""
     
