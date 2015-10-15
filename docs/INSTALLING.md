@@ -1,5 +1,14 @@
 # Installing Pony Mail #
 
+
+If your distro is on this list, please refer to that specific document
+for detailed package installation instructions:
+
+- [Debian (Jessie) Installation Instructions](INSTALL.debian.md)
+- [Ubuntu (14.04) Installation Instructions](INSTALL.ubuntu.md)
+
+Otherwise, read the next two chapters:
+
 ## Pre-requisites ##
 You will need the following software installed on your machine:
 
@@ -10,15 +19,18 @@ You will need the following software installed on your machine:
 
 
 ## Download and Install ##
+
 - Download the git repo: `git clone https://github.com/Humbedooh/ponymail.git`
 - Start ElasticSearch on the machine it needs to run on.
 - Run setup.py in the `tools` dir:
 ```
-      $cd toosl
+      $cd tools
       $python3 setup.py
       ...[follow instructions in the setup script]
 ```
 - Edit `site/js/config.js` to suit your needs (usually very little editing is needed)
+
+
 
 ### Using auth for ElasticSearch ###
 If your ElasticSearch instance requires authentication for the importer/archiver, please
