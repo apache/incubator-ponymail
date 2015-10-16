@@ -69,7 +69,7 @@ function search(q, d, nopush, all) {
     
     clearCalendarHover()
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
-    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q.replace(/([\s&+=])/g, function(a) { return escape(a)}) + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + d, null, buildPage)
     howlong = parseInt(d)
     if (isNaN(howlong)) {
         howlong = "custom date range"
@@ -100,7 +100,7 @@ function searchAll(q, dspan, from, subject, where) {
         wherel = a[0]
         whered = a[1]
     }
-    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + q.replace(/([\s&+=])/g, function(a) { return escape(a)}) + "&d=" + escape(dspan)
+    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + escape(dspan)
     if (from) {
         url += "&header_from=" + escape(from)
         current_query += " FROM:" + escape('"' + from + '"')
