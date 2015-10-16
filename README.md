@@ -34,6 +34,7 @@ private.
 
 ### Requirements: ###
 
+* Linux operating system (tested on Ubuntu, Debian and CentOS - Windows or OS/X may work)
 * ElasticSearch backend
 * Apache HTTP Server frontend with mod_lua loaded OR
   * Nginx with nginx-extras (ng-lua module) AND lua-apr installed
