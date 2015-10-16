@@ -6,6 +6,7 @@ for detailed package installation instructions:
 
 - [Debian (Jessie) Installation Instructions](INSTALL.debian.md)
 - [Ubuntu (14.04) Installation Instructions](INSTALL.ubuntu.md)
+- [CentOS (7.1) Installation Instructions](INSTALL.centos.md)
 
 Otherwise, read the next two chapters:
 
