@@ -31,6 +31,7 @@ sudo apt-get update && sudo apt-get install elasticsearch
 
 Compile and install mod_lua if necessary (httpd < 2.4.17 on Ubuntu):
 ~~~
+apt-get install apache2-dev
 svn co https://svn.apache.org/repos/asf/httpd/httpd/branches/2.4.x/modules/lua/
 cd lua/
 apxs -I/usr/include/lua5.2 -cia mod_lua.c lua_*.c -lm -llua5.2
