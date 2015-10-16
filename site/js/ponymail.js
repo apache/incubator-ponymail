@@ -273,18 +273,23 @@ function compose(eid, lid, type) {
 var datepicker_spawner = null
 var calendarpicker_spawner = null
 
+// makeSelect: Creates a <select> object with options
 function makeSelect(options, id, selval) {
     var sel = document.createElement('select')
     sel.setAttribute("name", id)
     sel.setAttribute("id", id)
+    // For each options element, create it in the DOM
     for (var key in options) {
         var opt = document.createElement('option')
+        // Hash or array?
         if (typeof key == "string") {
             opt.setAttribute("value", key)
+            // Option is selected by default?
             if (key == selval) {
                 opt.setAttribute("selected", "selected")
             }
         } else {
+            // Option is selected by default?
             if (options[key] == selval) {
                 opt.setAttribute("selected", "selected")
             }
@@ -295,6 +300,9 @@ function makeSelect(options, id, selval) {
     return sel
 }
 
+// splitDiv: Makes a split div with 2 elements,
+// and puts div2 into the right column,
+// and 'name' as text in the left one.
 function splitDiv(id, name, div2) {
     var div = document.createElement('div')
     var subdiv = document.createElement('div')
@@ -326,9 +334,14 @@ function splitDiv(id, name, div2) {
     return div
 }
 
+// calcTimespan: Calculates the value and representational text
+// for the datepicker choice and puts it in the datepicker's
+// spawning input/select element.
 function calcTimespan(what) {
     var wat = ""
     var tval = ""
+    
+    // Less than N units ago?
     if (what == 'lt') {
         var N = document.getElementById('datepicker_lti').value
         var unit = document.getElementById('datepicker_lts').value
@@ -339,6 +352,8 @@ function calcTimespan(what) {
         }
         
     }
+    
+    // More than N units ago?
     if (what == 'mt') {
         var N = document.getElementById('datepicker_mti').value
         var unit = document.getElementById('datepicker_mts').value
@@ -348,6 +363,7 @@ function calcTimespan(what) {
         }
     }
     
+    // Date range?
     if (what == 'cd') {
         var f = document.getElementById('datepicker_cfrom').value
         var t = document.getElementById('datepicker_cto').value
@@ -357,6 +373,7 @@ function calcTimespan(what) {
         }
     }
     
+    // If we calc'ed a value and spawner exists, update its key/val
     if (datepicker_spawner && what && wat.length > 0) {
         document.getElementById('datepicker_radio_' + what).checked = true
         if (datepicker_spawner.options) {
@@ -369,6 +386,8 @@ function calcTimespan(what) {
     }
 }
 
+// datePicker: spawns a date picker with various
+// timespan options right next to the parent caller.
 function datePicker(parent, seedPeriod) {
     datepicker_spawner = parent
     var div = document.getElementById('datepicker_popup')
@@ -465,8 +484,13 @@ function datePicker(parent, seedPeriod) {
     window.setTimeout(function() { document.body.setAttribute("onclick", "blurDatePicker(event)") }, 200)
     lti.focus()
     
+    // This is for recalcing the set options if spawned from a
+    // select/input box with an existing value derived from an
+    // earlier call to datePicker
     var ptype = ""
     if (parent.value.search(/=/) != -1) {
+        
+        // Less than N units ago?
         if (parent.value.match(/lte/)) {
             var m = parent.value.match(/lte=(\d+)([dMyw])/)
             ptype = 'lt'
@@ -483,6 +507,8 @@ function datePicker(parent, seedPeriod) {
             }
             
         }
+        
+        // More than N units ago?
         if (parent.value.match(/gte/)) {
             ptype = 'mt'
             var m = parent.value.match(/gte=(\d+)([dMyw])/)
@@ -498,6 +524,8 @@ function datePicker(parent, seedPeriod) {
                 }
             }
         }
+        
+        // Date range?
         if (parent.value.match(/dfr/)) {
             ptype = 'cd'
             var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
@@ -511,10 +539,15 @@ function datePicker(parent, seedPeriod) {
     }
 }
 
+// set date in caller and hide datepicker again.
 function setDatepickerDate() {
     calcTimespan()
     blurDatePicker()
 }
+
+// findParent: traverse DOM and see if we can find a parent to 'el'
+// called 'name'. This is used for figuring out whether 'el' has
+// lost focus or not.
 function findParent(el, name) {
     if (el.getAttribute && el.getAttribute("id") == name) {
         return true
@@ -530,6 +563,7 @@ function findParent(el, name) {
     }
 }
 
+// function for hiding the date picker
 function blurDatePicker(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.parentNode || (!findParent(es, "datepicker_popup") && !findParent(es, "calendarpicker_popup")))  {
@@ -537,38 +571,53 @@ function blurDatePicker(evt) {
     }
 }
 
+// draws the actual calendar inside a calendarPicker object
 function drawCalendarPicker(obj, date) {
     obj.focus()
+    
+    // Default to NOW for calendar.
     var now = new Date()
+    
+    // if called with an existing date (YYYY-MM-DD),
+    // convert it to a JS date object and use that for
+    // rendering the calendar
     if (date) {
         var ar = date.split(/-/)
         now = new Date(ar[0],parseInt(ar[1])-1,ar[2])
     }
     var days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
     var mat = now
+    
+    // Go to first day of the month
     mat.setDate(1)
     
     obj.innerHTML = "<h3>" + months[mat.getMonth()] + ", " + mat.getFullYear() + ":</h3>"
     var tm = mat.getMonth()
     
+    // -- Nav buttons --
+    
+    // back-a-year button
     var a = document.createElement('a')
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()-1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≪"
     obj.appendChild(a)
     
+    // back-a-month button
     a = document.createElement('a')
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&lt;"
     obj.appendChild(a)
     
+    // forward-a-month button
     a = document.createElement('a')
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()+2) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&gt;"
     obj.appendChild(a)
     
+    // forward-a-year button
     a = document.createElement('a')
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()+1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
@@ -577,11 +626,13 @@ function drawCalendarPicker(obj, date) {
     obj.appendChild(document.createElement('br'))
     
     
+    // Table containing the dates of the selected month
     var table = document.createElement('table')
     
     table.setAttribute("border", "1")
     table.style.margin = "0 auto"
     
+    // Add header day names
     var tr = document.createElement('tr');
     for (var m in days) {
         var td = document.createElement('th')
@@ -589,6 +640,8 @@ function drawCalendarPicker(obj, date) {
         tr.appendChild(td)
     }
     table.appendChild(tr)
+    
+    // Until we hit the first day in a month, add blank days
     tr = document.createElement('tr');
     var weekday = mat.getDay()
     if (weekday == 0) {
@@ -599,6 +652,8 @@ function drawCalendarPicker(obj, date) {
         var td = document.createElement('td')
         tr.appendChild(td)
     }
+    
+    // While still in this month, add day then increment date by 1 day.
     while (mat.getMonth() == tm) {
         weekday = mat.getDay()
         if (weekday == 0) {
@@ -610,6 +665,7 @@ function drawCalendarPicker(obj, date) {
             tr = document.createElement('tr');
         }
         td = document.createElement('td')
+        // onclick for setting the calendarPicker's parent to this val.
         td.setAttribute("onclick", "setCalendarDate('" + mat.getFullYear() + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
         td.innerHTML = mat.getDate()
         mat.setDate(mat.getDate()+1)
@@ -620,6 +676,7 @@ function drawCalendarPicker(obj, date) {
     obj.appendChild(table)
 }
 
+// callback for datePicker; sets the cd value to what date was picked
 function setCalendarDate(what) {
     calendarpicker_spawner.value = what
     var div = document.getElementById('calendarpicker_popup')
@@ -628,8 +685,11 @@ function setCalendarDate(what) {
     calcTimespan('cd')
 }
 
+// caller for when someone clicks on a calendarPicker enabled field
 function showCalendarPicker(parent, seedDate) {
     calendarpicker_spawner = parent
+    
+    // If supplied with a YYYY-MM-DD date, use this to seed the calendar
     if (!seedDate) {
         var m = parent.value.match(/(\d+-\d+-\d+)/)
         if (m) {
@@ -637,6 +697,7 @@ function showCalendarPicker(parent, seedDate) {
         }
     }
     
+    // Show or create the calendar object
     var div = document.getElementById('calendarpicker_popup')
     if (!div) {
         div = document.createElement('div')
@@ -647,6 +708,8 @@ function showCalendarPicker(parent, seedDate) {
     }
     div.style.display = "block"
     var bb = parent.getBoundingClientRect()
+    
+    // Align with the calling object, slightly below
     div.style.top = (bb.bottom + 8) + "px"
     div.style.left = (bb.right - 32) + "px"
     
@@ -1320,6 +1383,9 @@ function formatDate(date){
 }// Fetched from ponymail_helperfuncs.js
 
 
+// checkForSlows: Checks if there is a pending async URL fetching
+// that is delayed for more than 2.5 seconds. If found, display the
+// spinner, thus letting the user know that the resource is pending.
 function checkForSlows() {
     var slows = 0
     var now = new Date().getTime() / 1000;
@@ -1335,6 +1401,7 @@ function checkForSlows() {
         showSpinner(true);
     }
 }
+
 // GetAsync: func for getting a doc async with a callback
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
@@ -1376,7 +1443,7 @@ function GetAsync(theUrl, xstate, callback) {
     }
 }
 
-
+// spinner for checkForSlows
 function showSpinner(show) {
     var obj = document.getElementById('spinner')
     if (!obj) {
@@ -1392,6 +1459,7 @@ function showSpinner(show) {
     }
 }
 
+// Check for slow URLs every 0.5 seconds
 window.setInterval(checkForSlows, 500)// Fetched from ponymail_listview_flat.js
 
 
@@ -2733,6 +2801,7 @@ function setupUser() {
 }
 
 
+// set theme, both in prefs and localstorage (for non-logged-in-users)
 function setTheme(theme) {
     prefs.theme = theme
     if (typeof(window.localStorage) !== "undefined") {
@@ -2775,6 +2844,8 @@ function dealWithKeyboard(e) {
     }
 }
 
+
+// Add Pony Mail powered-by footer
 var footer = document.createElement('footer')
 footer.setAttribute("class", 'footer')
 footer.style.height = "32px"
@@ -2785,7 +2856,10 @@ fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href=
 footer.appendChild(fd)
 document.body.appendChild(footer)
 
+// Add listener for keys (mostly for escape key for hiding stuff)
 window.addEventListener("keyup", dealWithKeyboard, false);
+
+// Add listener for when URLs get popped from the browser history
 window.onpopstate = function(event) {
     getListInfo(null, document.location.search.substr(1), true)
 }

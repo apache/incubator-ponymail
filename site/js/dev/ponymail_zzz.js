@@ -47,6 +47,8 @@ function dealWithKeyboard(e) {
     }
 }
 
+
+// Add Pony Mail powered-by footer
 var footer = document.createElement('footer')
 footer.setAttribute("class", 'footer')
 footer.style.height = "32px"
@@ -57,7 +59,10 @@ fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href=
 footer.appendChild(fd)
 document.body.appendChild(footer)
 
+// Add listener for keys (mostly for escape key for hiding stuff)
 window.addEventListener("keyup", dealWithKeyboard, false);
+
+// Add listener for when URLs get popped from the browser history
 window.onpopstate = function(event) {
     getListInfo(null, document.location.search.substr(1), true)
 }

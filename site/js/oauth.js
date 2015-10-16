@@ -91,7 +91,7 @@ function oauthOptions() {
 }
 
 function oauthWelcome(args) {
-    // google thingy
+    // google auth sometimes uses bookmarks instead of passing the code as a query string arg.
     if (!args || args.length == 0) {
         args = window.location.hash.substring(1)
     }

@@ -16,6 +16,9 @@
 */
 
 
+// checkForSlows: Checks if there is a pending async URL fetching
+// that is delayed for more than 2.5 seconds. If found, display the
+// spinner, thus letting the user know that the resource is pending.
 function checkForSlows() {
     var slows = 0
     var now = new Date().getTime() / 1000;
@@ -31,6 +34,7 @@ function checkForSlows() {
         showSpinner(true);
     }
 }
+
 // GetAsync: func for getting a doc async with a callback
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
@@ -72,7 +76,7 @@ function GetAsync(theUrl, xstate, callback) {
     }
 }
 
-
+// spinner for checkForSlows
 function showSpinner(show) {
     var obj = document.getElementById('spinner')
     if (!obj) {
@@ -88,4 +92,5 @@ function showSpinner(show) {
     }
 }
 
+// Check for slow URLs every 0.5 seconds
 window.setInterval(checkForSlows, 500)

@@ -195,6 +195,7 @@ function setupUser() {
 }
 
 
+// set theme, both in prefs and localstorage (for non-logged-in-users)
 function setTheme(theme) {
     prefs.theme = theme
     if (typeof(window.localStorage) !== "undefined") {
