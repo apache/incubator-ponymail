@@ -52,7 +52,7 @@ For a quick guide to installing Pony Mail, please see the guides for:
 - [Debian (Jessie) Installation Instructions](docs/INSTALL.debian.md)
 - [Ubuntu (14.04) Installation Instructions](docs/INSTALL.ubuntu.md)
 - [CentOS (7.1) Installation Instructions](docs/INSTALL.centos.md)
-
+- [Fedora (22) Installation Instructions](docs/INSTALL.fedora.md)
 
 #### Generic installation instructions ####
 
