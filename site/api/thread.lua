@@ -23,6 +23,7 @@ local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
+local config = require 'lib/config'
 
 local emls_thrd
 
@@ -84,6 +85,12 @@ function handle(r)
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.subject then
         local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
+        if #docs == 1 then
+            doc = docs[1]
+        end
+        if #docs == 0 and #eid == 18 then
+            docs = elastic.find("mid:" .. r:escape(eid) .. "*", 1, "mbox")
+        end
         if #docs == 1 then
             doc = docs[1]
         end
