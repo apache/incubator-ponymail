@@ -144,8 +144,10 @@ function do_search(q, d, nopush, all) {
         domain = "*"
     }
     howlong = parseInt(d)
-    howlong = d
-    if (howlong >= 365) {
+    if (isNaN(howlong)) {
+        howlong = "Custom date range"
+    }
+    else if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year"
     } else if (howlong >= 30) {
         howlong = parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
