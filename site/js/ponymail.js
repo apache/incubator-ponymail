@@ -558,15 +558,15 @@ function datePickerValue(seedPeriod) {
         // More than N units ago?
         if (seedPeriod.match(/gte/)) {
             ptype = 'mt'
-            var m = parent.value.match(/gte=(\d+)([dMyw])/)
+            var m = seedPeriod.match(/gte=(\d+)([dMyw])/)
             rv = ">" + m[1] + m[2]
         }
         
         // Date range?
         if (seedPeriod.match(/dfr/)) {
             ptype = 'cd'
-            var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
-            var mt = parent.value.match(/dto=(\d+-\d+-\d+)/)
+            var mf = seedPeriod.match(/dfr=(\d+-\d+-\d+)/)
+            var mt = seedPeriod.match(/dto=(\d+-\d+-\d+)/)
             if (mf && mt) {
                 rv = "from " + mf[1] + " to " + mt[1]
             }
