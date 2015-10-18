@@ -32,7 +32,7 @@ var d_at = 10;
 var d_ppp = 15;
 var open_emails = []
 var list_year = {}
-var current_retention = 30
+var current_retention = "lte=30d"
 var current_cal_min = 1997
 var keywords = ""
 var current_thread = 0
@@ -546,20 +546,20 @@ function datePickerValue(seedPeriod) {
     // earlier call to datePicker
     var ptype = ""
     var rv = seedPeriod
-    if (seedPeriod.search(/=/) != -1) {
+    if (seedPeriod && seedPeriod.search && seedPeriod.search(/=/) != -1) {
         
         // Less than N units ago?
         if (seedPeriod.match(/lte/)) {
             var m = seedPeriod.match(/lte=(\d+)([dMyw])/)
             ptype = 'lt'
-            rv = "<" + m[1] + m[2]
+            rv = "<" + m[1] + m[2] + " ago"
         }
         
         // More than N units ago?
         if (seedPeriod.match(/gte/)) {
             ptype = 'mt'
             var m = seedPeriod.match(/gte=(\d+)([dMyw])/)
-            rv = ">" + m[1] + m[2]
+            rv = ">" + m[1] + m[2] + " ago"
         }
         
         // Date range?
@@ -2094,8 +2094,10 @@ function getListInfo(list, xdomain, nopush) {
                     dealtwithit = true
                 } else {
                     current_retention = parseInt(arr[1])
-                    if (isNaN(current_retention)) {
+                    if (("x"+current_retention) != ("x"+arr[1])) {
                         current_retention = arr[1]
+                        nopush = true
+                        
                     }
                     current_query = unescape(arr[2])
                 }

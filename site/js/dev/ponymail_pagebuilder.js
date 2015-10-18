@@ -278,8 +278,10 @@ function getListInfo(list, xdomain, nopush) {
                     dealtwithit = true
                 } else {
                     current_retention = parseInt(arr[1])
-                    if (isNaN(current_retention)) {
+                    if (("x"+current_retention) != ("x"+arr[1])) {
                         current_retention = arr[1]
+                        nopush = true
+                        
                     }
                     current_query = unescape(arr[2])
                 }

@@ -292,20 +292,20 @@ function datePickerValue(seedPeriod) {
     // earlier call to datePicker
     var ptype = ""
     var rv = seedPeriod
-    if (seedPeriod.search(/=/) != -1) {
+    if (seedPeriod && seedPeriod.search && seedPeriod.search(/=/) != -1) {
         
         // Less than N units ago?
         if (seedPeriod.match(/lte/)) {
             var m = seedPeriod.match(/lte=(\d+)([dMyw])/)
             ptype = 'lt'
-            rv = "<" + m[1] + m[2]
+            rv = "<" + m[1] + m[2] + " ago"
         }
         
         // More than N units ago?
         if (seedPeriod.match(/gte/)) {
             ptype = 'mt'
             var m = seedPeriod.match(/gte=(\d+)([dMyw])/)
-            rv = ">" + m[1] + m[2]
+            rv = ">" + m[1] + m[2] + " ago"
         }
         
         // Date range?

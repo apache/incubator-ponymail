@@ -29,7 +29,7 @@ var d_at = 10;
 var d_ppp = 15;
 var open_emails = []
 var list_year = {}
-var current_retention = 30
+var current_retention = "lte=30d"
 var current_cal_min = 1997
 var keywords = ""
 var current_thread = 0
