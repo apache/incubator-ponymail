@@ -1,6 +1,7 @@
 ## CHANGES in 0.3a:
 
-- None yet
+- Permalink page now accepts shortened IDs (first 18 chars)
+
 
 ## CHANGES in 0.2a:
 
