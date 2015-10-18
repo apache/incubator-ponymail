@@ -285,6 +285,42 @@ function datePicker(parent, seedPeriod) {
     }
 }
 
+
+function datePickerValue(seedPeriod) {
+    // This is for recalcing the set options if spawned from a
+    // select/input box with an existing value derived from an
+    // earlier call to datePicker
+    var ptype = ""
+    var rv = seedPeriod
+    if (seedPeriod.search(/=/) != -1) {
+        
+        // Less than N units ago?
+        if (seedPeriod.match(/lte/)) {
+            var m = seedPeriod.match(/lte=(\d+)([dMyw])/)
+            ptype = 'lt'
+            rv = "<" + m[1] + m[2]
+        }
+        
+        // More than N units ago?
+        if (seedPeriod.match(/gte/)) {
+            ptype = 'mt'
+            var m = parent.value.match(/gte=(\d+)([dMyw])/)
+            rv = ">" + m[1] + m[2]
+        }
+        
+        // Date range?
+        if (seedPeriod.match(/dfr/)) {
+            ptype = 'cd'
+            var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
+            var mt = parent.value.match(/dto=(\d+-\d+-\d+)/)
+            if (mf && mt) {
+                rv = "from " + mf[1] + " to " + mt[1]
+            }
+        }
+    }
+    return rv
+}
+
 // set date in caller and hide datepicker again.
 function setDatepickerDate() {
     calcTimespan()

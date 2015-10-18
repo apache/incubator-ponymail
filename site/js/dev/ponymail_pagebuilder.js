@@ -278,6 +278,9 @@ function getListInfo(list, xdomain, nopush) {
                     dealtwithit = true
                 } else {
                     current_retention = parseInt(arr[1])
+                    if (isNaN(current_retention)) {
+                        current_retention = arr[1]
+                    }
                     current_query = unescape(arr[2])
                 }
             }
@@ -302,9 +305,8 @@ function getListInfo(list, xdomain, nopush) {
 
     //buildCalendar()
     var dp = document.getElementById('dp')
-    for (var i = 0; i < dp.length; i++) {
-        if (dp[i].value == current_retention) dp.selectedIndex = i;
-    }
+    dp[0].text = datePickerValue(current_retention)
+    dp[0].value = current_retention
     
     document.getElementById('q').value = unescape(current_query)
     document.getElementById('aq').value = unescape(current_query)
