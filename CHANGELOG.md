@@ -1,6 +1,7 @@
 ## CHANGES in 0.3a:
 
 - Permalink page now accepts shortened IDs (first 18 chars)
+- Importer can ignore specific emails (like list owner/system messages)
 
 
 ## CHANGES in 0.2a:
