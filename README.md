@@ -18,6 +18,7 @@ private.
 
 
 ### Features include: ###
+* Importing from mbox files or an mod_mbox-driven site
 * Public and private list viewing based on auth
 * Cross-list threading
 * OpenSearch support for browsers (can add as search engine)
@@ -31,6 +32,7 @@ private.
 * Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
 * Supports both custom OAuth, Google Auth and Mozilla Persona
 * Atom feeds for all lists (including private ones!)
+* Source view and custom range mbox export
 
 ### Requirements: ###
 
