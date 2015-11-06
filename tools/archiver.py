@@ -410,6 +410,8 @@ if __name__ == '__main__':
                        help='Sender/list to ignore input from (owner etc)')
     parser.add_argument('--private', dest='private', action='store_true', 
                        help='This is a private archive')
+    parser.add_argument('--makedate', dest='makedate', action='store_true', 
+                       help='Use the archive timestamp as the email date instead of the Date header')
     args = parser.parse_args()
     
     foo = Archiver()
@@ -432,7 +434,11 @@ if __name__ == '__main__':
         if fnmatch.fnmatch(msg.get("from"), ignorefrom) or (msg.get("list-id") and fnmatch.fnmatch(msg.get("list-id"), ignorefrom)):
             print("Ignoring message as instructed by --ignore flag")
             sys.exit(0)
-            
+    
+    # Replace date header with $now?
+    if args.makedate:
+        msg.replace_header('date', email.utils.formatdate())
+        
     if args.private == True:
         ispublic = False
     if 'list-id' in msg:
