@@ -88,26 +88,28 @@ function sendEmail(form) {
 
 // compose: render a compose dialog for a reply to an email
 function compose(eid, lid, type) {
-    var email
+    var email = null
     if (lid) {
-        if (lid == "xlist") {
+        if (lid == "xlist" && xlist != null && xlist.length > 4) {
             lid = xlist;
         }
-        email = {
-            'message-id': "",
-            'list': xlist.replace("@", "."),
-            'subject': "",
-            'body': "",
-            'from': "",
-            'date': ""
+        if (lid != null) {
+            email = {
+                'message-id': "",
+                'list': xlist.replace("@", "."),
+                'subject': "",
+                'body': "",
+                'from': "",
+                'date': ""
+            }
+            composeType = "new"
         }
-        composeType = "new"
     }
     else {
         composeType = "reply"
         email = saved_emails[eid]
     }
-    if (email) {
+    if (email != null) {
         if (login.credentials) {
             current_reply_eid = eid
             var listname = email['list'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
