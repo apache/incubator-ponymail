@@ -38,20 +38,7 @@ function fetchChildren(r, pdoc, c, biglist)
         if not biglist[doc['message-id']] then
             biglist[doc['message-id']] = true
             local mykids = fetchChildren(r, doc, c, biglist)
-            local dc = {
-                private = doc.private,
-                tid = doc.mid,
-                mid = doc.mid,
-                list_raw = doc.list_raw,
-                subject = doc.subject,
-                from = doc.from,
-                id = doc.request_id,
-                epoch = doc.epoch,
-                children = mykids,
-                irt = doc['in-reply-to']
-            }
-            table.insert(children, dc)
-            table.insert(emls_thrd, dc)
+            table.insert(emls_thrd, doc)
         else
             docs[k] = nil
         end
@@ -176,6 +163,7 @@ function handle(r)
         if doc then
             local parent = findParent(r, doc)
             if parent then
+                table.insert(emls_thrd, parent)
                 fetchChildren(r, parent)
                 for k, doc in pairs(emls_thrd) do
                     local canUse = true
