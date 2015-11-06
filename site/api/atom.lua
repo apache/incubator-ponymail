@@ -90,7 +90,7 @@ function handle(r)
     local maxresults = 40
     local account = user.get(r)
     local rights = nil
-    local listid = r:escape_html(get.list)
+    local listid = r:escape_html(get.list or "")
     local listraw = "<" .. listid:gsub("@", ".") .. ">"
     
     local sterm = {
