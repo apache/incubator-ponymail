@@ -54,6 +54,7 @@ import re
 import codecs
 import configparser
 import os
+import fnmatch
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -405,6 +406,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line options.')
     parser.add_argument('--altheader', dest='altheader', type=str, nargs=1,
                        help='Alternate header for list ID')
+    parser.add_argument('--ignore', dest='ignorefrom', type=str, nargs=1,
+                       help='Sender/list to ignore input from (owner etc)')
     parser.add_argument('--private', dest='private', action='store_true', 
                        help='This is a private archive')
     args = parser.parse_args()
@@ -413,6 +416,7 @@ if __name__ == '__main__':
     msg = email.message_from_file(sys.stdin)
     # We're reading from STDIN, so let's fake an MM3 call
     ispublic = True
+    ignorefrom = None
     if args.altheader:
         altheader = args.altheader[0]
         if altheader in msg:
@@ -421,6 +425,14 @@ if __name__ == '__main__':
         altheader = sys.argv[len(sys.argv)-1]
         if altheader in msg:
             msg.add_header('list-id', msg.get(altheader))
+            
+    #Ignore based on --ignore flag?
+    if args.ignorefrom:
+        ignorefrom = args.ignorefrom[0]
+        if fnmatch.fnmatch(msg.get("from"), ignorefrom) or (msg.get("list-id") and fnmatch.fnmatch(msg.get("list-id"), ignorefrom)):
+            print("Ignoring message as instructed by --ignore flag")
+            sys.exit(0)
+            
     if args.private == True:
         ispublic = False
     if 'list-id' in msg:
