@@ -24,6 +24,7 @@ local aaa = require 'lib/aaa'
 local config = require 'lib/config'
 local cross = require 'lib/cross'
 
+local emls_thrd
 
 function fetchChildren(r, pdoc, c, biglist)
     c = (c or 0) + 1
@@ -101,6 +102,7 @@ function handle(r)
     
     
     local emls = {}
+    emls_thrd = {}
     
     -- Get threads from list ID?
     if get.list then
