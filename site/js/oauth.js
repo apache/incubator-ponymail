@@ -15,6 +15,7 @@
  limitations under the License.
 */
 
+// Sometimes we don't need ponymail.js, so let's redefine GetAsync here
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
     if (window.XMLHttpRequest) {
@@ -41,6 +42,7 @@ function GetAsync(theUrl, xstate, callback) {
     }
 }
 
+
 function oauthPortal(key) {
     var ot = pm_config.oauth[key]
     var state = parseInt(Math.random()*1000000000) + '' + parseInt(Math.random()*1000000000)
@@ -51,7 +53,7 @@ function oauthPortal(key) {
     }
 }
 
-
+// Callback for oauth response from backend. if okay, send user back to front page.
 function parseOauthResponse(json) {
     if (json.okay) {
         location.href = "/"
@@ -59,12 +61,14 @@ function parseOauthResponse(json) {
 }
 
 
+// Func for rendering all available oauth options
 function oauthOptions() {
-    var oobj = document.getElementById('oauthtypes')
+    var oobj = document.getElementById('oauthtypes') // get the oauth div
     oobj.innerHTML = ""
+    // For each enabled oauth plugin, list it.
     for (var key in pm_config.oauth) {
         var ot = pm_config.oauth[key]
-        if (true) {
+        if (true) { // dunno why this is here, but whatever.
             var img = document.createElement('img')
             img.setAttribute("src", "images/oauth_" + key + ".png")
             img.setAttribute("title", "Log on with " + ot.name)
@@ -77,6 +81,7 @@ function oauthOptions() {
         }
     }
     
+    // Mozilla Persona
     if (pm_config.persona.enabled) {
         var img = document.createElement('img')
         img.setAttribute("src", "images/persona.png")
@@ -90,11 +95,14 @@ function oauthOptions() {
     }
 }
 
+// onLoad function for oauth. If args (query string or bookmark) are supplied,
+// we pass that on to the backend, otherwise show which oauth options are enabled.
 function oauthWelcome(args) {
     // google auth sometimes uses bookmarks instead of passing the code as a query string arg.
     if (!args || args.length == 0) {
         args = window.location.hash.substring(1)
     }
+    // Is this a callback from an oauth provider? If so, run the oauth stuff
     if (args && args.length > 64) {
         var key = args.match(/key=([a-z]+)/i)
         if (key) {
@@ -109,6 +117,7 @@ function oauthWelcome(args) {
         } else {
             alert("Key missing or invalid! " + key)
         }
+    // Not a callback, let's just show which oauth/persona options are enabled.
     } else {
         oauthOptions()
     }
