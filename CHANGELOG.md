@@ -1,8 +1,8 @@
 ## CHANGES in 0.3a:
 
 - Permalink page now accepts shortened IDs (first 18 chars)
-- Importer can ignore specific emails (like list owner/system messages)
-
+- Archiver can ignore specific emails (like list owner/system messages)
+- Archiver can be told to use current timestamp instead of the Date header
 
 ## CHANGES in 0.2a:
 
