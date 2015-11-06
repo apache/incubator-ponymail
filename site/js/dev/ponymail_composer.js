@@ -90,8 +90,12 @@ function sendEmail(form) {
 function compose(eid, lid, type) {
     var email = null
     if (lid) {
-        if (lid == "xlist" && xlist != null && xlist.length > 4) {
-            lid = xlist;
+        if (lid == "xlist") {
+            if (xlist != null && xlist.length > 4) {
+                lid = xlist;
+            } else {
+                lid = null
+            }
         }
         if (lid != null) {
             email = {
