@@ -22,6 +22,8 @@ function setupUserFromLua(json) {
     }
 }
 
+
+// Callback for hasSeen - marks the email as seen inside the browser and decreases notification count.
 function hasSeenResult(json, tid) {
     // Only decrease number if backend says 'seen' has changed
     if (json && json.marked) {
@@ -31,16 +33,20 @@ function hasSeenResult(json, tid) {
     }
 }
 
+// Function for telling the backend that we've seen a specific message, as denoted by the MID
 function hasSeen(mid, tid) {
     GetAsync("/api/notifications.lua?seen=" + mid, tid, hasSeenResult)
 }
 
+// Func for rendering the list of notifications
 function renderNotifications(json) {
     var now = new Date().getTime() / 1000
     var deep = true
+    // Do we have notifications to show?
     if (json.notifications && json.notifications.length > 0) {
         current_flat_json = json.notifications
         
+        // Make an unordered list, dirty innerHTML style for now.
         var nest = "<ul style='text-align: left;'>"
         for (var i in current_flat_json) {
             var notif = current_flat_json[i]
@@ -55,6 +61,8 @@ function renderNotifications(json) {
             }
             var pmid = eml.nid
             eml.mid = eml.id
+            
+            // Have we read this notification already? if not, bold it.
             var bold = eml.seen == 0 ? 'bold' : 'normal'
             var ld = 'default'
             var ti = ''
@@ -62,6 +70,7 @@ function renderNotifications(json) {
                 ld = 'warning'
                 ti = "Has activity in the past 24 hours"
             }
+            // This sets the list the notif is from and shortens the subject line
             if (deep  && typeof eml.list != undefined && eml.list != null) {
                 var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
                 var elist2 = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
@@ -73,23 +82,32 @@ function renderNotifications(json) {
                     eml.subject = eml.subject.substr(0, 75) + "..."
                 }
             }
+            // Convert email date into locale format, firefox or ecma style.
             mdate = new Date(eml.epoch * 1000)
             mdate = mdate.toLocaleFormat ? mdate.toLocaleFormat('%Y-%m-%d %T') : mdate.toLocaleString('en-GB', {
                 hour12: false
             })
+            
+            // Escape HTML and make the From header have just the sender name
             var subject = eml.subject.replace(/</mg, "&lt;")
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
+            
+            // If not viewed, add a hasSeen callback inside it when clicked
             var extras = ""
             if (eml.seen == 0 ) {
                 extras = "hasSeen(\"" + pmid + "\", " + i + "); "
             }
+            
+            // Add notif to list
             nest += "<li class='list-group-item' style='font-weight: " + bold + ";' id='notif_" + i + "'> &nbsp; <a href='javascript:void(0);' onclick='" + extras + "toggleEmails_threaded(" + i + "); timeTravelList("+i+", "+ eml.epoch + ");'>" + subject + "</a> " + d + " <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 140px;' class='label label-" + ld + "' title='" + ti + "'>(" + mdate + ")</label><div id='thread_" + i + "' style='display:none';></div></li>"
         }
         nest += "</ul>"
         document.getElementById('notifications').innerHTML = nest
     }
 }
+
+// onLoad function, fetches the needed JSON and renders the notif list
 function listNotifications() {
     GetAsync("/api/notifications.lua", null, renderNotifications)
     GetAsync("/api/preferences.lua", null, setupUserFromLua)
