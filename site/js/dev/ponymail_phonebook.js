@@ -189,7 +189,7 @@ function seedTable(json) {
             obj.appendChild(d)
         }
     }
-    document.getElementById('phonebook_helper').innerHTML = "Pick a mailing list to start viewing emails"
+    document.getElementById('phonebook_help').innerHTML = "Pick a mailing list to start viewing emails"
 }
 
 
