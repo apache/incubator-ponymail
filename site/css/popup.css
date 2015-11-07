@@ -769,7 +769,7 @@ top: 17px;
      border: #5bc0de solid 1px;
 }
 
-.listtablekid:hover {
+.listtablekid:hover, .listtablekid a:hover {
      cursor: pointer;
-     color: #006;
+     color: #A06;
 }
