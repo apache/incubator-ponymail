@@ -3,6 +3,7 @@
 - Permalink page now accepts shortened IDs (first 18 chars)
 - Archiver can ignore specific emails (like list owner/system messages)
 - Archiver can be told to use current timestamp instead of the Date header
+- Added 'table' view mode for the front page for smaller list systems
 
 ## CHANGES in 0.2a:
 
