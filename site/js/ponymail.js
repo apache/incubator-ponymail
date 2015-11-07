@@ -2420,7 +2420,7 @@ function seedTable(json) {
             var list = lists[i]
             var d = document.createElement('div')
             d.setAttribute("class", "listtablekid")
-            d.innerHTML = "<b>" + list + "</b> - " + lnum[list] + " messages in the past 3 months."
+            d.innerHTML = "<a href='list.html?" + list + "'><b>" + list + "</b></a> - " + lnum[list] + " messages in the past 3 months."
             d.setAttribute("onclick", "location.href = 'list.html?" + list + "';")
             obj.appendChild(d)
         }
