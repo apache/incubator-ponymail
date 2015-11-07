@@ -759,3 +759,17 @@ top: 17px;
      font-weight: bold;
      background: linear-gradient(to bottom, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 100%);
 }
+
+.listtablekid {
+     min-width: 350px;
+     padding: 8px;
+     margin: 5px;
+     background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+     border-radius: 4px;
+     border: #5bc0de solid 1px;
+}
+
+.listtablekid:hover {
+     cursor: pointer;
+     color: #006;
+}

@@ -2251,7 +2251,7 @@ function getListInfo(list, xdomain, nopush) {
 
 // Fetched from ponymail_phonebook.js
 
-var phonebook_json
+var phonebook_json, table_json
 
 // showDomains: Show domains in the phone book display
 function showDomains(l) {
@@ -2371,9 +2371,72 @@ function seedDomains(json) {
 }
 
 
+
+// seedTable: get account info and seed a table view instead of a phonebook view
+function seedTable(json) {
+    table_json = json
+    var obj = document.getElementById('domains')
+    if (!obj) {
+        return
+    }
+    document.getElementById('login_disclaimer').style.display = "block"
+    if (prefs.fullname && json.login) {
+        json.login.credentials.fullname = prefs.fullname
+    }
+    if (json.login && json.login.credentials && json.login.credentials.fullname) {
+        document.getElementById('welcome').innerHTML = "Welcome, " + json.login.credentials.fullname.split(/ /)[0] + "!"
+        document.getElementById('login_disclaimer').innerHTML = "Not " + json.login.credentials.fullname.split(/ /)[0] + "? <a href='javascript:void(0);' onclick='logout();'>Log out</a> then!"
+        login = json.login
+        setupUser(json.login)
+    } else {
+        document.getElementById('login_disclaimer').style.display = "block"
+    }
+    var lists = []
+    var lnum = {}
+    
+    for (var key in json.lists) {
+        for (var list in json.lists[key]) {
+            var num = json.lists[key][list]
+            lists.push(list + '@' + key)
+            lnum[list+'@'+key] = num
+        }
+    }
+    
+    lists.sort()
+    var lu = {}
+    var pg;
+    var po = document.createElement("div")
+    
+    po.style.textAlign = "left"
+    po.style.margin = "0px"
+    var x = 0;
+    if (lists.length == 0) {
+        obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
+    } else {
+        for (var i in lists) {
+            var list = lists[i]
+            var d = document.createElement('div')
+            d.setAttribute("class", "listtablekid")
+            d.innerHTML = "<b>" + list + "</b> - " + lnum[list] + " messages in the past 3 months."
+            d.setAttribute("onclick", "location.href = 'list.html?" + list + "';")
+            obj.appendChild(d)
+        }
+    }
+}
+
+
 // listDomains: fetch prefs and ML stats
 function listDomains() {
-    GetAsync("/api/preferences.lua", null, seedDomains)
+    
+    // phonebook modes?
+    if (pm_config.indexMode.match(/phonebook/)) {
+        GetAsync("/api/preferences.lua", null, seedDomains)
+        
+    // Table view mode?
+    } else if (pm_config.indexMode == 'table') {
+        GetAsync("/api/preferences.lua?detailed=true", null, seedTable)
+    }
+    
     GetAsync("/api/pminfo.lua", null, showStats)
 }
 // Fetched from ponymail_search.js
