@@ -2413,6 +2413,9 @@ function seedTable(json) {
     if (lists.length == 0) {
         obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
     } else {
+        var title = document.createElement('h4')
+        title.appendChild(document.createTextNode('Available lists:'))
+        obj.appendChild(title)
         for (var i in lists) {
             var list = lists[i]
             var d = document.createElement('div')
