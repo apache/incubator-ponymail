@@ -340,7 +340,19 @@ function datePickerDouble(seedPeriod) {
             rv = "<" + m[1] + m[2] + " ago"
             dbl = "lte=" + (parseInt(m[1])*2) + m[2]
             tspan = parseInt(parseInt(m[1]) * 30.4)
-            dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
+            if (m[2] == "M") {
+                dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
+            }
+            if (m[2] == "d") {
+                dfrom.setDate(dfrom.getDate()-parseInt(m[1]))
+            }
+            if (m[2] == "y") {
+                dfrom.setYear(dfrom.getFullYear()-parseInt(m[1]))
+            }
+            if (m[2] == "w") {
+                dfrom.setDate(dfrom.getDate()-(parseInt(m[1])*7))
+            }
+            
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
         }
         
@@ -352,7 +364,18 @@ function datePickerDouble(seedPeriod) {
             dbl = "gte=" + (parseInt(m[1])*2) + m[2]
             tspan = parseInt(parseInt(m[1]) * 30.4)
             dfrom = null
-            dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
+            if (m[2] == "M") {
+                dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
+            }
+            if (m[2] == "d") {
+                dto.setDate(dto.getDate()-parseInt(m[1]))
+            }
+            if (m[2] == "y") {
+                dto.setYear(dto.getFullYear()-parseInt(m[1]))
+            }
+            if (m[2] == "w") {
+                dto.setDate(dto.getDate()-(parseInt(m[1])*7))
+            }
             tspan = null
         }
         

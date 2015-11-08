@@ -601,7 +601,19 @@ function datePickerDouble(seedPeriod) {
             rv = "<" + m[1] + m[2] + " ago"
             dbl = "lte=" + (parseInt(m[1])*2) + m[2]
             tspan = parseInt(parseInt(m[1]) * 30.4)
-            dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
+            if (m[2] == "M") {
+                dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
+            }
+            if (m[2] == "d") {
+                dfrom.setDate(dfrom.getDate()-parseInt(m[1]))
+            }
+            if (m[2] == "y") {
+                dfrom.setYear(dfrom.getFullYear()-parseInt(m[1]))
+            }
+            if (m[2] == "w") {
+                dfrom.setDate(dfrom.getDate()-(parseInt(m[1])*7))
+            }
+            
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
         }
         
@@ -613,7 +625,18 @@ function datePickerDouble(seedPeriod) {
             dbl = "gte=" + (parseInt(m[1])*2) + m[2]
             tspan = parseInt(parseInt(m[1]) * 30.4)
             dfrom = null
-            dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
+            if (m[2] == "M") {
+                dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
+            }
+            if (m[2] == "d") {
+                dto.setDate(dto.getDate()-parseInt(m[1]))
+            }
+            if (m[2] == "y") {
+                dto.setYear(dto.getFullYear()-parseInt(m[1]))
+            }
+            if (m[2] == "w") {
+                dto.setDate(dto.getDate()-(parseInt(m[1])*7))
+            }
             tspan = null
         }
         
@@ -2884,7 +2907,7 @@ function showTrends(json, state) {
     var total_topics_current = 0;
     var total_topics_past = 0;
     for (var i in json.thread_struct) {
-        if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
+        if ((state.dfrom == null) || json.thread_struct[i].epoch >= (state.dfrom.getTime()/1000)) {
             total_topics_current++;
         } else {
             total_topics_past++;

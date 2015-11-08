@@ -72,7 +72,7 @@ function showTrends(json, state) {
     var total_topics_current = 0;
     var total_topics_past = 0;
     for (var i in json.thread_struct) {
-        if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
+        if ((state.dfrom == null) || json.thread_struct[i].epoch >= (state.dfrom.getTime()/1000)) {
             total_topics_current++;
         } else {
             total_topics_past++;
