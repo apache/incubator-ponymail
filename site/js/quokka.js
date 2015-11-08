@@ -51,6 +51,7 @@ function quokka_internal_rgb2hex(r, g, b) {
 
 // Generate color list used for charts
 var colors = [];
+var rgbs = []
 var numColorRows = 3;
 var numColorColumns = 10;
 for (var x=0;x<numColorRows;x++) {
@@ -63,7 +64,7 @@ for (var x=0;x<numColorRows;x++) {
         // Darker variant for gradients:
         var dhex = quokka_internal_rgb2hex(color.r*111, color.g*111, color.b*111);
         
-        colors.push([hex, dhex]);
+        colors.push([hex, dhex, color]);
     }
 }
 
@@ -406,6 +407,7 @@ function quokkaBars(id, titles, values, options) {
     var lwidth = 150;
     var lheight = 75;
     var stack = options ? options.stack : false;
+    var astack = options ? options.astack : false;
     var curve = options ? options.curve : false;
     var title = options ? options.title : null;
     var noX = options ? options.nox : false;
@@ -559,8 +561,7 @@ function quokkaBars(id, titles, values, options) {
                 var value = values[k][i];
                 var title = titles[i];
                 var color = colors[zz % colors.length][1];
-                var fcolor = colors[zz % colors.length][0];
-                
+                var fcolor = colors[zz % colors.length][2];
                 var x = ((step) * k) + ((smallstep+2) * zz) + 5;
                 var y = canvas.height - 10 - lheight;
                 var height = ((canvas.height - 40 - lheight) / (max-min)) * value * -1;
@@ -568,8 +569,11 @@ function quokkaBars(id, titles, values, options) {
                 if (stack) {
                     width = step - 10;
                     y -= stacks[k];
-                    x = (step * k) + 4;
                     stacks[k] -= height;
+                    x = (step * k) + 4;
+                    if (astack) {
+                        y = canvas.height - 10 - lheight;
+                    }
                 }
                 
                         
@@ -578,8 +582,8 @@ function quokkaBars(id, titles, values, options) {
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = color;
                 ctx.strokeRect(27 + x, y, width, height);
-                
-                ctx.fillStyle = fcolor;
+                var alpha = 0.5
+                ctx.fillStyle = 'rgba('+ [parseInt(fcolor.r*255),parseInt(fcolor.g*255),parseInt(fcolor.b*255),alpha].join(",") + ')';
                 ctx.fillRect(27 + x, y, width, height);
                 
             }

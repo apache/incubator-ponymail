@@ -148,12 +148,13 @@ function showTrends(json, state) {
     
     if (state.dfrom && state.dto) {
         quokkaBars("trendCanvas", 
-        ['Emails sent', 'Topics started', 'Participants'], 
+        ['This timespan', 'Previous timespan'], 
         [ 
-            [state.dfrom, total_emails_past, total_topics_past, total_people_past], 
-            [state.dto, total_emails_current, total_topics_current, total_people_current], 
+            ["Emails sent", total_emails_current, total_emails_past],
+            ["Topics started", total_topics_current, total_topics_past],
+            ["Participants", total_people_current, total_people_past], 
         ],
-        { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days", nox: false }
+        { stack: true, astack: true, curve: false, title: "Stats for the past " + state.tspan + " days (with previous timespan superimposed)", nox: false }
       );
     }
     
