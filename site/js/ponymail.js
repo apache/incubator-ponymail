@@ -653,6 +653,8 @@ function datePickerDouble(seedPeriod) {
                 var dpast = new Date(dfrom)
                 dpast.setDate(dpast.getDate() - tspan)
                 dbl = seedPeriod.replace(/dfr=[^|]+/, "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate())
+            } else {
+                tspan = 0
             }
         }
     }
@@ -2860,6 +2862,12 @@ function showTrends(json, state) {
         return;
     }
     var daterange = ""
+    
+    if (state.tspan == 0) {
+        obj.innerHTML += "<h4>Invalid date range specified!</h4>"
+        return
+    }
+    
     if (state.dfrom || state.dto) {
         daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
     }

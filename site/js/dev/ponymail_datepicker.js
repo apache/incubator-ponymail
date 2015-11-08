@@ -392,6 +392,8 @@ function datePickerDouble(seedPeriod) {
                 var dpast = new Date(dfrom)
                 dpast.setDate(dpast.getDate() - tspan)
                 dbl = seedPeriod.replace(/dfr=[^|]+/, "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate())
+            } else {
+                tspan = 0
             }
         }
     }
