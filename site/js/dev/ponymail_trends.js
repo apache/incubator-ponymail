@@ -162,5 +162,5 @@ function gatherTrends() {
     var arr = list.split(/@/)
     var listname = arr[0]
     var domain = arr[1]
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + query, { dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], query: query }, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : ""), { dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], query: query }, showTrends)
 }
