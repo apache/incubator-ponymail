@@ -210,6 +210,7 @@ function buildPage(json, state) {
     d_at = 10
     current_thread_mids = []
     checkCalendar(json)
+    document.title = json.list + " - Pony Mail!"
     
     // if we have xdomain, rewrite the wording in quick search.
     var lcheckall = document.getElementById('lcheckall')
