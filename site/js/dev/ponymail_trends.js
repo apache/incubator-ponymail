@@ -31,13 +31,18 @@ function showTrends(json, state) {
         return
     }
     
+    // Add the timespan if it makes sense (has a beginning and end)
     if (state.dfrom || state.dto) {
         daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
     }
+    
+    // Link back to list view if possible
     var lname = json.list.replace(/</, "&lt;")
     if (lname.search(/\*/) == -1) {
         lname = "<a href='/list.html?" + lname + "'>" + lname + "</a>"
     }
+    
+    // Set page title
     obj.innerHTML = "<h2>Statistics for " + lname + daterange + ":</h2>"
     if (state.query && state.query.length > 0) {
         obj.innerHTML += "<i>(NB: You are using a search query which may distort these results)"
@@ -60,6 +65,7 @@ function showTrends(json, state) {
         }
     }
     
+    // change since past timespan as relative number and percentage
     var diff = total_emails_current-total_emails_past
     var pct = parseInt((diff / total_emails_past)*100)
     
@@ -107,6 +113,7 @@ function showTrends(json, state) {
     
     
     // people participating in the past 3 months
+    // As we can't just count them, we'll construct a hash and count the no. of elements in it
     var total_people_current = 0;
     var total_people_past = 0;
     var hc = {}
@@ -119,6 +126,7 @@ function showTrends(json, state) {
         }
     }
     
+    // count elements in the hashes
     for (var i in hc) { total_people_current++;}
     for (var i in hp) { total_people_past++;}
     
@@ -138,6 +146,7 @@ function showTrends(json, state) {
     
     obj.appendChild(parts)
     
+    // Display charts if possible
     if (state.dfrom && state.dto) {
         quokkaBars("trendCanvas", 
         ['Previous timespan', 'Current timespan'], 
