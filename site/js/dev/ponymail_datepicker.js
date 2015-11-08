@@ -331,6 +331,8 @@ function datePickerDouble(seedPeriod) {
     var tspan = 1
     var dfrom = new Date()
     var dto = new Date()
+    
+    // datepicker range?
     if (seedPeriod && seedPeriod.search && seedPeriod.search(/=/) != -1) {
         
         // Less than N units ago?
@@ -395,6 +397,22 @@ function datePickerDouble(seedPeriod) {
             } else {
                 tspan = 0
             }
+        }
+    }
+    // Specific month?
+    else if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
+        ptype = 'mr'
+        var mr = seedPeriod.match(/(\d+)-(\d+)/)
+        if (mr) {
+            rv = seedPeriod
+            dfrom = new Date(parseInt(mr[1]),parseInt(mr[2])-1,1, 0, 0, 0)
+            dto = new Date(parseInt(mr[1]),parseInt(mr[2]),0, 0, 0, 0)
+            tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+            var dpast = new Date(dfrom)
+            dpast.setDate(dpast.getDate() - tspan)
+            dbl = "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate() + "|dto=" + (dto.getFullYear()) + '-' + (dto.getMonth()+1) + '-' + dto.getDate()
+        } else {
+            tspan = 0
         }
     }
     return [dbl, dfrom, dto, tspan]
