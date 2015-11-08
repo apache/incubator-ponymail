@@ -321,6 +321,60 @@ function datePickerValue(seedPeriod) {
     return rv
 }
 
+function datePickerDouble(seedPeriod) {
+    // This basically takes a date-arg and doubles it backwards
+    // so >=3M becomes =>6M etc. Also returns the cutoff for
+    // the original date and the span in days of the original
+    var ptype = ""
+    var rv = seedPeriod
+    var dbl = seedPeriod
+    var tspan = 1
+    var dfrom = new Date()
+    var dto = new Date()
+    if (seedPeriod && seedPeriod.search && seedPeriod.search(/=/) != -1) {
+        
+        // Less than N units ago?
+        if (seedPeriod.match(/lte/)) {
+            var m = seedPeriod.match(/lte=(\d+)([dMyw])/)
+            ptype = 'lt'
+            rv = "<" + m[1] + m[2] + " ago"
+            dbl = "lte=" + (parseInt(m[1])*2) + m[2]
+            tspan = parseInt(parseInt(m[1]) * 30.4)
+            dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
+            tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+        }
+        
+        // More than N units ago?
+        if (seedPeriod.match(/gte/)) {
+            ptype = 'mt'
+            var m = seedPeriod.match(/gte=(\d+)([dMyw])/)
+            rv = ">" + m[1] + m[2] + " ago"
+            dbl = "gte=" + (parseInt(m[1])*2) + m[2]
+            tspan = parseInt(parseInt(m[1]) * 30.4)
+            dfrom = null
+            dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
+            tspan = null
+        }
+        
+        // Date range?
+        if (seedPeriod.match(/dfr/)) {
+            ptype = 'cd'
+            var mf = seedPeriod.match(/dfr=(\d+)-(\d+)-(\d+)/)
+            var mt = seedPeriod.match(/dto=(\d+)-(\d+)-(\d+)/)
+            if (mf && mt) {
+                rv = "from " + mf[1] + " to " + mt[1]
+                dfrom = new Date(parseInt(mf[1]),parseInt(mf[2])-1,parseInt(mf[3]), 0, 0, 0)
+                dto = new Date(parseInt(mt[1]),parseInt(mt[2])-1,parseInt(mt[3]), 23, 59, 59)
+                tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+                var dpast = new Date(dfrom)
+                dpast.setDate(dpast.getDate() - tspan)
+                dbl = seedPeriod.replace(/dfr=[^|]+/, "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate())
+            }
+        }
+    }
+    return [dbl, dfrom, dto, tspan]
+}
+
 // set date in caller and hide datepicker again.
 function setDatepickerDate() {
     calcTimespan()

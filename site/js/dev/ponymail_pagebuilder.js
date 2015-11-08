@@ -118,7 +118,10 @@ function buildStats(json, state, show) {
     if (json.numparts && json.numparts > 1) {
         ap = " by " + json.numparts + " people"
     }
-    stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics.<br/>"
+    stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics."
+    
+    stats.innerHTML += "[<a href='/trends.html" + document.location.search + "'>details</a>]"
+    stats.innerHTML += "<br/>"
 
     var ts = "<table border='0'><tr>"
     var ms = dailyStats(json.emails)

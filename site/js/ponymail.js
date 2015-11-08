@@ -582,6 +582,60 @@ function datePickerValue(seedPeriod) {
     return rv
 }
 
+function datePickerDouble(seedPeriod) {
+    // This basically takes a date-arg and doubles it backwards
+    // so >=3M becomes =>6M etc. Also returns the cutoff for
+    // the original date and the span in days of the original
+    var ptype = ""
+    var rv = seedPeriod
+    var dbl = seedPeriod
+    var tspan = 1
+    var dfrom = new Date()
+    var dto = new Date()
+    if (seedPeriod && seedPeriod.search && seedPeriod.search(/=/) != -1) {
+        
+        // Less than N units ago?
+        if (seedPeriod.match(/lte/)) {
+            var m = seedPeriod.match(/lte=(\d+)([dMyw])/)
+            ptype = 'lt'
+            rv = "<" + m[1] + m[2] + " ago"
+            dbl = "lte=" + (parseInt(m[1])*2) + m[2]
+            tspan = parseInt(parseInt(m[1]) * 30.4)
+            dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
+            tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+        }
+        
+        // More than N units ago?
+        if (seedPeriod.match(/gte/)) {
+            ptype = 'mt'
+            var m = seedPeriod.match(/gte=(\d+)([dMyw])/)
+            rv = ">" + m[1] + m[2] + " ago"
+            dbl = "gte=" + (parseInt(m[1])*2) + m[2]
+            tspan = parseInt(parseInt(m[1]) * 30.4)
+            dfrom = null
+            dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
+            tspan = null
+        }
+        
+        // Date range?
+        if (seedPeriod.match(/dfr/)) {
+            ptype = 'cd'
+            var mf = seedPeriod.match(/dfr=(\d+)-(\d+)-(\d+)/)
+            var mt = seedPeriod.match(/dto=(\d+)-(\d+)-(\d+)/)
+            if (mf && mt) {
+                rv = "from " + mf[1] + " to " + mt[1]
+                dfrom = new Date(parseInt(mf[1]),parseInt(mf[2])-1,parseInt(mf[3]), 0, 0, 0)
+                dto = new Date(parseInt(mt[1]),parseInt(mt[2])-1,parseInt(mt[3]), 23, 59, 59)
+                tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+                var dpast = new Date(dfrom)
+                dpast.setDate(dpast.getDate() - tspan)
+                dbl = seedPeriod.replace(/dfr=[^|]+/, "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate())
+            }
+        }
+    }
+    return [dbl, dfrom, dto, tspan]
+}
+
 // set date in caller and hide datepicker again.
 function setDatepickerDate() {
     calcTimespan()
@@ -1967,7 +2021,10 @@ function buildStats(json, state, show) {
     if (json.numparts && json.numparts > 1) {
         ap = " by " + json.numparts + " people"
     }
-    stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics.<br/>"
+    stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics."
+    
+    stats.innerHTML += "[<a href='/trends.html" + document.location.search + "'>details</a>]"
+    stats.innerHTML += "<br/>"
 
     var ts = "<table border='0'><tr>"
     var ms = dailyStats(json.emails)
@@ -2772,93 +2829,110 @@ function timeTravelList(id, jump) {
 
 
 // showTrends: Show the ML trends on trends.html
-function showTrends(json) {
+function showTrends(json, state) {
     
     var now = new Date().getTime() / 1000
     var obj = document.getElementById('trends')
     if (!obj) {
         return;
     }
-    obj.innerHTML = "<h2>3 month statistics for " + json.list + ":</h2>"
+    var daterange = ""
+    if (state.dfrom || state.dto) {
+        daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
+    }
+    obj.innerHTML = "<h2>Statistics for " + json.list + daterange + ":</h2>"
+    
+    
+    // for sake of displaying "N days" or just "days", make tspan empty string if null
+    if (state.tspan == null) {
+        state.tspan = ""
+    }
 
-    // total emails sent in the past 3 months
-    var total_emails_current_3 = 0;
-    var total_emails_past_3 = 0;
+    // total emails sent in the past N days
+    var total_emails_current = 0;
+    var total_emails_past = 0;
     for (var i in json.emails) {
-        if (json.emails[i].epoch >= now-(92*86400)) {
-            total_emails_current_3++;
+        if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
+            total_emails_current++;
         } else {
-            total_emails_past_3++;
+            total_emails_past++;
         }
     }
     
-    var diff = total_emails_current_3-total_emails_past_3
-    var pct = parseInt((diff / total_emails_past_3)*100)
+    var diff = total_emails_current-total_emails_past
+    var pct = parseInt((diff / total_emails_past)*100)
     
     var emls_sent = document.createElement('div')
-    emls_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F8684E; color: #FFF; font-family: sans-serif; width: 340px;")
-    emls_sent.innerHTML = "<h2 style='text-align: left;'>" + total_emails_current_3.toLocaleString() + "</h2>Emails sent in the past 3 months,<br/>"
-    if (total_emails_current_3 >= total_emails_past_3) {
-        emls_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_emails_current_3-total_emails_past_3) + " (" + pct + "%) since previous 3 months."
-    } else {
-        emls_sent.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_emails_past_3-total_emails_current_3) + " (" + pct + "%) since previous 3 months."
+    emls_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F8684E; color: #FFF; font-family: sans-serif; width: 420px;")
+    emls_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>" + total_emails_current.toLocaleString() + "</h2>Emails sent during these " + state.tspan + " days,<br/>"
+    if (!isNaN(pct)) {
+        if (total_emails_current >= total_emails_past) {
+        emls_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_emails_current-total_emails_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        } else {
+            emls_sent.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_emails_past-total_emails_current) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        }
     }
+    
     
     obj.appendChild(emls_sent)
     
     
     // total topics started in the past 3 months
-    var total_topics_current_3 = 0;
-    var total_topics_past_3 = 0;
+    var total_topics_current = 0;
+    var total_topics_past = 0;
     for (var i in json.thread_struct) {
-        if (json.thread_struct[i].epoch >= now-(92*86400)) {
-            total_topics_current_3++;
+        if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
+            total_topics_current++;
         } else {
-            total_topics_past_3++;
+            total_topics_past++;
         }
     }
     
-    var diff = total_topics_current_3-total_topics_past_3
-    var pct = parseInt((diff / total_topics_past_3)*100)
+    var diff = total_topics_current-total_topics_past
+    var pct = parseInt((diff / total_topics_past)*100)
     
     var topics_sent = document.createElement('div')
-    topics_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 340px;")
-    topics_sent.innerHTML = "<h2 style='text-align: left;'>" + total_topics_current_3.toLocaleString() + "</h2>discussions started in the past 3 months,<br/>"
-    if (total_topics_current_3 >= total_topics_past_3) {
-        topics_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_topics_current_3-total_topics_past_3) + " (" + pct + "%) since previous 3 months."
-    } else {
-        topics_sent.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_topics_past_3-total_topics_current_3) + " (" + pct + "%) since previous 3 months."
+    topics_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 420px;")
+    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>" + total_topics_current.toLocaleString() + "</h2>discussions during these " + state.tspan + " days,<br/>"
+    if (!isNaN(pct)) {
+        if (total_topics_current >= total_topics_past) {
+            topics_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_topics_current-total_topics_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        } else {
+            topics_sent.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_topics_past-total_topics_current) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        }
     }
     
     obj.appendChild(topics_sent)
     
     
     // people participating in the past 3 months
-    var total_people_current_3 = 0;
-    var total_people_past_3 = 0;
+    var total_people_current = 0;
+    var total_people_past = 0;
     var hc = {}
     var hp = {}
     for (var i in json.emails) {
-        if (json.emails[i].epoch >= now-(92*86400)) {
+        if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
             hc[json.emails[i].from] = (hc[json.emails[i].from] ? hc[json.emails[i].from] : 0) + 1
         } else {
             hp[json.emails[i].from] = (hp[json.emails[i].from] ? hp[json.emails[i].from] : 0) + 1
         }
     }
     
-    for (var i in hc) { total_people_current_3++;}
-    for (var i in hp) { total_people_past_3++;}
+    for (var i in hc) { total_people_current++;}
+    for (var i in hp) { total_people_past++;}
     
-    var diff = total_people_current_3-total_people_past_3
-    var pct = parseInt((diff / total_people_past_3)*100)
+    var diff = total_people_current-total_people_past
+    var pct = parseInt((diff / total_people_past)*100)
     
     var parts = document.createElement('div')
-    parts.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00A757; color: #FFF; font-family: sans-serif; width: 340px;")
-    parts.innerHTML = "<h2 style='text-align: left;'>" + total_people_current_3.toLocaleString() + "</h2>Participants in the past 3 months,<br/>"
-    if (total_people_current_3 >= total_people_past_3) {
-        parts.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_people_current_3-total_people_past_3) + " (" + pct + "%) since previous 3 months."
-    } else {
-        parts.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_people_past_3-total_people_current_3) + " (" + pct + "%) since previous 3 months."
+    parts.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00A757; color: #FFF; font-family: sans-serif; width: 420px;")
+    parts.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>" + total_people_current.toLocaleString() + "</h2>Participants during these " + state.tspan + " days,<br/>"
+    if (!isNaN(pct)) {
+        if (total_people_current >= total_people_past) {
+            parts.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_people_current-total_people_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        } else {
+            parts.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_people_past-total_people_current) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        }
     }
     
     obj.appendChild(parts)
@@ -2868,7 +2942,7 @@ function showTrends(json) {
     
     var top10 = document.createElement('div')
     top10.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 700px;")
-    top10.innerHTML = "<h2 style='text-align: left;'>Top 25 participants:</h2>"
+    top10.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>Top 25 participants:</h2>"
     
     var l = "<ul>"
     for (var i in json.participants) {
@@ -2885,11 +2959,16 @@ function showTrends(json) {
 }
 
 function gatherTrends() {
-    var list = document.location.search.substr(1)
+    var args = document.location.search.substr(1)
+    var a_arr = args.split(/:/, 3)
+    var list = a_arr[0]
+    var dspan = a_arr[1]
+    var query = a_arr[2]
+    var xa = datePickerDouble(dspan)
     var arr = list.split(/@/)
     var listname = arr[0]
     var domain = arr[1]
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=184', null, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0], { dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], query: query }, showTrends)
 }// Fetched from ponymail_user_preferences.js
 
 
