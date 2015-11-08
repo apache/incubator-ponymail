@@ -602,7 +602,7 @@ function datePickerDouble(seedPeriod) {
             ptype = 'lt'
             rv = "<" + m[1] + m[2] + " ago"
             dbl = "lte=" + (parseInt(m[1])*2) + m[2]
-            tspan = parseInt(parseInt(m[1]) * 30.4)
+            
             if (m[2] == "M") {
                 dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
             }
@@ -667,7 +667,7 @@ function datePickerDouble(seedPeriod) {
         if (mr) {
             rv = seedPeriod
             dfrom = new Date(parseInt(mr[1]),parseInt(mr[2])-1,1, 0, 0, 0)
-            dto = new Date(parseInt(mr[1]),parseInt(mr[2]),0, 0, 0, 0)
+            dto = new Date(parseInt(mr[1]),parseInt(mr[2]),0, 23, 59, 59)
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
             var dpast = new Date(dfrom)
             dpast.setDate(dpast.getDate() - tspan)
