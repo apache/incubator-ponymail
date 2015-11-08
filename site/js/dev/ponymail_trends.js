@@ -155,6 +155,9 @@ function gatherTrends() {
     var list = a_arr[0]
     var dspan = a_arr[1]
     var query = a_arr[2]
+    if (!dspan || dspan.length == 0) {
+        dspan = "lte=1M"
+    }
     var xa = datePickerDouble(dspan)
     var arr = list.split(/@/)
     var listname = arr[0]
