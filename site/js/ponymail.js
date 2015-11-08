@@ -686,7 +686,7 @@ function findParent(el, name) {
 // function for hiding the date picker
 function blurDatePicker(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
-    if (!es || !es.parentNode || (!findParent(es, "datepicker_popup") && !findParent(es, "calendarpicker_popup")))  {
+    if ((!es || !es.parentNode || (!findParent(es, "datepicker_popup") && !findParent(es, "calendarpicker_popup"))) && !es.toString().match(/javascript:void/)) {
         document.getElementById('datepicker_popup').style.display = "none"
     }
 }
