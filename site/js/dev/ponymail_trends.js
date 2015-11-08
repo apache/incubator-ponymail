@@ -34,7 +34,11 @@ function showTrends(json, state) {
     if (state.dfrom || state.dto) {
         daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
     }
-    obj.innerHTML = "<h2>Statistics for " + json.list + daterange + ":</h2>"
+    var lname = json.list.replace(/</, "&lt;")
+    if (lname.search(/\*/) == -1) {
+        lname = "<a href='/list.html?" + lname + "'>" + lname + "</a>"
+    }
+    obj.innerHTML = "<h2>Statistics for " + lname + daterange + ":</h2>"
     if (state.query && state.query.length > 0) {
         obj.innerHTML += "<i>(NB: You are using a search query which may distort these results)"
     }
