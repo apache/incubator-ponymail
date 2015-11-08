@@ -2890,7 +2890,7 @@ function showTrends(json, state) {
     
     var emls_sent = document.createElement('div')
     emls_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F8684E; color: #FFF; font-family: sans-serif; width: 420px;")
-    emls_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>" + total_emails_current.toLocaleString() + "</h2>Emails sent during these " + state.tspan + " days,<br/>"
+    emls_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-envelope'> </span> " + total_emails_current.toLocaleString() + "</h2>Emails sent during these " + state.tspan + " days,<br/>"
     if (!isNaN(pct)) {
         if (total_emails_current >= total_emails_past) {
         emls_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_emails_current-total_emails_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
@@ -2919,7 +2919,7 @@ function showTrends(json, state) {
     
     var topics_sent = document.createElement('div')
     topics_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 420px;")
-    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>" + total_topics_current.toLocaleString() + "</h2>discussions during these " + state.tspan + " days,<br/>"
+    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-list-alt'> </span> " + total_topics_current.toLocaleString() + "</h2>discussions during these " + state.tspan + " days,<br/>"
     if (!isNaN(pct)) {
         if (total_topics_current >= total_topics_past) {
             topics_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_topics_current-total_topics_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
@@ -2952,7 +2952,7 @@ function showTrends(json, state) {
     
     var parts = document.createElement('div')
     parts.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00A757; color: #FFF; font-family: sans-serif; width: 420px;")
-    parts.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>" + total_people_current.toLocaleString() + "</h2>Participants during these " + state.tspan + " days,<br/>"
+    parts.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-user'> </span> " + total_people_current.toLocaleString() + "</h2>Participants during these " + state.tspan + " days,<br/>"
     if (!isNaN(pct)) {
         if (total_people_current >= total_people_past) {
             parts.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_people_current-total_people_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
@@ -2968,7 +2968,7 @@ function showTrends(json, state) {
     
     var top10 = document.createElement('div')
     top10.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 700px;")
-    top10.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'>Top 25 participants:</h2>"
+    top10.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 25 participants:</h2>"
     
     var l = "<ul>"
     for (var i in json.participants) {
