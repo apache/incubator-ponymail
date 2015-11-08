@@ -2841,7 +2841,7 @@ function showTrends(json, state) {
         daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
     }
     obj.innerHTML = "<h2>Statistics for " + json.list + daterange + ":</h2>"
-    if (stats.query && state.query.length > 0) {
+    if (state.query && state.query.length > 0) {
         obj.innerHTML += "<i>(NB: You are using a search query which may distort these results)"
     }
     
