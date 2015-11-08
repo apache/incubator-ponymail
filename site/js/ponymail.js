@@ -2989,7 +2989,7 @@ function showTrends(json, state) {
             ["Topics started", total_topics_past, total_topics_current],
             ["Participants", total_people_past, total_people_current], 
         ],
-        { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days (with previous timespan superimposed)", nox: false }
+        { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days (compared to previous timespan)", nox: false }
       );
     }
     
