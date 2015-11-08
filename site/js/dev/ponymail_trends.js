@@ -154,7 +154,7 @@ function showTrends(json, state) {
             ["Topics started", total_topics_current, total_topics_past],
             ["Participants", total_people_current, total_people_past], 
         ],
-        { stack: true, astack: true, curve: false, title: "Stats for the past " + state.tspan + " days (with previous timespan superimposed)", nox: false }
+        { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days (with previous timespan superimposed)", nox: false }
       );
     }
     
