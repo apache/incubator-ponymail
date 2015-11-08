@@ -496,7 +496,7 @@ function quokkaBars(id, titles, values, options) {
         ctx.font="10px Arial";
         ctx.fillStyle = "#000";
         ctx.textAlign = "right";
-        ctx.fillText( Math.round( ((max-min) - (step*(x+1))) * 100 ) / 100,canvas.width - lwidth, y-4);
+        ctx.fillText( Math.round( ((max-min) - (step*(x+1))) * 100 ) / 100,canvas.width - lwidth + 12, y-4);
         ctx.fillText( Math.round( ((max-min) - (step*(x+1))) * 100 ) / 100,20, y-4);
     }
     
