@@ -3017,7 +3017,7 @@ function showTop(json, state) {
     
     // Top 10 participants
     var top10 = document.createElement('div')
-    top10.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; min-width: 400px;")
+    top10.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 420px;")
     top10.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 10 participants:</h2>"
     
     var l = "<ul>"
