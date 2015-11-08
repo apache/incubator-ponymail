@@ -565,7 +565,7 @@ function quokkaBars(id, titles, values, options) {
                 var x = ((step) * k) + ((smallstep+2) * zz) + 5;
                 var y = canvas.height - 10 - lheight;
                 var height = ((canvas.height - 40 - lheight) / (max-min)) * value * -1;
-                var width = smallstep - 2;
+                var width = smallstep - 8;
                 if (stack) {
                     width = step - 10;
                     y -= stacks[k];
