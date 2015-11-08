@@ -90,7 +90,7 @@ function showTrends(json, state) {
     
     var topics_sent = document.createElement('div')
     topics_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 420px;")
-    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-list-alt'> </span> " + total_topics_current.toLocaleString() + "</h2>discussions during these " + state.tspan + " days,<br/>"
+    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-list-alt'> </span> " + total_topics_current.toLocaleString() + "</h2>topics started during these " + state.tspan + " days,<br/>"
     if (!isNaN(pct)) {
         if (total_topics_current >= total_topics_past) {
             topics_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_topics_current-total_topics_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
