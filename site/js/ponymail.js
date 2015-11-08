@@ -2406,6 +2406,8 @@ function seedTable(json) {
     if (!obj) {
         return
     }
+    
+    // This is the usual login message, same in all view modes
     document.getElementById('login_disclaimer').style.display = "block"
     if (prefs.fullname && json.login) {
         json.login.credentials.fullname = prefs.fullname
@@ -2421,6 +2423,8 @@ function seedTable(json) {
     var lists = []
     var lnum = {}
     
+    
+    // Push lists and the no. of messages into lists
     for (var key in json.lists) {
         for (var list in json.lists[key]) {
             var num = json.lists[key][list]
@@ -2429,20 +2433,22 @@ function seedTable(json) {
         }
     }
     
+    // sort lists by name before iterating
     lists.sort()
-    var lu = {}
-    var pg;
+    
     var po = document.createElement("div")
     
     po.style.textAlign = "left"
     po.style.margin = "0px"
-    var x = 0;
+    
+    // Got any lists?
     if (lists.length == 0) {
         obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
     } else {
         var title = document.createElement('h4')
         title.appendChild(document.createTextNode('Available lists:'))
         obj.appendChild(title)
+        // for each list, show the name and the no. of emails in the past 90 days (3 months)
         for (var i in lists) {
             var list = lists[i]
             var d = document.createElement('div')
