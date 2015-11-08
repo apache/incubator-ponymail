@@ -62,6 +62,7 @@ var gxdomain = ""
 var fl = null
 var kiddos = []
 var pending_urls = {}
+var pb_refresh = 0
 
 var viewModes = {
     threaded: {
@@ -1023,7 +1024,7 @@ function displayEmail(json, id, level) {
             }
             
                
-            thread.innerHTML += "<pre style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
+            thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
             if (thread.hasAttribute("meme")) {
                 thread.scrollIntoView()
                 thread.style.background = "rgba(200,200,255, 0.25)"
@@ -1172,7 +1173,11 @@ function toggleEmails_threaded(id, close, toverride) {
         }
         
         if (prefs.groupBy == 'thread' && !(toverride == true)) {
+            // View as flat
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'date\'; toggleEmails_threaded(' + id + ', true); toggleEmails_threaded(' + id + ', false, true); sortByDate(' + id + ');" style="cursor: pointer; float: right;">Click to view as flat thread, sort by date</label> &nbsp;'
+            
+            // Highlight new emails since last view
+            helper.innerHTML += '<label style="margin-right: 10px; padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-success" onclick="highlightNewEmails('+id+');" style="cursor: pointer; float: right;">Highlight new messages</label> &nbsp;'
         } else {
             helper.innerHTML = '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; toggleEmails_threaded(' + id + ', true);toggleEmails_threaded(' + id + ');" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
         }
@@ -1223,7 +1228,26 @@ function toggleEmails_threaded(id, close, toverride) {
     }
 }
 
-
+// func for highlighting emails that have shown up during a recent page build, that we haven't
+// actually viewed before.
+function highlightNewEmails(id) {
+    if (typeof(window.localStorage) !== "undefined") {
+        kiddos = []
+        var t = document.getElementById("thread_" + id)
+        if (t) {
+            traverseThread(t, 'thread')
+            for (var i in kiddos) {
+                var mid = kiddos[i].getAttribute("id")
+                var epoch = window.localStorage.getItem("first_view_" + mid)
+                if (epoch && epoch != pb_refresh) {
+                    kiddos[i].style.color = "#AAA"
+                } else {
+                    window.localStorage.setItem("first_view_" + mid, pb_refresh)
+                }
+            }
+        }
+    }
+}
 
 function displaySingleThread(json) {
     if (json && json.thread) {
@@ -2022,6 +2046,7 @@ function buildStats(json, state, show) {
 // buildPage: build the entire page!
 function buildPage(json, state) {
     start = new Date().getTime()
+    pb_refresh = start
     json = json ? json : old_json
     old_json = json
     old_state = state

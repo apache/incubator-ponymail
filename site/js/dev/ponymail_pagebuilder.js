@@ -200,6 +200,7 @@ function buildStats(json, state, show) {
 // buildPage: build the entire page!
 function buildPage(json, state) {
     start = new Date().getTime()
+    pb_refresh = start
     json = json ? json : old_json
     old_json = json
     old_state = state

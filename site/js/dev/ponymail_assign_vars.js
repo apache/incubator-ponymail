@@ -59,6 +59,7 @@ var gxdomain = ""
 var fl = null
 var kiddos = []
 var pending_urls = {}
+var pb_refresh = 0
 
 var viewModes = {
     threaded: {

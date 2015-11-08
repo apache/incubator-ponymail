@@ -4,6 +4,7 @@
 - Archiver can ignore specific emails (like list owner/system messages)
 - Archiver can be told to use current timestamp instead of the Date header
 - Added 'table' view mode for the front page for smaller list systems
+- Users can now grey out emails they have seen before in a threaded view
 
 ## CHANGES in 0.2a:
 
