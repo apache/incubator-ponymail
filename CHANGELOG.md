@@ -5,6 +5,7 @@
 - Archiver can be told to use current timestamp instead of the Date header
 - Added 'table' view mode for the front page for smaller list systems
 - Users can now grey out emails they have seen before in a threaded view
+- Trends and stats for lists are available now (WIP)
 
 ## CHANGES in 0.2a:
 
