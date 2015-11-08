@@ -29,6 +29,9 @@ function showTrends(json, state) {
         daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
     }
     obj.innerHTML = "<h2>Statistics for " + json.list + daterange + ":</h2>"
+    if (stats.query && state.query.length > 0) {
+        obj.innerHTML += "<i>(NB: You are using a search query which may distort these results)"
+    }
     
     
     // for sake of displaying "N days" or just "days", make tspan empty string if null
@@ -156,5 +159,5 @@ function gatherTrends() {
     var arr = list.split(/@/)
     var listname = arr[0]
     var domain = arr[1]
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0], { dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], query: query }, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + query, { dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], query: query }, showTrends)
 }
