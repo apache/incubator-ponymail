@@ -1231,17 +1231,19 @@ function toggleEmails_threaded(id, close, toverride) {
 // func for highlighting emails that have shown up during a recent page build, that we haven't
 // actually viewed before.
 function highlightNewEmails(id) {
+    // This currently requires localStorage to store the view data
     if (typeof(window.localStorage) !== "undefined") {
         kiddos = []
         var t = document.getElementById("thread_" + id)
         if (t) {
-            traverseThread(t, 'thread')
+            traverseThread(t, 'thread') // find all child elements called 'thread*'
+            // For each email in this thread, check (or set) when it was first viewed
             for (var i in kiddos) {
                 var mid = kiddos[i].getAttribute("id")
                 var epoch = window.localStorage.getItem("first_view_" + mid)
-                if (epoch && epoch != pb_refresh) {
+                if (epoch && epoch != pb_refresh) { // did we view this before the last page build?
                     kiddos[i].style.color = "#AAA"
-                } else {
+                } else { // never seen it before, have it at normal color and set the first-view-date
                     window.localStorage.setItem("first_view_" + mid, pb_refresh)
                 }
             }
