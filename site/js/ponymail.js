@@ -2989,9 +2989,33 @@ function showTrends(json, state) {
     
     obj.appendChild(parts)
     
+    if (state.dfrom && state.dto) {
+        quokkaBars("trendCanvas", 
+        ['Previous timespan', 'Current timespan'], 
+        [ 
+            ["Emails sent", total_emails_past, total_emails_current],
+            ["Topics started", total_topics_past, total_topics_current],
+            ["Participants", total_people_past, total_people_current], 
+        ],
+        { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days (compared to previous timespan)", nox: false }
+      );
+    }
+    GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dspan + "&q=" + ((state.query && state.query.length > 0) ? state.query : ""), {tspan: state.tspan}, showTop)
+}
+
+function showTop(json, state) {
+    
+    var obj = document.getElementById('trends')
+    if (!obj) {
+        return;
+    }
+    var daterange = ""
+    
+    if (state.tspan == 0) {
+        return
+    }
     
     // Top 10 participants
-    
     var top10 = document.createElement('div')
     top10.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 700px;")
     top10.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 25 participants:</h2>"
@@ -3004,23 +3028,7 @@ function showTrends(json, state) {
     l += "</ul>"
     top10.innerHTML += l
     
-    obj.appendChild(top10)
-    
-    
-    if (state.dfrom && state.dto) {
-        quokkaBars("trendCanvas", 
-        ['Previous timespan', 'Current timespan'], 
-        [ 
-            ["Emails sent", total_emails_past, total_emails_current],
-            ["Topics started", total_topics_past, total_topics_current],
-            ["Participants", total_people_past, total_people_current], 
-        ],
-        { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days (compared to previous timespan)", nox: false }
-      );
-    }
-    
-    
-    
+    obj.appendChild(top10)    
 }
 
 function gatherTrends() {
@@ -3036,7 +3044,7 @@ function gatherTrends() {
     var arr = list.split(/@/)
     var listname = arr[0]
     var domain = arr[1]
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : ""), { dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], query: query }, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : ""), { listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
 }// Fetched from ponymail_user_preferences.js
 
 
