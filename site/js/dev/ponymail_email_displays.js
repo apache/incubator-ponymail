@@ -365,6 +365,7 @@ function highlightNewEmails(id) {
                     kiddos[i].style.color = "#AAA"
                 } else { // never seen it before, have it at normal color and set the first-view-date
                     window.localStorage.setItem("first_view_" + mid, pb_refresh)
+                    kiddos[i].style.color = "#000"
                 }
             }
         }
