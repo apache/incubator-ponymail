@@ -582,7 +582,7 @@ function quokkaBars(id, titles, values, options) {
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = color;
                 ctx.strokeRect(27 + x, y, width, height);
-                var alpha = 0.5
+                var alpha = 0.75
                 ctx.fillStyle = 'rgba('+ [parseInt(fcolor.r*255),parseInt(fcolor.g*255),parseInt(fcolor.b*255),alpha].join(",") + ')';
                 ctx.fillRect(27 + x, y, width, height);
                 
