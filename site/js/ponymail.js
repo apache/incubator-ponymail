@@ -3023,7 +3023,7 @@ function showTop(json, state) {
     var l = "<ul>"
     for (var i in json.participants) {
         var part = json.participants[i]
-        l += "<li><img src='https://secure.gravatar.com/avatar/" + part.gravatar + ".jpg?s=24&r=g&d=mm' style='margin: 5px;'/><b>" + part.name + ": </b>" + part.count + " emails</li>"
+        l += "<li><img src='https://secure.gravatar.com/avatar/" + part.gravatar + ".jpg?s=24&r=g&d=mm' style='margin: 5px;'/><b>" + part.name.replace(/</, "&lt;") + ": </b>" + part.count + " emails</li>"
     }
     l += "</ul>"
     top10.innerHTML += l
