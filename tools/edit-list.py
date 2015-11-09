@@ -143,7 +143,7 @@ if desc:
     LID = sourceLID
     if targetLID:
         LID = targetLID
-    self.es.index(
+    es.index(
         index=dbname,
         doc_type="mailinglists",
         id=LID,
