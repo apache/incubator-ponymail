@@ -33,24 +33,34 @@ function handle(r)
     if r.port == 80 then
         scheme = "http"
     end
+    
+    -- Persona callback
     if get.mode and get.mode == "persona" then
         local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=%s://%s:%u/"):format(post.assertion, scheme, r.hostname, r.port))
         r:err(("assertion=%s&audience=%s://ponymail:443/"):format(post.assertion, scheme))
         r:err(result)
         valid, json = pcall(function() return JSON.decode(result) end)
+        
+    -- Google Auth callback
     elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.id_token then
         local result = https.request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" .. r:escape(get.id_token))
         r:err(result)
         r:err(r:escape(get.id_token))
         valid, json = pcall(function() return JSON.decode(result) end)
+        
+    -- Generic callback (like ASF Oauth2)
     elseif get.state and get.code and get.oauth_token then
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
     end
+    
+    -- Did we get something useful from the backend?
     if valid and json then
         local eml = json.email
         local fname = json.fullname or json.name or json.email
         local admin = json.isMember
+        
+        -- If we got an email and a name, log in the user and set cookie etc
         if eml and fname then
             local cid = json.uid or json.email
             -- Does the user exist already?
@@ -68,9 +78,12 @@ function handle(r)
             usr.uid = json.uid
             user.update(r, cid, usr)
             r:puts[[{"okay": true, "msg": "Logged in successfully!"}]]
+        
+        -- didn't get email or name, bork!
         else
             r:puts[[{"okay": false, "msg": "Erroneous or missing response from backend!"}]]
         end
+    -- Backend borked, let the user know
     else
         r:puts[[{"okay": false, "msg": "Invalid oauth response!"}]]
     end
