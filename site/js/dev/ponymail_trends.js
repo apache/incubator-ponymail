@@ -163,7 +163,7 @@ function showTrends(json, state) {
         { stack: false, curve: false, title: "Stats for the past " + state.tspan + " days (compared to previous timespan)", nox: false }
       );
     }
-    GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dspan + "&q=" + ((state.query && state.query.length > 0) ? state.query : ""), {tspan: state.tspan}, showTop)
+    GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dspan + "&q=" + ((state.query && state.query.length > 0) ? state.query : "") + state.nquery, {tspan: state.tspan}, showTop)
     
     
     // daily chart rendering with quokka
@@ -230,6 +230,21 @@ function gatherTrends() {
     var list = a_arr[0]
     var dspan = a_arr[1]
     var query = a_arr[2]
+    
+    // Try to detect header searches, if present
+    var stuff = ['from', 'subject', 'body']
+    var nquery = ""
+    for (var k in stuff) {
+        // can we find 'header=foo' stuff?
+        var r = RegExp(stuff[k] + "=(.+)", "mi")
+        var m = query.match(r)
+        if (m) {
+            query = query.replace(m[0], "")
+            // append to the header_foo query
+            nquery += "&header_" + stuff[k] + "=" + escape(m[1])
+        }
+    }
+    
     // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
         dspan = "lte=1M"
@@ -243,6 +258,6 @@ function gatherTrends() {
     var domain = arr[1]
     
     // Get us some data
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : ""), { listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
     document.title = "Stats for " + list + " - Pony Mail!"
 }
