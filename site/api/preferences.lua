@@ -100,6 +100,16 @@ function handle(r)
     account = account or {}
     local descs = elastic.find("*", 9999, "mailinglists", "name")
     
+    -- try to extrapolate foo@bar.tld here
+    for k, v in pairs(descs) do
+        local l, d = v.list:match("<([^.]+)%.(.-)>")
+        if l and d then
+            descs[k].lid = ("%s@%s"):format(l, d)
+        else
+            descs[k].lid = v.list
+        end
+    end
+    
     r:puts(JSON.encode{
         lists = lists,
         descriptions = descs,
