@@ -28,12 +28,11 @@
 
 var _VERSION_ = "0.3a"
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-var d_at = 10;
-var d_ppp = 15;
+var d_ppp = 15; // results per page
 var open_emails = []
 var list_year = {}
-var current_retention = "lte=30d"
-var current_cal_min = 1997
+var current_retention = "lte=30d" // default timespan for list view
+var current_cal_min = 1997 // don't go further back than 1997 in case everything blows up, date-wise
 var keywords = ""
 var current_thread = 0
 var current_thread_mids = {}
@@ -2153,7 +2152,6 @@ function buildPage(json, state) {
     json = json ? json : old_json
     old_json = json
     old_state = state
-    d_at = 10
     current_thread_mids = []
     checkCalendar(json)
     document.title = json.list + " - Pony Mail!"
@@ -2590,25 +2588,32 @@ function toggleEmail(year, mo, nopush) {
     var domain = arr[1]
     var s = year + "-" + mo
     var e = s
+    // if year and month is supplied, the calendar (to the left) should show where we are
+    // so let's open up the right year and set the CSS for the selected month
     if (year && mo) {
         kiddos = []
         traverseThread(document.getElementById('datepicker'), 'calmonth', 'LABEL')
         for (var n in kiddos) {
+            // if this is the active month, blue-ify it
             if (kiddos[n].getAttribute("id") == ("calmonth_" + year + "-" + mo)) {
                 kiddos[n].setAttribute("class", "label label-info")
+            // otherwise, default css
             } else {
                 kiddos[n].setAttribute("class", "label label-default label-hover")
             }
         }
     }
     
-    
+    // if month is supplied, prettify it
     var xmo = mo ? parseInt(mo).toString() : ""
     if (mo.length > 0 && mo <= 9) {
         xmo = '0' + xmo
     }
+    // push history state, fetch the data from API
     if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
+    
+    // set list title to list and year/month
     document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")"
 }
 
@@ -2617,24 +2622,36 @@ function toggleEmail(year, mo, nopush) {
 // search: run a search
 function search(q, d, nopush, all) {
     keywords = q
-    current_retention = d
-    current_query = q
+    current_retention = d // we use this later in the pagebuilder
+    current_query = q // ditto
     var arr = xlist.split('@', 2)
     var listname = arr[0]
     var olist = listname
     var domain = arr[1]
+    
+    // are we checking *@foo.tld ?
     if (document.getElementById('checkall')) {
         all = document.getElementById('checkall').checked
     }
+    // If checking multiple lists, the globa_deep will tell the pagebuilder to also
+    // include the mailing list name in each result
     global_deep = false
     if (all == true) {
         listname = "*"
         global_deep = true
     }
     
+    // we just made a new search, clear the selected month in the calendar to the left if that makes sense
     clearCalendarHover()
+    
+    // As usual, push new history state
     if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
+    
+    // get the data from backend, push to page builder func
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + d, null, buildPage)
+    
+    // for the list title, prepare the date range
+    // TODO: improve this much like we have with trends.html
     howlong = parseInt(d)
     if (isNaN(howlong)) {
         howlong = "custom date range"
@@ -2653,6 +2670,7 @@ function search(q, d, nopush, all) {
 }
 
 // searchAll: run a deep search of all lists
+// much the same as search(), but with added stuff for from and subject field searches.
 function searchAll(q, dspan, from, subject, where) {
     keywords = q
     current_retention = 30
@@ -2725,12 +2743,13 @@ function do_search(q, d, nopush, all) {
     return false;
 }
 
-
+// Adds an opensearch engine to the browser
 function addSearchEngine() {
     window.external.AddSearchProvider("/api/websearch.lua?" + gxdomain)
 }
 
-
+// for firefox (chrome doesn't seem to get it just yet): add an opensearch header element,
+// so the browser will notice that it's available, and inform the user in the quick search bar
 function addSearchBar() {
     var h = document.getElementsByTagName('head')[0]
     var sl = document.createElement('link')
@@ -2795,11 +2814,14 @@ function showStats(json) {
     obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span> ' + json.no_active_lists.toLocaleString() + " active lists."
     
     var ts = "<table border='0' style='float: right; margin-top: -30px;'><tr>"
+    
+    // find the max no. of emails in a single day, for calculating max height of the 14 day chart
     var max = 1
     for (var i in json.activity) {
         max = Math.max(max, json.activity[i][1])
     }
     
+    // for each day, make a bar, taking into account the max value
     for (var i in json.activity) {
         var day = new Date(json.activity[i][0]).toDateString()
         ts += "<td style='padding-left: 2px; vertical-align: bottom'><div title='" + day + ": " + json.activity[i][1] + " emails' style='background: #369; width: 6px; height: " + parseInt((json.activity[i][1] / max) * 48) + "px;'> </div></td>"
@@ -2809,12 +2831,14 @@ function showStats(json) {
 }// Fetched from ponymail_timetravel.js
 
 
+// simple func that just redirects to the original thread URL we just got if possible
 function timeTravelSingleThreadRedirect(json) {
     if (json && json.thread) {
         location.href = "/thread.html/" + json.thread.mid
     }
 }
 
+// Func that fetches the timetravel data for the current thread (permalink mode)
 function timeTravelSingleThread() {
     var mid = current_thread_json[0].mid
     GetAsync("/api/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
@@ -2822,17 +2846,20 @@ function timeTravelSingleThread() {
 
 
 
-// time travel in list mode:
+// time travel in list view mode, callback from the API:
 function timeTravelListRedirect(json, state) {
     if (json && json.emails) {
         for (var i in json.emails) {
             current_flat_json.push(json.emails[i])
         }
     }
+    // Did we receive timetravel data?
     if (json && json.thread) {
         var osubs = countSubs(current_thread_json[state.id])
         var nsubs = countSubs(json.thread)
         var oid = current_thread_json[state.id].tid
+        
+        // Did we actually get more emails now than we had before?
         if (nsubs > osubs || nsubs >= osubs && !json.thread.irt) {
             toggleEmails_threaded(state.id)
             current_thread_json[state.id] = json.thread
@@ -2846,9 +2873,11 @@ function timeTravelListRedirect(json, state) {
             }
             document.getElementById('magic_' + state.id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         }
+        // Nope, nothing new - bummer!
         else {
             document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
+        // Should we jump in the HTML to somewhere?
         if (state.jump) {
             var thread = findEpoch(state.jump)
             if (thread) {
@@ -2866,6 +2895,7 @@ function timeTravelListRedirect(json, state) {
     }
 }
 
+// time travel inside a list view
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
     GetAsync("/api/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
@@ -3017,6 +3047,7 @@ function showTrends(json, state) {
     GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dspan + "&q=" + ((state.query && state.query.length > 0) ? state.query : ""), {tspan: state.tspan}, showTop)
 }
 
+// callback for top10 stats
 function showTop(json, state) {
     
     var obj = document.getElementById('trends')
@@ -3045,19 +3076,28 @@ function showTop(json, state) {
     obj.appendChild(top10)    
 }
 
+// onload func that figures out what we want and then asks the API for stats
 function gatherTrends() {
+    
+    // get list, timespan and query from the html page
     var args = document.location.search.substr(1)
     var a_arr = args.split(/:/, 3)
     var list = a_arr[0]
     var dspan = a_arr[1]
     var query = a_arr[2]
+    // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
         dspan = "lte=1M"
     }
+    // figure out when this is and what the double is (for comparisons)
     var xa = datePickerDouble(dspan)
+    
+    // split list name for stats.lua
     var arr = list.split(/@/)
     var listname = arr[0]
     var domain = arr[1]
+    
+    // Get us some data
     GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : ""), { listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
 }// Fetched from ponymail_user_preferences.js
 
