@@ -968,6 +968,29 @@ function generateFormDivs(id, title, type, options, selval) {
 }
 
 
+// func for rolling up an email to its immediate parent, hiding emails between that
+function rollup(mid) {
+    var obj = document.getElementById('thread_' + mid)
+    if (obj) {
+        var glyph = "down"
+        var parent = obj.parentNode
+        for (var i in parent.childNodes) {
+            var node = parent.childNodes[i]
+            if (node.nodeType && node.nodeType == 1 && node.nodeName == 'DIV') {
+                if (node.getAttribute && node.getAttribute("id") && node.getAttribute("id").search(mid) != -1) {
+                    break
+                } else if (node.getAttribute("id")) {
+                    // reverse opacity
+                    node.style.display = (node.style.display == "none") ? "block" : "none"
+                    glyph = (node.style.display == "none") ? "down" : "up"
+                }
+            }
+        }
+        var robj = document.getElementById('rollup_' + mid)
+        robj.setAttribute("class", "glyphicon glyphicon-chevron-" + glyph)
+    }
+}
+
 function findEpoch(epoch) {
     kiddos = []
     traverseThread(document.body)
@@ -1020,7 +1043,9 @@ function displayEmail(json, id, level) {
         }
     }
     var cols = ['primary', 'success', 'info', 'warning', 'danger']
-    var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
+    var id_sanitised = id.toString().replace(/@<.+>/, "")
+    var thread = document.getElementById('thread_' + id_sanitised)
+    
     if (thread) {
         json.date = new Date(json.epoch*1000).toLocaleString();
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
@@ -1058,6 +1083,9 @@ function displayEmail(json, id, level) {
             thread.style.marginTop = "20px"
             thread.innerHTML = "<img src='https://secure.gravatar.com/avatar/" + json['gravatar'] + ".jpg?s=48&r=g&d=mm' style='vertical-align:middle'/> &nbsp; <b>" + fr + "</b> - " + sdate
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
+            if (level > 1) {
+                thread.innerHTML += ' &nbsp; <a href="javascript:void(0);" onclick="rollup(\'' + id_sanitised + '\');"><label class="label label-primary" title="roll up" style="cursor: pointer; float: right; margin-right: 10px;"><span id="rollup_' + id_sanitised + '" class="glyphicon glyphicon-chevron-up"> </span></label></a> &nbsp; '
+            }
             thread.innerHTML += "<br/><br/>"
             var bclass = "bubble-" + cols[parseInt(Math.random() * cols.length - 0.01)]
             thread.innerHTML += "<div class='" + bclass + "' style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</div>'
@@ -1087,6 +1115,11 @@ function displayEmail(json, id, level) {
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
             thread.innerHTML += ' &nbsp; <a href="/thread.html/'+json.mid+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
             thread.innerHTML += ' &nbsp; <a href="/api/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
+            if (level > 1) {
+                thread.innerHTML += ' &nbsp; <a href="javascript:void(0);" onclick="rollup(\'' + id_sanitised + '\');"><label class="label label-primary" title="roll up" style="cursor: pointer; float: right; margin-right: 10px;"><span id="rollup_' + id_sanitised + '" class="glyphicon glyphicon-chevron-up"> </span></label></a> &nbsp; '
+            }
+            
+            
             thread.innerHTML += "<br/>"
             //thread.style.border = "1px dotted #666"
             thread.style.padding = "5px"

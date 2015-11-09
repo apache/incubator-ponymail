@@ -128,6 +128,29 @@ function generateFormDivs(id, title, type, options, selval) {
 }
 
 
+// func for rolling up an email to its immediate parent, hiding emails between that
+function rollup(mid) {
+    var obj = document.getElementById('thread_' + mid)
+    if (obj) {
+        var glyph = "down"
+        var parent = obj.parentNode
+        for (var i in parent.childNodes) {
+            var node = parent.childNodes[i]
+            if (node.nodeType && node.nodeType == 1 && node.nodeName == 'DIV') {
+                if (node.getAttribute && node.getAttribute("id") && node.getAttribute("id").search(mid) != -1) {
+                    break
+                } else if (node.getAttribute("id")) {
+                    // reverse opacity
+                    node.style.display = (node.style.display == "none") ? "block" : "none"
+                    glyph = (node.style.display == "none") ? "down" : "up"
+                }
+            }
+        }
+        var robj = document.getElementById('rollup_' + mid)
+        robj.setAttribute("class", "glyphicon glyphicon-chevron-" + glyph)
+    }
+}
+
 function findEpoch(epoch) {
     kiddos = []
     traverseThread(document.body)

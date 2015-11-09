@@ -6,6 +6,7 @@
 - Added 'table' view mode for the front page for smaller list systems
 - Users can now grey out emails they have seen before in a threaded view
 - Trends and stats for lists are now available for custom date ranges
+- Users can roll up (collapse) threads between currently viewed email and immediate parent
 
 
 ## CHANGES in 0.2a:
