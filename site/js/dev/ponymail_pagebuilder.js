@@ -207,7 +207,6 @@ function buildPage(json, state) {
     json = json ? json : old_json
     old_json = json
     old_state = state
-    d_at = 10
     current_thread_mids = []
     checkCalendar(json)
     document.title = json.list + " - Pony Mail!"
