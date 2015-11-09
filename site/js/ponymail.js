@@ -3163,9 +3163,10 @@ function gatherTrends() {
     var query = a_arr[2]
     
     // Try to detect header searches, if present
+    var nquery = ""
     if (query && query.length > 0) {
         var stuff = ['from', 'subject', 'body']
-        var nquery = ""
+        
         for (var k in stuff) {
             // can we find 'header=foo' stuff?
             var r = RegExp(stuff[k] + "=(.+)", "mi")
@@ -3178,7 +3179,9 @@ function gatherTrends() {
         }
     }
     
-    
+    if (query == undefined) {
+        query = ""
+    }
     // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
         dspan = "lte=1M"
