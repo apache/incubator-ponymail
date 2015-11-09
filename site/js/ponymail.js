@@ -2985,10 +2985,15 @@ function showTrends(json, state) {
         state.tspan = ""
     }
 
+    // save each daily stat for later canvas drawing
+    var daily = {}
+    
     // total emails sent in the past N days
     var total_emails_current = 0;
     var total_emails_past = 0;
     for (var i in json.emails) {
+        var f = parseInt(json.emails[i].epoch/86400)
+        daily[f] = daily[f] ? daily[f]+1 : 1
         if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
             total_emails_current++;
         } else {
@@ -3090,6 +3095,26 @@ function showTrends(json, state) {
       );
     }
     GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dspan + "&q=" + ((state.query && state.query.length > 0) ? state.query : ""), {tspan: state.tspan}, showTop)
+    
+    
+    // daily chart rendering with quokka
+    var days = []
+    for (var d in daily) {
+        days.push(d)
+    }
+    days.sort()
+    
+    var arr = []
+    for (var d in days) {
+        var day = new Date(days[d]*86400*1000)
+        if (day.getTime() >= state.dfrom.getTime()) {
+            arr.push([day, daily[days[d]], '#00C0F1'])
+        } else {
+            arr.push([day, daily[days[d]], '#2DC47B'])
+        }
+        
+    }
+    quokkaBars("dayCanvas", ['Current timespan', '', 'Previous timespan'], arr, {verts: false})
 }
 
 // callback for top10 stats
