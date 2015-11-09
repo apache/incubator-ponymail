@@ -63,7 +63,7 @@ function handle(r)
     end
     local qs = "*"
     local nqs = ""
-    local dd = 30
+    local dd = "lte=1M"
     local maxresults = 5000
     local account = user.get(r)
     local rights = nil
@@ -143,7 +143,9 @@ function handle(r)
             }
         end
     end
-    
+    if not get.d then
+        get.d = dd
+    end
     if get.d and get.d:match("lte=.+") then
         local lte = get.d:match("lte=([wMyd0-9]+)")
         if lte then
