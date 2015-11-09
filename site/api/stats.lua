@@ -93,7 +93,7 @@ function handle(r)
                 table.insert(x, "(" .. table.concat(y, " AND ") .. ")")
             end
             if #z > 0 then
-                table.insert(nx, "(" .. table.concat(z, " AND ") .. ")")
+                table.insert(nx, "(" .. table.concat(z, " OR ") .. ")")
             end
         end
         qs = table.concat(x, " OR ")
@@ -404,7 +404,7 @@ function handle(r)
     -- Debug time point 6
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
-    
+
     -- Get threads
     local threads = {}
     local emails = {}
