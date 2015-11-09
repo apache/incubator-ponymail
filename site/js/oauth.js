@@ -42,10 +42,11 @@ function GetAsync(theUrl, xstate, callback) {
     }
 }
 
-
+// redirect to the oauth provider
 function oauthPortal(key) {
     var ot = pm_config.oauth[key]
     var state = parseInt(Math.random()*1000000000) + '' + parseInt(Math.random()*1000000000)
+    // google is different (as usual)
     if (key == 'google') {
         location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(window.location)
     } else {
