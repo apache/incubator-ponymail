@@ -8,7 +8,8 @@
 - Trends and stats for lists are now available for custom date ranges
 - Users can roll up (collapse) threads between currently viewed email and immediate parent
 - Searches can now exclude terms by prepending a '-' to them.
-
+- UTF-8 fixes for the STDIN version of the archiver
+- Archiver can now exit quietly (not bounce) with --quiet in STDIN mode in case of parser errors
 
 ## CHANGES in 0.2a:
 
