@@ -62,6 +62,7 @@ function handle(r)
         return cross.OK
     end
     local qs = "*"
+    local nqs = ""
     local dd = 30
     local maxresults = 5000
     local account = user.get(r)
@@ -71,15 +72,36 @@ function handle(r)
     end
     if get.q and #get.q > 0 then
         x = {}
+        nx = {}
         local q = get.q
         for k, v in pairs({'from','subject','body'}) do
             y = {}
+            z = {}
             for word in q:gmatch("(%S+)") do
-                table.insert(y, ("(%s:\"%s\")"):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
+                local preface = ""
+                if word:match("^%-") then
+                    preface = "-"
+                    word = word:sub(2)
+                end
+                if preface == "" then
+                    table.insert(y, ("%s:\"%s\""):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
+                else
+                    table.insert(z, ("%s:\"%s\""):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
+                end
             end
-            table.insert(x, "(" .. table.concat(y, " AND ") .. ")")
+            if #y > 0 then
+                table.insert(x, "(" .. table.concat(y, " AND ") .. ")")
+            end
+            if #z > 0 then
+                table.insert(nx, "(" .. table.concat(z, " AND ") .. ")")
+            end
         end
         qs = table.concat(x, " OR ")
+        if qs == "" then
+            qs = "*"
+        end
+        nqs = table.concat(nx, " OR ")
+        r:err(qs)
     end
     
     local listraw = "<" .. get.list .. "." .. get.domain .. ">"
@@ -224,6 +246,14 @@ function handle(r)
                         },
                         sterm
                         
+                },
+                    must_not = {
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = nqs
+                            }
+                        }
                 }}
                 
             }
@@ -396,6 +426,14 @@ function handle(r)
                         query_string = {
                             default_field = "subject",
                             query = qs
+                        }
+                    }
+            },
+                must_not = {
+                    {
+                        query_string = {
+                            default_field = "subject",
+                            query = nqs
                         }
                     }
             }}
