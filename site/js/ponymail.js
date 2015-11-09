@@ -3163,18 +3163,21 @@ function gatherTrends() {
     var query = a_arr[2]
     
     // Try to detect header searches, if present
-    var stuff = ['from', 'subject', 'body']
-    var nquery = ""
-    for (var k in stuff) {
-        // can we find 'header=foo' stuff?
-        var r = RegExp(stuff[k] + "=(.+)", "mi")
-        var m = query.match(r)
-        if (m) {
-            query = query.replace(m[0], "")
-            // append to the header_foo query
-            nquery += "&header_" + stuff[k] + "=" + escape(m[1])
+    if (query && query.length > 0) {
+        var stuff = ['from', 'subject', 'body']
+        var nquery = ""
+        for (var k in stuff) {
+            // can we find 'header=foo' stuff?
+            var r = RegExp(stuff[k] + "=(.+)", "mi")
+            var m = query.match(r)
+            if (m) {
+                query = query.replace(m[0], "")
+                // append to the header_foo query
+                nquery += "&header_" + stuff[k] + "=" + escape(m[1])
+            }
         }
     }
+    
     
     // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
