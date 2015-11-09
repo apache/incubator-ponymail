@@ -192,6 +192,13 @@ function seedTable(json) {
             d.setAttribute("class", "listtablekid")
             d.innerHTML = "<a href='list.html?" + list + "'><b>" + list + "</b></a> - " + lnum[list] + " messages in the past 3 months."
             d.setAttribute("onclick", "location.href = 'list.html?" + list + "';")
+            
+            // if possible, append description of list here
+            for (var z in json.descriptions) {
+                if (json.descriptions[z].lid == list) {
+                    d.innerHTML += "<br/><small>" + json.descriptions[z].description.replace(/</, "&lt;") + "</small>"
+                }
+            }
             obj.appendChild(d)
         }
     }
