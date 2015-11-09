@@ -411,6 +411,7 @@ function quokkaBars(id, titles, values, options) {
     var curve = options ? options.curve : false;
     var title = options ? options.title : null;
     var noX = options ? options.nox : false;
+    var verts = options ? options.verts : true;
     if (noX) {
         lheight = 0;
     }
@@ -435,15 +436,19 @@ function quokkaBars(id, titles, values, options) {
             x = x + 1;
         }
         var title = titles[k];
-        ctx.fillStyle = colors[k % colors.length][0];
-        ctx.fillRect(canvas.width - lwidth + 20, posY-10, 10, 10);
+        if (title && title.length > 0) {
+            ctx.fillStyle = colors[k % colors.length][0];
+            ctx.fillRect(canvas.width - lwidth + 20, posY-10, 10, 10);
+            
+            // Add legend text
+            ctx.font="12px Arial";
+            ctx.fillStyle = "#000";
+            ctx.fillText(title,canvas.width - lwidth + 40, posY);
+            
+            posY += 15;
+        }
         
-        // Add legend text
-        ctx.font="12px Arial";
-        ctx.fillStyle = "#000";
-        ctx.fillText(title,canvas.width - lwidth + 40, posY);
-        
-        posY += 15;
+
     }
     
     // Find max and min
@@ -502,35 +507,51 @@ function quokkaBars(id, titles, values, options) {
     
     
     // Draw vertical lines
-    ctx.beginPath();
+    var sx = 1
     var numLines = values.length-1;
     var step = (canvas.width - lwidth - 40) / values.length;
-    for (var x = 1; x < values.length; x++) {
-        var y = 25 + (step * x);
-        ctx.moveTo(y, 30);
-        ctx.lineTo(y, canvas.height - 10 - lheight);
-        ctx.lineWidth = 0.25;
-        ctx.stroke();
+    while (step < 24) {
+        step *= 2
+        sx *= 2
     }
     
-    // Draw X values if noX isn't set:
-    if (noX == false) {
-        for (var i = 0; i < values.length; i++) {
-            var x = 25 + (step * i) + step/2;
-            var y = canvas.height - lheight + 5;
-            ctx.translate(x, y);
-            ctx.moveTo(0,0);
-            ctx.lineTo(0,-15);
-            ctx.stroke();
-            ctx.rotate(-45*Math.PI/180);
-            ctx.textAlign = "right";
-            var val = values[i][0];
-            if (val.constructor.toString().match("Date()")) {
-                val = val.toDateString();
+    
+    
+    if (verts) {
+        ctx.beginPath();
+        for (var x = 1; x < values.length; x++) {
+            if (x % sx == 0) {
+                var y = 25 + (step * (x/sx));
+                ctx.moveTo(y, 30);
+                ctx.lineTo(y, canvas.height - 10 - lheight);
+                ctx.lineWidth = 0.25;
+                ctx.stroke();
             }
-            ctx.fillText(val.toString(), 0, 0);
-            ctx.rotate(45*Math.PI/180);
-            ctx.translate(-x,-y);
+        }
+    }
+    
+    
+    // Draw X values if noX isn't set:
+    if (noX != true) {
+        ctx.beginPath();
+        for (var i = 0; i < values.length; i++) {
+            var x = 25 + (step * (i/sx)) + step/2;
+            var y = canvas.height - lheight + 5;
+            if (i % sx == 0) {
+                ctx.translate(x, y);
+                ctx.moveTo(0,0);
+                ctx.lineTo(0,-15);
+                ctx.stroke();
+                ctx.rotate(-45*Math.PI/180);
+                ctx.textAlign = "right";
+                var val = values[i][0];
+                if (val.constructor.toString().match("Date()")) {
+                    val = val.toDateString();
+                }
+                ctx.fillText(val.toString(), 0, 0);
+                ctx.rotate(45*Math.PI/180);
+                ctx.translate(-x,-y);
+            }
         }
         
     }
@@ -542,8 +563,9 @@ function quokkaBars(id, titles, values, options) {
     var stacks = [];
     var pstacks = [];
     var step = (canvas.width - lwidth - 40) / values.length;
-    var smallstep = (step / titles.length) - 4;
+    var smallstep = (step / titles.length) - 2;
     for (k in values) {
+        smallstep = (step / (values[k].length-1)) - 2;
         stacks[k] = 0;
         pstacks[k] = canvas.height - 40 - lheight;
         var beginX = 0;
@@ -562,10 +584,18 @@ function quokkaBars(id, titles, values, options) {
                 var title = titles[i];
                 var color = colors[zz % colors.length][1];
                 var fcolor = colors[zz % colors.length][2];
+                if (values[k][2] && values[k][2].toString().match(/^#.+$/)) {
+                    color = values[k][2]
+                    fcolor = values[k][2]
+                    smallstep = (step / (values[k].length-2)) - 2;
+                }
                 var x = ((step) * k) + ((smallstep+2) * zz) + 5;
                 var y = canvas.height - 10 - lheight;
                 var height = ((canvas.height - 40 - lheight) / (max-min)) * value * -1;
-                var width = smallstep - 8;
+                var width = smallstep - 4;
+                if (width <= 1) {
+                    width = 1
+                }
                 if (stack) {
                     width = step - 10;
                     y -= stacks[k];
@@ -583,7 +613,11 @@ function quokkaBars(id, titles, values, options) {
                 ctx.strokeStyle = color;
                 ctx.strokeRect(27 + x, y, width, height);
                 var alpha = 0.75
-                ctx.fillStyle = 'rgba('+ [parseInt(fcolor.r*255),parseInt(fcolor.g*255),parseInt(fcolor.b*255),alpha].join(",") + ')';
+                if (fcolor.r) {
+                    ctx.fillStyle = 'rgba('+ [parseInt(fcolor.r*255),parseInt(fcolor.g*255),parseInt(fcolor.b*255),alpha].join(",") + ')';
+                } else {
+                    ctx.fillStyle = fcolor;
+                }
                 ctx.fillRect(27 + x, y, width, height);
                 
             }
