@@ -161,6 +161,7 @@ function showTrends(json, state) {
     GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dspan + "&q=" + ((state.query && state.query.length > 0) ? state.query : ""), {tspan: state.tspan}, showTop)
 }
 
+// callback for top10 stats
 function showTop(json, state) {
     
     var obj = document.getElementById('trends')
@@ -189,18 +190,27 @@ function showTop(json, state) {
     obj.appendChild(top10)    
 }
 
+// onload func that figures out what we want and then asks the API for stats
 function gatherTrends() {
+    
+    // get list, timespan and query from the html page
     var args = document.location.search.substr(1)
     var a_arr = args.split(/:/, 3)
     var list = a_arr[0]
     var dspan = a_arr[1]
     var query = a_arr[2]
+    // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
         dspan = "lte=1M"
     }
+    // figure out when this is and what the double is (for comparisons)
     var xa = datePickerDouble(dspan)
+    
+    // split list name for stats.lua
     var arr = list.split(/@/)
     var listname = arr[0]
     var domain = arr[1]
+    
+    // Get us some data
     GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : ""), { listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
 }

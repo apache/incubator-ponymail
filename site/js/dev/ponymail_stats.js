@@ -27,11 +27,14 @@ function showStats(json) {
     obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span> ' + json.no_active_lists.toLocaleString() + " active lists."
     
     var ts = "<table border='0' style='float: right; margin-top: -30px;'><tr>"
+    
+    // find the max no. of emails in a single day, for calculating max height of the 14 day chart
     var max = 1
     for (var i in json.activity) {
         max = Math.max(max, json.activity[i][1])
     }
     
+    // for each day, make a bar, taking into account the max value
     for (var i in json.activity) {
         var day = new Date(json.activity[i][0]).toDateString()
         ts += "<td style='padding-left: 2px; vertical-align: bottom'><div title='" + day + ": " + json.activity[i][1] + " emails' style='background: #369; width: 6px; height: " + parseInt((json.activity[i][1] / max) * 48) + "px;'> </div></td>"

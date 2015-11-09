@@ -16,12 +16,14 @@
 */
 
 
+// simple func that just redirects to the original thread URL we just got if possible
 function timeTravelSingleThreadRedirect(json) {
     if (json && json.thread) {
         location.href = "/thread.html/" + json.thread.mid
     }
 }
 
+// Func that fetches the timetravel data for the current thread (permalink mode)
 function timeTravelSingleThread() {
     var mid = current_thread_json[0].mid
     GetAsync("/api/thread.lua?timetravel=true&id=" + mid, null, timeTravelSingleThreadRedirect)
@@ -29,17 +31,20 @@ function timeTravelSingleThread() {
 
 
 
-// time travel in list mode:
+// time travel in list view mode, callback from the API:
 function timeTravelListRedirect(json, state) {
     if (json && json.emails) {
         for (var i in json.emails) {
             current_flat_json.push(json.emails[i])
         }
     }
+    // Did we receive timetravel data?
     if (json && json.thread) {
         var osubs = countSubs(current_thread_json[state.id])
         var nsubs = countSubs(json.thread)
         var oid = current_thread_json[state.id].tid
+        
+        // Did we actually get more emails now than we had before?
         if (nsubs > osubs || nsubs >= osubs && !json.thread.irt) {
             toggleEmails_threaded(state.id)
             current_thread_json[state.id] = json.thread
@@ -53,9 +58,11 @@ function timeTravelListRedirect(json, state) {
             }
             document.getElementById('magic_' + state.id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         }
+        // Nope, nothing new - bummer!
         else {
             document.getElementById('magic_' + state.id).innerHTML = "<i>Hm, we couldn't find any more messages in this thread. bummer!</i>"
         }
+        // Should we jump in the HTML to somewhere?
         if (state.jump) {
             var thread = findEpoch(state.jump)
             if (thread) {
@@ -73,6 +80,7 @@ function timeTravelListRedirect(json, state) {
     }
 }
 
+// time travel inside a list view
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
     GetAsync("/api/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
