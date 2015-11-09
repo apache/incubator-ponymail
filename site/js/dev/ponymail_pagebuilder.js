@@ -266,7 +266,7 @@ function getListInfo(list, xdomain, nopush) {
         }
         nopush = true
         dealtwithit = true
-        search(current_query, 30, true, true)
+        search(current_query, "lte=1M", true, true)
     }
     else if (xdomain && xdomain != "") {
         if (xdomain.length <= 1) {
@@ -416,7 +416,7 @@ function getListInfo(list, xdomain, nopush) {
         for (var n in kiddos) {
             kiddos[n].setAttribute("class", "label label-default label-hover")
         }
-        document.getElementById('listtitle').innerHTML = list + ", last 30 days"
+        document.getElementById('listtitle').innerHTML = list + ", last month"
         if (current_query == "") {
             global_deep = false
             current_query = ""

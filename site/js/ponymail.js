@@ -31,7 +31,7 @@ var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'A
 var d_ppp = 15; // results per page
 var open_emails = []
 var list_year = {}
-var current_retention = "lte=30d" // default timespan for list view
+var current_retention = "lte=1M" // default timespan for list view
 var current_cal_min = 1997 // don't go further back than 1997 in case everything blows up, date-wise
 var keywords = ""
 var current_thread = 0
@@ -674,6 +674,13 @@ function datePickerDouble(seedPeriod) {
         } else {
             tspan = 0
         }
+    }
+    
+    // just N days?
+    else if (parseInt(seedPeriod).toString() == seedPeriod.toString()) {
+        tspan = parseInt(seedPeriod)
+        dfrom.setDate(dfrom.getDate() - tspan)
+        dbl = "lte=" + (tspan*2) + "d"
     }
     return [dbl, dfrom, dto, tspan]
 }
@@ -2249,7 +2256,7 @@ function getListInfo(list, xdomain, nopush) {
         }
         nopush = true
         dealtwithit = true
-        search(current_query, 30, true, true)
+        search(current_query, "lte=1M", true, true)
     }
     else if (xdomain && xdomain != "") {
         if (xdomain.length <= 1) {
@@ -2399,7 +2406,7 @@ function getListInfo(list, xdomain, nopush) {
         for (var n in kiddos) {
             kiddos[n].setAttribute("class", "label label-default label-hover")
         }
-        document.getElementById('listtitle').innerHTML = list + ", last 30 days"
+        document.getElementById('listtitle').innerHTML = list + ", last month"
         if (current_query == "") {
             global_deep = false
             current_query = ""
@@ -2697,7 +2704,8 @@ function search(q, d, nopush, all) {
     
     // for the list title, prepare the date range
     // TODO: improve this much like we have with trends.html
-    howlong = parseInt(d)
+    var arr = datepickerDouble(d)
+    howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "custom date range"
     } else {
@@ -2740,14 +2748,15 @@ function searchAll(q, dspan, from, subject, where) {
     GetAsync(url, {
         deep: true
     }, buildPage)
-    howlong = parseInt(dspan)
+    var arr = datepickerDouble(d)
+    howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "custom date range"
     } else {
         if (howlong >= 365) {
             howlong = parseInt(howlong/365) + " year"
         } else if (howlong >= 30) {
-            howlong = parseInt(howlong/30) + " month"
+            howlong = "last " + parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
         } else {
             howlong =  howlong + " day"
         }
@@ -2761,7 +2770,7 @@ function searchAll(q, dspan, from, subject, where) {
 function do_search(q, d, nopush, all) {
     document.getElementById('q').value = q
     document.getElementById('aq').value = q
-    current_retention = d ? d : 30
+    current_retention = d ? d : "lte=1M"
     current_query = q
     var arr = xlist.split('@', 2)
     var listname = arr[0]
@@ -2771,14 +2780,15 @@ function do_search(q, d, nopush, all) {
         listname = "*"
         domain = "*"
     }
-    howlong = parseInt(d)
+    var arr = datepickerDouble(d)
+    howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "Custom date range"
     }
     else if (howlong >= 365) {
-        howlong = parseInt(howlong/365) + " year"
+        howlong = parseInt(howlong/365) + " year" + (howlong>769 ? "s" : "")
     } else if (howlong >= 30) {
-        howlong = parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
+        howlong = parseInt(howlong/30) + " month" + (howlong>60 ? "s" : "")
     } else {
         howlong = howlong + " days"
     }

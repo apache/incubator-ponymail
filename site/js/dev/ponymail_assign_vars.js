@@ -28,7 +28,7 @@ var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'A
 var d_ppp = 15; // results per page
 var open_emails = []
 var list_year = {}
-var current_retention = "lte=30d" // default timespan for list view
+var current_retention = "lte=1M" // default timespan for list view
 var current_cal_min = 1997 // don't go further back than 1997 in case everything blows up, date-wise
 var keywords = ""
 var current_thread = 0
