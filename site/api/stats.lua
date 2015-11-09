@@ -64,7 +64,7 @@ function handle(r)
     local qs = "*"
     local nqs = ""
     local dd = "lte=1M"
-    local maxresults = 5000
+    local maxresults = config.maxResults or 5000
     local account = user.get(r)
     local rights = nil
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
@@ -201,7 +201,7 @@ function handle(r)
                         list = "*." .. get.domain
                     }
                 }
-        maxresults = 5000
+        maxresults = config.maxResults or 5000
     end
     if get.domain == "*" then
         wc = true
@@ -210,7 +210,7 @@ function handle(r)
                         list = "*"
                     }
                 }
-        maxresults = 5000
+        maxresults = config.maxResults or 5000
     end
     
     local top10 = {}
