@@ -27,15 +27,20 @@ local config = require 'lib/config'
 
 local emls_thrd
 
+-- func that fetches all children of an original topic email thingy
 function fetchChildren(r, pdoc, c, biglist)
     c = (c or 0) + 1
+    -- don't fetch more than 250 subtrees, we don't want to nest ad nauseam
     if c > 250 then
         return {}
     end
+    -- biglist is for making sure we dont' fetch something twice
     biglist = biglist or {}
     local children = {}
+    -- find any emails that reference this one
     local docs = elastic.find('in-reply-to:"' .. r:escape(pdoc['message-id'])..'"', 50, "mbox")
     for k, doc in pairs(docs) do
+        -- if we haven't seen this email before, check for its kids and add it to the bunch
         if not biglist[doc['message-id']] then
             biglist[doc['message-id']] = true
             local mykids = fetchChildren(r, doc, c, biglist)
@@ -58,9 +63,10 @@ function fetchChildren(r, pdoc, c, biglist)
     return children
 end
 
-
+-- find the original topic starter
 function findParent(r, doc)
     local step = 0
+    -- max 50 steps up in the hierarchy
     while step < 50 do
         step = step + 1
         if not doc['in-reply-to'] then
@@ -74,6 +80,7 @@ function findParent(r, doc)
     end
     return doc
 end
+
 
 function handle(r)
     r.content_type = "application/json"
@@ -99,8 +106,12 @@ function handle(r)
         doc = findParent(r, doc)
     end
     local doclist = {}
+    
+    -- did we find an email=
     if doc then
         local canAccess = false
+        
+        -- if private, can we access it?
         if doc.private then
             local account = user.get(r)
             if account then
