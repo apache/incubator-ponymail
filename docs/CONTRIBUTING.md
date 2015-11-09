@@ -1,6 +1,6 @@
 
 # Contributing to Pony Mail #
-We'd LOVE if if more people would contribute to Pony Mail!
+We'd LOVE it if more people would contribute to Pony Mail!
 Any form of contribution is most welcome, whether it be programming,
 documentation, evangelism, marketing, or helping out other users.
 
