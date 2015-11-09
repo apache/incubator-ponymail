@@ -972,6 +972,7 @@ function generateFormDivs(id, title, type, options, selval) {
 function rollup(mid) {
     var obj = document.getElementById('thread_' + mid)
     if (obj) {
+        var changes = 0
         var glyph = "down"
         var parent = obj.parentNode
         for (var i in parent.childNodes) {
@@ -983,11 +984,15 @@ function rollup(mid) {
                     // reverse opacity
                     node.style.display = (node.style.display == "none") ? "block" : "none"
                     glyph = (node.style.display == "none") ? "down" : "up"
+                    changes++
                 }
             }
         }
-        var robj = document.getElementById('rollup_' + mid)
-        robj.setAttribute("class", "glyphicon glyphicon-chevron-" + glyph)
+        if (changes > 0) {
+            var robj = document.getElementById('rollup_' + mid)
+            robj.setAttribute("class", "glyphicon glyphicon-chevron-" + glyph)
+        }
+        
     }
 }
 
