@@ -415,6 +415,13 @@ function datePickerDouble(seedPeriod) {
             tspan = 0
         }
     }
+    
+    // just N days?
+    else if (parseInt(seedPeriod).toString() == seedPeriod.toString()) {
+        tspan = parseInt(seedPeriod)
+        dfrom.setDate(dfrom.getDate() - tspan)
+        dbl = "lte=" + (tspan*2) + "d"
+    }
     return [dbl, dfrom, dto, tspan]
 }
 
