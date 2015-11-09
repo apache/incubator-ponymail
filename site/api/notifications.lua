@@ -28,8 +28,12 @@ function handle(r)
     r.content_type = "application/json"
     local now = r:clock()
     local get = r:parseargs()
+    
+    -- make sure we're logged in
     local account = user.get(r)
     if account then
+        
+        -- callback from the browser when the user has viewed an email. mark it as seen.
         if get.seen then
             local mid = get.seen
             if mid and #mid > 0 then
@@ -45,37 +49,40 @@ function handle(r)
         end
         local peml = {}
         local rights = nil
-        if not doc or not doc.subject then
-            local docs = elastic.find("recipient:\"" .. r:sha1(account.cid) .. "\"", 50, "notifications")
-            for k, doc in pairs(docs) do
-                local canUse = true
-                if doc.private then
-                    if not rights then
-                        rights = aaa.rights(r, account.credentials.uid or account.credentials.email)
-                    end
-                    canUse = false
-                    if account then
-                        local lid = doc.list:match("<[^.]+%.(.-)>")
-                        for k, v in pairs(rights or {}) do
-                            if v == "*" or v == lid then
-                                canUse = true
-                                break
-                            end
+        
+        -- Find all recent notification docs, up to 50 latest results
+        local docs = elastic.find("recipient:\"" .. r:sha1(account.cid) .. "\"", 50, "notifications")
+        for k, doc in pairs(docs) do
+            local canUse = true
+            -- check we have rights to view this notification (it might be from a private email we shouldn't see)
+            if doc.private then
+                if not rights then
+                    rights = aaa.rights(r, account.credentials.uid or account.credentials.email)
+                end
+                canUse = false
+                if account then
+                    local lid = doc.list:match("<[^.]+%.(.-)>")
+                    for k, v in pairs(rights or {}) do
+                        if v == "*" or v == lid then
+                            canUse = true
+                            break
                         end
                     end
                 end
-                if canUse then
-                    doc.id = doc['message-id']
-                    doc.tid = doc.id
-                    doc.nid = doc.request_id
-                    doc.irt = doc['in-reply-to']
-                    table.insert(peml, doc)
-                end
             end
-            r:puts(JSON.encode{
-                notifications = peml
-            })
+            -- if we can see the email, push the notif to the list
+            if canUse then
+                doc.id = doc['message-id']
+                doc.tid = doc.id
+                doc.nid = doc.request_id
+                doc.irt = doc['in-reply-to']
+                table.insert(peml, doc)
+            end
         end
+        -- spit out JSON
+        r:puts(JSON.encode{
+            notifications = peml
+        })
     else
         r:puts[[{}]]
     end
