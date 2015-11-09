@@ -59,6 +59,7 @@ function handle(r)
             d = days[m]
         end
         
+        -- fetch all results from the list (up to 20k results), make sure to get the 'private' element
         local docs = elastic.raw {
             _source = {'mid','private'},
             query = {
@@ -94,6 +95,7 @@ function handle(r)
         }
         
         local mfile = ""
+        -- for each email, get the actual source of it to plop into the mbox file
         for k, v in pairs(docs.hits.hits) do
             v = v._source
             if not v.private then

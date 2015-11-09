@@ -26,6 +26,7 @@ local cross = require 'lib/cross'
 
 local emls_thrd
 
+-- func for fetching all child emails of a parent topic
 function fetchChildren(r, pdoc, c, biglist)
     c = (c or 0) + 1
     if c > 250 then
@@ -46,7 +47,7 @@ function fetchChildren(r, pdoc, c, biglist)
     return children
 end
 
-
+-- func for finding the original email in a thread, if need be
 function findParent(r, doc)
     local step = 0
     while step < 50 do
@@ -69,10 +70,15 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
+    
+    -- make sure we have a list or a thread to display results from
     if not get.list and not get.mid then
         r:puts("<>")
         return cross.OK
     end
+    
+    -- default to any subject/body, 30 day view
+    -- but accept whatever the browser demands
     local qs = "*"
     local dd = 30
     local maxresults = 40
@@ -81,6 +87,7 @@ function handle(r)
     local listid = r:escape_html(get.list or "")
     local listraw = "<" .. listid:gsub("@", ".") .. ">"
     
+    -- search terms for ES
     local sterm = {
                     term = {
                         list_raw = listraw
@@ -122,10 +129,7 @@ function handle(r)
         }
         local h = #doc.hits.hits
         
-        -- Debug time point 7
-        table.insert(t, r:clock() - tnow)
-        tnow = r:clock()
-        
+        -- for each email found, check if we can access it and then digest it if so
         for k = #doc.hits.hits, 1, -1 do
             local v = doc.hits.hits[k]
             local email = v._source
@@ -159,12 +163,17 @@ function handle(r)
         
     -- Or get a thread?
     elseif get.mid then
+        -- get the parent email
         local doc = elastic.get("mbox", get.mid)
         if doc then
+            -- make sure we have the real parent
             local parent = findParent(r, doc)
+            
+            -- we got the original email, now let's find and process all kids
             if parent then
                 table.insert(emls_thrd, parent)
                 fetchChildren(r, parent)
+                -- ensure access and process all children
                 for k, doc in pairs(emls_thrd) do
                     local canUse = true
                     if doc.private then

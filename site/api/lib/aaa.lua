@@ -17,6 +17,7 @@
 
 -- This is aaa.lua - AAA filter for ASF.
 
+-- Get a list of PMCs the user is a part of
 function getPMCs(r, uid)
     local groups = {}
     local ldapdata = io.popen( ([[ldapsearch -x -LLL "(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))" cn]]):format(uid,uid) )
@@ -26,7 +27,9 @@ function getPMCs(r, uid)
     end
     return groups
 end
-    
+
+
+-- Is $uid a member of the org?
 function isMember(r, uid)
     local nowish = math.floor(os.time() / 1800)
     local t = r:ivm_get("isMember_" .. nowish .. "_" .. uid)
@@ -46,6 +49,7 @@ function isMember(r, uid)
     return false
 end
 
+-- Get a list of domains the user has private email access to (or wildcard if org member)
 function getRights(r, xuid)
     uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
@@ -63,6 +67,7 @@ function getRights(r, xuid)
     return rights
 end
 
+-- module defs
 return {
     rights = getRights
 }

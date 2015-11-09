@@ -24,16 +24,24 @@ local config = require 'lib/config'
 local smtp = require 'socket.smtp'
 local cross = require 'lib/cross'
 
+
 function handle(r)
     local account = user.get(r)
     r.content_type = "application/json"
     
+    -- make sure the user is logged in
     if account and account.cid then
+        -- parse response, up to 1MB of it. if >1MB, we're gonna pretend we never saw anything ;)
         local post = r:parsebody(1024*1024)
+        
+        -- check that recipient, subject and body exists
         if post.to and post.subject and post.body then
+            -- validate recipient
             to = ("<%s>"):format(post.to)
             local fp, lp = post.to:match("([^@]+)@([^@]+)")
             local domainIsOkay = false
+            
+            -- check that recipient is whitelisted in config.lua
             if type(config.accepted_domains) == "string" then
                 if r.strcmp_match(lp, config.accepted_domains) or config.accepted_domains == "*" then
                     domainIsOkay = true
@@ -46,12 +54,18 @@ function handle(r)
                     end
                 end
             end
+            
+            -- if we can send, then...
             if domainIsOkay then
+                -- find user's full name
                 local fname = nil
                 if account.preferences then
                     fname = account.preferences.fullname
                 end
+                -- construct sender name+address
                 local fr = ([["%s"<%s>]]):format(fname or account.credentials.fullname, account.credentials.email)
+                
+                -- standard headers + headers we need ourselves for parsing in the archiver (notifications etc)
                 local headers = {
                     ['X-PonyMail-Sender'] = r:sha1(account.cid),
                     ['X-PonyMail-Agent'] = "PonyMail/0.1a",
@@ -60,6 +74,8 @@ function handle(r)
                     subject = post.subject,
                     from = fr,
                 }
+                
+                -- set references and IRT if need be
                 if post['references'] then
                     headers['references'] = post['references']
                 end
@@ -67,6 +83,8 @@ function handle(r)
                     headers['in-reply-to'] = post['in-reply-to']
                 end
                 local msgbody = post.body
+                
+                -- set an email footer if specified in config.lua
                 if config.email_footer then
                     local subs = {
                         list = to:gsub("[<>]", ""),
@@ -76,10 +94,14 @@ function handle(r)
                     }
                     msgbody = msgbody .. "\n" .. config.email_footer:gsub("$([a-z]+)", function(a) return subs[a] or a end)
                 end
+                
+                -- construct the smtp object
                 local source = smtp.message{
                         headers = headers,
                         body = msgbody
                     }
+                
+                -- send email!
                 local rv, er = smtp.send{
                     from = fr,
                     rcpt = to,
@@ -87,6 +109,7 @@ function handle(r)
                     server = config.mailserver
                 }
                 
+                -- let the user know what happened
                 r:puts(JSON.encode{
                     result = rv,
                     error = er,

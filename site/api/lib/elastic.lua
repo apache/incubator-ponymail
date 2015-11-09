@@ -22,6 +22,7 @@ local JSON = require 'cjson'
 local config = require 'lib/config'
 local default_doc = "mbox"
 
+-- Standard ES query, returns $size results of any doc of type $doc, sorting by $sitem
 function getHits(query, size, doc, sitem)
     doc = doc or "mbox"
     sitem = sitem or "epoch"
@@ -41,7 +42,7 @@ function getHits(query, size, doc, sitem)
     return out
 end
 
-
+-- Get a single document
 function getDoc (ty, id)
     local url = config.es_url  .. ty .. "/" .. id
     local result = http.request(url)
@@ -53,6 +54,8 @@ function getDoc (ty, id)
     return (json and json._source) and json._source or {}
 end
 
+-- Get results (a'la getHits), but only return email headers, not the body
+-- provides faster transport when we don't need everything
 function getHeaders(query, size, doc)
     doc = doc or "mbox"
     size = size or 10
@@ -71,6 +74,7 @@ function getHeaders(query, size, doc)
     return out
 end
 
+-- Same as above, but reverse return order
 function getHeadersReverse(query, size, doc)
     doc = doc or "mbox"
     size = size or 10
@@ -89,6 +93,7 @@ function getHeadersReverse(query, size, doc)
     return out
 end
 
+-- Do a raw ES query with a JSON query
 function raw(query, doctype)
     local js = JSON.encode(query)
     doctype = doctype or default_doc
@@ -99,6 +104,7 @@ function raw(query, doctype)
     return json or {}, url
 end
 
+-- Update a document
 function update(doctype, id, query)
     local js = JSON.encode({doc = query })
     doctype = doctype or default_doc
@@ -109,6 +115,7 @@ function update(doctype, id, query)
     return json or {}, url
 end
 
+-- Put a new document somewhere
 function index(r, id, ty, body)
     local js = JSON.encode(query)
     if not id then
@@ -125,6 +132,7 @@ function setDefault(typ)
     default_doc = typ
 end
 
+-- module defs
 return {
     find = getHits,
     findFast = getHeaders,

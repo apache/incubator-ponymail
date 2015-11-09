@@ -30,16 +30,20 @@ function handle(r)
     local eid = (get.id or ""):gsub("\"", "")
     local doc = elastic.get("mbox", eid or "hmm")
     
-    -- Try searching by mid if not found, for backward compat
+    -- Try searching by original source mid if not found, for backward compat
     if not doc or not doc.subject then
         local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
         if #docs == 1 then
             doc = docs[1]
         end
     end
+    
+    -- Did we find an email?
     if doc then
         local canAccess = false
         local account = user.get(r)
+        
+        -- Is this a private email? and if so, does the user have access to view it?
         if doc.private then
             if account then
                 local lid = doc.list_raw:match("<[^.]+%.(.-)>")
@@ -58,8 +62,12 @@ function handle(r)
         else
             canAccess = true
         end
+        
+        -- If we can access this email, ...
         if canAccess then
             doc.tid = doc.request_id
+            
+            -- Are we in fact looking for an attachment inside this email?
             if get.attachment then
                 local hash = r:escape(get.file)
                 local fdoc = elastic.get("attachment", hash)
@@ -84,6 +92,7 @@ function handle(r)
                     r:write(out)
                     return cross.OK
                 end
+            -- Or do we just want the email itself?
             else
                 local eml = doc.from:match("<(.-)>") or doc.from:match("%S+@%S+") or "unknown"
                 if not account then -- anonymize email address if not logged in
