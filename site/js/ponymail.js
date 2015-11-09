@@ -2704,7 +2704,7 @@ function search(q, d, nopush, all) {
     
     // for the list title, prepare the date range
     // TODO: improve this much like we have with trends.html
-    var arr = datepickerDouble(d)
+    var arr = datePickerDouble(d)
     howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "custom date range"
@@ -2748,7 +2748,7 @@ function searchAll(q, dspan, from, subject, where) {
     GetAsync(url, {
         deep: true
     }, buildPage)
-    var arr = datepickerDouble(d)
+    var arr = datePickerDouble(d)
     howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "custom date range"
@@ -2780,7 +2780,7 @@ function do_search(q, d, nopush, all) {
         listname = "*"
         domain = "*"
     }
-    var arr = datepickerDouble(d)
+    var arr = datePickerDouble(d)
     howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "Custom date range"
