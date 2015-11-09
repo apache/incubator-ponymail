@@ -174,15 +174,21 @@ function showTrends(json, state) {
     days.sort()
     
     var arr = []
+    // for each element, reconstruct the date
     for (var d in days) {
         var day = new Date(days[d]*86400*1000)
+        
+        // if in this timespan, color it blue
         if (day.getTime() >= state.dfrom.getTime()) {
             arr.push([day, daily[days[d]], '#00C0F1'])
+            
+        // else, color it green
         } else {
             arr.push([day, daily[days[d]], '#2DC47B'])
         }
         
     }
+    // draw the chart
     quokkaBars("dayCanvas", ['Current timespan', '', 'Previous timespan'], arr, {verts: false, title: "Daily email stats"})
 }
 
