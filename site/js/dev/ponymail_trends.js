@@ -44,7 +44,7 @@ function showTrends(json, state) {
     
     // Set page title
     obj.innerHTML = "<h2>Statistics for " + lname + daterange + ":</h2>"
-    if (state.query && state.query.length > 0) {
+    if ((state.query && state.query.length > 0) || (state.nquery && state.nquery.length > 0)) {
         obj.innerHTML += "<i>(NB: You are using a search query which may distort these results)"
     }
     
