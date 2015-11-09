@@ -3114,7 +3114,7 @@ function showTrends(json, state) {
         }
         
     }
-    quokkaBars("dayCanvas", ['Current timespan', '', 'Previous timespan'], arr, {verts: false})
+    quokkaBars("dayCanvas", ['Current timespan', '', 'Previous timespan'], arr, {verts: false, title: "Daily email stats"})
 }
 
 // callback for top10 stats
