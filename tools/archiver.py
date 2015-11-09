@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.4
+# -*- coding: utf-8 -*-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -412,43 +413,51 @@ if __name__ == '__main__':
                        help='This is a private archive')
     parser.add_argument('--makedate', dest='makedate', action='store_true', 
                        help='Use the archive timestamp as the email date instead of the Date header')
+    parser.add_argument('--quiet', dest='quiet', action='store_true', 
+                       help='Do not exit -1 if the email could not be parsed')
     args = parser.parse_args()
     
     foo = Archiver()
-    msg = email.message_from_file(sys.stdin)
-    # We're reading from STDIN, so let's fake an MM3 call
-    ispublic = True
-    ignorefrom = None
-    if args.altheader:
-        altheader = args.altheader[0]
-        if altheader in msg:
-            msg.add_header('list-id', msg.get(altheader))
-    elif 'altheader' in sys.argv:
-        altheader = sys.argv[len(sys.argv)-1]
-        if altheader in msg:
-            msg.add_header('list-id', msg.get(altheader))
+    try:
+        msg = email.message_from_file(sys.stdin)
+        # We're reading from STDIN, so let's fake an MM3 call
+        ispublic = True
+        ignorefrom = None
+        if args.altheader:
+            altheader = args.altheader[0]
+            if altheader in msg:
+                msg.add_header('list-id', msg.get(altheader))
+        elif 'altheader' in sys.argv:
+            altheader = sys.argv[len(sys.argv)-1]
+            if altheader in msg:
+                msg.add_header('list-id', msg.get(altheader))
+                
+        #Ignore based on --ignore flag?
+        if args.ignorefrom:
+            ignorefrom = args.ignorefrom[0]
+            if fnmatch.fnmatch(msg.get("from"), ignorefrom) or (msg.get("list-id") and fnmatch.fnmatch(msg.get("list-id"), ignorefrom)):
+                print("Ignoring message as instructed by --ignore flag")
+                sys.exit(0)
+        
+        # Replace date header with $now?
+        if args.makedate:
+            msg.replace_header('date', email.utils.formatdate())
             
-    #Ignore based on --ignore flag?
-    if args.ignorefrom:
-        ignorefrom = args.ignorefrom[0]
-        if fnmatch.fnmatch(msg.get("from"), ignorefrom) or (msg.get("list-id") and fnmatch.fnmatch(msg.get("list-id"), ignorefrom)):
-            print("Ignoring message as instructed by --ignore flag")
-            sys.exit(0)
-    
-    # Replace date header with $now?
-    if args.makedate:
-        msg.replace_header('date', email.utils.formatdate())
-        
-    if args.private == True:
-        ispublic = False
-    if 'list-id' in msg:
-        if not msg.get('archived-at'):
-            msg.add_header('archived-at', email.utils.formatdate())
-        msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
-        
-        lid = foo.archive_message(msg_metadata, msg)
-        print("Done archiving to %s!" % lid)
-    else:
-        print("Nothing to import (no list-id found!)")
-        
-    
+        if args.private == True:
+            ispublic = False
+        if 'list-id' in msg:
+            if not msg.get('archived-at'):
+                msg.add_header('archived-at', email.utils.formatdate())
+            msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
+            
+            lid = foo.archive_message(msg_metadata, msg)
+            print("Done archiving to %s!" % lid)
+        else:
+            print("Nothing to import (no list-id found!)")
+    except Exception as err:
+        if args.quiet:
+            print("Could not parse email, but exiting quietly as --quiet is on: %s" % err)
+        else:
+            print("Could not parse email: %s" % err)
+            sys.exit(-1)
+            
