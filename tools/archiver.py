@@ -451,7 +451,7 @@ if __name__ == '__main__':
             msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
             
             lid = foo.archive_message(msg_metadata, msg)
-            print("Done archiving to %s!" % lid)
+            print("%s: Done archiving to %s!" % (email.utils.formatdate(), lid))
         else:
             print("Nothing to import (no list-id found!)")
     except Exception as err:
