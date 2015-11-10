@@ -2712,7 +2712,7 @@ function search(q, d, nopush, all) {
         if (howlong >= 365) {
             howlong = "last " + parseInt(howlong/365) + " year" + (howlong>365 ? "s" : "")
         } else if (howlong >= 30) {
-            howlong = "last " + parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
+            howlong = "last " + parseInt(howlong/30) + " month" + (howlong>59 ? "s" : "")
         } else {
             howlong = "last " + howlong + " days"
         }
@@ -2748,7 +2748,7 @@ function searchAll(q, dspan, from, subject, where) {
     GetAsync(url, {
         deep: true
     }, buildPage)
-    var arr = datePickerDouble(d)
+    var arr = datePickerDouble(dspan)
     howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "custom date range"
@@ -2756,7 +2756,7 @@ function searchAll(q, dspan, from, subject, where) {
         if (howlong >= 365) {
             howlong = parseInt(howlong/365) + " year"
         } else if (howlong >= 30) {
-            howlong = "last " + parseInt(howlong/30) + " month" + (howlong>30 ? "s" : "")
+            howlong = "last " + parseInt(howlong/30) + " month" + (howlong>59 ? "s" : "")
         } else {
             howlong =  howlong + " day"
         }
@@ -2788,7 +2788,7 @@ function do_search(q, d, nopush, all) {
     else if (howlong >= 365) {
         howlong = parseInt(howlong/365) + " year" + (howlong>769 ? "s" : "")
     } else if (howlong >= 30) {
-        howlong = parseInt(howlong/30) + " month" + (howlong>60 ? "s" : "")
+        howlong = parseInt(howlong/30) + " month" + (howlong>59 ? "s" : "")
     } else {
         howlong = howlong + " days"
     }

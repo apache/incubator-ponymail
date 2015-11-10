@@ -35,7 +35,7 @@
       <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid; id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].value, false, this.elements['checkall'].checked);">
         <input type="text" name="q" id="q" placeholder="Search list..." style="width: 150px;"/>
         <select name="d" id='dp' onmousedown="datePicker(this);">
-          <option selected="selected" value="30">past month</option>
+          <option selected="selected" value="lte=1M">&lt; 1M ago</option>
         </select>
         <input type="checkbox" value="all" id="checkall"><label for="checkall" id="lcheckall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
         <input type="submit" value="Search!" class="btn btn-primary"/>&nbsp;
@@ -100,7 +100,7 @@
           <div style="width: 120px; float: left;">When:</div>
           <div style="width: 300px; float: left; page-break-after: always;">
             <select name="dp" id='dp' onmousedown="datePicker(this)">
-            <option selected="selected" value="lte=30d">past month</option>
+            <option selected="selected" value="lte=1M">&lt; 1M ago</option>
           </select>
           </div>
         </div>
