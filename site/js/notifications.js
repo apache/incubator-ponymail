@@ -16,9 +16,11 @@
 */
 
 function setupUserFromLua(json) {
-    if (json.login) {
-        setupUser(json.login)
+    if (typeof json.login != undefined && json.login) {
         login = json.login
+        if (login.credentials) {
+            setupUser(json.login)
+        }
     }
 }
 
