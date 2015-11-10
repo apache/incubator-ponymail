@@ -14,10 +14,10 @@ Otherwise, read the next two chapters:
 ## Pre-requisites ##
 You will need the following software installed on your machine:
 
-- ElasticSearch >= 1.3 (2.0 is not supported yet)
+- ElasticSearch >= 1.3 (2.0 should also work just fine)
 - Python 3.x for the archiver plugin (setup.py will handle dependencies) and importer
 - Apache HTTP Server 2.4.x with mod_lua (see http://modlua.org/gs/installing if you need to build mod_lua manually)
-- Lua 5.2 or 5.1 with the following modules: cjson, luasec, luasocket
+- Lua >=5.1 with the following modules: cjson, luasec, luasocket
 
 
 ## Download and Install ##
