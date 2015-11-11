@@ -244,7 +244,7 @@ function showTop(json, state) {
     top10.setAttribute("style", "float: left; margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 300px;")
     top10.innerHTML = "<h3 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 10 participants:</h3>"
     
-    var l = "<ul>"
+    var l = "<ul style='margin-left: 0px; padding-left: 0px; list-style: none;'>"
     for (var i in json.participants) {
         var part = json.participants[i]
         l += "<li style='font-size: 13px;'><img src='https://secure.gravatar.com/avatar/" + part.gravatar + ".jpg?s=24&r=g&d=mm' style='margin-top: 3px; margin-right: 5px;'/><b>" + part.name.replace(/</, "&lt;") + ": </b>" + part.count + " email" + (part.count == 1 ? "" : "s") + "</li>"
