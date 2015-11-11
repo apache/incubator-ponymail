@@ -556,6 +556,9 @@ function handle(r)
             email.references = nil
             email.to = nil
             email['in-reply-to'] = nil
+            if not account and config.antispam then
+                email.from = email.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+            end
             if email.attachments then
                 email.attachments = #email.attachments
             else
@@ -591,6 +594,13 @@ function handle(r)
     for k, v in pairs(top10) do
         if v.count <= 0 then
             top10[k] = nil
+        end
+    end
+    
+    -- anonymize emails if not logged in - anti-spam!
+    if not account and config.antispam then
+        for k, v in pairs(top10) do
+            top10[k].email = top10[k].email:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
         end
     end
     

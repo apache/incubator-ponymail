@@ -4,6 +4,7 @@
 - Trend page now correctly displays dates with 0 emails in the bottom chart
 - Admins can now specify which OAuth portals can provide access to private archives
 - Fixed a bug where raw From: headers were not masked when not logged in
+- By default, all From: headers are now anonymized for anonymous users
 
 
 ## CHANGES in 0.3a:
