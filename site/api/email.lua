@@ -101,6 +101,13 @@ function handle(r)
                         doc.from_raw = doc.from_raw:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
                     end
                 end
+                
+                -- Anonymize any email address mentioned in the email if not logged in
+                if not account and config.antispam then
+                    doc.body = doc.body:gsub("<(%S+)@([-a-zA-Z0-9_.]+)>", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                end
+                
+                
                 -- Anonymize to/cc if full_headers is false
                 if not config.full_headers then
                     doc.to = nil
