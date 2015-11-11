@@ -104,7 +104,7 @@ function handle(r)
                 
                 -- Anonymize any email address mentioned in the email if not logged in
                 if not account and config.antispam then
-                    doc.body = doc.body:gsub("<(%S+)@([-a-zA-Z0-9_.]+)>", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                    doc.body = doc.body:gsub("<(%S+)@([-a-zA-Z0-9_.]+)>", function(a,b) return "<" .. a:sub(1,2) .. "..." .. "@" .. b .. ">" end)
                 end
                 
                 
