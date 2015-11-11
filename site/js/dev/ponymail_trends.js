@@ -195,17 +195,24 @@ function showTrends(json, state) {
     days.sort()
     
     var arr = []
-    // for each element, reconstruct the date
-    for (var d in days) {
-        var day = new Date(days[d]*86400*1000)
+    
+    // Start from the beginning
+    var D = new Date(state.dfrom)
+    D.setDate(D.getDate()-state.tspan)
+    
+    // For each day from $beginning to $now, push the no. of emails sent that day into an array
+    while (D <= state.dto) {
+        var day = D
+        D.setDate(D.getDate()+1)
+        var d = parseInt(D.getTime()/86400/1000) // make correct pointer to daily[] array
         
         // if in this timespan, color it blue
         if (day.getTime() >= state.dfrom.getTime()) {
-            arr.push([day, daily[days[d]], '#00C0F1'])
+            arr.push([day, daily[d] ? daily[d] : 0, '#00C0F1'])
             
         // else, color it green
         } else {
-            arr.push([day, daily[days[d]], '#2DC47B'])
+            arr.push([day, daily[d] ? daily[d] : 0, '#2DC47B'])
         }
         
     }
