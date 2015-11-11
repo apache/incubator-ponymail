@@ -24,11 +24,12 @@ function dealWithKeyboard(e) {
             saveDraft()
         } else if (location.href.search(/list\.html/) != -1) { // should only work for the list view
             
-            
+            // If datepicker popup is shown, hide it on escape
             var thread = document.getElementById('thread_' + current_thread.toString().replace(/@<.+>/, ""))
             if (document.getElementById('datepicker_popup') && document.getElementById('datepicker_popup').style.display == "block") {
                 document.getElementById('datepicker_popup').style.display = "none"
             }
+            // otherwise, collapse a thread?
             else if (thread) {
                     // Close one thread?
                 if (thread.style.display != 'none') {

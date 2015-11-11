@@ -53,7 +53,10 @@ function sortByDate(tid) {
     var t = document.getElementById("thread_" + tid)
     var h = document.getElementById("helper_" + tid)
     if (t) {
+        // fetch all elements called 'thread*' inside t
         traverseThread(t, 'thread')
+        
+        // sort the node array
         if (prefs.sortOrder == 'forward') {
             kiddos.sort(function(a, b) {
                 return parseInt(b.getAttribute('epoch') - a.getAttribute('epoch'));
@@ -63,6 +66,8 @@ function sortByDate(tid) {
                 return parseInt(a.getAttribute('epoch') - b.getAttribute('epoch'));
             })
         }
+        
+        // do some DOM magic, repositioning according to sort order
         for (var i in kiddos) {
             t.insertBefore(kiddos[i], t.firstChild)
         }
@@ -156,6 +161,7 @@ function rollup(mid) {
     }
 }
 
+// Check the entire DOM tree for elements with 'epoch' key set to this epoch.
 function findEpoch(epoch) {
     kiddos = []
     traverseThread(document.body)
@@ -167,6 +173,7 @@ function findEpoch(epoch) {
     return null
 }
 
+// Pop-up message display thingy. Used for saying "email sent...I think!"
 function popup(title, body) {
     var obj = document.getElementById('popupper')
     if (obj) {

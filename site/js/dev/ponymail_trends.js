@@ -20,18 +20,23 @@
 function showTrends(json, state) {
     
     var now = new Date().getTime() / 1000
+    
+    // Do we have a trend DOM object to edit?
     var obj = document.getElementById('trends')
     if (!obj) {
         return;
     }
-    var daterange = ""
     
+    
+    // Make sure we actually have a timespan > 0 days to analyze.
     if (state.tspan == 0) {
         obj.innerHTML += "<h4>Invalid date range specified!</h4>"
         return
     }
     
+    
     // Add the timespan if it makes sense (has a beginning and end)
+    var daterange = ""
     if (state.dfrom || state.dto) {
         daterange = " between " + (state.dfrom ? state.dfrom.toDateString() : "beginning of time") + " and " + (state.dto ? state.dto.toDateString() : "now")
     }
@@ -60,6 +65,8 @@ function showTrends(json, state) {
     // total emails sent in the past N days
     var total_emails_current = 0;
     var total_emails_past = 0;
+    
+    // For each email, count the ones in this and the previous time span
     for (var i in json.emails) {
         var f = parseInt(json.emails[i].epoch/86400)
         daily[f] = daily[f] ? daily[f]+1 : 1
@@ -74,9 +81,12 @@ function showTrends(json, state) {
     var diff = total_emails_current-total_emails_past
     var pct = parseInt((diff / total_emails_past)*100)
     
+    // Make div for emails sent
     var emls_sent = document.createElement('div')
     emls_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F8684E; color: #FFF; font-family: sans-serif; width: 420px;")
     emls_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-envelope'> </span> " + total_emails_current.toLocaleString() + "</h2>Emails sent during these " + state.tspan + " days,<br/>"
+    
+    // If a comparison with previous timespan makes sense (can be calculated), show it
     if (!isNaN(pct)) {
         if (total_emails_current >= total_emails_past) {
         emls_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_emails_current-total_emails_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
@@ -92,6 +102,8 @@ function showTrends(json, state) {
     // total topics started in the past 3 months
     var total_topics_current = 0;
     var total_topics_past = 0;
+    
+    // For each thread, count the ones _started_ in this time span and the previous one
     for (var i in json.thread_struct) {
         if ((state.dfrom == null) || json.thread_struct[i].epoch >= (state.dfrom.getTime()/1000)) {
             total_topics_current++;
@@ -103,9 +115,13 @@ function showTrends(json, state) {
     var diff = total_topics_current-total_topics_past
     var pct = parseInt((diff / total_topics_past)*100)
     
+    
+    // Make div for topics started
     var topics_sent = document.createElement('div')
     topics_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 420px;")
     topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-list-alt'> </span> " + total_topics_current.toLocaleString() + "</h2>topics started during these " + state.tspan + " days,<br/>"
+    
+    // If a comparison with previous timespan makes sense (can be calculated), show it
     if (!isNaN(pct)) {
         if (total_topics_current >= total_topics_past) {
             topics_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_topics_current-total_topics_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
@@ -123,6 +139,8 @@ function showTrends(json, state) {
     var total_people_past = 0;
     var hc = {}
     var hp = {}
+    
+    // For each email, add to the sender hash for current and previous time span. Count 'em later
     for (var i in json.emails) {
         if ((state.dfrom == null) || json.emails[i].epoch >= (state.dfrom.getTime()/1000)) {
             hc[json.emails[i].from] = (hc[json.emails[i].from] ? hc[json.emails[i].from] : 0) + 1
@@ -138,9 +156,12 @@ function showTrends(json, state) {
     var diff = total_people_current-total_people_past
     var pct = parseInt((diff / total_people_past)*100)
     
+    // Make div for participants
     var parts = document.createElement('div')
     parts.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00A757; color: #FFF; font-family: sans-serif; width: 420px;")
     parts.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-user'> </span> " + total_people_current.toLocaleString() + "</h2>Participants during these " + state.tspan + " days,<br/>"
+    
+    // If a comparison with previous timespan makes sense (can be calculated), show it
     if (!isNaN(pct)) {
         if (total_people_current >= total_people_past) {
             parts.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_people_current-total_people_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
@@ -195,12 +216,14 @@ function showTrends(json, state) {
 // callback for top10 stats
 function showTop(json, state) {
     
+    // Make sure we have a trend object to edit in the DOM
     var obj = document.getElementById('trends')
     if (!obj) {
         return;
     }
     var daterange = ""
     
+    // Can't do much analysis if the timespan is 0 days
     if (state.tspan == 0) {
         return
     }
@@ -248,6 +271,7 @@ function gatherTrends() {
         }
     }
     
+    // don't let JavaScript try to send 'undefined' as an actual query here.
     if (query == undefined) {
         query = ""
     }

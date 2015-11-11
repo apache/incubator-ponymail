@@ -26,6 +26,8 @@ function showStats(json) {
     obj.innerHTML += '<span class="glyphicon glyphicon-list-alt"> </span> ' + json.no_threads.toLocaleString() + " topics &nbsp; "
     obj.innerHTML += '<span class="glyphicon glyphicon-inbox"> </span> ' + json.no_active_lists.toLocaleString() + " active lists."
     
+    
+    // Make a table (cheap way to graph stuff) for the daily stats
     var ts = "<table border='0' style='float: right; margin-top: -30px;'><tr>"
     
     // find the max no. of emails in a single day, for calculating max height of the 14 day chart
