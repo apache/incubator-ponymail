@@ -3,6 +3,8 @@
 - Notification pane correctly notes if there are no notifications
 - Trend page now correctly displays dates with 0 emails in the bottom chart
 - Admins can now specify which OAuth portals can provide access to private archives
+- Fixed a bug where raw From: headers were not masked when not logged in
+
 
 ## CHANGES in 0.3a:
 
