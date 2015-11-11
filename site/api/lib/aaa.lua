@@ -31,20 +31,30 @@ end
 
 -- Is $uid a member of the org?
 function isMember(r, uid)
+    
+    -- First, check the 30 minute cache
     local nowish = math.floor(os.time() / 1800)
     local t = r:ivm_get("isMember_" .. nowish .. "_" .. uid)
+    
+    -- If cached, then just return the value
     if t then
         return tonumber(t) == 1
+    
+    -- Otherwise, look in LDAP
     else
         local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
         local data = ldapdata:read("*a")
         for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
+            -- Found it?
             if match == uid then
+                -- Set cache
                 r:ivm_set("isMember_" .. nowish .. "_" .. uid, "1")
                 return true
             end
         end
     end
+    
+    -- Set cache
     r:ivm_set("isMember_" .. nowish .. "_" .. uid, "0")
     return false
 end
@@ -53,11 +63,14 @@ end
 function getRights(r, xuid)
     uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
+    -- bad char in uid?
     if not uid or xuid ~= uid then
         return rights
     end
+    -- Check if uid has member (admin) rights
     if isMember(r, uid) then
         table.insert(rights, "*")
+    -- otherwise, get PMC list and construct array
     else
         local list = getPMCs(r, uid)
         for k, v in pairs(list) do
