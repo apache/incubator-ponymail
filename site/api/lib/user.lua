@@ -66,7 +66,7 @@ function updateUser(r, cid, data)
         internal = {
             admin = data.admin,
             cookie = cookie,
-            oauth_used = data.oauth
+            oauth_used = data.oauth_used
         },
         cid = cid,
         preferences = prefs
