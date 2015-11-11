@@ -96,7 +96,10 @@ function handle(r)
             else
                 local eml = doc.from:match("<(.-)>") or doc.from:match("%S+@%S+") or "unknown"
                 if not account then -- anonymize email address if not logged in
-                    doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)                  
+                    doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                    if doc.from_raw then
+                        doc.from_raw = doc_raw.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                    end
                 end
                 -- Anonymize to/cc if full_headers is false
                 if not config.full_headers then
