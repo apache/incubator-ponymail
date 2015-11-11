@@ -1132,7 +1132,7 @@ function displayEmail(json, id, level) {
             thread.style.background = estyle
             thread.innerHTML = ''
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
-            thread.innerHTML += ' &nbsp; <a href="/thread.html/'+json.mid+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
+            thread.innerHTML += ' &nbsp; <a href="/thread.html/'+(pm_config.shortLinks ? shortenID(json.mid) : json.mid)+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
             thread.innerHTML += ' &nbsp; <a href="/api/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
             if (level > 1) {
                 thread.innerHTML += ' &nbsp; <a href="javascript:void(0);" onclick="rollup(\'' + id_sanitised + '\');"><label class="label label-primary" title="roll up" style="cursor: pointer; float: right; margin-right: 10px;"><span id="rollup_' + id_sanitised + '" class="glyphicon glyphicon-chevron-up"> </span></label></a> &nbsp; '
@@ -1597,7 +1597,29 @@ function formatDate(date){
         date.getDate().pad(2) + " " +
         date.getHours().pad(2) + ":" +
         date.getMinutes().pad(2))        
-}// Fetched from ponymail_helperfuncs.js
+}
+
+
+// hex -> base 36 conversion
+function shortenID(mid) {
+    var id1 = parseInt(mid.substr(0,9), 16).toString(36)
+    while (id1.length < 7) id1 = '-' + id1
+    var id2 = parseInt(mid.substr(9,9), 16).toString(36)
+    while (id2.length < 7) id2 = '-' + id2
+    return 'B' + id1 + id2
+}
+
+// hex <- base 36 conversion
+function unshortenID(mid) {
+    if (mid[0] == 'B') {
+        var id1 = parseInt(mid.substr(1, 7).replace("-", ""), 36)
+        var id2 = parseInt(mid.substr(8, 7).replace("-", ""), 36)
+        return id1.toString(16) + id2.toString(16)
+    }
+    return mid
+}
+
+// Fetched from ponymail_helperfuncs.js
 
 
 // checkForSlows: Checks if there is a pending async URL fetching
@@ -1745,7 +1767,7 @@ function loadList_flat(mjson, limit, start, deep) {
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
         }
-        nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + eml.id + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
     }
     nest += "</ul>"
 
@@ -1915,7 +1937,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             from = from.replace(/\"/g, "")
             nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
                     d +
-                    "<a style='" + estyle + "' href='/thread.html/" + eml.id + "' onclick='this.style=\"\"; latestEmailInThread = " +
+                    "<a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" +
                     subject +
@@ -1933,7 +1955,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
                     "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "<br/>" +
-                    "<a class='label label-info' href='/thread.html/" + eml.id + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
+                    "<a class='label label-info' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
                     "</div>" +
@@ -1942,7 +1964,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         } else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 300px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hide;" + estyle + "' href='/thread.html/" + eml.id + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    d + "<a style='overflow:hide;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         }
     }

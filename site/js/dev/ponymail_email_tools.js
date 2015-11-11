@@ -173,3 +173,24 @@ function formatDate(date){
         date.getHours().pad(2) + ":" +
         date.getMinutes().pad(2))        
 }
+
+
+// hex -> base 36 conversion
+function shortenID(mid) {
+    var id1 = parseInt(mid.substr(0,9), 16).toString(36)
+    while (id1.length < 7) id1 = '-' + id1
+    var id2 = parseInt(mid.substr(9,9), 16).toString(36)
+    while (id2.length < 7) id2 = '-' + id2
+    return 'B' + id1 + id2
+}
+
+// hex <- base 36 conversion
+function unshortenID(mid) {
+    if (mid[0] == 'B') {
+        var id1 = parseInt(mid.substr(1, 7).replace("-", ""), 36)
+        var id2 = parseInt(mid.substr(8, 7).replace("-", ""), 36)
+        return id1.toString(16) + id2.toString(16)
+    }
+    return mid
+}
+
