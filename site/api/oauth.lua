@@ -23,6 +23,7 @@ local elastic = require 'lib/elastic'
 local https = require 'ssl.https'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
+local config = require 'lib/config'
 
 function handle(r)
     r.content_type = "application/json"
