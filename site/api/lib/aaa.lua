@@ -60,15 +60,30 @@ function isMember(r, uid)
 end
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
-function getRights(r, xuid)
+function getRights(r, usr)
+    local xuid = usr.uid or usr.email
     uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
     -- bad char in uid?
     if not uid or xuid ~= uid then
         return rights
     end
+    
+    -- check if oauth was through an oauth portal that can give privacy rights
+    local authority = false
+    for k, v in pairs(config.admin_oauth or {}) do
+        if r.strcmp_match(oauth_domain, v) then
+            authority = true
+            break
+        end
+    end
+    -- if not a 'good' oauth, then let's forget all about it
+    if not authority then
+        return rights
+    end
+    
     -- Check if uid has member (admin) rights
-    if isMember(r, uid) then
+    if usr.admin or isMember(r, uid) then
         table.insert(rights, "*")
     -- otherwise, get PMC list and construct array
     else

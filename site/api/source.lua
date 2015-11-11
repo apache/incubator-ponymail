@@ -41,7 +41,7 @@ function handle(r)
             local account = user.get(r)
             if account then
                 local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-                for k, v in pairs(aaa.rights(r, account.credentials.uid or account.credentials.email)) do
+                for k, v in pairs(aaa.rights(r, account)) do
                     if v == "*" or v == lid then
                         canAccess = true
                         break

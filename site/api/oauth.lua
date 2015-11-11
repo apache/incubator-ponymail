@@ -34,8 +34,10 @@ function handle(r)
         scheme = "http"
     end
     
+    local oauth_domain = ""
     -- Persona callback
     if get.mode and get.mode == "persona" then
+        oauth_domain = "verifier.login.persona.org"
         local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=%s://%s:%u/"):format(post.assertion, scheme, r.hostname, r.port))
         r:err(("assertion=%s&audience=%s://ponymail:443/"):format(post.assertion, scheme))
         r:err(result)
@@ -43,11 +45,13 @@ function handle(r)
         
     -- Google Auth callback
     elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.id_token then
+        oauth_domain = "www.googleapis.com"
         local result = https.request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" .. r:escape(get.id_token))
         valid, json = pcall(function() return JSON.decode(result) end)
         
     -- Generic callback (like ASF Oauth2)
     elseif get.state and get.code and get.oauth_token then
+        oauth_domain = get.oauth_token:match("https?://(.-)/")
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
     end
@@ -71,9 +75,22 @@ function handle(r)
             end
             usr.gauth = get.id_token
             usr.fullname = fname
-            usr.admin = admin
+            
+            -- if the oauth provider can set admin status, do so if needed
+            local authority = false
+            for k, v in pairs(config.admin_oauth or {}) do
+                if r.strcmp_match(oauth_domain, v) then
+                    authority = true
+                    break
+                end
+            end
+            if authority then
+                usr.admin = admin
+            end
+            
             usr.email = eml
             usr.uid = json.uid
+            usr.oauth_used = oauth_domain
             user.update(r, cid, usr)
             r:puts[[{"okay": true, "msg": "Logged in successfully!"}]]
         

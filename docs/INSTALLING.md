@@ -128,6 +128,9 @@ belongs to, and thus which lists said person has access to. Again, this is
 modelled on the Apache LDAP structure, so you may wish to change this to suit
 your need.
 
+_NB:_ You will need to add the OAuth domain to config.admin_oauth in config.lua
+if the OAuth portal is authorized to give access to private lists.
+
 
 ### Whitelisting replies via the Web UI ###
 To have Pony Mail accept replies done via the Web UI, you must make sure
