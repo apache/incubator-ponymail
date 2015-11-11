@@ -402,7 +402,7 @@ class SlurpThread(Thread):
                                             'source': contents[key]
                                         }
                                     )
-                        if len(ja) >= 100:
+                        if len(ja) >= 50:
                             if not args.dry:
                                 bulk = BulkThread()
                                 bulk.assign(ja, es, 'mbox')
