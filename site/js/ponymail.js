@@ -1614,7 +1614,11 @@ function unshortenID(mid) {
     if (mid[0] == 'B') {
         var id1 = parseInt(mid.substr(1, 7).replace("-", ""), 36)
         var id2 = parseInt(mid.substr(8, 7).replace("-", ""), 36)
-        return id1.toString(16) + id2.toString(16)
+        id1 = id1.toString(16)
+        id2 = id2.toString(16)
+        while (id1.length < 9) id1 = '0' + id1
+        while (id2.length < 9) id2 = '0' + id2
+        return id1+id2
     }
     return mid
 }
