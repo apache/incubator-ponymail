@@ -57,7 +57,7 @@ function handle(r)
             -- check we have rights to view this notification (it might be from a private email we shouldn't see)
             if doc.private then
                 if not rights then
-                    rights = aaa.rights(r, account.credentials.uid or account.credentials.email)
+                    rights = aaa.rights(r, account)
                 end
                 canUse = false
                 if account then
