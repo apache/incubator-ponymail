@@ -44,8 +44,6 @@ function handle(r)
     -- Google Auth callback
     elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.id_token then
         local result = https.request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" .. r:escape(get.id_token))
-        r:err(result)
-        r:err(r:escape(get.id_token))
         valid, json = pcall(function() return JSON.decode(result) end)
         
     -- Generic callback (like ASF Oauth2)
