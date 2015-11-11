@@ -1,6 +1,7 @@
 ## CHANGES in 0.4a:
 
 - Notification pane correctly notes if there are no notifications
+- Trend page now correctly displays dates with 0 emails in the bottom chart
 
 
 ## CHANGES in 0.3a:
