@@ -36,7 +36,8 @@ function getUser(r, override)
                     internal = {
                         cookie = cookie,
                         admin = js.internal.admin,
-                        oauth_used = js.internal.oauth_used
+                        oauth_used = js.internal.oauth_used,
+                        ip = r.useragent_ip
                     },
                     preferences = js.preferences,
                 }
@@ -66,7 +67,8 @@ function updateUser(r, cid, data)
         internal = {
             admin = data.admin,
             cookie = cookie,
-            oauth_used = data.oauth_used
+            oauth_used = data.oauth_used,
+            ip = r.useragent_ip
         },
         cid = cid,
         preferences = prefs
