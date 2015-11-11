@@ -1,3 +1,8 @@
+## CHANGES in 0.4a:
+
+- Notification pane correctly notes if there are no notifications
+
+
 ## CHANGES in 0.3a:
 
 - Permalink page now accepts shortened IDs (first 18 chars)

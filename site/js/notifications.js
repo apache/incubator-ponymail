@@ -106,6 +106,8 @@ function renderNotifications(json) {
         }
         nest += "</ul>"
         document.getElementById('notifications').innerHTML = nest
+    } else {
+        document.getElementById('notifications').innerHTML = "There doesn't seem to be any notifications for you yet."
     }
 }
 
