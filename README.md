@@ -10,6 +10,8 @@ using Mozilla Persona or OAuth2 for authentication.
 
 ![Ponies](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo.png)
 
+![Trends](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo_trends.png)
+
 See [http://ponymail.info](http://ponymail.info) or [http://fosslists.org](http://fosslists.org) for a demo.
 
 Pony Mail works in both public, private and mixed-mode, allowing you 
