@@ -3156,7 +3156,7 @@ function showTrends(json, state) {
     
     // For each day from $beginning to $now, push the no. of emails sent that day into an array
     while (D <= state.dto) {
-        var day = D
+        var day = new Date(D)
         D.setDate(D.getDate()+1)
         var d = parseInt(D.getTime()/86400/1000) // make correct pointer to daily[] array
         
