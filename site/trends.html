@@ -32,12 +32,19 @@
     </nav>
     
     <div class="container-fluid">
-     <div class="row">
-      <div id="trends" class="bs-callout bs-callout-info" style="margin-top: 0px; padding-top: 10px; text-align: center; font-size: 12pt; padding-bottom: 0px; min-height: 64px;">
+     <div class="row" style="text-align: center;">
+      <div class="bs-callout bs-callout-info" style="float: left; padding-top: 10px; text-align: center; font-size: 12pt; padding-bottom: 0px; min-height: 64px; width: 100%;">
+        <div id="trends" style="margin: 0 auto; float: left;">
         Fetching trend data, hang on..!
+        </div>
+        <div id="trC" style="float: left; padding-top: 120px;">
+          <canvas id="trendCanvas" width="540" height="320"></canvas><br/>
+        </div>
+        <div style="float: left; width: 100%; text-align: left;">
+          <canvas id="dayCanvas" width="1200" height="320"></canvas><br/>
+        </div>
       </div>
-      <canvas id="trendCanvas" width="640" height="320"></canvas><br/>
-      <canvas id="dayCanvas" width="1200" height="320"></canvas><br/>
+      
     </div>
     </div>
     

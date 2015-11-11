@@ -27,6 +27,8 @@ function showTrends(json, state) {
         return;
     }
     
+    // size down trend obj
+    obj.style.maxWidth = "660px"
     
     // Make sure we actually have a timespan > 0 days to analyze.
     if (state.tspan == 0) {
@@ -48,10 +50,12 @@ function showTrends(json, state) {
     }
     
     // Set page title
-    obj.innerHTML = "<h2>Statistics for " + lname + daterange + ":</h2>"
+    var title = "<div><h2>Statistics for " + lname + "<br/><small>" + daterange + ":</small></h2>"
     if ((state.query && state.query.length > 0) || (state.nquery && state.nquery.length > 0)) {
-        obj.innerHTML += "<i>(NB: You are using a search query which may distort these results)"
+        title += "<i>(NB: You are using a search query which may distort these results)"
     }
+    title += "</div>"
+    obj.innerHTML = title
     
     
     // for sake of displaying "N days" or just "days", make tspan empty string if null
@@ -83,15 +87,15 @@ function showTrends(json, state) {
     
     // Make div for emails sent
     var emls_sent = document.createElement('div')
-    emls_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F8684E; color: #FFF; font-family: sans-serif; width: 420px;")
-    emls_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-envelope'> </span> " + total_emails_current.toLocaleString() + "</h2>Emails sent during these " + state.tspan + " days,<br/>"
+    emls_sent.setAttribute("style", "float: left; margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F8684E; color: #FFF; font-family: sans-serif; width: 300px;")
+    emls_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-envelope'> </span> " + total_emails_current.toLocaleString() + "</h2><span style='font-size: 13px;'>Emails sent during these " + state.tspan + " days,<br/></span>"
     
     // If a comparison with previous timespan makes sense (can be calculated), show it
     if (!isNaN(pct)) {
         if (total_emails_current >= total_emails_past) {
-        emls_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_emails_current-total_emails_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+        emls_sent.innerHTML += "<span style='font-size: 11px;'><b style='color:#00D0F1'>up</b> " + (total_emails_current-total_emails_past) + " (" + pct + "%) compared to previous " + state.tspan + " days.</span>"
         } else {
-            emls_sent.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_emails_past-total_emails_current) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+            emls_sent.innerHTML += "<span style='font-size: 11px;'><b style='color:#F9BA00'>down</b> " + (total_emails_past-total_emails_current) + " (" + pct + "%) compared to previous " + state.tspan + " days.</span>"
         }
     }
     
@@ -118,15 +122,15 @@ function showTrends(json, state) {
     
     // Make div for topics started
     var topics_sent = document.createElement('div')
-    topics_sent.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 420px;")
-    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-list-alt'> </span> " + total_topics_current.toLocaleString() + "</h2>topics started during these " + state.tspan + " days,<br/>"
+    topics_sent.setAttribute("style", "float: left; margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #F99A00; color: #FFF; font-family: sans-serif; width: 300px;")
+    topics_sent.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-list-alt'> </span> " + total_topics_current.toLocaleString() + "</h2><span style='font-size: 13px;'>topics started during these " + state.tspan + " days,<br/></span>"
     
     // If a comparison with previous timespan makes sense (can be calculated), show it
     if (!isNaN(pct)) {
         if (total_topics_current >= total_topics_past) {
-            topics_sent.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_topics_current-total_topics_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+            topics_sent.innerHTML += "<span style='font-size: 11px;'><b style='color:#00D0F1'>up</b> " + (total_topics_current-total_topics_past) + " (" + pct + "%) compared to previous " + state.tspan + " days.</span>"
         } else {
-            topics_sent.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_topics_past-total_topics_current) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+            topics_sent.innerHTML += "<span style='font-size: 11px;'><b style='color:#F9BA00'>down</b> " + (total_topics_past-total_topics_current) + " (" + pct + "%) compared to previous " + state.tspan + " days.</span>"
         }
     }
     
@@ -158,15 +162,15 @@ function showTrends(json, state) {
     
     // Make div for participants
     var parts = document.createElement('div')
-    parts.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00A757; color: #FFF; font-family: sans-serif; width: 420px;")
-    parts.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-user'> </span> " + total_people_current.toLocaleString() + "</h2>Participants during these " + state.tspan + " days,<br/>"
+    parts.setAttribute("style", "float: left; break-after: always; margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00A757; color: #FFF; font-family: sans-serif; width: 300px;")
+    parts.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-user'> </span> " + total_people_current.toLocaleString() + "</h2><span style='font-size: 13px;'>Participants during these " + state.tspan + " days,</span><br/>"
     
     // If a comparison with previous timespan makes sense (can be calculated), show it
     if (!isNaN(pct)) {
         if (total_people_current >= total_people_past) {
-            parts.innerHTML += "<b style='color:#00D0F1'>up</b> " + (total_people_current-total_people_past) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+            parts.innerHTML += "<span style='font-size: 11px;'><b style='color:#00D0F1'>up</b> " + (total_people_current-total_people_past) + " (" + pct + "%) compared to previous " + state.tspan + " days.</span>"
         } else {
-            parts.innerHTML += "<b style='color:#F9BA00'>down</b> " + (total_people_past-total_people_current) + " (" + pct + "%) compared to previous " + state.tspan + " days."
+            parts.innerHTML += "<span style='font-size: 11px;'><b style='color:#F9BA00'>down</b> " + (total_people_past-total_people_current) + " (" + pct + "%) compared to previous " + state.tspan + " days.</span>"
         }
     }
     
@@ -237,18 +241,18 @@ function showTop(json, state) {
     
     // Top 10 participants
     var top10 = document.createElement('div')
-    top10.setAttribute("style", "margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 420px;")
-    top10.innerHTML = "<h2 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 10 participants:</h2>"
+    top10.setAttribute("style", "float: left; margin: 10px; padding: 5px; text-align: left; border-radius: 8px; background: #00C0F1; color: #FFF; font-family: sans-serif; width: 300px;")
+    top10.innerHTML = "<h3 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 10 participants:</h3>"
     
     var l = "<ul>"
     for (var i in json.participants) {
         var part = json.participants[i]
-        l += "<li><img src='https://secure.gravatar.com/avatar/" + part.gravatar + ".jpg?s=24&r=g&d=mm' style='margin: 5px;'/><b>" + part.name.replace(/</, "&lt;") + ": </b>" + part.count + " email" + (part.count == 1 ? "" : "s") + "</li>"
+        l += "<li style='font-size: 13px;'><img src='https://secure.gravatar.com/avatar/" + part.gravatar + ".jpg?s=24&r=g&d=mm' style='margin-top: 3px; margin-right: 5px;'/><b>" + part.name.replace(/</, "&lt;") + ": </b>" + part.count + " email" + (part.count == 1 ? "" : "s") + "</li>"
     }
     l += "</ul>"
     top10.innerHTML += l
     
-    obj.appendChild(top10)    
+    obj.insertBefore(top10, obj.childNodes[1])    
 }
 
 // onload func that figures out what we want and then asks the API for stats
