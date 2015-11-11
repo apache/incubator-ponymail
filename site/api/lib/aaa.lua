@@ -61,7 +61,7 @@ end
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
 function getRights(r, usr)
-    local xuid = usr.uid or usr.email
+    local xuid = usr.uid or usr.email or "|||"
     uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
     -- bad char in uid?
