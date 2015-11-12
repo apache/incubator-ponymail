@@ -531,11 +531,18 @@ function quokkaBars(id, titles, values, options) {
     }
     
     
+    
+    // Some pre-calculations of steps
+    var step = (canvas.width - lwidth - 40) / values.length;
+    var smallstep = (step / titles.length) - 2;
+    
     // Draw X values if noX isn't set:
     if (noX != true) {
         ctx.beginPath();
         for (var i = 0; i < values.length; i++) {
-            var x = 25 + (step * (i/sx)) + step/2;
+            smallstep = (step / (values[i].length-1)) - 2;
+            zz = 1
+            var x = 28 + ((step) * i);
             var y = canvas.height - lheight + 5;
             if (i % sx == 0) {
                 ctx.translate(x, y);
@@ -562,8 +569,7 @@ function quokkaBars(id, titles, values, options) {
     // Draw each line
     var stacks = [];
     var pstacks = [];
-    var step = (canvas.width - lwidth - 40) / values.length;
-    var smallstep = (step / titles.length) - 2;
+    
     for (k in values) {
         smallstep = (step / (values[k].length-1)) - 2;
         stacks[k] = 0;
