@@ -6,7 +6,8 @@
 - Fixed a bug where raw From: headers were not masked when not logged in
 - By default, all From: headers are now anonymized for anonymous users
 - Email IDs in links are now by default shortened to 15 chars
-
+- Minor changes to the chart graphics
+- Fixed an issue where the word cloud would not update the search terms
 
 ## CHANGES in 0.3a:
 
