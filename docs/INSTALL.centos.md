@@ -17,7 +17,7 @@ Start by installing the following CentOS packages:
 - readline-devel
 
 ~~~
-yum install -y httpd git lua lua-devel gcc gcc-c++ kernel-devel unzip openssl openssl-devel readline-devel
+sudo yum install -y httpd git lua lua-devel gcc gcc-c++ kernel-devel unzip openssl openssl-devel readline-devel
 ~~~
 
 
@@ -29,30 +29,30 @@ tar zxvf luarocks-2.0.6.tar.gz
 cd luarocks-2.0.6                                                               
 ./configure                                                                          
 make                                                                                  
-make install
+sudo make install
 ~~~
 
 Now build/install the required Lua modules:
 
 ~~~
-luarocks install lua-socket
-luarocks install luasec OPENSSL_LIBDIR=/usr/lib64/
-luarocks install lua-cjson
+sudo luarocks install lua-socket
+sudo luarocks install luasec OPENSSL_LIBDIR=/usr/lib64/
+sudo luarocks install lua-cjson
 ~~~
 
 
 Configure, compile and install Python 3:
 
 ~~~
-yum groupinstall -y development
-yum install -y zlib-dev sqlite-devel bzip2-devel xz-libs
+sudo yum groupinstall -y development
+sudo yum install -y zlib-dev sqlite-devel bzip2-devel xz-libs
 wget http://www.python.org/ftp/python/3.4.3/Python-3.4.3.tar.xz
 xz -d Python-3.4.3.tar.xz
 tar zvf Python-3.4.3.tar
 cd Python-3.4.3/
 ./configure
 make
-make altinstall
+sudo make altinstall
 ~~~
 
 
@@ -65,8 +65,8 @@ sudo pip3.4 install elasticsearch formatflowed chardet
 Install ElasticSearch:
 
 ~~~
-yum install -y java-1.7.0-openjdk-headless
-rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+sudo yum install -y java-1.7.0-openjdk-headless
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 
     (The following is taken from the ElasticSearch online guide:)
 
@@ -80,17 +80,17 @@ rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
     gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
     enabled=1
 
-yum update
-yum install elasticsearch
+sudo yum update
+sudo yum install elasticsearch
 ~~~
 
 
 Configure and start up ElasticSearch:
 
 ~~~
-sudo /bin/systemctl daemon-reload
-sudo /bin/systemctl enable elasticsearch.service
-/etc/init.d/elasticsearch start
+sudo sudo /bin/systemctl daemon-reload
+sudo sudo /bin/systemctl enable elasticsearch.service
+sudo /etc/init.d/elasticsearch start
 ~~~
 
 
@@ -128,7 +128,7 @@ This differs from the normal installation (because of CentOS specifics), so bewa
 (re)start apache:
 
 ~~~
-apachectl restart
+sudo apachectl restart
 ~~~
 
 Once this is done, you should now have a *working copy* of Pony Mail!
