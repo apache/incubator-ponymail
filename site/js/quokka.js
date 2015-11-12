@@ -533,7 +533,7 @@ function quokkaBars(id, titles, values, options) {
     
     
     // Some pre-calculations of steps
-    var step = (canvas.width - lwidth - 40) / values.length;
+    var step = (canvas.width - lwidth - 48) / values.length;
     var smallstep = (step / titles.length) - 2;
     
     // Draw X values if noX isn't set:
