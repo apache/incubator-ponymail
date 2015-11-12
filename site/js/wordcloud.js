@@ -39,7 +39,7 @@ function makeWord(word, size) {
     txt.setAttribute("x", "0")
     txt.setAttribute("y", "40")
     txt.setAttribute("class", "cloudword")
-    txt.setAttribute("onclick", "do_search(\"" + word + "\", 30)")
+    txt.setAttribute("onclick", "do_search(\"" + word + "\", 'lte=1M')")
     txt.textContent = word
     return txt
 }
