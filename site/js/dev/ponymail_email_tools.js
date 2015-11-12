@@ -175,22 +175,32 @@ function formatDate(date){
 }
 
 
-// hex -> base 36 conversion
+// hex -> base 36 conversion for creating shorter permalinks
 function shortenID(mid) {
     var id1 = parseInt(mid.substr(0,9), 16).toString(36)
+    
+    // add padding if < 7 chars long
     while (id1.length < 7) id1 = '-' + id1
     var id2 = parseInt(mid.substr(9,9), 16).toString(36)
     while (id2.length < 7) id2 = '-' + id2
-    return 'B' + id1 + id2
+    
+    // add 'Z' which is the short link denoter
+    return 'Z' + id1 + id2
 }
 
-// hex <- base 36 conversion
+// hex <- base 36 conversion, reverses short links
 function unshortenID(mid) {
-    if (mid[0] == 'B') {
+    // all short links begin with 'Z'. If not, it's not a short link
+    // so let's just pass it through unaltered if so.
+    // Some old shortlinks begin with 'B', so let's be backwards compatible for now.
+    if (mid[0] == 'Z' || mid[0] == 'B') {
+        // remove padding
         var id1 = parseInt(mid.substr(1, 7).replace("-", ""), 36)
         var id2 = parseInt(mid.substr(8, 7).replace("-", ""), 36)
         id1 = id1.toString(16)
         id2 = id2.toString(16)
+        
+        // add 0-padding
         while (id1.length < 9) id1 = '0' + id1
         while (id2.length < 9) id2 = '0' + id2
         return id1+id2
