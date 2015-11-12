@@ -108,10 +108,10 @@ Persona will only ever work for public lists. For private lists, you will need
 to specify and implement an OAuth provider.
 
 ### Setting up an OAuth provider ###
-Pony Mail comes with a default `Apache` OAuth example in `site/js/config.js`,
-that enables the ASF Oauth. You probably don't want this, so comment it out or
-edit it to suit your own needs. This is a standard OAuth that expects the
-backend to supply the following JSON data on success:
+Pony Mail comes with a few default OAuth examples in `site/js/config.js`, such
+as ASF Oauth and Google OAuth. You can enable these by uncommenting the lines in
+question, or set up your own OAuth portal to handle things. This is a standard
+OAuth that expects the backend to supply the following JSON data on success:
 
 ~~~
     {
@@ -124,12 +124,21 @@ backend to supply the following JSON data on success:
 
 For private list browsing, Pony Mail supplies an example AAA library in
 `site/api/lib/aaa.lua` that does LDAP lookups to determine which groups a person
-belongs to, and thus which lists said person has access to. Again, this is
+belongs to, and thus which lists said person has access to. The AAA example is
 modelled on the Apache LDAP structure, so you may wish to change this to suit
 your need.
 
-_NB:_ You will need to add the OAuth domain to config.admin_oauth in config.lua
-if the OAuth portal is authorized to give access to private lists.
+If you are looking for an OAuth portal to provide users access to private lists
+in the archive, you will need to add the OAuth domain to config.admin_oauth in
+config.lua:
+
+~~~
+    admin_oauth = { 'myoauth.foo.tld', '*.oauthprovider.com', 'etc' }
+~~~~
+
+If not specified in config.lua, OAuth will only provide users with a place to
+store settings and notifications, and - provided your mail server is set to accept
+this - a place to reply to emails in the archive.
 
 
 ### Whitelisting replies via the Web UI ###
