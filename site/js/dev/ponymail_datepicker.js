@@ -399,6 +399,14 @@ function datePickerDouble(seedPeriod) {
             }
         }
     }
+    
+    // just N days?
+    else if (parseInt(seedPeriod).toString() == seedPeriod.toString()) {
+        tspan = parseInt(seedPeriod)
+        dfrom.setDate(dfrom.getDate() - tspan)
+        dbl = "lte=" + (tspan*2) + "d"
+    }
+    
     // Specific month?
     else if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
         ptype = 'mr'
@@ -416,12 +424,6 @@ function datePickerDouble(seedPeriod) {
         }
     }
     
-    // just N days?
-    else if (parseInt(seedPeriod).toString() == seedPeriod.toString()) {
-        tspan = parseInt(seedPeriod)
-        dfrom.setDate(dfrom.getDate() - tspan)
-        dbl = "lte=" + (tspan*2) + "d"
-    }
     return [dbl, dfrom, dto, tspan]
 }
 
