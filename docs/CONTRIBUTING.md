@@ -12,14 +12,14 @@ and pull requests are welcome.
 ## Mailing lists ##
 
 Developers list:
-    - list: dev@ponymail.info
-    - subscribe addr: dev-subscribe@ponymail.info
-    - Online version: http://ponymail.info/list.html?dev@ponymail.info
+ - list: dev@ponymail.info
+ - subscribe addr: dev-subscribe@ponymail.info
+ - Online version: http://ponymail.info/list.html?dev@ponymail.info
     
 Bugs list:
-    - list: bugs@ponymail.info
-    - subscribe addr: bugs-subscribe@ponymail.info
-    - Online version: http://ponymail.info/list.html?bugs@ponymail.info
+ - list: bugs@ponymail.info
+ - subscribe addr: bugs-subscribe@ponymail.info
+ - Online version: http://ponymail.info/list.html?bugs@ponymail.info
 
 ## Chat ##
     
