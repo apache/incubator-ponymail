@@ -8,6 +8,7 @@
 - Email IDs in links are now by default shortened to 15 chars
 - Minor changes to the chart graphics
 - Fixed an issue where the word cloud would not update the search terms
+- Pony Mail now works with ElasticSearch 2.0
 
 ## CHANGES in 0.3a:
 
