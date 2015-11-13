@@ -382,7 +382,7 @@ function handle(r)
                         {
                         range = {
                             date = {
-                                gt = "0",
+                                gt = "1970/01/01 00:00:00",
                             }
                         }
                     },sterm
