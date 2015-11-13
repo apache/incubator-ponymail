@@ -19,6 +19,10 @@ import getpass
 import subprocess
 import readline
 
+if sys.version_info <= (3, 3):
+    print("This script requires Python 3.4 or higher")
+    sys.exit(-1)
+
 dopip = False
 try:
     from elasticsearch import Elasticsearch
@@ -29,7 +33,7 @@ except:
 if dopip and (getpass.getuser() != "root"):
     print("It looks like you need to install some python modules first")
     print("Either run this as root to do so, or run: ")
-    print("pip install elasticsearch formatflowed")
+    print("pip3 install elasticsearch formatflowed")
     sys.exit(-1)
 
 elif dopip:
