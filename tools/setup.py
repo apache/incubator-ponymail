@@ -108,10 +108,6 @@ es = Elasticsearch([
     )
 mappings = {
     "mbox" : {
-      "_size" : {
-        "enabled" : True,
-        "store" : True
-      },
       "properties" : {
         "@import_timestamp" : {
           "type" : "date",
@@ -171,10 +167,6 @@ mappings = {
       }
     },
     "mbox_source" : {
-      "_size" : {
-        "enabled" : True,
-        "store" : True
-      },
       "properties" : {
         "source" : {
           "type" : "string",
@@ -183,10 +175,6 @@ mappings = {
       }
     },
     "attachment" : {
-      "_size" : {
-        "enabled" : True,
-        "store" : True
-      },
       "properties" : {
         "source" : {
           "type" : "binary"
@@ -194,10 +182,6 @@ mappings = {
       }
     },
     "mbox_source" : {
-      "_size" : {
-        "enabled" : True,
-        "store" : True
-      },
       "properties" : {
         "source" : {
           "type" : "binary"
