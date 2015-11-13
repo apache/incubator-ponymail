@@ -57,6 +57,15 @@ mldom = ""
 wc = ""
 wce = False
 
+# If called with --defaults (like from Docker), use default values
+if ('--defaults' in sys.argv):
+    hostname = "localhost"
+    port = 9200
+    dbname = "ponymail"
+    mlserver = "localhost"
+    mldom = "example.org"
+    wce = True
+
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
     
