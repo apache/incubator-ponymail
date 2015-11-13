@@ -64,6 +64,7 @@ if ('--defaults' in sys.argv):
     dbname = "ponymail"
     mlserver = "localhost"
     mldom = "example.org"
+    wc = "Y"
     wce = True
 
 while hostname == "":
