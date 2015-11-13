@@ -235,3 +235,4 @@ return config
     f.close()
     
 print("All done, Pony Mail should...work now :)")
+print("If you are using an external mail inbound server, \nmake sure to copy archiver.py and ponymail.cfg to it")

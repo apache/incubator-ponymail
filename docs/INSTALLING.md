@@ -57,11 +57,17 @@ password:       [password for ES]
 
 
 ## Setting up the archiver ##
-If your mailing list supports feeding emails to a program, feed the incoming new emails to `python3 /path/to/tools/archiver.py`
-and it will use STDIN as the transport mechanism. If you are simply using aliases or dot-forwards and no ML system, you can
-add (for example) `"|/usr/bin/python3 /path/to/tools/archiver.py"` to your alias file to enable archiving.
-If you are not using a Mailing List manager, you will need to tell Pony Mail which email header determines the
-list ID using the --altheader argument, for instance:
+First off, you will need both `tools/archiver.py` and the generated
+`tools/ponymail.cfg` present on the machine that your mail server runs on. This
+machine should also have access to the ElasticSearch backend.
+
+If your mailing list supports feeding emails to a program, feed the incoming new
+emails to `python3 /path/to/tools/archiver.py` and it will use STDIN as the
+transport mechanism. If you are simply using aliases or dot-forwards and no ML
+system, you can add (for example) `"|/usr/bin/python3
+/path/to/tools/archiver.py"` to your alias file to enable archiving. If you are
+not using a Mailing List manager, you will need to tell Pony Mail which email
+header determines the list ID using the --altheader argument, for instance:
 ```
     foolist: "|/usr/bin/python3 /path/to/tools/archiver.py --altheader delivered-to"
 ```
