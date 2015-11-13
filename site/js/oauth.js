@@ -54,7 +54,8 @@ function oauthPortal(key) {
     }
 }
 
-// Callback for oauth response from backend. if okay, send user back to front page.
+// Callback for oauth response from backend. if okay, send user back to front
+// page.
 function parseOauthResponse(json) {
     if (json.okay) {
         location.href = "/"
@@ -64,7 +65,8 @@ function parseOauthResponse(json) {
 
 // Func for rendering all available oauth options
 function oauthOptions() {
-    var oobj = document.getElementById('oauthtypes') // get the oauth div
+    // get the oauth div
+    var oobj = document.getElementById('oauthtypes') 
     oobj.innerHTML = ""
     // For each enabled oauth plugin, list it.
     for (var key in pm_config.oauth) {
@@ -97,9 +99,11 @@ function oauthOptions() {
 }
 
 // onLoad function for oauth. If args (query string or bookmark) are supplied,
-// we pass that on to the backend, otherwise show which oauth options are enabled.
+// we pass that on to the backend, otherwise show which oauth options are
+// enabled.
 function oauthWelcome(args) {
-    // google auth sometimes uses bookmarks instead of passing the code as a query string arg.
+    // google auth sometimes uses bookmarks instead of passing the code as a
+    // query string arg.
     if (!args || args.length == 0) {
         args = window.location.hash.substring(1)
     }

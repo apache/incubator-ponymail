@@ -15,6 +15,8 @@
  limitations under the License.
 */
 
+// Callback that sets up the user menu in JS, provided
+// valid account JSON is supplied
 function setupUserFromLua(json) {
     if (typeof json.login != undefined && json.login) {
         login = json.login
@@ -25,7 +27,8 @@ function setupUserFromLua(json) {
 }
 
 
-// Callback for hasSeen - marks the email as seen inside the browser and decreases notification count.
+// Callback for hasSeen - marks the email as seen inside the browser and
+// decreases notification count.
 function hasSeenResult(json, tid) {
     // Only decrease number if backend says 'seen' has changed
     if (json && json.marked) {
@@ -35,7 +38,8 @@ function hasSeenResult(json, tid) {
     }
 }
 
-// Function for telling the backend that we've seen a specific message, as denoted by the MID
+// Function for telling the backend that we've seen a specific message, as
+// denoted by the MID
 function hasSeen(mid, tid) {
     GetAsync("/api/notifications.lua?seen=" + mid, tid, hasSeenResult)
 }

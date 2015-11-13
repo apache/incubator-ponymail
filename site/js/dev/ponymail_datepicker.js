@@ -89,20 +89,25 @@ function calcTimespan(what) {
     
     // Less than N units ago?
     if (what == 'lt') {
+        // Get unit and how many units
         var N = document.getElementById('datepicker_lti').value
         var unit = document.getElementById('datepicker_lts').value
+        
+        // If this makes sense, construct a humanly readable and a computer version
+        // of the timespan
         if (N.length > 0) {
             wat = "< " + N + unit + " ago"
             tval = "lte=" + N + unit
-            
         }
-        
     }
     
     // More than N units ago?
     if (what == 'mt') {
+        // As above, get unit and no of units.
         var N = document.getElementById('datepicker_mti').value
         var unit = document.getElementById('datepicker_mts').value
+        
+        // construct timespan val + description
         if (N.length > 0) {
             wat = "> " + N + unit + " ago"
             tval = "gte=" + N + unit
@@ -111,8 +116,10 @@ function calcTimespan(what) {
     
     // Date range?
     if (what == 'cd') {
+        // Get From and To values
         var f = document.getElementById('datepicker_cfrom').value
         var t = document.getElementById('datepicker_cto').value
+        // construct timespan val + description if both from and to are valid
         if (f.length > 0 && t.length > 0) {
             wat = "From " + f + " to " + t
             tval = "dfr=" + f + "|dto=" + t
@@ -137,14 +144,20 @@ function calcTimespan(what) {
 function datePicker(parent, seedPeriod) {
     datepicker_spawner = parent
     var div = document.getElementById('datepicker_popup')
+    
+    // If the datepicker object doesn't exist, spawn it
     if (!div) {
         div = document.createElement('div')
         var id = parseInt(Math.random() * 10000).toString(16)
         div.setAttribute("id", "datepicker_popup")
         div.setAttribute("class", "datepicker")
     }
+    
+    // Reset the contents of the datepicker object
     div.innerHTML = ""
     div.style.display = "block"
+    
+    // Position the datepicker next to whatever called it
     var bb = parent.getBoundingClientRect()
     div.style.top = (bb.bottom + 8) + "px"
     div.style.left = (bb.left + 32) + "px"
@@ -197,6 +210,7 @@ function datePicker(parent, seedPeriod) {
     
     
     // -- Calendar timespan
+    // This is just two text fields, the calendarPicker sub-plugin populates them
     var cdiv = document.createElement('div')
     
     var cfrom = document.createElement('input')
@@ -219,7 +233,7 @@ function datePicker(parent, seedPeriod) {
     
     
     
-    // -- Magic button
+    // -- Magic button that sends the timespan back to the caller
     var okay = document.createElement('input')
     okay.setAttribute("type", "button")
     okay.setAttribute("value", "Okay")
@@ -261,6 +275,7 @@ function datePicker(parent, seedPeriod) {
             if (m) {
                 document.getElementById('datepicker_mti').value = m[1]
                 var sel = document.getElementById('datepicker_mts')
+                // Go through the unit values, select the one we use
                 for (var i in sel.options) {
                     if (sel.options[i].value == m[2]) {
                         sel.options[i].selected = "selected"
@@ -274,9 +289,11 @@ function datePicker(parent, seedPeriod) {
         // Date range?
         if (parent.value.match(/dfr/)) {
             ptype = 'cd'
+            // Make sure we have both a dfr and a dto here, catch them
             var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
             var mt = parent.value.match(/dto=(\d+-\d+-\d+)/)
             if (mf && mt) {
+                // easy peasy, just set two text fields!
                 document.getElementById('datepicker_cfrom').value = mf[1]
                 document.getElementById('datepicker_cto').value = mt[1]
             }
@@ -342,19 +359,27 @@ function datePickerDouble(seedPeriod) {
             rv = "<" + m[1] + m[2] + " ago"
             dbl = "lte=" + (parseInt(m[1])*2) + m[2]
             
+            // N months ago
             if (m[2] == "M") {
                 dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
             }
+            
+            // N days ago
             if (m[2] == "d") {
                 dfrom.setDate(dfrom.getDate()-parseInt(m[1]))
             }
+            
+            // N years ago
             if (m[2] == "y") {
                 dfrom.setYear(dfrom.getFullYear()-parseInt(m[1]))
             }
+            
+            // N weeks ago
             if (m[2] == "w") {
                 dfrom.setDate(dfrom.getDate()-(parseInt(m[1])*7))
             }
             
+            // Calc total duration in days for this time span
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
         }
         
@@ -366,31 +391,50 @@ function datePickerDouble(seedPeriod) {
             dbl = "gte=" + (parseInt(m[1])*2) + m[2]
             tspan = parseInt(parseInt(m[1]) * 30.4)
             dfrom = null
+            
+            // Months
             if (m[2] == "M") {
                 dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
             }
+            
+            // Days
             if (m[2] == "d") {
                 dto.setDate(dto.getDate()-parseInt(m[1]))
             }
+            
+            // Years
             if (m[2] == "y") {
                 dto.setYear(dto.getFullYear()-parseInt(m[1]))
             }
+            
+            // Weeks
             if (m[2] == "w") {
                 dto.setDate(dto.getDate()-(parseInt(m[1])*7))
             }
+            
+            // Can't really figure out a timespan for this, so...null!
+            // This also sort of invalidates use on the trend page, but meh..
             tspan = null
         }
         
         // Date range?
         if (seedPeriod.match(/dfr/)) {
             ptype = 'cd'
+            // Find from and to
             var mf = seedPeriod.match(/dfr=(\d+)-(\d+)-(\d+)/)
             var mt = seedPeriod.match(/dto=(\d+)-(\d+)-(\d+)/)
             if (mf && mt) {
                 rv = "from " + mf[1] + " to " + mt[1]
+                // Starts at 00:00:00 on from date
                 dfrom = new Date(parseInt(mf[1]),parseInt(mf[2])-1,parseInt(mf[3]), 0, 0, 0)
+                
+                // Ends at 23:59:59 on to date
                 dto = new Date(parseInt(mt[1]),parseInt(mt[2])-1,parseInt(mt[3]), 23, 59, 59)
+                
+                // Get duration in days, add 5 seconds to we can floor the value and get an integer
                 tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+                
+                // double the distance
                 var dpast = new Date(dfrom)
                 dpast.setDate(dpast.getDate() - tspan)
                 dbl = seedPeriod.replace(/dfr=[^|]+/, "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate())
@@ -409,13 +453,19 @@ function datePickerDouble(seedPeriod) {
     
     // Specific month?
     else if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
-        ptype = 'mr'
+        ptype = 'mr' // just a made up thing...(month range)
         var mr = seedPeriod.match(/(\d+)-(\d+)/)
         if (mr) {
             rv = seedPeriod
+            // Same as before, start at 00:00:00
             dfrom = new Date(parseInt(mr[1]),parseInt(mr[2])-1,1, 0, 0, 0)
+            // end at 23:59:59
             dto = new Date(parseInt(mr[1]),parseInt(mr[2]),0, 23, 59, 59)
+            
+            // B-A, add 5 seconds so we can floor the no. of days into an integer neatly
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+            
+            // Double timespan
             var dpast = new Date(dfrom)
             dpast.setDate(dpast.getDate() - tspan)
             dbl = "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate() + "|dto=" + (dto.getFullYear()) + '-' + (dto.getMonth()+1) + '-' + dto.getDate()

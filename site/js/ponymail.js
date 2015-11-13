@@ -77,7 +77,8 @@ var viewModes = {
 
 
 function saveDraft() {
-    // If the user was composing a new thread, let's save the contents (if any) for next time
+    // If the user was composing a new thread, let's save the contents (if any)
+    // for next time
     if (composeType == "new") {
         if (typeof(window.sessionStorage) !== "undefined") {
             window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
@@ -85,6 +86,8 @@ function saveDraft() {
             window.sessionStorage.setItem("reply_list", xlist)
         }
         composeType = ""
+    // Likewise, if composing a reply, save it in case the user wants to revisit
+    // the draft
     } else if (composeType == "reply" && current_reply_eid) {
         if (typeof(window.sessionStorage) !== "undefined") {
             window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
@@ -112,14 +115,10 @@ function sendEmail(form) {
     
     
     // We have a bit of a mix here due to nginx not supporting multipart form data
-    //var f = new FormData();
     var of = []
     for (var k in compose_headers) {
-//        f.append(k, compose_headers[k])
         of.push(k + "=" + encodeURIComponent(compose_headers[k]))
     }
-//    f.append("subject", document.getElementById('reply_subject').value)
-//    f.append("body", document.getElementById('reply_body').value)
     
     of.push("subject=" + encodeURIComponent(document.getElementById('reply_subject').value))
     of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
@@ -136,12 +135,15 @@ function sendEmail(form) {
     if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
         window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
         window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
+        
+        // If it's a new non-reply email, clear that box as well
         if (composeType == "new") {
             window.sessionStorage.removeItem("reply_subject__" + xlist)
             window.sessionStorage.removeItem("reply_body_" + xlist)
         }
     }
     
+    // Open the annoying popup dialogue :)
     popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.")
 }
 
@@ -149,6 +151,10 @@ function sendEmail(form) {
 // compose: render a compose dialog for a reply to an email
 function compose(eid, lid, type) {
     var email = null
+    
+    // If a list ID is supplied, try to work out which list,
+    // and create a dummy email object, as we're not
+    // replying to an email here.
     if (lid) {
         if (lid == "xlist") {
             if (xlist != null && xlist.length > 4) {
@@ -173,23 +179,34 @@ function compose(eid, lid, type) {
         composeType = "reply"
         email = saved_emails[eid]
     }
+    
+    // If we have a valid dummy email or are replying to an email, then...
     if (email != null) {
         if (login.credentials) {
             current_reply_eid = eid
+            // Turn list-id into an actual email address to send to
             var listname = email['list'].replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+            
+            // Save some smtp headers for later
             compose_headers = {
                 'eid': eid,
                 'in-reply-to': email['message-id'],
                 'references': email['message-id'] + " " + (email['references'] ? email['references'] : ""),
                 'to': listname
             }
+            
+            // find the composer pane and show it
             var obj = document.getElementById('splash')
             obj.style.display = "block"
+            
+            // Set the right title of the pane
             what = "Reply to email"
             if (lid) {
                 what = "Start a new thread"
             }
             obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here<big> &#x2612;</big></a></p><h3>" + what + " on " + listname + ":</h3>"
+            
+            // Append the previous email body, if such exists
             var area = document.createElement('textarea')
             area.style.width = "660px"
             area.style.height = "400px";
@@ -202,11 +219,14 @@ function compose(eid, lid, type) {
 
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
             
+            // If it's a new email, scrap what we just did...gee, swell!
             if (lid) {
                 eml = ""
                 eml_raw = ""
                 subject = ""
             }
+            
+            // Set up a subject text field, populate it
             obj.appendChild(document.createTextNode('Subject: '))
             var txt = document.createElement('input')
             txt.setAttribute("type", "text")
@@ -215,6 +235,7 @@ function compose(eid, lid, type) {
             txt.setAttribute("id", "reply_subject")
             obj.appendChild(txt)
 
+            // Set email body in HTML
             area.innerHTML = eml
             obj.appendChild(area)
             
@@ -242,7 +263,10 @@ function compose(eid, lid, type) {
             
             // reply-via-mua button
             if (!lid) {
+                // construct long and winding mailto: link
                 var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
+                
+                // Make a button object
                 var btn = document.createElement('input')
                 btn.setAttribute("type", "button")
                 btn.setAttribute("class", "btn btn-info")
@@ -259,14 +283,20 @@ function compose(eid, lid, type) {
             if (composeType == "new" && txt.value.length == 0) {
                 txt.focus()
             }
+        // If not logged in, we don't show the UI, but we do show a "reply-via-MUA" button
         } else {
+            // Same as above, construct mailto: link
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
             eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
             var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + escape(subject) + "&In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
+            
+            // Get compose pane, show it
             var obj = document.getElementById('splash')
             obj.style.display = "block"
             obj.innerHTML = "<p style='text-align: right;'><a href='javascript:void(0);' onclick='hideComposer(event)' style='color: #FFF;'>Hit escape to close this window or click here<big> &#x2612;</big></a></p><h3>Reply to email:</h3>"
+            
+            // "sorry, but..." text + mua link
             obj.innerHTML += "<p>You need to be logged in to reply online.<br/>If you have a regular mail client, you can reply to this email by clicking below:<br/><h4><a style='color: #FFF;' class='btn btn-success' onclick='hideComposer(event);' href=\"" + link + "\">Reply via Mail Client</a></h4>"
         }
     } else {
@@ -349,20 +379,25 @@ function calcTimespan(what) {
     
     // Less than N units ago?
     if (what == 'lt') {
+        // Get unit and how many units
         var N = document.getElementById('datepicker_lti').value
         var unit = document.getElementById('datepicker_lts').value
+        
+        // If this makes sense, construct a humanly readable and a computer version
+        // of the timespan
         if (N.length > 0) {
             wat = "< " + N + unit + " ago"
             tval = "lte=" + N + unit
-            
         }
-        
     }
     
     // More than N units ago?
     if (what == 'mt') {
+        // As above, get unit and no of units.
         var N = document.getElementById('datepicker_mti').value
         var unit = document.getElementById('datepicker_mts').value
+        
+        // construct timespan val + description
         if (N.length > 0) {
             wat = "> " + N + unit + " ago"
             tval = "gte=" + N + unit
@@ -371,8 +406,10 @@ function calcTimespan(what) {
     
     // Date range?
     if (what == 'cd') {
+        // Get From and To values
         var f = document.getElementById('datepicker_cfrom').value
         var t = document.getElementById('datepicker_cto').value
+        // construct timespan val + description if both from and to are valid
         if (f.length > 0 && t.length > 0) {
             wat = "From " + f + " to " + t
             tval = "dfr=" + f + "|dto=" + t
@@ -397,14 +434,20 @@ function calcTimespan(what) {
 function datePicker(parent, seedPeriod) {
     datepicker_spawner = parent
     var div = document.getElementById('datepicker_popup')
+    
+    // If the datepicker object doesn't exist, spawn it
     if (!div) {
         div = document.createElement('div')
         var id = parseInt(Math.random() * 10000).toString(16)
         div.setAttribute("id", "datepicker_popup")
         div.setAttribute("class", "datepicker")
     }
+    
+    // Reset the contents of the datepicker object
     div.innerHTML = ""
     div.style.display = "block"
+    
+    // Position the datepicker next to whatever called it
     var bb = parent.getBoundingClientRect()
     div.style.top = (bb.bottom + 8) + "px"
     div.style.left = (bb.left + 32) + "px"
@@ -457,6 +500,7 @@ function datePicker(parent, seedPeriod) {
     
     
     // -- Calendar timespan
+    // This is just two text fields, the calendarPicker sub-plugin populates them
     var cdiv = document.createElement('div')
     
     var cfrom = document.createElement('input')
@@ -479,7 +523,7 @@ function datePicker(parent, seedPeriod) {
     
     
     
-    // -- Magic button
+    // -- Magic button that sends the timespan back to the caller
     var okay = document.createElement('input')
     okay.setAttribute("type", "button")
     okay.setAttribute("value", "Okay")
@@ -521,6 +565,7 @@ function datePicker(parent, seedPeriod) {
             if (m) {
                 document.getElementById('datepicker_mti').value = m[1]
                 var sel = document.getElementById('datepicker_mts')
+                // Go through the unit values, select the one we use
                 for (var i in sel.options) {
                     if (sel.options[i].value == m[2]) {
                         sel.options[i].selected = "selected"
@@ -534,9 +579,11 @@ function datePicker(parent, seedPeriod) {
         // Date range?
         if (parent.value.match(/dfr/)) {
             ptype = 'cd'
+            // Make sure we have both a dfr and a dto here, catch them
             var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
             var mt = parent.value.match(/dto=(\d+-\d+-\d+)/)
             if (mf && mt) {
+                // easy peasy, just set two text fields!
                 document.getElementById('datepicker_cfrom').value = mf[1]
                 document.getElementById('datepicker_cto').value = mt[1]
             }
@@ -602,19 +649,27 @@ function datePickerDouble(seedPeriod) {
             rv = "<" + m[1] + m[2] + " ago"
             dbl = "lte=" + (parseInt(m[1])*2) + m[2]
             
+            // N months ago
             if (m[2] == "M") {
                 dfrom.setMonth(dfrom.getMonth()-parseInt(m[1]), dfrom.getDate())
             }
+            
+            // N days ago
             if (m[2] == "d") {
                 dfrom.setDate(dfrom.getDate()-parseInt(m[1]))
             }
+            
+            // N years ago
             if (m[2] == "y") {
                 dfrom.setYear(dfrom.getFullYear()-parseInt(m[1]))
             }
+            
+            // N weeks ago
             if (m[2] == "w") {
                 dfrom.setDate(dfrom.getDate()-(parseInt(m[1])*7))
             }
             
+            // Calc total duration in days for this time span
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
         }
         
@@ -626,31 +681,50 @@ function datePickerDouble(seedPeriod) {
             dbl = "gte=" + (parseInt(m[1])*2) + m[2]
             tspan = parseInt(parseInt(m[1]) * 30.4)
             dfrom = null
+            
+            // Months
             if (m[2] == "M") {
                 dto.setMonth(dto.getMonth()-parseInt(m[1]), dto.getDate())
             }
+            
+            // Days
             if (m[2] == "d") {
                 dto.setDate(dto.getDate()-parseInt(m[1]))
             }
+            
+            // Years
             if (m[2] == "y") {
                 dto.setYear(dto.getFullYear()-parseInt(m[1]))
             }
+            
+            // Weeks
             if (m[2] == "w") {
                 dto.setDate(dto.getDate()-(parseInt(m[1])*7))
             }
+            
+            // Can't really figure out a timespan for this, so...null!
+            // This also sort of invalidates use on the trend page, but meh..
             tspan = null
         }
         
         // Date range?
         if (seedPeriod.match(/dfr/)) {
             ptype = 'cd'
+            // Find from and to
             var mf = seedPeriod.match(/dfr=(\d+)-(\d+)-(\d+)/)
             var mt = seedPeriod.match(/dto=(\d+)-(\d+)-(\d+)/)
             if (mf && mt) {
                 rv = "from " + mf[1] + " to " + mt[1]
+                // Starts at 00:00:00 on from date
                 dfrom = new Date(parseInt(mf[1]),parseInt(mf[2])-1,parseInt(mf[3]), 0, 0, 0)
+                
+                // Ends at 23:59:59 on to date
                 dto = new Date(parseInt(mt[1]),parseInt(mt[2])-1,parseInt(mt[3]), 23, 59, 59)
+                
+                // Get duration in days, add 5 seconds to we can floor the value and get an integer
                 tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+                
+                // double the distance
                 var dpast = new Date(dfrom)
                 dpast.setDate(dpast.getDate() - tspan)
                 dbl = seedPeriod.replace(/dfr=[^|]+/, "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate())
@@ -669,13 +743,19 @@ function datePickerDouble(seedPeriod) {
     
     // Specific month?
     else if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
-        ptype = 'mr'
+        ptype = 'mr' // just a made up thing...(month range)
         var mr = seedPeriod.match(/(\d+)-(\d+)/)
         if (mr) {
             rv = seedPeriod
+            // Same as before, start at 00:00:00
             dfrom = new Date(parseInt(mr[1]),parseInt(mr[2])-1,1, 0, 0, 0)
+            // end at 23:59:59
             dto = new Date(parseInt(mr[1]),parseInt(mr[2]),0, 23, 59, 59)
+            
+            // B-A, add 5 seconds so we can floor the no. of days into an integer neatly
             tspan = parseInt((dto.getTime() - dfrom.getTime() + 5000) / (1000*86400))
+            
+            // Double timespan
             var dpast = new Date(dfrom)
             dpast.setDate(dpast.getDate() - tspan)
             dbl = "dfr=" + (dpast.getFullYear()) + '-' + (dpast.getMonth()+1) + '-' + dpast.getDate() + "|dto=" + (dto.getFullYear()) + '-' + (dto.getMonth()+1) + '-' + dto.getDate()
@@ -871,13 +951,21 @@ function traverseThread(child, name, type) {
     if (!child) {
         return
     }
+    // Default to looking for DIV types if nothing else is specified
+    // but we'll happily look for any type...really!
     type = type ? type : 'DIV'
+    
+    // for each child in this object...
     for (var i in child.childNodes) {
+        // Matching type?
         if (child.childNodes[i].nodeType && child.childNodes[i].nodeType == 1 && child.childNodes[i].nodeName == type) {
+            // Right ID? Or are we maybe just looking for ANY object of this type?
             if (!name || (child.childNodes[i].getAttribute("id") && child.childNodes[i].getAttribute("id").search(name) != -1)) {
+                // Found one! append to the big result list in the sky
                 kiddos.push(child.childNodes[i])
             }
         }
+        // Does this object have children? If so, let's traverse those as well
         if (child.childNodes[i].nodeType && child.childNodes[i].hasChildNodes()) {
             traverseThread(child.childNodes[i], name, type)
         }
@@ -890,6 +978,7 @@ function traverseThread(child, name, type) {
 function toggleView(el) {
     var obj = document.getElementById(el)
     if (obj) {
+        // assuming display is either 'none' or 'block', we simply reverse it.
         obj.style.display = (obj.style.display == 'none') ? 'block' : 'none'
     }
 }
@@ -905,11 +994,13 @@ function sortByDate(tid) {
         // fetch all elements called 'thread*' inside t
         traverseThread(t, 'thread')
         
-        // sort the node array
+        // sort the node array:
+        // forward
         if (prefs.sortOrder == 'forward') {
             kiddos.sort(function(a, b) {
                 return parseInt(b.getAttribute('epoch') - a.getAttribute('epoch'));
             })
+        // backward
         } else {
             kiddos.sort(function(a, b) {
                 return parseInt(a.getAttribute('epoch') - b.getAttribute('epoch'));
@@ -926,11 +1017,14 @@ function sortByDate(tid) {
 
 // generateFormDivs: helper func for making form elements
 function generateFormDivs(id, title, type, options, selval) {
+    
+    // Make a parent div that holds the title and input field
     var mf = document.createElement('div')
     mf.setAttribute('id', "main_form_" + id)
     mf.style.margin = "10px"
     mf.style.padding = "10px"
     
+    // title div to the left
     var td = document.createElement('div')
     td.style.width = "300px"
     td.style.float = "left"
@@ -938,20 +1032,26 @@ function generateFormDivs(id, title, type, options, selval) {
     td.appendChild(document.createTextNode(title))
     mf.appendChild(td)
     
+    // input field to the right
     var td2 = document.createElement('div')
     td2.style.width = "200px"
     td2.style.float = "left"
+    
+    // <select> object?
     if (type == 'select') {
         var sel = document.createElement('select')
         sel.setAttribute("name", id)
         sel.setAttribute("id", id)
+        // add all options as <option> elements
         for (var key in options) {
             var opt = document.createElement('option')
+            // array?
             if (typeof key == "string") {
                 opt.setAttribute("value", key)
                 if (key == selval) {
                     opt.setAttribute("selected", "selected")
                 }
+            // hash?
             } else {
                 if (options[key] == selval) {
                     opt.setAttribute("selected", "selected")
@@ -962,6 +1062,7 @@ function generateFormDivs(id, title, type, options, selval) {
         }
         td2.appendChild(sel)
     }
+    // (unknown?) <input> element
     if (type == 'input') {
         var inp = document.createElement('input')
         inp.setAttribute("name", id)
@@ -969,6 +1070,7 @@ function generateFormDivs(id, title, type, options, selval) {
         inp.setAttribute("value", options)
         td2.appendChild(inp)
     }
+    // <input type='text'> element
     if (type == 'text') {
         var inp = document.createElement('input')
         inp.setAttribute("type", "text")
@@ -977,6 +1079,8 @@ function generateFormDivs(id, title, type, options, selval) {
         inp.setAttribute("value", options)
         td2.appendChild(inp)
     }
+    
+    // add to parent, return parent div
     mf.appendChild(td2)
     return mf
 }
@@ -986,22 +1090,31 @@ function generateFormDivs(id, title, type, options, selval) {
 function rollup(mid) {
     var obj = document.getElementById('thread_' + mid)
     if (obj) {
+        // changes var makes sure we only change the rollup icon if changes occured,
+        // that is to say, if the page actually changed its looks (hid/showed emails).
         var changes = 0
+        
+        // default to the downwards facing icon, that's the target icon mostly
         var glyph = "down"
         var parent = obj.parentNode
+        // for each email in this specific sub-thread...
         for (var i in parent.childNodes) {
             var node = parent.childNodes[i]
             if (node.nodeType && node.nodeType == 1 && node.nodeName == 'DIV') {
+                // if we've reached the current email, we'll stop.
+                // we only want to hide emails _before_ that.
                 if (node.getAttribute && node.getAttribute("id") && node.getAttribute("id").search(mid) != -1) {
                     break
+                // otherwise, if valid email or div or whatever, HIDE IT!..or show it, depending.
                 } else if (node.getAttribute("id")) {
                     // reverse opacity
                     node.style.display = (node.style.display == "none") ? "block" : "none"
                     glyph = (node.style.display == "none") ? "down" : "up"
-                    changes++
+                    changes++ // mark that we've made a visible change here
                 }
             }
         }
+        // Did we process changes to the DOM? If so, change the glyph
         if (changes > 0) {
             var robj = document.getElementById('rollup_' + mid)
             robj.setAttribute("class", "glyphicon glyphicon-chevron-" + glyph)
@@ -1023,15 +1136,16 @@ function findEpoch(epoch) {
 }
 
 // Pop-up message display thingy. Used for saying "email sent...I think!"
-function popup(title, body) {
+function popup(title, body, timeout) {
     var obj = document.getElementById('popupper')
     if (obj) {
         obj.innerHTML = ""
         obj.style.display = 'block'
         obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='toggleView(\"popupper\")'>Got it!</a></p>"
+        // hide popupper after N seconds, giving people enough time to read it.
         window.setTimeout(function() {
             document.getElementById('popupper').style.display = 'none'
-            }, 5000)
+            }, (timeout ? timeout : 5) * 1000)
     }
 }// Fetched from ponymail_email_displays.js
 

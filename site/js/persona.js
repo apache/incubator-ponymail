@@ -15,6 +15,8 @@
  limitations under the License.
 */
 
+// We need to fetch the account data, so we can determine how to set up the
+// persona stuff here
 GetAsync("/api/preferences.lua", null, setupPersona)
 
 
