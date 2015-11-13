@@ -36,6 +36,9 @@ ADD https://raw.githubusercontent.com/Humbedooh/ponymail/master/dockerfiles/pony
 RUN sed -i '/sysctl/echo/' /etc/init.d/elasticsearch
 RUN sed -i '/# network.host/network.host\: 127.0.0.1/' /etc/elasticsearch/elasticsearch.yml
 
+# Set some very tiny defaults for this ES DB
+RUN printf "index.number_of_shards: 2\nindex.number_of_replicas: 0\n" >> /etc/elasticsearch/elasticsearch.yml
+
 
 # Start ElasticSearch, set up Pony Mail
 EXPOSE 9200 9300
