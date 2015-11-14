@@ -146,6 +146,9 @@ function quokkaLines(id, titles, values, options) {
     var ctx=canvas.getContext("2d");
     // clear the canvas first
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    
+
 
     ctx.lineWidth = 0.25;
     ctx.strokeStyle = "#000000";
@@ -162,6 +165,16 @@ function quokkaLines(id, titles, values, options) {
     if (noX) {
         lheight = 0;
     }
+    
+    // Draw the stamp
+    base_image = new Image();
+    base_image.src = '/images/logo_large.png';
+    base_image.onload = function(){
+        ctx.globalAlpha = 0.04
+        ctx.drawImage(base_image, (canvas.width/2) - 128 - (lwidth/2), (canvas.height/2) - 128);
+        ctx.globalAlpha = 1
+    }
+    
     // Draw a border
     ctx.lineWidth = 0.5;
     ctx.strokeRect(35, 30, rectwidth, canvas.height - lheight - 40);
@@ -454,6 +467,18 @@ function quokkaBars(id, titles, values, options) {
     if (noX) {
         lheight = 0;
     }
+    
+    
+    // Draw the stamp
+    base_image = new Image();
+    base_image.src = '/images/logo_large.png';
+    base_image.onload = function(){
+        ctx.globalAlpha = 0.04
+        ctx.drawImage(base_image, (canvas.width/2) - 128 - (lwidth/2), (canvas.height/2) - 128);
+        ctx.globalAlpha = 1
+    }
+    
+    
     // Draw a border
     ctx.lineWidth = 0.5;
     ctx.strokeRect(25, 30, canvas.width - lwidth - 40, canvas.height - lheight - 40);
