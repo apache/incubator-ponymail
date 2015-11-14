@@ -150,7 +150,7 @@ function quokkaLines(id, titles, values, options) {
     ctx.lineWidth = 0.25;
     ctx.strokeStyle = "#000000";
     
-    var lwidth = 150;
+    var lwidth = 250;
     var lheight = 75;
     var rectwidth = canvas.width - lwidth - 40;
     var stack = options ? options.stack : false;
