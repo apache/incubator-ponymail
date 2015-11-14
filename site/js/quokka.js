@@ -612,14 +612,14 @@ function quokkaBars(id, titles, values, options) {
                 ctx.moveTo(0,0);
                 ctx.lineTo(0,-15);
                 ctx.stroke();
-                ctx.rotate(-45*Math.PI/180);
-                ctx.textAlign = "right";
+                ctx.rotate(45*Math.PI/180);
+                ctx.textAlign = "left";
                 var val = values[i][0];
                 if (val.constructor.toString().match("Date()")) {
                     val = val.toDateString();
                 }
                 ctx.fillText(val.toString(), 0, 0);
-                ctx.rotate(45*Math.PI/180);
+                ctx.rotate(-45*Math.PI/180);
                 ctx.translate(-x,-y);
             }
         }
