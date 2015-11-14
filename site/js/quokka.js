@@ -187,7 +187,7 @@ function quokkaLines(id, titles, values, options) {
             sum += values[y][x]
         }
         
-        var title = titles[k] + " (" + sum + ")";
+        var title = titles[k] + " (" + sum.toFixed(0) + ")";
         ctx.fillStyle = colors[k % colors.length][0];
         ctx.fillRect(40 + rectwidth + 20, posY-10, 10, 10);
         
