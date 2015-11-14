@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1080, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Pony Mail!</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/popup.css" rel="stylesheet">
+    <link href="css/solar.css" rel="alternate stylesheet" type="text/css" title="Solar theme" media="all">
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body style="margin: 20px;" onload="loadNgrams()">
+    <nav class="navbar navbar-default" style="margin-bottom: 5px;">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header" style="min-width: 200px;">
+      <a class="navbar-brand" href="/"><span><img src="images/logo.png" style="margin-top: -10px !important;" height="27" width="32"/>&nbsp;Pony Mail!</span></a>
+      </div>
+    </div>
+    
+    </div>
+    </nav>
+    
+    <div class="container-fluid">
+     <div class="row" style="text-align: center;">
+      <div class="bs-callout bs-callout-info" style="float: left; padding-top: 10px; text-align: center; font-size: 12pt; padding-bottom: 0px; min-height: 64px; width: 100%;">
+        <div id="trends" style="margin: 0 auto; float: left;">
+        Fetching trend data, hang on..!
+        </div>
+        <div style="float: left; width: 100%; text-align: left;">
+          <canvas id="ngramCanvas" width="1200" height="320"></canvas><br/>
+        </div>
+      </div>
+      
+    </div>
+    </div>
+    
+    <div id="splash" class="splash fade-in"> &nbsp; </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/quokka.js"></script>
+    <script src="js/ponymail.js"></script>
+    <script src="js/weburl.js"></script>
+  </body>
+</html>
