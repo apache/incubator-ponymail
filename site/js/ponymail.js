@@ -2195,11 +2195,23 @@ function addNgram(json, state) {
     for (var n in ngram_data) ngram_names.push(n)
     
     var ngram_arr = []
+    var avg = {}
     for (var d in ngram_data[ngram_names[0]]) {
         var x = []
+        
         for (var n in ngram_data) {
+            avg[n] = avg[n] ? avg[n] : []
+            avg[n].push(ngram_data[n][d][1])
+            if (avg[n].length > 7) {
+                avg[n].shift();
+            }
+            var sum = 0;
+            for (var a in avg[n]) {
+                sum += avg[n][a]
+            }
+            sum = sum/avg[n].length;
             x[0] = ngram_data[n][d][0];
-            x.push(ngram_data[n][d][1])
+            x.push(state.avg ? sum : ngram_data[n][d][1])
         }
         ngram_arr.push(x)
     }
@@ -2208,7 +2220,7 @@ function addNgram(json, state) {
     // Fetch next ngram analysis
     if (state.ngrams.length > 0) {
         var nngram = state.ngrams.pop()
-        GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query }, addNgram)
+        GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
         document.getElementById('trends').innerHTML = "n-gram analysis completed!"
     }
@@ -2229,6 +2241,11 @@ function loadNgrams() {
     // Try to detect header searches, if present
     var queries = unescape(query).split("||")
     var ngrams = []
+    var avg = false
+    if (queries[0] && queries[0] == 'avg') {
+        avg = true
+        queries.shift()
+    }
     for (var n in queries) {
         var nquery = []
         var q = queries[n]
@@ -2266,7 +2283,7 @@ function loadNgrams() {
     
     // Get us some data
     for (var n in ngrams) {
-        GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + dspan + "&" + ngrams[n], { ngram: ngrams[n], ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
+        GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + dspan + "&" + ngrams[n], { avg: avg, ngram: ngrams[n], ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
         break
     }
     
