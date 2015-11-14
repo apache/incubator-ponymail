@@ -387,9 +387,9 @@ function quokkaLines(id, titles, values, options) {
                 if (spots) {
                     ctx.fillStyle = color;
                     ctx.translate(x-2, y-2);
-                    ctx.rotate(-45*Math.PI/180);
-                    ctx.fillRect(-2,1,4,4);
                     ctx.rotate(45*Math.PI/180);
+                    ctx.fillRect(-2,1,4,4);
+                    ctx.rotate(-45*Math.PI/180);
                     ctx.translate(-x+2, -y+2);
                 }
             }
