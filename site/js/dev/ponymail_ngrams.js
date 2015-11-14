@@ -47,10 +47,14 @@ function addNgram(json, state) {
     
     var ngram_arr = []
     var avg = {}
+    
+    // For each ngram array we have, compile it into the quokka array
     for (var d in ngram_data[ngram_names[0]]) {
         var x = []
         
         for (var n in ngram_data) {
+            
+            // Are we doing a rolling average ? let's calc it regardless, because ponies..
             avg[n] = avg[n] ? avg[n] : []
             avg[n].push(ngram_data[n][d][1])
             if (avg[n].length > 7) {
@@ -61,14 +65,19 @@ function addNgram(json, state) {
                 sum += avg[n][a]
             }
             sum = sum/avg[n].length;
+            
+            // Set the date for the array element
             x[0] = ngram_data[n][d][0];
+            
+            // push value (or rolling avg) into the quokka array
             x.push(state.avg ? sum : ngram_data[n][d][1])
         }
         ngram_arr.push(x)
     }
+    // Draw the current timeline
     quokkaLines("ngramCanvas", ngram_names, ngram_arr, {curve: true, verts: false, title: "n-gram stats"})
     
-    // Fetch next ngram analysis
+    // Fetch next ngram analysis if any are waiting
     if (state.ngrams.length > 0) {
         var nngram = state.ngrams.pop()
         GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
