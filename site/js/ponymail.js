@@ -2246,7 +2246,7 @@ function loadNgrams() {
             }
         }
         if (q.length > 0) {
-            nquery.push("q=" + escape(q))
+            nquery.push("q=" + q)
         }
         ngrams.push(nquery.join("&"))
     }
@@ -2270,7 +2270,7 @@ function loadNgrams() {
         break
     }
     
-    document.title = "Stats for " + list + " - Pony Mail!"
+    document.title = "n-gram stats for " + list + " - Pony Mail!"
 }// Fetched from ponymail_pagebuilder.js
 
 
@@ -3518,7 +3518,7 @@ function gatherTrends() {
     
     // Get us some data
     GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
-    document.title = "n-gram stats for " + list + " - Pony Mail!"
+    document.title = "Stats for " + list + " - Pony Mail!"
 }// Fetched from ponymail_user_preferences.js
 
 

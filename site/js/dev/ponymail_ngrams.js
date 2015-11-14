@@ -97,7 +97,7 @@ function loadNgrams() {
             }
         }
         if (q.length > 0) {
-            nquery.push("q=" + escape(q))
+            nquery.push("q=" + q)
         }
         ngrams.push(nquery.join("&"))
     }
