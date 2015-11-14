@@ -78,7 +78,7 @@ function loadNgrams() {
     var query = a_arr[2]
     
     // Try to detect header searches, if present
-    var queries = query.split("||")
+    var queries = unescape(query).split("||")
     var ngrams = []
     for (var n in queries) {
         var nquery = []
