@@ -156,7 +156,7 @@ function quokkaLines(id, titles, values, options) {
     
     var lwidth = 250;
     var lheight = 75;
-    var rectwidth = canvas.width - lwidth - 40;
+    var rectwidth = canvas.width - lwidth - 50;
     var stack = options ? options.stack : false;
     var curve = options ? options.curve : false;
     var title = options ? options.title : null;
@@ -203,7 +203,7 @@ function quokkaLines(id, titles, values, options) {
         
         var title = titles[k] + " (" + sum.toFixed(0) + ")";
         ctx.fillStyle = colors[k % colors.length][0];
-        ctx.fillRect(40 + rectwidth + 20, posY-10, 10, 10);
+        ctx.fillRect(40 + rectwidth + 35, posY-9, 10, 10);
         
         // Add legend text
         ctx.font="12px Arial";
