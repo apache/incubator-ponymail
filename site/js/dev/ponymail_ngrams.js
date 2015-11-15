@@ -115,7 +115,7 @@ function addNgram(json, state) {
     if (state.ngrams.length > 0) {
         document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
         var nngram = state.ngrams.pop()
-        GetAsync('/api/stats.lua?' + (state.topics ? "" : 'quick=true&') + 'list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
+        GetAsync('/api/stats.lua?' + (state.topics ? "" : 'quick=true&') + 'list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { topics: state.topics, stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
         document.getElementById('trends').innerHTML = "Rendering chart, hold on..!"
         window.setTimeout(function() {
@@ -123,7 +123,7 @@ function addNgram(json, state) {
             if (state.broken) {
                 document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
             }
-            quokkaLines("ngramCanvas", names_neat, ngram_arr, {topics: state.topics, broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
+            quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
         }, 200)
     }
     
