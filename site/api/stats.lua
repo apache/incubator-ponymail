@@ -78,7 +78,7 @@ function handle(r)
         x = {}
         nx = {}
         local q = get.q
-        for k, v in pairs({'from','subject','body', 'to'}) do
+        for k, v in pairs({'from','subject','body'}) do
             y = {}
             z = {}
             for word in q:gmatch("(%S+)") do
@@ -115,7 +115,7 @@ function handle(r)
     }
 
     z = {}
-    for k, v in pairs({'from','subject','body'}) do
+    for k, v in pairs({'from','subject','body', 'to'}) do
         if get['header_' .. v] then
             local word = get['header_' .. v]
             table.insert(z, ("(%s:\"%s\")"):format(v, r:escape_html( word:gsub("[()\"]+", "") )))
