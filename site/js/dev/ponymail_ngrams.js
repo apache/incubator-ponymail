@@ -28,6 +28,7 @@ function addNgram(json, state) {
     var daily = []
     if (json.emails.length == json.max) {
         document.getElementById('trends').innerHTML = "NOTE: Too many results found (&ge;" + json.max + ") , n-grams may be distorted"
+        state.broken = true
     }
     for (var i in json.emails) {
         var f = parseInt(json.emails[i].epoch/86400)
@@ -110,7 +111,10 @@ function addNgram(json, state) {
         document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
     } else {
         document.getElementById('trends').innerHTML = "n-gram analysis completed!"
-        quokkaLines("ngramCanvas", names_neat, ngram_arr, {stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
+        if (state.broken) {
+            document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
+        }
+        quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
     }
     
 }
