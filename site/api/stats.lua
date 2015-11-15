@@ -571,7 +571,11 @@ function handle(r)
                 email.attachments = 0
             end
             email.body = nil
-            table.insert(emls, email)
+            if not statsOnly then
+                table.insert(emls, email)
+            else
+                table.insert(emls, {epoch= email.epoch})
+            end
         elseif config.slow_count then
             for k, v in pairs(top10) do
                 local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
