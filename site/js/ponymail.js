@@ -2277,7 +2277,10 @@ function addNgram(json, state) {
             // push value (or rolling avg) into the quokka array
             x.push(state.avg ? sum : ngram_data[n][d][1])
         }
-        ngram_arr.push(x)
+        if (!state.avg || d%parseInt(ndays/3) == 0) {
+                ngram_arr.push(x)
+            }
+        
     }
     // Draw the current timeline
     var names_neat = []
