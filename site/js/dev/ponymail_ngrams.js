@@ -98,7 +98,7 @@ function addNgram(json, state) {
         }
         names_neat.push(nn.join(", "))
     }
-    quokkaLines("ngramCanvas", names_neat, ngram_arr, {stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
+    //quokkaLines("ngramCanvas", names_neat, ngram_arr, {stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
     
     // Fetch next ngram analysis if any are waiting
     if (state.ngrams.length > 0) {
@@ -106,6 +106,7 @@ function addNgram(json, state) {
         GetAsync('/api/stats.lua?quick=true&list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
         document.getElementById('trends').innerHTML = "n-gram analysis completed!"
+        quokkaLines("ngramCanvas", names_neat, ngram_arr, {stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
     }
     
 }
@@ -169,10 +170,8 @@ function loadNgrams() {
     var domain = arr[1]
     
     // Get us some data
-    for (var n in ngrams) {
-        GetAsync('/api/stats.lua?quick=true&list='+listname+'&domain='+domain+'&d=' + dspan + "&" + ngrams[n], { stack: stack, avg: avg, ngram: ngrams[n], ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
-        break
-    }
+    var nngram = ngrams.pop()
+    GetAsync('/api/stats.lua?quick=true&list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
     
     document.title = "n-gram stats for " + list + " - Pony Mail!"
 }
