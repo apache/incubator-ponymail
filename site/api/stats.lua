@@ -57,6 +57,10 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
+    
+    -- statsOnly: Whether to only send statistical info (for n-grams etc), and not the
+    -- thread struct and message bodies
+    local statsOnly = get.quick
     if not get.list or not get.domain then
         r:puts("{}")
         return cross.OK
@@ -285,7 +289,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     local cloud = nil
-    if config.wordcloud then
+    if config.wordcloud and not statsOnly then
         cloud = {}
         -- Word cloud!
         local doc = elastic.raw {
@@ -343,7 +347,7 @@ function handle(r)
     -- Get years active
     local nowish = math.floor(os.time()/600)
     local firstYear = r:ivm_get("firstYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
-    if not firstYear or firstYear == "" then
+    if (not firstYear or firstYear == "") and not statsOnly then
         local doc = elastic.raw {
             query = {
                 bool = {
@@ -373,7 +377,7 @@ function handle(r)
     
     -- Get years active
     local lastYear = r:ivm_get("lastYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
-    if not lastYear or lastYear == "" then
+    if (not lastYear or lastYear == "")  and not statsOnly then
         local doc = elastic.raw {
     
             query = {
@@ -551,7 +555,9 @@ function handle(r)
                 else
                     table.insert(threads, emails[mid])
                 end
-                threads[#threads].body = #email.body < 300 and email.body or email.body:sub(1,300) .. "..."
+                if not statsOnly then
+                    threads[#threads].body = #email.body < 300 and email.body or email.body:sub(1,300) .. "..."
+                end
             end
             email.references = nil
             email.to = nil
@@ -576,7 +582,7 @@ function handle(r)
         end
     end
     
-    if not config.slow_count then
+    if not config.slow_count and not statsOnly then
         local stable = {}
         for k, v in pairs(senders) do
             table.insert(stable, v)
@@ -618,7 +624,9 @@ function handle(r)
     listdata.max = maxresults
     listdata.using_wc = wc
     listdata.no_threads = #threads
-    listdata.thread_struct = threads
+    if not statsOnly then
+        listdata.thread_struct = threads
+    end
     listdata.firstYear = firstYear
     listdata.lastYear = lastYear
     listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")

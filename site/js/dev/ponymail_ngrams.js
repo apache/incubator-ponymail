@@ -80,7 +80,7 @@ function addNgram(json, state) {
     // Fetch next ngram analysis if any are waiting
     if (state.ngrams.length > 0) {
         var nngram = state.ngrams.pop()
-        GetAsync('/api/stats.lua?list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
+        GetAsync('/api/stats.lua?quick=true&list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
         document.getElementById('trends').innerHTML = "n-gram analysis completed!"
     }
@@ -143,7 +143,7 @@ function loadNgrams() {
     
     // Get us some data
     for (var n in ngrams) {
-        GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + dspan + "&" + ngrams[n], { avg: avg, ngram: ngrams[n], ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
+        GetAsync('/api/stats.lua?quick=true&list='+listname+'&domain='+domain+'&d=' + dspan + "&" + ngrams[n], { avg: avg, ngram: ngrams[n], ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
         break
     }
     
