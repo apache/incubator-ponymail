@@ -2307,9 +2307,9 @@ function addNgram(json, state) {
     
     // Fetch next ngram analysis if any are waiting
     if (state.ngrams.length > 0) {
+        document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
         var nngram = state.ngrams.pop()
         GetAsync('/api/stats.lua?quick=true&list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
-        document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
     } else {
         document.getElementById('trends').innerHTML = "n-gram analysis completed!"
         if (state.broken) {
