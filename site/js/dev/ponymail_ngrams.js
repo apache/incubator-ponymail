@@ -116,7 +116,7 @@ function addNgram(json, state) {
     if (state.ngrams.length > 0) {
         document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
         var nngram = state.ngrams.pop()
-        GetAsync('/api/stats.lua?' + (state.topics ? "" : 'quick=true&') + 'list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { topics: state.topics, stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
+        GetAsync('/api/stats.lua?' + (state.topics ? "" : 'quick=true&') + 'list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { plaw:state.plaw, topics: state.topics, stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
         document.getElementById('trends').innerHTML = "Rendering chart, hold on..!"
         window.setTimeout(function() {
@@ -125,6 +125,16 @@ function addNgram(json, state) {
                 document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
             }
             quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
+            if (state.plaw) {
+                document.getElementById('plawCanvas').style.display = "block"
+                tsum.sort().reverse()
+                var xs = []
+                for (var i in tsum) {
+                    xs.push([i+1, tsum[i]])
+                }
+                quokkaLines("plawCanvas", names_neat, xs, {curve: true, verts: false, title: "Power Law distribution check chart"}, tsum)
+            }
+            
         }, 200)
     }
     
@@ -138,6 +148,7 @@ function makeNgramURL() {
     if (document.getElementById('stack').checked) qs.push("stack")
     if (document.getElementById('topics').checked) qs.push("topics")
     if (document.getElementById('avg').checked) qs.push("avg")
+    if (document.getElementById('plaw').checked) qs.push("plaw")
     for (n = 0; n < 20; n++) {
         if (document.getElementById('query' + n) && document.getElementById('query' + n).value.length > 0) {
             qs.push(document.getElementById('query' + n).value)
@@ -174,6 +185,7 @@ function loadNgrams() {
     var avg = false
     var topics = false
     var stack = false
+    var plaw = false
     for (var n in queries) {
         var nquery = []
         var q = queries[n]
@@ -182,6 +194,9 @@ function loadNgrams() {
             continue
         } else if (q == 'stack') {
             stack = true
+            continue
+        } else if (q == 'plaw') {
+            plaw = true
             continue
         } else if (q == 'topics') {
             topics = true
@@ -235,13 +250,14 @@ function loadNgrams() {
     nobj.appendChild(generateFormDivs('stack', 'Stack n-grams:', 'checkbox', stack))
     nobj.appendChild(generateFormDivs('avg', 'Use rolling averages:', 'checkbox', avg))
     nobj.appendChild(generateFormDivs('topics', 'Group messages by topics:', 'checkbox', topics))
+    nobj.appendChild(generateFormDivs('plaw', 'Check for PL distribution:', 'checkbox', plaw))
     
     
     // query fields
     
     for (var n in queries) {
         var q = queries[n];
-        if (q != 'stack' && q != 'topics' && q!= 'avg') {
+        if (q != 'stack' && q != 'topics' && q!= 'avg' && q != 'plaw') {
             ngramboxes++;
             nobj.appendChild(generateFormDivs('query' + ngramboxes, 'Query #' + ngramboxes + ':', 'text', q != undefined ? q : ""))
         }
@@ -264,7 +280,7 @@ function loadNgrams() {
     // Get us some data
     if (ngrams.length > 0) {
         var nngram = ngrams.pop()
-        GetAsync('/api/stats.lua?' + (topics ? "" : "quick=true&") + 'list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { topics: topics, stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
+        GetAsync('/api/stats.lua?' + (topics ? "" : "quick=true&") + 'list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { plaw: plaw, topics: topics, stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
         document.title = "n-gram stats for " + list + " - Pony Mail!"
     } else {
         document.getElementById('trends').innerHTML = ""
