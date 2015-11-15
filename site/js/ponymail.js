@@ -2314,8 +2314,8 @@ function addNgram(json, state) {
             name = m[1] + m[4]
             nn.push(m[2] + ": " + m[3])
         }
-        if (name.match(/q=(..+)/)) {
-            nn.push("query: " + name.match(/q=(..+)/)[1])
+        if (name.match(/&?q=(.[^&=]+)/)) {
+            nn.push("query: " + name.match(/&?q=(.[^&=]+)/)[1])
         }
         names_neat.push(nn.join(", "))
     }
@@ -2420,7 +2420,7 @@ function loadNgrams() {
             var stuff = ['from', 'subject', 'body', 'to']
             for (var k in stuff) {
                 // can we find 'header=foo' stuff?
-                var r = RegExp(stuff[k] + "=([^&=]+)", "mi")
+                var r = RegExp(stuff[k] + "=([^&=]+)&?", "mi")
                 var m = q.match(r)
                 if (m) {
                     q = q.replace(m[0], "")
