@@ -2275,7 +2275,7 @@ function addNgram(json, state) {
             x[0] = ngram_data[n][d][0];
             
             // push value (or rolling avg) into the quokka array
-            x.push(state.avg ? sum : ngram_data[n][d][1])
+            x.push(state.avg ? sum*parseInt(ndays/3) : ngram_data[n][d][1])
         }
         if (!state.avg || d%parseInt(ndays/3) == 0) {
                 ngram_arr.push(x)
