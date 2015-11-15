@@ -94,7 +94,7 @@ function addNgram(json, state) {
             nn.push(m[2] + ": " + m[3])
         }
         if (name.match(/q=(..+)/)) {
-            nn.push("query: " + name.match(/q=(..+)/))
+            nn.push("query: " + name.match(/q=(..+)/)[1])
         }
         names_neat.push(nn.join(", "))
     }
