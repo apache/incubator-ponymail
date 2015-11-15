@@ -123,7 +123,7 @@ function addNgram(json, state) {
             if (state.broken) {
                 document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
             }
-            quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
+            quokkaLines("ngramCanvas", names_neat, ngram_arr, {topics: state.topics, broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
         }, 200)
     }
     
