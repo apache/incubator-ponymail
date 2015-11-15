@@ -2217,6 +2217,7 @@ function loadEmails_threaded(json, state) {
 // Side-by-side comparison functions
 
 var ngram_data = {}
+var tsum = []
 
 function addNgram(json, state) {
     
@@ -2260,9 +2261,10 @@ function addNgram(json, state) {
     // For each ngram array we have, compile it into the quokka array
     for (var d in ngram_data[ngram_names[0]]) {
         var x = []
-        
+        var z = 0;
         for (var n in ngram_data) {
-            
+            tsum[z] = (tsum[z] ? tsum[z] : 0) + ngram_data[n][d][1]
+            z++;
             // Are we doing a rolling average ? let's calc it regardless, because ponies..
             avg[n] = avg[n] ? avg[n] : []
             avg[n].push(ngram_data[n][d][1])
@@ -2313,7 +2315,7 @@ function addNgram(json, state) {
         if (state.broken) {
             document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
         }
-        quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
+        quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
     }
     
 }

@@ -142,7 +142,7 @@ function quokkaCircle(id, tags, opts) {
  * Example usage:
  * quokkaLines("myCanvas", ['Line a', 'Line b', 'Line c'], [ [x1,a1,b1,c1], [x2,a2,b2,c2], [x3,a3,b3,c3] ], { stacked: true, curve: false, title: "Some title" } );
  */
-function quokkaLines(id, titles, values, options) {
+function quokkaLines(id, titles, values, options, sums) {
     var canvas = document.getElementById(id);
     var ctx=canvas.getContext("2d");
     // clear the canvas first
@@ -201,7 +201,7 @@ function quokkaLines(id, titles, values, options) {
             sum += values[y][x]
         }
         
-        var title = titles[k] + " (" + sum.toFixed(0) + ")";
+        var title = titles[k] + " (" + ((sums && sums[k]) ? sums[k] : sum.toFixed(0)) + ")";
         ctx.fillStyle = colors[k % colors.length][0];
         ctx.fillRect(40 + rectwidth + 35, posY-9, 10, 10);
         
