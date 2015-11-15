@@ -2341,7 +2341,7 @@ function addNgram(json, state) {
                 for (var i in tsum) {
                     xs.push([i+1, tsum[i]])
                 }
-                quokkaLines("plawCanvas", names_neat, xs, {curve: true, verts: false, title: "Power Law distribution check chart"}, tsum)
+                quokkaLines("plawCanvas", tsum, xs, {nosum: true, curve: true, verts: false, title: "Power Law distribution check chart"})
             }
             
         }, 200)
