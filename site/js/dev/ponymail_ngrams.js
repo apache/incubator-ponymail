@@ -112,11 +112,14 @@ function addNgram(json, state) {
         var nngram = state.ngrams.pop()
         GetAsync('/api/stats.lua?quick=true&list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
-        document.getElementById('trends').innerHTML = "n-gram analysis completed!"
+        document.getElementById('trends').innerHTML = "Rendering chart, hold on..!"
         if (state.broken) {
             document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
         }
-        quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
+        window.setTimeout(function() {
+            document.getElementById('trends').innerHTML = "n-gram analysis completed!"
+            quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
+        }, 200)
     }
     
 }
