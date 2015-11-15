@@ -26,6 +26,10 @@ function addNgram(json, state) {
     
     // For each day from $beginning to $now, push the no. of emails sent that day into an array
     var daily = []
+    if (json.emails.length == json.max) {
+        document.getElementById('trends').innerHTML = "ERROR: Too many results (&ge;" + json.max + ") , can't make n-grams!"
+        return
+    }
     for (var i in json.emails) {
         var f = parseInt(json.emails[i].epoch/86400)
         daily[f] = daily[f] ? daily[f]+1 : 1
@@ -104,6 +108,7 @@ function addNgram(json, state) {
     if (state.ngrams.length > 0) {
         var nngram = state.ngrams.pop()
         GetAsync('/api/stats.lua?quick=true&list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
+        document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
     } else {
         document.getElementById('trends').innerHTML = "n-gram analysis completed!"
         quokkaLines("ngramCanvas", names_neat, ngram_arr, {stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
