@@ -151,6 +151,16 @@ function generateFormDivs(id, title, type, options, selval) {
         td2.appendChild(inp)
     }
     
+    // check box
+    if (type == 'checkbox') {
+        var inp = document.createElement('input')
+        inp.setAttribute("type", "checkbox")
+        inp.setAttribute("name", id)
+        inp.setAttribute("id", id)
+        inp.checked = options
+        td2.appendChild(inp)
+    }
+    
     // add to parent, return parent div
     mf.appendChild(td2)
     return mf

@@ -19,6 +19,7 @@
 
 var ngram_data = {}
 var tsum = []
+var ngramboxes = 0
 
 function addNgram(json, state) {
     
@@ -129,6 +130,33 @@ function addNgram(json, state) {
     
 }
 
+// ngram URL generator:
+function makeNgramURL() {
+    var list = document.getElementById('listname').value
+    var timespan = document.getElementById('timespan').value
+    var qs = []
+    if (document.getElementById('stack').checked) qs.push("stack")
+    if (document.getElementById('topics').checked) qs.push("topics")
+    if (document.getElementById('avg').checked) qs.push("avg")
+    for (n = 0; n < 20; n++) {
+        if (document.getElementById('query' + n) && document.getElementById('query' + n).value.length > 0) {
+            qs.push(document.getElementById('query' + n).value)
+        }
+    }
+    var url = "ngrams.html?" + list + ":" + timespan + ":" + qs.join("||")
+    location.href = url
+}
+
+//function for adding another field to the ngram form
+function addNgramBox(hmm) {
+    if (hmm > 0) {
+        ngramboxes++
+        var nobj = document.getElementById('ngram_query')
+        var lbox = generateFormDivs('query' + ngramboxes, 'Query #' + ngramboxes + ':', 'text', "")
+        lbox.childNodes[1].childNodes[0].setAttribute("onblur", "addNgramBox(this.value.length)")
+        nobj.insertBefore(lbox, document.getElementById('ngrambutton'))
+    }
+}
 
 // onload func that figures out what we want and then asks the API for stats
 function loadNgrams() {
@@ -141,7 +169,7 @@ function loadNgrams() {
     var query = a_arr[2]
     
     // Try to detect header searches, if present
-    var queries = unescape(query).split("||")
+    var queries = unescape(query ? query : "").split("||")
     var ngrams = []
     var avg = false
     var topics = false
@@ -157,6 +185,11 @@ function loadNgrams() {
             continue
         } else if (q == 'topics') {
             topics = true
+            continue
+        } else if (q.length == 0) {
+            continue
+        } else if (q == '*') {
+            ngrams.push("q=")
             continue
         }
         else if (q && q.length > 0) {
@@ -191,9 +224,50 @@ function loadNgrams() {
     var listname = arr[0]
     var domain = arr[1]
     
-    // Get us some data
-    var nngram = ngrams.pop()
-    GetAsync('/api/stats.lua?' + (topics ? "" : "quick=true&") + 'list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { topics: topics, stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
+    // make the ngram generator div
+    var nobj = document.getElementById('ngram_query')
+    // options for ngram generator
     
-    document.title = "n-gram stats for " + list + " - Pony Mail!"
+    nobj.appendChild(generateFormDivs('listname', 'List(s):', 'text', list))
+    var tspanner = generateFormDivs('timespan', 'Date range:', 'text', dspan)
+    tspanner.childNodes[1].childNodes[0].setAttribute("onmousedown", 'datePicker(this);')
+    nobj.appendChild(tspanner)
+    nobj.appendChild(generateFormDivs('stack', 'Stack n-grams:', 'checkbox', stack))
+    nobj.appendChild(generateFormDivs('avg', 'Use rolling averages:', 'checkbox', avg))
+    nobj.appendChild(generateFormDivs('topics', 'Group messages by topics:', 'checkbox', topics))
+    
+    
+    // query fields
+    
+    for (var n in queries) {
+        var q = queries[n];
+        if (q != 'stack' && q != 'topics' && q!= 'avg') {
+            ngramboxes++;
+            nobj.appendChild(generateFormDivs('query' + ngramboxes, 'Query #' + ngramboxes + ':', 'text', q != undefined ? q : ""))
+        }
+        
+    }
+    
+    
+    // submit button
+    var btn = document.createElement('input')
+    btn.setAttribute("id", "ngrambutton")
+    btn.setAttribute("type", "button")
+    btn.setAttribute("value", "Generate n-grams")
+    btn.setAttribute("onclick", "makeNgramURL()")
+    nobj.appendChild(btn)
+    
+    
+    // add an empty field
+    addNgramBox(2)
+    
+    // Get us some data
+    if (ngrams.length > 0) {
+        var nngram = ngrams.pop()
+        GetAsync('/api/stats.lua?' + (topics ? "" : "quick=true&") + 'list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { topics: topics, stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
+        document.title = "n-gram stats for " + list + " - Pony Mail!"
+    } else {
+        document.getElementById('trends').innerHTML = ""
+    }
+    
 }
