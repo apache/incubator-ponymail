@@ -56,7 +56,7 @@ var numColorRows = 3;
 var numColorColumns = 10;
 for (var x=0;x<numColorRows;x++) {
     for (var y=0;y<numColorColumns;y++) {
-        var color = quokka_internal_hsl2rgb(Math.random(), 0.75, 0.52 + (0.48*(x/numColorRows)));
+        var color = quokka_internal_hsl2rgb(y > 8 ? Math.random() : (y/5)%0.95, 0.75, 0.52 + (0.48*(x/numColorRows)));
         
         // Light (primary) color:
         var hex = quokka_internal_rgb2hex(color.r*255, color.g*255, color.b*255);
