@@ -2247,6 +2247,12 @@ function addNgram(json, state) {
     var ngram_arr = []
     var avg = {}
     
+    // find a suitable rolling-average timespan
+    // set it to 1/15th of the timespan, or at least 3 days
+    var ndays = parseInt(ngram_data[ngram_names[0]].length/15)
+    if (ndays < 3) {
+        ndays = 3
+    }
     // For each ngram array we have, compile it into the quokka array
     for (var d in ngram_data[ngram_names[0]]) {
         var x = []
@@ -2256,7 +2262,7 @@ function addNgram(json, state) {
             // Are we doing a rolling average ? let's calc it regardless, because ponies..
             avg[n] = avg[n] ? avg[n] : []
             avg[n].push(ngram_data[n][d][1])
-            if (avg[n].length > 7) {
+            if (avg[n].length > ndays) {
                 avg[n].shift();
             }
             var sum = 0;
