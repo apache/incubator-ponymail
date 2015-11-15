@@ -16,7 +16,12 @@
 */
 // THIS IS AN AUTOMATICALLY COMBINED FILE. PLEASE EDIT dev/*.js!!
 
-// Fetched from ponymail_assign_vars.js
+
+
+/******************************************
+ Fetched from ponymail_assign_vars.js
+******************************************/
+
 
 // These are all variables needed at some point during our work.
 // They keep track of the JSON we have received, storing it in the browser,
@@ -73,7 +78,12 @@ var viewModes = {
         list: loadList_flat
     }
 }
-// Fetched from ponymail_composer.js
+
+
+/******************************************
+ Fetched from ponymail_composer.js
+******************************************/
+
 
 
 function saveDraft() {
@@ -303,7 +313,12 @@ function compose(eid, lid, type) {
         alert("I don't know which list to send an email to, sorry :(")
     }
 }
-// Fetched from ponymail_datepicker.js
+
+
+/******************************************
+ Fetched from ponymail_datepicker.js
+******************************************/
+
 
 
 var datepicker_spawner = null
@@ -942,7 +957,12 @@ function showCalendarPicker(parent, seedDate) {
     div.style.left = (bb.right - 32) + "px"
     
     drawCalendarPicker(div, seedDate)    
-}// Fetched from ponymail_dom_helpers.js
+}
+
+/******************************************
+ Fetched from ponymail_dom_helpers.js
+******************************************/
+
 
 
 
@@ -1147,7 +1167,12 @@ function popup(title, body, timeout) {
             document.getElementById('popupper').style.display = 'none'
             }, (timeout ? timeout : 5) * 1000)
     }
-}// Fetched from ponymail_email_displays.js
+}
+
+/******************************************
+ Fetched from ponymail_email_displays.js
+******************************************/
+
 
 // displayEmail: Shows an email inside a thread
 function displayEmail(json, id, level) {
@@ -1554,7 +1579,12 @@ function displaySingleThread(json) {
 function getSingleThread(id) {
     GetAsync("/api/thread.lua?id=" + id, null, displaySingleThread)
 }
-// Fetched from ponymail_email_tools.js
+
+
+/******************************************
+ Fetched from ponymail_email_tools.js
+******************************************/
+
 
 
 // findEml: Finds and returns an email object based on message ID
@@ -1749,7 +1779,12 @@ function unshortenID(mid) {
     return mid
 }
 
-// Fetched from ponymail_helperfuncs.js
+
+
+/******************************************
+ Fetched from ponymail_helperfuncs.js
+******************************************/
+
 
 
 // checkForSlows: Checks if there is a pending async URL fetching
@@ -1829,7 +1864,12 @@ function showSpinner(show) {
 }
 
 // Check for slow URLs every 0.5 seconds
-window.setInterval(checkForSlows, 500)// Fetched from ponymail_listview_flat.js
+window.setInterval(checkForSlows, 500)
+
+/******************************************
+ Fetched from ponymail_listview_flat.js
+******************************************/
+
 
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
@@ -1978,7 +2018,12 @@ function loadEmails_flat(id, close) {
         alert("no such thread ID: " + id)
     }
 }
-// Fetched from ponymail_listview_threaded.js
+
+
+/******************************************
+ Fetched from ponymail_listview_threaded.js
+******************************************/
+
 
 
 // loadList_threaded: Same as above, but threaded display
@@ -2162,7 +2207,12 @@ function loadEmails_threaded(json, state) {
     })
     getChildren(state.blockid, state.thread)
 }
-// Fetched from ponymail_ngrams.js
+
+
+/******************************************
+ Fetched from ponymail_ngrams.js
+******************************************/
+
 
 // Side-by-side comparison functions
 
@@ -2297,7 +2347,12 @@ function loadNgrams() {
     }
     
     document.title = "n-gram stats for " + list + " - Pony Mail!"
-}// Fetched from ponymail_pagebuilder.js
+}
+
+/******************************************
+ Fetched from ponymail_pagebuilder.js
+******************************************/
+
 
 
 // toggleCalendar: Expands/contracts years in the calendar (to show/hide months)
@@ -2722,7 +2777,12 @@ function getListInfo(list, xdomain, nopush) {
     
 }
 
-// Fetched from ponymail_phonebook.js
+
+
+/******************************************
+ Fetched from ponymail_phonebook.js
+******************************************/
+
 
 var phonebook_json, table_json
 
@@ -2929,7 +2989,12 @@ function listDomains() {
     
     GetAsync("/api/pminfo.lua", null, showStats)
 }
-// Fetched from ponymail_search.js
+
+
+/******************************************
+ Fetched from ponymail_search.js
+******************************************/
+
 
 
 // toggleEmail: Fetch a list of emails from an ML in a specific year/month
@@ -3115,7 +3180,12 @@ function addSearchBar() {
     sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
     h.appendChild(sl)
 }
-// Fetched from ponymail_seeders.js
+
+
+/******************************************
+ Fetched from ponymail_seeders.js
+******************************************/
+
 
 // seedGetListInfo: Callback that seeds the list index and sets up account stuff
 function seedGetListInfo(json, state) {
@@ -3156,7 +3226,12 @@ function preGetListInfo(list, xdomain, nopush) {
     }, seedGetListInfo)
 }
 
-// Fetched from ponymail_stats.js
+
+
+/******************************************
+ Fetched from ponymail_stats.js
+******************************************/
+
 
 
 // showStats: Show the ML stats on the front page
@@ -3186,7 +3261,12 @@ function showStats(json) {
     }
     ts += "</tr></table>"
     obj.innerHTML += ts
-}// Fetched from ponymail_timetravel.js
+}
+
+/******************************************
+ Fetched from ponymail_timetravel.js
+******************************************/
+
 
 
 // simple func that just redirects to the original thread URL we just got if possible
@@ -3257,7 +3337,12 @@ function timeTravelListRedirect(json, state) {
 function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
     GetAsync("/api/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
-}// Fetched from ponymail_trends.js
+}
+
+/******************************************
+ Fetched from ponymail_trends.js
+******************************************/
+
 
 
 // showTrends: Show the ML trends on trends.html
@@ -3545,7 +3630,12 @@ function gatherTrends() {
     // Get us some data
     GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
     document.title = "Stats for " + list + " - Pony Mail!"
-}// Fetched from ponymail_user_preferences.js
+}
+
+/******************************************
+ Fetched from ponymail_user_preferences.js
+******************************************/
+
 
 
 // logout: log out a user
@@ -3736,7 +3826,12 @@ function setTheme(theme) {
     if (document.getElementById('emails')) {
         buildPage()
     }
-}// Fetched from ponymail_zzz.js
+}
+
+/******************************************
+ Fetched from ponymail_zzz.js
+******************************************/
+
 
 
 // dealWithKeyboard: Handles what happens when you hit the escape key
