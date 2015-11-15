@@ -347,6 +347,7 @@ function quokkaLines(id, titles, values, options, sums) {
         var y = (canvas.height - 10 - lheight) - (((value-min) / (max-min)) * (canvas.height - 40 - lheight));
         var py = y;
         if (stack) {
+            stacks[0] = stacks[0] ? stacks[0] : 0
             y -= stacks[0];
             pstacks[0] = stacks[0];
             stacks[0] += (((value-min) / (max-min)) * (canvas.height - 40 - lheight));
@@ -357,7 +358,7 @@ function quokkaLines(id, titles, values, options, sums) {
         var pvalY = y;
         var pvalX = x;
         for (var i in values) {
-            if (i >= 0) {
+            if (i > 0) {
                 x = 35 + (step*i);
                 var f = parseInt(k) + 1;
                 if (noX == true) {
@@ -426,7 +427,7 @@ function quokkaLines(id, titles, values, options, sums) {
                 var l = values.length - i - 1;
                 x = 35 + (step*l);
                 y = canvas.height - 10 - lheight - pstacks[l];
-                
+
                 if (curve) {
                     ctx.bezierCurveTo((pvalX + x) / 2, pvalY, (pvalX + x) / 2, y, x, y);
                     pvalX = x;
