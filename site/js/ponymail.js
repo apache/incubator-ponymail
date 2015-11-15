@@ -2297,7 +2297,7 @@ function addNgram(json, state) {
         }
         names_neat.push(nn.join(", "))
     }
-    quokkaLines("ngramCanvas", names_neat, ngram_arr, {curve: true, verts: false, title: "n-gram stats"})
+    quokkaLines("ngramCanvas", names_neat, ngram_arr, {curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain })
     
     // Fetch next ngram analysis if any are waiting
     if (state.ngrams.length > 0) {
