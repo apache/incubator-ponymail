@@ -127,7 +127,7 @@ function addNgram(json, state) {
             quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
             if (state.plaw) {
                 document.getElementById('plawCanvas').style.display = "block"
-                tsum.sort().reverse()
+                tsum.sort(function(b,a) {return a - b})
                 var xs = []
                 for (var i in tsum) {
                     xs.push([i+1, tsum[i]])
