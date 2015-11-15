@@ -27,8 +27,7 @@ function addNgram(json, state) {
     // For each day from $beginning to $now, push the no. of emails sent that day into an array
     var daily = []
     if (json.emails.length == json.max) {
-        document.getElementById('trends').innerHTML = "ERROR: Too many results (&ge;" + json.max + ") , can't make n-grams!"
-        return
+        document.getElementById('trends').innerHTML = "NOTE: Too many results found (&ge;" + json.max + ") , n-grams may be distorted"
     }
     for (var i in json.emails) {
         var f = parseInt(json.emails[i].epoch/86400)
