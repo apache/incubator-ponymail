@@ -2224,6 +2224,11 @@ function addNgram(json, state) {
     // Start from the beginning
     var D = new Date(state.dfrom)
     
+    // Are we measuring emails or topics?
+    if (state.topics) {
+        json.emails = json.thread_struct
+    }
+    
     // For each day from $beginning to $now, push the no. of emails sent that day into an array
     var daily = []
     var zz = 0
@@ -2309,7 +2314,7 @@ function addNgram(json, state) {
     if (state.ngrams.length > 0) {
         document.getElementById('trends').innerHTML = state.ngrams.length + " n-grams left to analyze..."
         var nngram = state.ngrams.pop()
-        GetAsync('/api/stats.lua?quick=true&list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
+        GetAsync('/api/stats.lua?' + (state.topics ? "" : 'quick=true&') + 'list='+state.listname+'&domain='+state.domain+'&d=' + state.dbl + "&" + nngram, { stack: state.stack, ngram: nngram, ngrams: state.ngrams, listname: state.listname, domain: state.domain, dbl: state.dbl, dfrom: state.dfrom, dto: state.dto, tspan: state.tspan, dspan: state.dspan, query: state.query, avg: state.avg }, addNgram)
     } else {
         document.getElementById('trends').innerHTML = "Rendering chart, hold on..!"
         window.setTimeout(function() {
@@ -2338,6 +2343,7 @@ function loadNgrams() {
     var queries = unescape(query).split("||")
     var ngrams = []
     var avg = false
+    var topics = false
     var stack = false
     for (var n in queries) {
         var nquery = []
@@ -2347,6 +2353,9 @@ function loadNgrams() {
             continue
         } else if (q == 'stack') {
             stack = true
+            continue
+        } else if (q == 'topics') {
+            topics = true
             continue
         }
         else if (q && q.length > 0) {
@@ -2383,7 +2392,7 @@ function loadNgrams() {
     
     // Get us some data
     var nngram = ngrams.pop()
-    GetAsync('/api/stats.lua?quick=true&list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
+    GetAsync('/api/stats.lua?' + (topics ? "" : "quick=true&") + 'list='+listname+'&domain='+domain+'&d=' + dspan + "&" + nngram, { topics: topics, stack: stack, avg: avg, ngram: nngram, ngrams: ngrams, listname: listname, domain: domain, dbl: dspan, dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, addNgram)
     
     document.title = "n-gram stats for " + list + " - Pony Mail!"
 }
