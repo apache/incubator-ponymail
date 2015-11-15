@@ -27,6 +27,7 @@ function addNgram(json, state) {
     
     // For each day from $beginning to $now, push the no. of emails sent that day into an array
     var daily = []
+    var zz = 0
     if (json.emails.length >= json.max) {
         document.getElementById('trends').innerHTML = "NOTE: Too many results found (&ge;" + json.max + ") , n-grams may be distorted"
         state.broken = true
@@ -34,8 +35,9 @@ function addNgram(json, state) {
     for (var i in json.emails) {
         var f = parseInt(json.emails[i].epoch/86400)
         daily[f] = daily[f] ? daily[f]+1 : 1
+        zz++;
     }
-    
+    tsum.push(zz)
     var arr = []
     while (D <= state.dto) {
         var day = new Date(D)
@@ -64,8 +66,6 @@ function addNgram(json, state) {
         var x = []
         var z = 0;
         for (var n in ngram_data) {
-            tsum[z] = (tsum[z] ? tsum[z] : 0) + ngram_data[n][d][1]
-            z++;
             // Are we doing a rolling average ? let's calc it regardless, because ponies..
             avg[n] = avg[n] ? avg[n] : []
             avg[n].push(ngram_data[n][d][1])
