@@ -441,6 +441,8 @@ function quokkaLines(id, titles, values, options) {
             ctx.strokeStyle = colors[k % colors.length][0];
             ctx.fillStyle = colors[k % colors.length][0];
             ctx.fill();
+            ctx.fillStyle = "#000"
+            ctx.strokeStyle = "#000"
         }
 
     }
