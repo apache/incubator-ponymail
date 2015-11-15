@@ -35,6 +35,8 @@ private.
 * Supports both custom OAuth, Google Auth and Mozilla Persona
 * Atom feeds for all lists (including private ones!)
 * Source view and custom range mbox export
+* Customized trend analysis and n-grams
+
 
 ### Requirements: ###
 
@@ -76,9 +78,10 @@ documentation, evangelism, marketing, or helping out other users.
 
 To contribute to Pony Mail, follow these steps:
 
+- Fork the repo
 - Subscribe to the Pony Mail dev list:
   - Either send an email to dev-subscribe@ponymail.info OR
-  - Visit http://ponymail.info/list.html?dev@ponymail.info (You can use Persona)
+  - Visit http://ponymail.info/list.html?dev@ponymail.info (You can use Persona or Google Auth)
 - Find something to fix or help out with
 - Let us know what you want to do, and we'll add you to our contributors list!
 - Join us on #ponymail on the Freenode IRC network
@@ -101,8 +104,8 @@ This is a list of what mr. Humbedooh would love to get done:
 * ~~Add license headers (ALv2) to everything~~ (*DONE(?)*)
 * ~~Have reply feature actually work~~ (*DONE*)
 * ~~Split JS into smaller files for development, bundle together for releases~~ (*DONE*)
-* Start on documentation
+* Start on documentation (WIP)
 * Rework JS, turn those ugly innerHTML hacks into proper DOM handling
-* Set up notification system (depends on reply system) (Sort of works, but still *WIP!*)
+* Set up notification system (depends on reply system) (works, but still *WIP!*)
 * Have it work with ES with auth mode or via HTTPS
 
