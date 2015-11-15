@@ -78,7 +78,7 @@ function handle(r)
         x = {}
         nx = {}
         local q = get.q
-        for k, v in pairs({'from','subject','body'}) do
+        for k, v in pairs({'from','subject','body', 'to'}) do
             y = {}
             z = {}
             for word in q:gmatch("(%S+)") do

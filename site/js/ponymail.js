@@ -2350,7 +2350,7 @@ function loadNgrams() {
             continue
         }
         else if (q && q.length > 0) {
-            var stuff = ['from', 'subject', 'body']
+            var stuff = ['from', 'subject', 'body', 'to']
             for (var k in stuff) {
                 // can we find 'header=foo' stuff?
                 var r = RegExp(stuff[k] + "=([^&=]+)", "mi")
