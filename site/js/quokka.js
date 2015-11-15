@@ -264,7 +264,7 @@ function quokkaLines(id, titles, values, options) {
         ctx.font="10px Arial";
         ctx.fillStyle = "#000000";
         ctx.textAlign = "right";
-        ctx.fillText( Math.round( ((max-min) - (step*(x+1))) * 100 ) / 100,canvas.width - lwidth + 10, y-4);
+        ctx.fillText( Math.round( ((max-min) - (step*(x+1))) * 100 ) / 100,canvas.width - lwidth + 16, y-4);
         ctx.fillText( Math.round( ((max-min) - (step*(x+1))) * 100 ) / 100,30, y-4);
     }
     
