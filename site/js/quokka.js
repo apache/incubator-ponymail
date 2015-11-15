@@ -176,6 +176,21 @@ function quokkaLines(id, titles, values, options, sums) {
         ctx.globalAlpha = 1
     }
     
+    // calc rectwidth if titles are large
+    var nlwidth = 0
+    for (var k in titles) {
+        ctx.font="13px Arial";
+        ctx.fillStyle = "#00000";
+        var w = ctx.measureText(titles[k]).width + 48;
+        if (w > lwidth && w > nlwidth) {
+            nlwidth = w
+        }
+        if (nlwidth > 0) {
+            rectwidth -= nlwidth - lwidth
+            lwidth = nlwidth
+        }
+    }
+    
     // Draw a border
     ctx.lineWidth = 0.5;
     ctx.strokeRect(35, 30, rectwidth, canvas.height - lheight - 40);
