@@ -48,7 +48,7 @@ function displayEmail(json, id, level) {
     var thread = document.getElementById('thread_' + id_sanitised)
     
     if (thread) {
-        json.date = new Date(json.epoch*1000).toLocaleString();
+        json.date = formatDate(new Date(json.epoch*1000))
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         var ebody = json.body
         ebody = ebody.replace(/</mg, "&lt;")
