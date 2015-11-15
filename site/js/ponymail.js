@@ -2280,7 +2280,21 @@ function addNgram(json, state) {
         ngram_arr.push(x)
     }
     // Draw the current timeline
-    quokkaLines("ngramCanvas", ngram_names, ngram_arr, {curve: true, verts: false, title: "n-gram stats"})
+    var names_neat = []
+    for (var i in ngram_names) {
+        var nn = []
+        var name = unescape(ngram_names[i])
+        while (name.match(/(.*)&?header_([^=]+)=([^=&]+)&?/)) {
+            var m = name.match(/(.*)&?header_([^=]+)=([^&=]+)&?(.*)/)
+            name = m[1] + m[4]
+            nn.push(m[2] + ": " + m[3])
+        }
+        if (name.match(/q=(..+)/)) {
+            nn.push("query: " + name.match(/q=(..+)/))
+        }
+        names_neat.push(nn.join(", "))
+    }
+    quokkaLines("ngramCanvas", names_neat, ngram_arr, {curve: true, verts: false, title: "n-gram stats"})
     
     // Fetch next ngram analysis if any are waiting
     if (state.ngrams.length > 0) {
@@ -2318,7 +2332,7 @@ function loadNgrams() {
             var stuff = ['from', 'subject', 'body']
             for (var k in stuff) {
                 // can we find 'header=foo' stuff?
-                var r = RegExp(stuff[k] + "=(.+)", "mi")
+                var r = RegExp(stuff[k] + "=([^&=]+)", "mi")
                 var m = q.match(r)
                 if (m) {
                     q = q.replace(m[0], "")
