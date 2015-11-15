@@ -94,6 +94,7 @@ function handle(r)
                 end
             -- Or do we just want the email itself?
             else
+                doc.from = doc.from or "unknown"
                 local eml = doc.from:match("<(.-)>") or doc.from:match("%S+@%S+") or "unknown"
                 if not account then -- anonymize email address if not logged in
                     doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)

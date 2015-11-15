@@ -487,7 +487,7 @@ function handle(r)
             if not config.slow_count then
                 local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
                 local gravatar = r:md5(eml)
-                local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+")
+                local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+") or "unknown"
                 email.gravatar = gravatar
                 name = name:gsub("\"", ""):gsub("%s+$", "")
                 local eid = ("%s <%s>"):format(name, eml)
