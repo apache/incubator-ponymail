@@ -284,7 +284,7 @@ function quokkaLines(id, titles, values, options) {
         ctx.beginPath();
         for (var x = 1; x < values.length; x++) {
             if (x % sx == 0) {
-                var y = 25 + (step * (x/sx));
+                var y = 35 + (step * (x/sx));
                 ctx.moveTo(y, 30);
                 ctx.lineTo(y, canvas.height - 10 - lheight);
                 ctx.lineWidth = 0.25;
@@ -305,7 +305,7 @@ function quokkaLines(id, titles, values, options) {
         for (var i = 0; i < values.length; i++) {
             smallstep = (step / (values[i].length-1)) - 2;
             zz = 1
-            var x = 28 + ((step) * i);
+            var x = 35 + ((step) * i);
             var y = canvas.height - lheight + 5;
             if (i % sx == 0) {
                 ctx.translate(x, y);
@@ -585,7 +585,7 @@ function quokkaBars(id, titles, values, options) {
         ctx.beginPath();
         for (var x = 1; x < values.length; x++) {
             if (x % sx == 0) {
-                var y = 25 + (step * (x/sx));
+                var y = 35 + (step * (x/sx));
                 ctx.moveTo(y, 30);
                 ctx.lineTo(y, canvas.height - 10 - lheight);
                 ctx.lineWidth = 0.25;
@@ -606,7 +606,7 @@ function quokkaBars(id, titles, values, options) {
         for (var i = 0; i < values.length; i++) {
             smallstep = (step / (values[i].length-1)) - 2;
             zz = 1
-            var x = 28 + ((step) * i);
+            var x = 35 + ((step) * i);
             var y = canvas.height - lheight + 5;
             if (i % sx == 0) {
                 ctx.translate(x, y);
