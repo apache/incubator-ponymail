@@ -141,7 +141,7 @@ function addNgram(json, state) {
                 var ref = tsum[0]
                 var xs = []
                 for (var i in tsum) {
-                    xs.push([i+1, tsum[i], ref])
+                    xs.push([i, tsum[i], ref])
                     ref /= 2
                 }
                 quokkaLines("plawCanvas", ['Actual distribution', 'PL distribution reference'], xs, {nosum: true, curve: false, verts: false, title: "Power Law distribution check chart"})
