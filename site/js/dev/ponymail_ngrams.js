@@ -19,6 +19,7 @@
 
 var ngram_data = {}
 var tsum = []
+var nsum = {}
 var ngramboxes = 0
 
 function addNgram(json, state) {
@@ -44,6 +45,7 @@ function addNgram(json, state) {
         zz++;
     }
     tsum.push(zz)
+    nsum[state.ngram] = zz
     var arr = []
     while (D <= state.dto) {
         var day = new Date(D)
@@ -54,10 +56,16 @@ function addNgram(json, state) {
     }
     ngram_data[state.ngram] = arr
     
-    // draw the chart
     var ngram_names = []
     for (var n in ngram_data) ngram_names.push(n)
     
+    // Sort so that the largest areas will be at the bottom in case of stacking
+    ngram_names.sort(function(a,b) { return nsum[b] - nsum[a] })
+    tsum = []
+    for (var nn in ngram_names) {
+        tsum.push(nsum[ngram_names[nn]])
+    }
+
     var ngram_arr = []
     var avg = {}
     
@@ -71,7 +79,8 @@ function addNgram(json, state) {
     for (var d in ngram_data[ngram_names[0]]) {
         var x = []
         var z = 0;
-        for (var n in ngram_data) {
+        for (var ni in ngram_names) {
+            var n = ngram_names[ni]
             // Are we doing a rolling average ? let's calc it regardless, because ponies..
             avg[n] = avg[n] ? avg[n] : []
             avg[n].push(ngram_data[n][d][1])
@@ -125,7 +134,6 @@ function addNgram(json, state) {
                 document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
             }
             quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
-            
             // power law distribution check
             if (state.plaw) {
                 document.getElementById('plawCanvas').style.display = "block"
