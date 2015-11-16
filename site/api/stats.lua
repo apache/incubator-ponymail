@@ -167,7 +167,7 @@ function handle(r)
         get.d = dd
     end
     if get.d and get.d:match("lte=.+") then
-        local lte = get.d:match("lte=([wMyd0-9]+)")
+        local lte = get.d:match("lte=([0-9]+[wMyd])")
         if lte then
             daterange.lte = "now+1d"
             daterange.gte = "now-" .. lte
@@ -175,7 +175,7 @@ function handle(r)
         end
     end
     if get.d and get.d:match("gte=.+") then
-        local gte = get.d:match("gte=([wMyd0-9]+)")
+        local gte = get.d:match("gte=([0-9]+[wMyd])")
         if gte then
             daterange.gte = nil
             daterange.gt = nil
