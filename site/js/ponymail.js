@@ -2334,14 +2334,18 @@ function addNgram(json, state) {
                 document.getElementById('trends').innerHTML += "<br/><b>Note:</b>Some n-gram objects exceeded the maximum result count (" + json.max + "), so the results may be distorted."
             }
             quokkaLines("ngramCanvas", names_neat, ngram_arr, {broken: state.broken, stack: state.stack, curve: true, verts: false, title: "n-gram stats for " + state.listname + "@" + state.domain }, tsum)
+            
+            // power law distribution check
             if (state.plaw) {
                 document.getElementById('plawCanvas').style.display = "block"
                 tsum.sort(function(b,a) {return a - b})
+                var init = tsum[0]
                 var xs = []
                 for (var i in tsum) {
-                    xs.push([i+1, tsum[i]])
+                    xs.push([i+1, tsum[i], init, '#999999'])
+                    init /= 2
                 }
-                quokkaLines("plawCanvas", tsum, xs, {nosum: true, curve: true, verts: false, title: "Power Law distribution check chart"})
+                quokkaLines("plawCanvas", ['Actual distribution', 'PL distribution reference'], xs, {nosum: true, curve: false, verts: false, title: "Power Law distribution check chart"})
             }
             
         }, 200)
