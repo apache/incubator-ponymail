@@ -189,8 +189,8 @@ function quokkaLines(id, titles, values, options, sums) {
         for (var y in values) {
             sum += values[y][x]
         }
-        var title = titles[k] + (!options.nosum ? " (" + ((sums && sums[k]) ? sums[k] : sum.toFixed(0)) + ")" : "");
-        var w = ctx.measureText(title).width + 48;
+        var t = titles[k] + (!options.nosum ? " (" + ((sums && sums[k]) ? sums[k] : sum.toFixed(0)) + ")" : "");
+        var w = ctx.measureText(t).width + 48;
         if (w > lwidth && w > nlwidth) {
             nlwidth = w
         }
