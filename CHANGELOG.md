@@ -9,8 +9,9 @@
 - Minor changes to the chart graphics
 - Fixed an issue where the word cloud would not update the search terms
 - Pony Mail now works with ElasticSearch 2.0
-- Added a simple n-gram analysis page
+- Added an n-gram analysis page
 - You can now to complete sentence searches ("foo bar" as opposed to foo bar)
+- Various bug fixes to date-parsing and -defaults
 
 ## CHANGES in 0.3a:
 
