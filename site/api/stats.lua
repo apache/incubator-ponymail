@@ -81,7 +81,23 @@ function handle(r)
         for k, v in pairs({'from','subject','body'}) do
             y = {}
             z = {}
+            local words = {}
+            
+            -- first, grab all "foo bar" quotes
+            for lword in q:gmatch([[("[^"]+")]]) do
+                table.insert(words, lword)
+            end
+            -- then cut them out of the query
+            for _, word in pairs(words) do
+                q = q:gsub('"' .. word:gsub('[.%-%%%?%+]', "%%%1") .. '"', "")
+            end
+            
+            -- then remaining single words
             for word in q:gmatch("(%S+)") do
+                table.insert(words, word)
+            end
+            
+            for _, word in pairs(words) do
                 local preface = ""
                 if word:match("^%-") then
                     preface = "-"
