@@ -20,7 +20,7 @@ private.
 
 
 ### Features include: ###
-* Importing from mbox files or an mod_mbox-driven site
+* Importing from standard mbox files or an mod_mbox-driven site
 * Public and private list viewing based on auth
 * Cross-list threading
 * OpenSearch support for browsers (can add as search engine)
@@ -29,8 +29,8 @@ private.
 * Threaded and flat view modes
 * Notifications of replies to emails sent via Pony Mail
 * Email and list statistics
-* Multi-site, Multi-list handling
-* Word clouds (yay!)
+* Multi-site, multi-list handling
+* Word clouds
 * Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
 * Supports both custom OAuth, Google Auth and Mozilla Persona
 * Atom feeds for all lists (including private ones!)
@@ -76,7 +76,7 @@ We'd LOVE if more people would contribute to Pony Mail!
 Any form of contribution is most welcome, whether it be programming,
 documentation, evangelism, marketing, or helping out other users.
 
-To contribute to Pony Mail, follow these steps:
+To contribute to Pony Mail, follow these steps (also see [this doc](docs/CONTRIBUTING.md)):
 
 - Fork the repo
 - Subscribe to the Pony Mail dev list:
@@ -95,7 +95,7 @@ at around 100 archive search requests per second per ES node, depending on maili
 list size and available bandwidth.
 
 ### TODO: ###
-This is a list of what mr. Humbedooh would love to get done:
+This is a list of what we would love to get done:
 * ~~Set up dir structure~~ (*DONE*)
 * ~~Import site data~~ (*DONE*)
 * ~~Import tools~~ (*DONE*)
