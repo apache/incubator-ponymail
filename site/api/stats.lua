@@ -149,7 +149,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    local daterange = {gt = "now-"..dd.."d", lte = "now+1d" }
+    local daterange = {gt = "now-1M", lte = "now+1d" }
     if get.dfrom and get.dto then
         local ef = tonumber(get.dfrom:match("(%d+)$")) or 0
         local et = tonumber(get.dto:match("^(%d+)")) or 0
