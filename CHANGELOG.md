@@ -12,6 +12,7 @@
 - Added an n-gram analysis page
 - You can now to complete sentence searches ("foo bar" as opposed to foo bar)
 - Various bug fixes to date-parsing and -defaults
+- Permalink view now shows the email subject in the tab title
 
 ## CHANGES in 0.3a:
 
