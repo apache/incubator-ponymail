@@ -17,7 +17,7 @@ sudo apt-get install apache2 git liblua5.2-dev lua-cjson lua-sec lua-socket pyth
 
 Install the required Python 3 modules:
 ~~~
-sudo pip3 install elasticsearch formatflowed
+sudo pip3 install elasticsearch formatflowed netaddr
 ~~~
 
 Install ElasticSearch:

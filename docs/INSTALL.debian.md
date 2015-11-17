@@ -15,7 +15,7 @@ sudo apt-get install apache2 git lua-cjson lua-sec lua-socket python3 python3-pi
 
 Install the required Python 3 modules:
 ~~~
-sudo pip3 install elasticsearch formatflowed
+sudo pip3 install elasticsearch formatflowed netaddr
 ~~~
 
 Install ElasticSearch:

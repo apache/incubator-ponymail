@@ -22,7 +22,7 @@ luarocks-5.3 install lua-cjson
 
 Install the required Python 3 modules:
 ~~~
-sudo pip3.4 install elasticsearch formatflowed chardet
+sudo pip3.4 install elasticsearch formatflowed chardet netaddr
 ~~~
 
 

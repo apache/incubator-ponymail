@@ -407,6 +407,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line options.')
     parser.add_argument('--altheader', dest='altheader', type=str, nargs=1,
                        help='Alternate header for list ID')
+    parser.add_argument('--allowfrom', dest='allowfrom', type=str, nargs=1,
+                       help='(optional) source IP (mail server) to allow posts from, ignore if no match')
     parser.add_argument('--ignore', dest='ignorefrom', type=str, nargs=1,
                        help='Sender/list to ignore input from (owner etc)')
     parser.add_argument('--private', dest='private', action='store_true', 
@@ -423,6 +425,7 @@ if __name__ == '__main__':
         # We're reading from STDIN, so let's fake an MM3 call
         ispublic = True
         ignorefrom = None
+        allowfrom = None
         if args.altheader:
             altheader = args.altheader[0]
             if altheader in msg:
@@ -439,6 +442,25 @@ if __name__ == '__main__':
                 print("Ignoring message as instructed by --ignore flag")
                 sys.exit(0)
         
+        # Check CIDR if need be
+        if args.allowfrom:
+            from netaddr import IPNetwork, IPAddress
+            c = IPNetwork(args.allowfrom)
+            good = False
+            for line in msg.get_all('received') or []:
+                m = re.search(r"from .+\[(.+)\]", line)
+                if m:
+                    try:
+                        ip = IPAddress(m.group(1))
+                        if ip in c:
+                            good = True
+                            msg.add_header("ip-whitelisted", "yes")
+                            break
+                    except:
+                        pass
+            if not good:
+                print("No whitelisted IP found in message, aborting")
+                sys.exit(-1)
         # Replace date header with $now?
         if args.makedate:
             msg.replace_header('date', email.utils.formatdate())

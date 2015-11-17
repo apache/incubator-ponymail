@@ -27,24 +27,25 @@ dopip = False
 try:
     from elasticsearch import Elasticsearch
     from formatflowed import convertToWrapped
+    from netaddr import IPNetwork
 except:
     dopip = True
     
 if dopip and (getpass.getuser() != "root"):
     print("It looks like you need to install some python modules first")
     print("Either run this as root to do so, or run: ")
-    print("pip3 install elasticsearch formatflowed")
+    print("pip3 install elasticsearch formatflowed netaddr")
     sys.exit(-1)
 
 elif dopip:
     print("Before we get started, we need to install some modules")
     print("Hang on!")
     try:
-        subprocess.check_call(('pip3','install','elasticsearch','formatflowed'))
+        subprocess.check_call(('pip3','install','elasticsearch','formatflowed', 'netaddr'))
     except:
         print("Oh dear, looks like this failed :(")
         print("Please install elasticsearch and formatflowed before you try again:")
-        print("pip install elasticsearch formatflowed")
+        print("pip install elasticsearch formatflowed netaddr")
         sys.exit(-1)
     
 

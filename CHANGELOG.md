@@ -14,6 +14,7 @@
 - Various bug fixes to date-parsing and -defaults in the UI
 - Permalink view now shows the email subject in the tab title
 - Added copy-lists.py for copying archives to a new DB
+- Archiver can be set to only allow specific IP blocks in STDIN mode
 
 ## CHANGES in 0.3a:
 
