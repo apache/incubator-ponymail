@@ -445,7 +445,7 @@ if __name__ == '__main__':
         # Check CIDR if need be
         if args.allowfrom:
             from netaddr import IPNetwork, IPAddress
-            c = IPNetwork(args.allowfrom)
+            c = IPNetwork(args.allowfrom[0])
             good = False
             for line in msg.get_all('received') or []:
                 m = re.search(r"from .+\[(.+)\]", line)
