@@ -10,9 +10,10 @@
 - Fixed an issue where the word cloud would not update the search terms
 - Pony Mail now works with ElasticSearch 2.0
 - Added an n-gram analysis page
-- You can now to complete sentence searches ("foo bar" as opposed to foo bar)
-- Various bug fixes to date-parsing and -defaults
+- You can now do complete sentence searches ("foo bar" as opposed to foo bar)
+- Various bug fixes to date-parsing and -defaults in the UI
 - Permalink view now shows the email subject in the tab title
+- Added copy-lists.py for copying archives to a new DB
 
 ## CHANGES in 0.3a:
 
