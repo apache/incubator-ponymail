@@ -21,7 +21,7 @@ sudo pip3 install elasticsearch formatflowed netaddr
 Install ElasticSearch:
 
 ~~~
-sudo apt-get openjdk-7-jre-headless
+sudo apt-get install openjdk-7-jre-headless
 wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb http://packages.elastic.co/elasticsearch/1.7/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-1.7.list
 sudo apt-get update && sudo apt-get install elasticsearch
@@ -31,19 +31,19 @@ sudo apt-get update && sudo apt-get install elasticsearch
 Check out a copy of Pony Mail:
 ~~~
 cd /var/www
-git clone https://github.com/Humbedooh/ponymail.git
+sudo git clone https://github.com/Humbedooh/ponymail.git
 ~~~
 
 Start up ElasticSearch:
 
 ~~~
-service elasticsearch start
+sudo service elasticsearch start
 ~~~
 
 Set up Pony Mail:
 ~~~
 cd /var/www/ponymail/tools
-python3 setup.py
+sudo python3 setup.py
 [... answer questions asked by the setup script ...]
 ~~~
 
@@ -64,8 +64,8 @@ Set up Apache httpd by adding, for example, the following virtual host configura
 Enable mod_lua and start apache:
 
 ~~~
-a2enmod lua
-service apache start
+sudo a2enmod lua
+sudo service apache start
 ~~~
 
 Once this is done, you should now have a *working copy* of Pony Mail!
