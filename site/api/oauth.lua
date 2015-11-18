@@ -60,7 +60,7 @@ function handle(r)
         valid, json = pcall(function() return JSON.decode(result) end)
         
     -- GitHub Auth callback
-    elseif get.oauth_token and get.oauth_token:match("^https://github.com/") and get.id_token then
+    elseif get.oauth_token and get.key == 'github' then
         local result = https.request(get.oauth_token, r.args)
         local token = result:match("(access_token=[a-f0-9]+)")
         if token then
