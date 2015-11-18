@@ -43,6 +43,9 @@ elif dopip:
     print("Hang on!")
     try:
         subprocess.check_call(('pip3','install','elasticsearch','formatflowed', 'netaddr'))
+        from elasticsearch import Elasticsearch
+        from formatflowed import convertToWrapped
+        from netaddr import IPNetwork
     except:
         print("Oh dear, looks like this failed :(")
         print("Please install elasticsearch and formatflowed before you try again:")
