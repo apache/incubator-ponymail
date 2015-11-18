@@ -36,6 +36,15 @@ function handle(r)
     end
     
     local oauth_domain = ""
+    if config.oauth_fields and config.oauth_fields[get.key] then
+        for k, v in pairs(config.oauth_fields[get.key]) do
+            r.args = r.args .. ("&%s=%s"):format(k,v)
+        end
+        if config.oauth_fields[get.key].oauth_token then
+            get.oauth_token = config.oauth_fields[get.key].oauth_token
+        end
+    end
+    
     -- Persona callback
     if get.mode and get.mode == "persona" then
         oauth_domain = "verifier.login.persona.org"
@@ -50,17 +59,21 @@ function handle(r)
         local result = https.request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" .. r:escape(get.id_token))
         valid, json = pcall(function() return JSON.decode(result) end)
         
+    -- GitHub Auth callback
+    elseif get.oauth_token and get.oauth_token:match("^https://github.com/") and get.id_token then
+        local result = https.request(get.oauth_token, r.args)
+        local token = result:match("(access_token=[a-f0-9]+)")
+        if token then
+            local result = https.request("https://api.github.com/user/emails?" .. token)
+            valid, json = pcall(function() return JSON.decode(result) end)
+            if valid and json then
+                json = json[1]
+            end
+        end
+        
     -- Generic callback (like ASF Oauth2)
     elseif get.state and get.code and get.oauth_token then
         oauth_domain = get.oauth_token:match("https?://(.-)/")
-        if config.oauth_fields and config.oauth_fields[get.key] then
-            for k, v in pairs(config.oauth_fields[get.key]) do
-                r.args = r.args .. ("&%s=%s"):format(k,v)
-            end
-            if config.oauth_fields[get.key].oauth_token then
-                get.oauth_token = config.oauth_fields[get.key].oauth_token
-            end
-        end
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
     end
