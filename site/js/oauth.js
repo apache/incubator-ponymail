@@ -56,7 +56,7 @@ function oauthPortal(key) {
                 cid += "&" + key + "=" + escape(ot[k])
             }
         }
-        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state + cid)
+        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state) + cid
     }
 }
 
