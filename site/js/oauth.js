@@ -50,7 +50,13 @@ function oauthPortal(key) {
     if (key == 'google') {
         location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(window.location)
     } else {
-        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state)
+        var cid = ""
+        if (ot.construct) {
+            for (var k in ot) {
+                cid += "&" + key + "=" + escape(ot[k])
+            }
+        }
+        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state + cid)
     }
 }
 
