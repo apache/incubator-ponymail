@@ -71,7 +71,8 @@ parser.add_argument('--mldom', dest='mldom', type=str, nargs=1,
                    help='Domains to accept mail for via UI')
 parser.add_argument('--wordcloud', dest='wc', action='store_true', 
                    help='Enable word cloud')
-
+parser.add_argument('--nocloud', dest='nwc', action='store_true', 
+                   help='Do not enable word cloud')
 args = parser.parse_args()    
 
 print("Welcome to the Pony Mail setup script!")
@@ -112,7 +113,9 @@ if args.mldom:
     mldom = args.mldom[0]
 if args.wc:
     wc = args.wc
-
+if args.nwc:
+    wc = False
+    
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
     
