@@ -114,15 +114,10 @@ function oauthWelcome(args) {
         args = window.location.hash.substring(1)
     }
     // Is this a callback from an oauth provider? If so, run the oauth stuff
-    if (args && args.length > 64) {
+    if (args && args.length >= 40) {
         var key = args.match(/key=([a-z]+)/i)
         if (key) {
             key = key[1]
-        } else {
-            var code = args.match(/code=([a-z]+)/i)
-            if (code) {
-                key = code[1]
-            }
         }
         if (args.match(/id_token=/)) {
             key = 'google'
