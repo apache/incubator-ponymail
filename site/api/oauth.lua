@@ -53,6 +53,14 @@ function handle(r)
     -- Generic callback (like ASF Oauth2)
     elseif get.state and get.code and get.oauth_token then
         oauth_domain = get.oauth_token:match("https?://(.-)/")
+        if config.oauth_fields and config.oauth_fields[get.key] then
+            for k, v in pairs(config.oauth_fields[get.key]) do
+                r.args = r.args .. ("&%s=%s"):format(k,v)
+            end
+            if config.oauth_fields[get.key].oauth_token then
+                get.oauth_token = config.oauth_fields[get.key].oauth_token
+            end
+        end
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
     end
@@ -106,4 +114,4 @@ function handle(r)
     return cross.OK
 end
 
-cross.start(handle)
+cross.start(handle) 

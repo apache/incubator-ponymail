@@ -15,6 +15,7 @@
 - Permalink view now shows the email subject in the tab title
 - Added copy-lists.py for copying archives to a new DB
 - Archiver can be set to only allow specific IP blocks in STDIN mode
+- Further customization of oauth providers
 
 ## CHANGES in 0.3a:
 
