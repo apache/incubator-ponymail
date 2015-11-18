@@ -53,7 +53,7 @@ function oauthPortal(key) {
         var cid = ""
         if (ot.construct) {
             for (var k in ot) {
-                cid += "&" + key + "=" + escape(ot[k])
+                cid += "&" + k + "=" + escape(ot[k])
             }
         }
         location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state) + cid
