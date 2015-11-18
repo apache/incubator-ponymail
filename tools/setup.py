@@ -18,6 +18,7 @@ import sys, os, json, re, time
 import getpass
 import subprocess
 import readline
+import argparse
 
 if sys.version_info <= (3, 3):
     print("This script requires Python 3.4 or higher")
@@ -47,7 +48,28 @@ elif dopip:
         print("Please install elasticsearch and formatflowed before you try again:")
         print("pip install elasticsearch formatflowed netaddr")
         sys.exit(-1)
-    
+
+
+# CLI arg parsing
+parser = argparse.ArgumentParser(description='Command line options.')
+
+parser.add_argument('--defaults', dest='defaults', action='store_true', 
+                   help='Use default settings')
+
+parser.add_argument('--dbhost', dest='dbhost', type=str, nargs=1,
+                   help='ES backend hostname')
+parser.add_argument('--dbport', dest='dbport', type=str, nargs=1,
+                   help='DB port')
+parser.add_argument('--dbname', dest='dbname', type=str, nargs=1,
+                   help='ES DB name')
+parser.add_argument('--mailserver', dest='mailserver', type=str, nargs=1,
+                   help='Host name of outgoing mail server')
+parser.add_argument('--mldom', dest='mldom', type=str, nargs=1,
+                   help='Domains to accept mail for via UI')
+parser.add_argument('--wordcloud', dest='wc', action='store_true', 
+                   help='Enable word cloud')
+
+args = parser.parse_args()    
 
 print("Welcome to the Pony Mail setup script!")
 print("Let's start by determining some settings...")
@@ -62,8 +84,10 @@ mldom = ""
 wc = ""
 wce = False
 
+
+
 # If called with --defaults (like from Docker), use default values
-if ('--defaults' in sys.argv):
+if args.defaults:
     hostname = "localhost"
     port = 9200
     dbname = "ponymail"
@@ -71,6 +95,20 @@ if ('--defaults' in sys.argv):
     mldom = "example.org"
     wc = "Y"
     wce = True
+
+# Accept CLI args, copy them
+if args.dbhost:
+    hostname = args.dbhost[0]
+if args.dbport:
+    port = int(args.dbport[0])
+if args.dbname:
+    dbname = args.dbname[0]
+if args.mailserver:
+    mlserver = args.mailserver[0]
+if args.mldom:
+    mldom = args.mldom[0]
+if args.wc:
+    wc = args.wc
 
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
