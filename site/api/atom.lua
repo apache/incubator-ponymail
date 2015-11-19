@@ -236,7 +236,7 @@ function handle(r)
            r:escape_html(eml['message-id']),
            r:escape_html(eml['message-id']),
            date,
-           r:escape_html(eml.body)
+           r:escape_html(eml.body:gsub("\x0F", ""))
            ))
     end
     r:puts[[</feed>]]
