@@ -1,3 +1,6 @@
+## CHANGES in 0.5a:
+
+
 ## CHANGES in 0.4a:
 
 - Notification pane correctly notes if there are no notifications
