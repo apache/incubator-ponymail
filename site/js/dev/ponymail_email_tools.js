@@ -195,8 +195,8 @@ function unshortenID(mid) {
     // Some old shortlinks begin with 'B', so let's be backwards compatible for now.
     if (mid[0] == 'Z' || mid[0] == 'B') {
         // remove padding
-        var id1 = parseInt(mid.substr(1, 7).replace("-", ""), 36)
-        var id2 = parseInt(mid.substr(8, 7).replace("-", ""), 36)
+        var id1 = parseInt(mid.substr(1, 7).replace(/-/g, ""), 36)
+        var id2 = parseInt(mid.substr(8, 7).replace(/-/g, ""), 36)
         id1 = id1.toString(16)
         id2 = id2.toString(16)
         
