@@ -108,7 +108,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     subject +
                     "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" +
                     mdate +
-                    "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 80px;' class='label label-" + ls + "'> " +
+                    "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 88px;' class='label label-" + ls + "'> " +
                     "<span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " +
                     "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp +
                     "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label>" +
