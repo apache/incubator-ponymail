@@ -1,5 +1,7 @@
 ## CHANGES in 0.5a:
 
+- Fixed an issue where shortened URLs were not unpacked correctly.
+
 
 ## CHANGES in 0.4a:
 
