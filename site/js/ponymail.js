@@ -1876,6 +1876,11 @@ function showSpinner(show) {
     }
 }
 
+
+function isArray(obj) {
+    return (obj && obj.constructor && obj.constructor == Array)
+}
+
 // Check for slow URLs every 0.5 seconds
 window.setInterval(checkForSlows, 500)
 
