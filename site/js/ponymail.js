@@ -2059,7 +2059,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     }
     open_emails = []
     limit = limit ? limit : d_ppp;
-    var fjson = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
+    var fjson = mjson ? ('emails' in mjson && isArray(mjson.emails) ? mjson.emails.sort(function(a, b) {
         return b.epoch - a.epoch
     }) : []) : current_flat_json
     current_flat_json = fjson
