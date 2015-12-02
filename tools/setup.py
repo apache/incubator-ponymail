@@ -71,6 +71,8 @@ parser.add_argument('--mldom', dest='mldom', type=str, nargs=1,
                    help='Domains to accept mail for via UI')
 parser.add_argument('--wordcloud', dest='wc', action='store_true', 
                    help='Enable word cloud')
+parser.add_argument('--skiponexist', dest='soe', action='store_true', 
+                   help='Skip setup if ES index exists')
 parser.add_argument('--nocloud', dest='nwc', action='store_true', 
                    help='Do not enable word cloud')
 args = parser.parse_args()    
@@ -235,6 +237,16 @@ mappings = {
     }
   }
 
+# Check if index already exists
+if es.indices.exists(dbname):
+    if args.soe:
+        print("Index already exists and SOE set, exiting quietly")
+        sys.exit(0)
+    else:
+        print("Error: ElasticSearch index %s already exists!" % dbname)
+        sys.exit(-1)
+        
+        
 res = es.indices.create(index = dbname, body = {
             "mappings" : mappings
         }
