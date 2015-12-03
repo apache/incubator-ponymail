@@ -47,8 +47,9 @@ function handle(r)
         if doc.private then
             if account then
                 local lid = doc.list_raw:match("<[^.]+%.(.-)>")
+                local flid = doc.list_raw:match("<([^.]+%..-)>")
                 for k, v in pairs(aaa.rights(r, account)) do
-                    if v == "*" or v == lid then
+                    if v == "*" or v == lid or v == flid then
                         canAccess = true
                         break
                     end

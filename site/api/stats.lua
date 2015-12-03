@@ -490,8 +490,9 @@ function handle(r)
             canUse = false
             if account then
                 local lid = email.list_raw:match("<[^.]+%.(.-)>")
+                local flid = email.list_raw:match("<([^.]+%..-)>")
                 for k, v in pairs(rights or {}) do
-                    if v == "*" or v == lid then
+                    if v == "*" or v == lid or v == flid then
                         canUse = true
                         break
                     end

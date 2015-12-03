@@ -62,8 +62,9 @@ function handle(r)
                 canUse = false
                 if account then
                     local lid = doc.list:match("<[^.]+%.(.-)>")
+                    local flid = doc.list:match("<([^.]+%..-)>")
                     for k, v in pairs(rights or {}) do
-                        if v == "*" or v == lid then
+                        if v == "*" or v == lid or v == flid then
                             canUse = true
                             break
                         end
