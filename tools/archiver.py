@@ -76,7 +76,7 @@ def parse_attachment(part):
             attachment['size'] = len(fd)
             attachment['filename'] = None
             h = hashlib.sha256(fd).hexdigest()
-            b64 = codecs.encode(fd, "base64").decode('ascii')
+            b64 = codecs.encode(fd, "base64").decode('ascii', errors='ignore')
             attachment['hash'] = h
             for param in dispositions[1:]:
                 key,val = param.split("=")
@@ -472,8 +472,12 @@ if __name__ == '__main__':
                 msg.add_header('archived-at', email.utils.formatdate())
             msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
             
-            lid = foo.archive_message(msg_metadata, msg)
-            print("%s: Done archiving to %s!" % (email.utils.formatdate(), lid))
+            try:
+                lid = foo.archive_message(msg_metadata, msg)
+                print("%s: Done archiving to %s!" % (email.utils.formatdate(), lid))
+            except Exception as err:
+                print("Archiving failed!: %s" % err)
+                raise Exception("Archiving to ES failed")
         else:
             print("Nothing to import (no list-id found!)")
     except Exception as err:
