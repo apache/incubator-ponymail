@@ -193,7 +193,7 @@ class BulkThread(Thread):
         for entry in self.json:
             js = entry
             js['@version'] = 1
-            js['@import_timestamp'] = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime())
+            #js['@import_timestamp'] = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime())
             js_arr.append({
                 '_op_type': 'index',
                 '_index': iname,
@@ -402,7 +402,7 @@ class SlurpThread(Thread):
                                             'source': contents[key]
                                         }
                                     )
-                        if len(ja) >= 50:
+                        if len(ja) >= 40:
                             if not args.dry:
                                 bulk = BulkThread()
                                 bulk.assign(ja, es, 'mbox')
