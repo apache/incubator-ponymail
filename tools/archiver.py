@@ -245,8 +245,10 @@ class Archiver(object):
         if body:
             attachments, contents = self.msgfiles(msg)
             private = False
-            if hasattr(mlist, 'archive_public') and mlist.archive_public:
+            if hasattr(mlist, 'archive_public') and mlist.archive_public == True:
                 private = False
+            elif hasattr(mlist, 'archive_public') and mlist.archive_public == False:
+                private = True
             elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
                 private = True
             pmid = mid
@@ -465,7 +467,7 @@ if __name__ == '__main__':
         if args.makedate:
             msg.replace_header('date', email.utils.formatdate())
             
-        if args.private == True:
+        if args.private:
             ispublic = False
         if 'list-id' in msg:
             if not msg.get('archived-at'):
