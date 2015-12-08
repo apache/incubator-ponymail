@@ -3,7 +3,8 @@
 - Fixed an issue where shortened URLs were not unpacked correctly.
 - Setup can now quietly exit if the system is already set up
 - List access can now be defined down to individual lists
-
+- Fixed an error where emails were wrongly archived as public when
+  the --private flag was used
 
 ## CHANGES in 0.4a:
 
