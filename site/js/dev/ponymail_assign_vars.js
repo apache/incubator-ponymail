@@ -59,6 +59,7 @@ var fl = null
 var kiddos = []
 var pending_urls = {}
 var pb_refresh = 0
+var treeview_guard = {}
 
 var viewModes = {
     threaded: {

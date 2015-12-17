@@ -46,9 +46,15 @@ function timeTravelListRedirect(json, state) {
         
         // Did we actually get more emails now than we had before?
         if (nsubs > osubs || nsubs >= osubs && !json.thread.irt) {
-            toggleEmails_threaded(state.id)
-            current_thread_json[state.id] = json.thread
-            toggleEmails_threaded(state.id)
+            if (prefs.displayMode == 'threaded') {
+                toggleEmails_threaded(state.id)
+                current_thread_json[state.id] = json.thread
+                toggleEmails_threaded(state.id)
+            } else if (prefs.displayMode == 'treeview') {
+                toggleEmails_treeview(state.id)
+                current_thread_json[state.id] = json.thread
+                toggleEmails_treeview(state.id)
+            }
             var subs = countSubs(json.thread)
             var parts = countParts(json.thread)
             if (document.getElementById('subs_' + state.id) != null) {

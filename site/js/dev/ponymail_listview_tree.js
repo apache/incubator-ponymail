@@ -194,6 +194,7 @@ function buildTreeview(nesting, list, obj) {
     for (var i in list) {
         var el = list[i]
         var friendly_id = (el.mid ? el.mid : el.tid).toString().replace(/@<.+>/, "")
+        
         var node = document.createElement('div')
         node.setAttribute("id", "thread_parent_" + friendly_id)
         var nest = ""
@@ -279,7 +280,12 @@ function buildTreeview(nesting, list, obj) {
         }
         nest += "<li class='list-group-item' style='margin-left: " + nw + "px;'> " + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(\"" + el.tid + "\", false, \""+friendly_id+"\"); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + friendly_id + "' style='display: none;'></div></li>"
         node.innerHTML = nest
-        obj.appendChild(node)
+        // Guard against double post errors from time travel
+        if (!treeview_guard[friendly_id]) {
+            obj.appendChild(node)
+        }
+        treeview_guard[friendly_id] = true
+        
         if (el.children && el.children.length > 0) {
             buildTreeview(nesting+1, el.children, obj)
         }
@@ -319,6 +325,7 @@ function toggleEmails_treeview(id, close, toverride) {
 
         // time travel magic!
         helper.innerHTML = ""
+        thread.innerHTML = ""
         var ml = findEml(current_thread_json[id].tid)
         if (!current_thread_json[id].magic && ml.irt && ml.irt.length > 0) {
             helper.innerHTML += "<p id='magic_"+id+"'><i><b>Note:</b> You are viewing a search result/aggregation in threaded mode. Only results matching your keywords or dates are shown, which may distort the thread. For the best result, go to the specific list and view the full thread there, or view your search results in flat mode. Or we can <a href='javascript:void(0);' onclick='timeTravelList("+id+")'>do some magic for you</a>.</i></p>"
@@ -351,9 +358,11 @@ function toggleEmails_treeview(id, close, toverride) {
 
         }
         
-        // build treeview
-        var nesting = 1
+        // build treeview, set guard
+        var nesting = 0
+        treeview_guard = {}
         var html = buildTreeview(nesting, [current_thread_json[id]], thread)
+        
         
     }
 }
