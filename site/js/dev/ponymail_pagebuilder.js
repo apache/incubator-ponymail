@@ -157,24 +157,14 @@ function buildStats(json, state, show) {
     }
 
 
-    // Show display modes
-    stats.innerHTML += "<br/><br/><b>Display mode:</b><br/>"
-    for (var mode in viewModes) {
-
-        var btn = document.createElement('a')
-        btn.setAttribute("href", "javascript:void(0);")
-        btn.setAttribute("class", "btn btn-" + ((prefs.displayMode == mode) ? 'info' : 'default'))
-        btn.setAttribute("onclick", "prefs.displayMode='" + mode + "'; buildPage();")
-        btn.style.marginRight = "10px"
-        btn.innerHTML = mode
-        stats.appendChild(btn)
-    }
+    
     var btn = document.createElement('a')
     btn.setAttribute("href", "javascript:void(0);")
     btn.setAttribute("class", "btn btn-warning")
     btn.setAttribute("onclick", "prefs.hideStats='yes'; buildStats(old_json, old_state, false);")
     btn.style.marginRight = "10px"
-    btn.innerHTML = "Hide me!"
+    btn.style.marginTop = "10px"
+    btn.innerHTML = "Hide stats"
     stats.appendChild(btn)
     if (prefs.hideStats == 'yes' || show == false) {
         document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
@@ -233,6 +223,19 @@ function buildPage(json, state) {
     buildStats(json, state, null)
     
     nest = ""
+    
+    // Add/reset list view modes
+    var vmobj = document.getElementById('viewmode')
+    vmobj.innerHTML = "" // reset innerhtml
+    for (var mode in viewModes) {
+        var opt = document.createElement('option')
+        opt.setAttribute("value", mode)
+        opt.text = mode
+        if (mode == prefs.displayMode) {
+            opt.setAttribute("selected", "selected")
+        }
+        vmobj.appendChild(opt)
+    }
 
     viewModes[prefs.displayMode].list(json, 0, 0, state ? state.deep : false);
     if (!json.emails || !json.emails.length || json.emails.length == 0) {

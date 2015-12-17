@@ -138,8 +138,11 @@
         &nbsp;
       </div>
       <div id="emails_parent" class="col-xs-10 col-lg-7">
-        <div>
-        <h3 id="listtitle" style="text-align: center; margin: 6px; padding: 0px;"><a href="#">&nbsp;</a></h3>
+        <div style="height: 48px;">
+          <div style="width: 200px; float: left;"><small>View mode: <select onchange="prefs.displayMode=this.value; buildPage();" id="viewmode"></select></small></div>
+          <div style="width: calc(100% - 220px); float: right;">
+            <h3 id="listtitle" style="text-align: center; margin: 6px; padding: 0px;"><a href="#">&nbsp;</a></h3>
+          </div>
         </div>
         <div id="emails">
           &nbsp;
