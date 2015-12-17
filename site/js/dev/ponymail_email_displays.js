@@ -46,7 +46,6 @@ function displayEmail(json, id, level) {
     var cols = ['primary', 'success', 'info', 'warning', 'danger']
     var id_sanitised = id.toString().replace(/@<.+>/, "")
     var thread = document.getElementById('thread_' + id_sanitised)
-    
     if (thread) {
         json.date = formatDate(new Date(json.epoch*1000))
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
@@ -283,17 +282,23 @@ function toggleEmails_threaded(id, close, toverride) {
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
             var epoch = latestEmailInThread + "!"
-            var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
-            if (xx) {
-                var yy = parseInt(xx)
-                if (yy >= parseInt(latestEmailInThread)) {
-                    epoch = yy
+            if (current_thread_json[id]) {
+                var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+                if (xx) {
+                    var yy = parseInt(xx)
+                    if (yy >= parseInt(latestEmailInThread)) {
+                        epoch = yy
+                    }
                 }
+                window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
             }
-            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
         }
         
         thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
+        // Bail if we can't find the thread struct
+        if (!current_thread_json[id]) {
+            return;
+        }
         var helper = document.getElementById('helper_' + id)
         if (!helper) {
             helper = document.createElement('div')

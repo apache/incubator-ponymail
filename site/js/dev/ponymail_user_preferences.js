@@ -67,7 +67,8 @@ function showPreferences() {
     // Display mode
     section.appendChild(generateFormDivs('displayMode', 'Display mode, list view:', 'select', {
         threaded: "Threaded view",
-        flat: "Flat view"
+        flat: "Flat view",
+        treeview: "Threaded with treeview"
     }, prefs.displayMode))
     
     // groupBy mode

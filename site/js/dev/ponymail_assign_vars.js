@@ -68,5 +68,9 @@ var viewModes = {
     flat: {
         email: loadEmails_flat,
         list: loadList_flat
-    }
+    },
+    treeview: {
+        email: loadEmails_flat,
+        list: loadList_treeview
+    },
 }

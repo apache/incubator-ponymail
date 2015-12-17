@@ -32,15 +32,14 @@ function dealWithKeyboard(e) {
             // otherwise, collapse a thread?
             else if (thread) {
                     // Close one thread?
-                if (thread.style.display != 'none') {
+                if (thread.style.display == 'block') {
                     toggleEmails_threaded(current_thread, true)
                 } else {
                     // Close all threads?
                     kiddos = []
-                    traverseThread(document.body, 'thread_', 'DIV')
+                    traverseThread(document.body, '(thread|helper)_', 'DIV')
                     for (var i in kiddos) {
-                        var id = kiddos[i].getAttribute('id').match(/thread_(.+)/)[1]
-                        toggleEmails_threaded(id, true)
+                        kiddos[i].style.display = 'none';
                     }
                 }
             }

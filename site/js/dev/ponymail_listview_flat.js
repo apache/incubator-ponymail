@@ -137,28 +137,39 @@ function loadList_flat(mjson, limit, start, deep) {
 
 
 // loadEmails_flat: Load a topic in a flat display
-function loadEmails_flat(id, close) {
-    var thread = document.getElementById('thread_' + id)
+function loadEmails_flat(id, close, treeview) {
+    var lvid = id
+    if (treeview) {
+        lvid = treeview
+    }
+    var thread = document.getElementById('thread_' + lvid)
     if (thread) {
-        current_thread = id
-        thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
+        current_thread = lvid
+        thread.style.display = (thread.style.display != 'block') ? 'block' : 'none';
         if (close == true) {
             thread.style.display = 'none'
         }
         if (thread.style.display == 'none') {
             return
         }
-        if (!open_emails[id]) {
-            open_emails[id] = true
+        if (!open_emails[lvid]) {
+            open_emails[lvid] = true
 
         }
-        var eml = saved_emails[current_flat_json[id].id]
-        if (!eml || !eml.from) {
-            GetAsync("/api/email.lua?id=" + current_flat_json[id].id, id, displayEmail)
+        var cfid
+        if (treeview) {
+            cfid = id
         } else {
-            displayEmail(eml, id)
+            cfid = current_flat_json[id].id
+        }
+        var eml = saved_emails[cfid]
+        
+        if (!eml || !eml.from) {
+            GetAsync("/api/email.lua?id=" + cfid, lvid, displayEmail)
+        } else {
+            displayEmail(eml, lvid)
         }
     } else {
-        alert("no such thread ID: " + id)
+        alert("no such thread ID: " + lvid)
     }
 }
