@@ -5,6 +5,9 @@
 - List access can now be defined down to individual lists
 - Fixed an error where emails were wrongly archived as public when
   the --private flag was used
+- Added the treeview email list mode
+- Turned the view mode buttons into a dropdown menu to save space
+- Moved the list view title to save some space
 
 ## CHANGES in 0.4a:
 
