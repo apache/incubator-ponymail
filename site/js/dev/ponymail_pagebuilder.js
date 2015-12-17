@@ -318,8 +318,8 @@ function getListInfo(list, xdomain, nopush) {
 
     //buildCalendar()
     var dp = document.getElementById('dp')
-    dp[0].text = datePickerValue(current_retention)
-    dp[0].value = current_retention
+    dp.value = datePickerValue(current_retention)
+    dp.setAttribute("data", current_retention)
     
     document.getElementById('q').value = unescape(current_query)
     document.getElementById('aq').value = unescape(current_query)

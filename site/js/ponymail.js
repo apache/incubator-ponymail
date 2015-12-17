@@ -438,7 +438,8 @@ function calcTimespan(what) {
             datepicker_spawner.options[0].value = tval
             datepicker_spawner.options[0].text = wat
         } else if (datepicker_spawner.value) {
-            datepicker_spawner.value = tval
+            datepicker_spawner.value = wat
+            datepicker_spawner.setAttribute("data", tval)
         }
         
     }
@@ -553,11 +554,12 @@ function datePicker(parent, seedPeriod) {
     // select/input box with an existing value derived from an
     // earlier call to datePicker
     var ptype = ""
-    if (parent.value.search(/=/) != -1) {
+    var pvalue = parent.hasAttribute("data") ? parent.getAttribute("data") : parent.value
+    if (pvalue.search(/=/) != -1) {
         
         // Less than N units ago?
-        if (parent.value.match(/lte/)) {
-            var m = parent.value.match(/lte=(\d+)([dMyw])/)
+        if (pvalue.match(/lte/)) {
+            var m = pvalue.match(/lte=(\d+)([dMyw])/)
             ptype = 'lt'
             if (m) {
                 document.getElementById('datepicker_lti').value = m[1]
@@ -574,9 +576,9 @@ function datePicker(parent, seedPeriod) {
         }
         
         // More than N units ago?
-        if (parent.value.match(/gte/)) {
+        if (pvalue.match(/gte/)) {
             ptype = 'mt'
-            var m = parent.value.match(/gte=(\d+)([dMyw])/)
+            var m = pvalue.match(/gte=(\d+)([dMyw])/)
             if (m) {
                 document.getElementById('datepicker_mti').value = m[1]
                 var sel = document.getElementById('datepicker_mts')
@@ -592,11 +594,11 @@ function datePicker(parent, seedPeriod) {
         }
         
         // Date range?
-        if (parent.value.match(/dfr/)) {
+        if (pvalue.match(/dfr/)) {
             ptype = 'cd'
             // Make sure we have both a dfr and a dto here, catch them
-            var mf = parent.value.match(/dfr=(\d+-\d+-\d+)/)
-            var mt = parent.value.match(/dto=(\d+-\d+-\d+)/)
+            var mf = pvalue.match(/dfr=(\d+-\d+-\d+)/)
+            var mt = pvalue.match(/dto=(\d+-\d+-\d+)/)
             if (mf && mt) {
                 // easy peasy, just set two text fields!
                 document.getElementById('datepicker_cfrom').value = mf[1]
@@ -2825,8 +2827,8 @@ function getListInfo(list, xdomain, nopush) {
 
     //buildCalendar()
     var dp = document.getElementById('dp')
-    dp[0].text = datePickerValue(current_retention)
-    dp[0].value = current_retention
+    dp.value = datePickerValue(current_retention)
+    dp.setAttribute("data", current_retention)
     
     document.getElementById('q').value = unescape(current_query)
     document.getElementById('aq').value = unescape(current_query)
