@@ -1981,9 +1981,9 @@ function loadList_flat(mjson, limit, start, deep) {
     
     bulk.innerHTML += tnav + nest
     if (prefs.hideStats == 'yes') {
-        bulk.setAttribute("class", "well col-md-10 col-lg-10")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-10")
     } else {
-        bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-7")
     }
     
 
@@ -2185,9 +2185,9 @@ function loadList_threaded(mjson, limit, start, deep) {
     // Emails
     bulk.innerHTML += tnav + nest
     if (prefs.hideStats == 'yes') {
-        bulk.setAttribute("class", "well col-md-10 col-lg-10")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-10")
     } else {
-        bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-7")
     }
     var dp = (deep || (global_deep && current_query.length > 0)) ? 'true' : 'false'
     
@@ -2684,11 +2684,11 @@ function buildStats(json, state, show) {
     btn.innerHTML = "Hide me!"
     stats.appendChild(btn)
     if (prefs.hideStats == 'yes' || show == false) {
-        document.getElementById('emails').style.width = "calc(100% - 190px)"
+        document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
         
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
-            document.getElementById('emails').style.width = "calc(100% - 190px)"
+            document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
         }
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
@@ -2696,11 +2696,11 @@ function buildStats(json, state, show) {
     if (prefs.hideStats == 'no' || show == true) {
         stats.setAttribute("class", "hidden-xs hidden-sm hidden-md col-lg-3")
         var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
-        document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
+        document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
             var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
-            document.getElementById('emails').style.width = "calc(100% - " + sw + "px)"
+            document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         }
         stats.removeAttribute("onclick")
         //stats.style.display = "block"
@@ -2743,7 +2743,7 @@ function buildPage(json, state) {
 
     viewModes[prefs.displayMode].list(json, 0, 0, state ? state.deep : false);
     if (!json.emails || !json.emails.length || json.emails.length == 0) {
-        document.getElementById('emails').innerHTML += "<h3>No emails found fitting this criteria</h3>"
+        document.getElementById('emails').innerHTML = "<h3>No emails found fitting this criteria</h3>"
     }
     if (json.private && json.private == true) {
         document.getElementById('emails').innerHTML += "<h4>Looks like you don't have access to this archive. Maybe you need to be logged in?</h4>"

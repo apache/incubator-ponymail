@@ -107,9 +107,9 @@ function loadList_flat(mjson, limit, start, deep) {
     
     bulk.innerHTML += tnav + nest
     if (prefs.hideStats == 'yes') {
-        bulk.setAttribute("class", "well col-md-10 col-lg-10")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-10")
     } else {
-        bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-7")
     }
     
 

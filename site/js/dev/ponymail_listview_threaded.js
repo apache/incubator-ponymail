@@ -157,9 +157,9 @@ function loadList_threaded(mjson, limit, start, deep) {
     // Emails
     bulk.innerHTML += tnav + nest
     if (prefs.hideStats == 'yes') {
-        bulk.setAttribute("class", "well col-md-10 col-lg-10")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-10")
     } else {
-        bulk.setAttribute("class", "well col-md-10 col-lg-7")
+        bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-7")
     }
     var dp = (deep || (global_deep && current_query.length > 0)) ? 'true' : 'false'
     
