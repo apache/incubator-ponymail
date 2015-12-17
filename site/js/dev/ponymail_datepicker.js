@@ -18,6 +18,12 @@
 
 var datepicker_spawner = null
 var calendarpicker_spawner = null
+var units = {
+    w: 'week',
+    d: 'day',
+    M: 'month',
+    y: 'year'
+}
 
 // makeSelect: Creates a <select> object with options
 function makeSelect(options, id, selval) {
@@ -92,11 +98,15 @@ function calcTimespan(what) {
         // Get unit and how many units
         var N = document.getElementById('datepicker_lti').value
         var unit = document.getElementById('datepicker_lts').value
+        var unitt = units[unit]
+        if (parseInt(N) != 1) {
+            unitt += "s"
+        }
         
         // If this makes sense, construct a humanly readable and a computer version
         // of the timespan
         if (N.length > 0) {
-            wat = "< " + N + unit + " ago"
+            wat = "Less than " + N + " " + unitt + " ago"
             tval = "lte=" + N + unit
         }
     }
@@ -106,10 +116,14 @@ function calcTimespan(what) {
         // As above, get unit and no of units.
         var N = document.getElementById('datepicker_mti').value
         var unit = document.getElementById('datepicker_mts').value
+        var unitt = units[unit]
+        if (parseInt(N) != 1) {
+            unitt += "s"
+        }
         
         // construct timespan val + description
         if (N.length > 0) {
-            wat = "> " + N + unit + " ago"
+            wat = "More than " + N + " " + unitt + " ago"
             tval = "gte=" + N + unit
         }
     }
@@ -317,14 +331,22 @@ function datePickerValue(seedPeriod) {
         if (seedPeriod.match(/lte/)) {
             var m = seedPeriod.match(/lte=(\d+)([dMyw])/)
             ptype = 'lt'
-            rv = "<" + m[1] + m[2] + " ago"
+            var unitt = units[m[2]]
+            if (parseInt(m[1]) != 1) {
+                unitt += "s"
+            }
+            rv = "Less than " + m[1] + " " + unitt + " ago"
         }
         
         // More than N units ago?
         if (seedPeriod.match(/gte/)) {
             ptype = 'mt'
             var m = seedPeriod.match(/gte=(\d+)([dMyw])/)
-            rv = ">" + m[1] + m[2] + " ago"
+            var unitt = units[m[2]]
+            if (parseInt(m[1]) != 1) {
+                unitt += "s"
+            }
+            rv = "More than " + m[1] + " " + unitt + " ago"
         }
         
         // Date range?
@@ -333,7 +355,7 @@ function datePickerValue(seedPeriod) {
             var mf = seedPeriod.match(/dfr=(\d+-\d+-\d+)/)
             var mt = seedPeriod.match(/dto=(\d+-\d+-\d+)/)
             if (mf && mt) {
-                rv = "from " + mf[1] + " to " + mt[1]
+                rv = "From " + mf[1] + " to " + mt[1]
             }
         }
     }
