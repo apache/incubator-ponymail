@@ -293,7 +293,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='title='This email has attachments'/> "
         }
-        nest += "<li class='list-group-item' style='border: none !important; padding: 0px !important; margin: 0px !important;'>" + nvi + "<label style='width: 140px;' class='label label-info'>" + from + "</label>" + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(\"" + el.tid + "\", false, \""+friendly_id+"\"); return false;'>" + subject + "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + friendly_id + "' style='display: none;'></div></li>"
+        nest += "<li class='list-group-item' style='height: 32px !important; border: none !important; padding: 0px !important; margin: 0px !important;'>" + nvi + "<label style='width: 140px;' class='label label-info'>" + from + "</label>" + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(\"" + el.tid + "\", false, \""+friendly_id+"\"); return false;'>" + subject + "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + friendly_id + "' style='display: none;'></div></li>"
         node.innerHTML = nest
         // Guard against double post errors from time travel
         if (!treeview_guard[friendly_id]) {
