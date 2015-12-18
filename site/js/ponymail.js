@@ -2822,7 +2822,7 @@ function addNgram(json, state) {
 // ngram URL generator:
 function makeNgramURL() {
     var list = document.getElementById('listname').value
-    var timespan = document.getElementById('timespan').value
+    var timespan = document.getElementById('timespan').getAttribute("data")
     var qs = []
     if (document.getElementById('stack').checked) qs.push("stack")
     if (document.getElementById('topics').checked) qs.push("topics")
