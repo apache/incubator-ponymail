@@ -125,7 +125,7 @@ function loadList_treeview(mjson, limit, start, deep) {
                     "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
                     "</div>" +
                     "</div>" +
-                    "<div id='thread_" + i + "' style='display:none';></div></div></li>"
+                    "</div><div id='thread_treeview_" + i + "' style='display:none';></div></li>"
         } else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 300px); white-space:nowrap; overflow: hidden;'>" +
