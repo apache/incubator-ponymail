@@ -2923,7 +2923,7 @@ function loadNgrams() {
     // options for ngram generator
     
     nobj.appendChild(generateFormDivs('listname', 'List(s):', 'text', list))
-    var tspanner = generateFormDivs('timespan', 'Date range:', 'text', dspan)
+    var tspanner = generateFormDivs('timespan', 'Date range:', 'text', datePickerValue(dspan))
     tspanner.childNodes[1].childNodes[0].setAttribute("onmousedown", 'datePicker(this);')
     tspanner.childNodes[1].childNodes[0].setAttribute("data", dspan)
     nobj.appendChild(tspanner)
