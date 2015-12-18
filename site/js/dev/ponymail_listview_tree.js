@@ -385,6 +385,7 @@ function toggleEmails_treeview(id, close, toverride) {
         var nesting = 0
         treeview_guard = {}
         var html = buildTreeview(nesting, [current_thread_json[id]], thread, [true])
+        current_thread = current_thread_json[id].tid
         
         
     }
