@@ -574,7 +574,7 @@ function datePicker(parent, seedPeriod) {
     // earlier call to datePicker
     var ptype = ""
     var pvalue = parent.hasAttribute("data") ? parent.getAttribute("data") : parent.value
-    if (pvalue.search(/=/) != -1) {
+    if (pvalue.search(/=|-/) != -1) {
         
         // Less than N units ago?
         if (pvalue.match(/lte/)) {
@@ -624,6 +624,19 @@ function datePicker(parent, seedPeriod) {
                 document.getElementById('datepicker_cto').value = mt[1]
             }
         }
+        // Month??
+        if (pvalue.match(/(\d{4})-(\d+)/)) {
+            ptype = 'cd'
+            // Make sure we have both a dfr and a dto here, catch them
+            var m = pvalue.match(/(\d{4})-(\d+)/)
+            if (m.length == 3) {
+                // easy peasy, just set two text fields!
+                var dfrom = new Date(parseInt(m[1]),parseInt(m[2])-1,1, 0, 0, 0)
+                var dto = new Date(parseInt(m[1]),parseInt(m[2]),0, 23, 59, 59)
+                document.getElementById('datepicker_cfrom').value = m[0] + "-" + dfrom.getDate()
+                document.getElementById('datepicker_cto').value = m[0] + "-" + dto.getDate()
+            }
+        }
         calcTimespan(ptype)
     }
 }
@@ -635,7 +648,7 @@ function datePickerValue(seedPeriod) {
     // earlier call to datePicker
     var ptype = ""
     var rv = seedPeriod
-    if (seedPeriod && seedPeriod.search && seedPeriod.search(/=/) != -1) {
+    if (seedPeriod && seedPeriod.search && seedPeriod.search(/=|-/) != -1) {
         
         // Less than N units ago?
         if (seedPeriod.match(/lte/)) {
@@ -668,6 +681,17 @@ function datePickerValue(seedPeriod) {
                 rv = "From " + mf[1] + " to " + mt[1]
             }
         }
+        
+        // Month??
+        if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
+            ptype = 'mr' // just a made up thing...(month range)
+            var mr = seedPeriod.match(/(\d+)-(\d+)/)
+            if (mr) {
+                dfrom = new Date(parseInt(mr[1]),parseInt(mr[2])-1,1, 0, 0, 0)
+                rv = months[dfrom.getMonth()] + ', ' + mr[1]
+            }
+        }
+        
     }
     return rv
 }
@@ -963,7 +987,7 @@ function showCalendarPicker(parent, seedDate) {
     
     // If supplied with a YYYY-MM-DD date, use this to seed the calendar
     if (!seedDate) {
-        var m = parent.value.match(/(\d+-\d+-\d+)/)
+        var m = parent.value.match(/(\d+-\d+(-\d+)?)/)
         if (m) {
             seedDate = m[1]
         }
@@ -2596,7 +2620,6 @@ function toggleEmails_treeview(id, close, toverride) {
                     epoch = yy
                 }
             }
-            //window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
         }
         
         thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
@@ -3220,9 +3243,11 @@ function getListInfo(list, xdomain, nopush) {
                 var arr = xdomain.split(/:/)
                 xdomain = arr[0]
                 xlist = xdomain
-                if (arr[1].search(/-/) != -1 && arr[1].search("|") == -1) {
+                if (arr[1].match(/-/) && !arr[1].match(/\|/)) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
+                    var dp = document.getElementById('dp')
+                    current_retention = arr[1]
                     dealtwithit = true
                 } else {
                     current_retention = parseInt(arr[1])

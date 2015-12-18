@@ -286,9 +286,11 @@ function getListInfo(list, xdomain, nopush) {
                 var arr = xdomain.split(/:/)
                 xdomain = arr[0]
                 xlist = xdomain
-                if (arr[1].search(/-/) != -1 && arr[1].search("|") == -1) {
+                if (arr[1].match(/-/) && !arr[1].match(/\|/)) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
+                    var dp = document.getElementById('dp')
+                    current_retention = arr[1]
                     dealtwithit = true
                 } else {
                     current_retention = parseInt(arr[1])
