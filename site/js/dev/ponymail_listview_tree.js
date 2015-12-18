@@ -195,14 +195,14 @@ function buildTreeview(nesting, list, obj, pbigger) {
         for (var z = 1; z <= nesting; z++) {
             if (z == nesting) {
                 if (i == (list.length -1)) {
-                    nvi += "<img src='/images/treeview_lastchild.png' style='margin-top: -5px;'/>"
+                    nvi += "<img src='/images/treeview_lastchild.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
                 } else {
-                    nvi += "<img src='/images/treeview_child.png' style='margin-top: -5px;'/>"
+                    nvi += "<img src='/images/treeview_child.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
                 }
             } else if (pbigger[z+1]) {
-                nvi += "<img src='/images/treeview_parent.png' style='margin-top: -5px;'/>"
+                nvi += "<img src='/images/treeview_parent.png' style='height: 40px; width: 16px; overflow: hidden;margin-top: -5px;'/>"
             } else {
-                nvi += "<img src='/images/treeview_none.png' style='margin-top: -5px;'/>"
+                nvi += "<img src='/images/treeview_none.png' style='height: 40px; width: 16px; overflow: hidden;margin-top: -5px;'/>"
             }
         }
         
@@ -293,7 +293,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='title='This email has attachments'/> "
         }
-        var nw = (24*nesting) + 130
+        var nw = (16*nesting) + 130
         nest += "<li class='list-group-item' style='min-height: 38px !important; border: none; padding: 0px; margin: 0px; padding-top: 5px; padding-bottom: -5px;'><div style='float: left; margin-top: -8px;'>" +
                 nvi + "</div>" + "<div style='width: calc(99% - "+nw+"px); page-break: avoid; white-space: nowrap; overflow: hidden; float:left;'>" + at + "<span style='padding-top: 4px;'><a style='" + estyle + "' href='/thread.html/" +
                 (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"padding-top: 4px; padding-bottom: -4px;\"; loadEmails_flat(\"" +
