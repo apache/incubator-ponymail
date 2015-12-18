@@ -167,11 +167,11 @@ function buildStats(json, state, show) {
     btn.innerHTML = "Hide stats"
     stats.appendChild(btn)
     if (prefs.hideStats == 'yes' || show == false) {
-        document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
+        document.getElementById('emails_parent').style.maxWidth = "calc(100% - 190px)"
         
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
-            document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
+            document.getElementById('emails_parent').style.maxWidth = "calc(100% - 190px)"
         }
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
@@ -179,11 +179,11 @@ function buildStats(json, state, show) {
     if (prefs.hideStats == 'no' || show == true) {
         stats.setAttribute("class", "hidden-xs hidden-sm hidden-md col-lg-3")
         var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
-        document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
+        document.getElementById('emails_parent').style.maxWidth = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
             var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
-            document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
+            document.getElementById('emails_parent').style.maxWidth = "calc(99% - " + sw + "px)"
         }
         stats.removeAttribute("onclick")
         //stats.style.display = "block"

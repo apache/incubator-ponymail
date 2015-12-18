@@ -131,16 +131,16 @@
     </div>
       
     <div class="row">
-      <div id="datepicker" class="col-md-2">
+      <div id="datepicker" class="hidden-xs col-md-2" style="float: left;">
         &nbsp;
       </div>
       <div id="stats" class="hidden-xs hidden-sm hidden-md col-lg-3" style="font-size: 9pt;">
         &nbsp;
       </div>
-      <div id="emails_parent" class="col-xs-10 col-lg-7">
-        <div style="height: 48px;">
-          <div style="width: 200px; float: left;"><small>View mode: <select onchange="prefs.displayMode=this.value; buildPage();" id="viewmode"></select></small></div>
-          <div style="width: calc(100% - 220px); float: right;">
+      <div id="emails_parent" class="col-xs-10 col-md-8 col-lg-7" style="float: left;">
+        <div style="min-height: 48px;">
+          <div style="width: 170px; float: left;"><small>View mode: <select onchange="prefs.displayMode=this.value; buildPage();" id="viewmode"></select></small></div>
+          <div style="width: calc(100% - 170px); float: right;">
             <h3 id="listtitle" style="text-align: center; margin: 6px; padding: 0px;"><a href="#">&nbsp;</a></h3>
           </div>
         </div>
