@@ -293,12 +293,13 @@ function buildTreeview(nesting, list, obj, pbigger) {
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='title='This email has attachments'/> "
         }
-        nest += "<li class='list-group-item' style='min-height: 38px !important; border: none; padding: 0px; margin: 0px; padding-top: 5px; padding-bottom: -5px;'>" +
-                nvi + at + "<span style='padding-top: 4px;'><a style='" + estyle + "' href='/thread.html/" +
-                (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"padding-top: 4px; padding-bottom: -4px; \"; loadEmails_flat(\"" +
+        var nw = (24*nesting) + 130
+        nest += "<li class='list-group-item' style='min-height: 38px !important; border: none; padding: 0px; margin: 0px; padding-top: 5px; padding-bottom: -5px;'><div style='float: left; margin-top: -8px;'>" +
+                nvi + "</div>" + "<div style='width: calc(99% - "+nw+"px); page-break: avoid; white-space: nowrap; overflow: hidden; float:left;'>" + at + "<span style='padding-top: 4px;'><a style='" + estyle + "' href='/thread.html/" +
+                (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"padding-top: 4px; padding-bottom: -4px;\"; loadEmails_flat(\"" +
                 el.tid + "\", false, \""+friendly_id+"\"); return false;'>" + subject + "</a></span> "+
-                "<label style='width: 140px;' class='label label-info'>" + from + "</label>" +
-                "<label style='float: right; width: 110px; margin-top: 6px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate +
+                "<label style='width: 140px;' class='label label-info'>" + from + "</label></div>" +
+                "<label style='float: right; position:absolute;right:4px;top:10px;width: 110px; margin-top: 6px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate +
                 "</label><div id='thread_" + friendly_id + "' style='display: none;'></div></li>"
         node.innerHTML = nest
         // Guard against double post errors from time travel
