@@ -2925,6 +2925,7 @@ function loadNgrams() {
     nobj.appendChild(generateFormDivs('listname', 'List(s):', 'text', list))
     var tspanner = generateFormDivs('timespan', 'Date range:', 'text', dspan)
     tspanner.childNodes[1].childNodes[0].setAttribute("onmousedown", 'datePicker(this);')
+    tspanner.childNodes[1].childNodes[0].setAttribute("data", dspan)
     nobj.appendChild(tspanner)
     nobj.appendChild(generateFormDivs('stack', 'Stack n-grams:', 'checkbox', stack))
     nobj.appendChild(generateFormDivs('avg', 'Use rolling averages:', 'checkbox', avg))
