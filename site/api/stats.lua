@@ -380,7 +380,7 @@ function handle(r)
             
             sort = {
                 {
-                    epoch = {
+                    date = {
                         order = "asc"
                     }
                 }  
