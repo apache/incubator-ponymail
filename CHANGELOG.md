@@ -8,6 +8,7 @@
 - Added the treeview email list mode
 - Turned the view mode buttons into a dropdown menu to save space
 - Moved the list view title to save some space
+- Improved responsive interface (better resizing and low res display)
 
 ## CHANGES in 0.4a:
 
