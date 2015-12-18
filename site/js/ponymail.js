@@ -2555,7 +2555,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='title='This email has attachments'/> "
         }
-        nest += "<li class='list-group-item' style='height: 38px !important; border: none; padding: 0px; margin: 0px; padding-top: 5px; padding-bottom: -5px;'>" +
+        nest += "<li class='list-group-item' style='min-height: 38px !important; border: none; padding: 0px; margin: 0px; padding-top: 5px; padding-bottom: -5px;'>" +
                 nvi + at + "<span style='padding-top: 4px;'><a style='" + estyle + "' href='/thread.html/" +
                 (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"padding-top: 4px; padding-bottom: -4px; \"; loadEmails_flat(\"" +
                 el.tid + "\", false, \""+friendly_id+"\"); return false;'>" + subject + "</a></span> "+
