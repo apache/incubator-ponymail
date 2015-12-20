@@ -1,3 +1,7 @@
+## CHANGES in 0.6a:
+
+- Added a caching system for search results to reduce load times
+  
 ## CHANGES in 0.5a:
 
 - Fixed an issue where shortened URLs were not unpacked correctly.
