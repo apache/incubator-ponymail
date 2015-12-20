@@ -1878,6 +1878,9 @@ function checkForSlows() {
 }
 
 // GetAsync: func for getting a doc async with a callback
+var visited_urls = {}
+var cached_urls = {}
+
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
     if (window.XMLHttpRequest) {
@@ -1888,7 +1891,12 @@ function GetAsync(theUrl, xstate, callback) {
     if (pending_urls) {
         pending_urls[theUrl] = new Date().getTime() / 1000;
     }
-    xmlHttp.open("GET", theUrl, true);
+    var finalURL = theUrl
+    if (visited_urls[theUrl]) {
+        finalURL += ((finalURL.search(/\?/) == -1) ? '?' : '&') + 'since=' + visited_urls[theUrl]
+    }
+    visited_urls[theUrl] = new Date().getTime()/1000
+    xmlHttp.open("GET", finalURL, true);
     xmlHttp.send(null);
     xmlHttp.onprogress = function() {
         checkForSlows()
@@ -1905,7 +1913,14 @@ function GetAsync(theUrl, xstate, callback) {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             if (callback) {
                 try {
-                    callback(JSON.parse(xmlHttp.responseText), xstate);
+                    var response = JSON.parse(xmlHttp.responseText)
+                    if (response && typeof response.changed !== 'undefined' && response.changed == false) {
+                        var t = response.took
+                        response = cached_urls[theUrl]
+                        response.took = t
+                    }
+                    cached_urls[theUrl] = response
+                    callback(response, xstate);
                 } catch (e) {
                     callback(JSON.parse(xmlHttp.responseText), xstate)
                 }
@@ -2226,7 +2241,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         } else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 300px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hide;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><label id='subs_" + i + "' style='float: right; margin-right: 8px; width: 88px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span> " + subs + " " + (subs != 1 ? "replies" : "reply") + "</label> &nbsp; " + "<label style='visibility:" + pds + "; float: right; margin-right: 8px;' id='people_"+i+"' class='label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " people</label></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         }
     }
