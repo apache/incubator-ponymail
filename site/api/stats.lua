@@ -235,6 +235,59 @@ function handle(r)
     
     local top10 = {}
     local allparts = 0
+    
+    -- Check for changes?
+    if get.since then
+        local epoch = tonumber(get.since) or os.time()
+        local doc = elastic.raw {
+            _source = {'message-id'},
+            query = {
+                bool = {
+                    must = {
+                        {
+                            range = {
+                                epoch = {
+                                    gt = epoch
+                                }
+                            }
+                        },
+                        sterm,
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = qs
+                            }
+                        }
+                },
+                    must_not = {
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = nqs
+                            }
+                        }
+                }}
+            },
+            
+            sort = {
+                {
+                    epoch = {
+                        order = "desc"
+                    }
+                }  
+            },
+            size = 1
+        }
+        local h = #doc.hits.hits
+        if h == 0 then
+            r:puts(JSON.encode{
+                changed = false,
+                took = r:clock() - tnow
+            })
+            return apache2.OK
+        end
+    end
+    
     if config.slow_count then
         -- Debug time point 2
         table.insert(t, r:clock() - tnow)

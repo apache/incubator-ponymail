@@ -36,6 +36,9 @@ function checkForSlows() {
 }
 
 // GetAsync: func for getting a doc async with a callback
+var visited_urls = {}
+var cached_urls = {}
+
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
     if (window.XMLHttpRequest) {
@@ -46,7 +49,12 @@ function GetAsync(theUrl, xstate, callback) {
     if (pending_urls) {
         pending_urls[theUrl] = new Date().getTime() / 1000;
     }
-    xmlHttp.open("GET", theUrl, true);
+    var finalURL = theUrl
+    if (visited_urls[theUrl]) {
+        finalURL += ((finalURL.search(/\?/) == -1) ? '?' : '&') + 'since=' + visited_urls[theUrl]
+    }
+    visited_urls[theUrl] = new Date().getTime()/1000
+    xmlHttp.open("GET", finalURL, true);
     xmlHttp.send(null);
     xmlHttp.onprogress = function() {
         checkForSlows()
@@ -63,7 +71,14 @@ function GetAsync(theUrl, xstate, callback) {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             if (callback) {
                 try {
-                    callback(JSON.parse(xmlHttp.responseText), xstate);
+                    var response = JSON.parse(xmlHttp.responseText)
+                    if (response && typeof response.changed !== 'undefined' && response.changed == false) {
+                        var t = response.took
+                        response = cached_urls[theUrl]
+                        response.took = t
+                    }
+                    cached_urls[theUrl] = response
+                    callback(response, xstate);
                 } catch (e) {
                     callback(JSON.parse(xmlHttp.responseText), xstate)
                 }
