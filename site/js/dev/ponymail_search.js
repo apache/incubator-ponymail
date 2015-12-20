@@ -123,12 +123,12 @@ function searchAll(q, dspan, from, subject, where) {
     }
     var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + escape(dspan)
     if (from) {
-        url += "&header_from=" + escape(from)
-        current_query += " FROM:" + escape('"' + from + '"')
+        url += "&header_from="  + "\""+ from.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
+        current_query += " FROM:"  + "\""+ from.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
     }
     if (subject) {
-        url += "&header_subject=" + escape(subject)
-        current_query += " SUBJECT:" + escape('"' + subject + '"')
+        url += "&header_subject=\"" + subject.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
+        current_query += " SUBJECT:\"" + subject.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
     }
     GetAsync(url, {
         deep: true
