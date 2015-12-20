@@ -268,14 +268,6 @@ function handle(r)
                         }
                 }}
             },
-            
-            sort = {
-                {
-                    epoch = {
-                        order = "desc"
-                    }
-                }  
-            },
             size = 1
         }
         local h = #doc.hits.hits
