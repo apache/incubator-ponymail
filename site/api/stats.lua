@@ -251,6 +251,11 @@ function handle(r)
                                 }
                             }
                         },
+                        {
+                            range = {
+                                date = daterange
+                            }
+                        },
                         sterm,
                         {
                             query_string = {
