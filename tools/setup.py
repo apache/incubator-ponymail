@@ -19,6 +19,7 @@ import getpass
 import subprocess
 import readline
 import argparse
+import shutil
 
 if sys.version_info <= (3, 3):
     print("This script requires Python 3.4 or higher")
@@ -290,6 +291,11 @@ local config = {
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
     f.close()
+    
+print("Copying sample JS config to config.js (if needed)...")
+if not os.path.exists("../site/js/config.js") and os.path.exists("../site/js/config.js.sample"):
+    shutil.copy("../site/js/config.js.sample", "../site/js/config.js")
+    
     
 print("All done, Pony Mail should...work now :)")
 print("If you are using an external mail inbound server, \nmake sure to copy archiver.py and ponymail.cfg to it")
