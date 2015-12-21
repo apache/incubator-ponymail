@@ -1,6 +1,7 @@
 ## CHANGES in 0.6a:
 
 - Added a caching system for search results to reduce load times
+- The statistics panel is now hidden by default
   
 ## CHANGES in 0.5a:
 
