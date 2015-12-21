@@ -320,17 +320,23 @@
 }
 
 .vertical-text {
-	transform: rotate(90deg);
-	transform-origin: left top 0;
+    max-width: 260px;
+    height: 24px;
+	transform: rotate(-90deg);
+	transform-origin: left bottom 0;
     margin: 3px;
     border: 1px solid #666;
     border-radius: 4px;
-    margin-top: 60px;
-    margin-bottom: -60px;
+    margin-top: 280px;
+    margin-bottom: -260px;
     margin-right: 5px;
     margin-left: 5px;
     cursor: pointer;
     background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%);
+}
+
+.vertical-text:hover {
+     background: linear-gradient(to bottom, rgba(255,255,235,1) 0%,rgba(243,243,213,1) 50%,rgba(237,237,207,1) 51%,rgba(255,255,235,1) 100%);
 }
 
 

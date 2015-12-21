@@ -3023,8 +3023,8 @@ function buildCalendar(firstYear, lastYear) {
         if (fyear == firstYear) {
             n = "block"
         }
-        dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 120px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
-        var cale = "<div style='float: left; width: 90%; display: " + n + "; padding-left: 20px; margin-bottom: 15px;' id='cal_" + year + "'>"
+        dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 110px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
+        var cale = "<div style='float: left; width: 80%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
             var url = "/list.html?" + xlist + ":" + (year+"-"+(y+1))
