@@ -161,7 +161,7 @@ function buildStats(json, state, show) {
     var btn = document.createElement('a')
     btn.setAttribute("href", "javascript:void(0);")
     btn.setAttribute("class", "btn btn-warning")
-    btn.setAttribute("onclick", "prefs.hideStats='yes'; buildStats(old_json, old_state, false);")
+    btn.setAttribute("onclick", "prefs.hideStats='yes'; saveEphemeral(); buildStats(old_json, old_state, false);")
     btn.style.marginRight = "10px"
     btn.style.marginTop = "10px"
     btn.innerHTML = "Hide stats"
@@ -174,7 +174,7 @@ function buildStats(json, state, show) {
             document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
         }
         stats.setAttribute("class", "col-md-1 vertical-text")
-        stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
+        stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; saveEphemeral(); buildStats(old_json, old_state, true);\">Show stats panel..</div>"
     }
     if (prefs.hideStats == 'no' || show == true) {
         stats.setAttribute("class", "hidden-xs hidden-sm col-md-3 col-lg-3")
@@ -199,6 +199,7 @@ function buildStats(json, state, show) {
 
 // buildPage: build the entire page!
 function buildPage(json, state) {
+    loadEphemeral(); // load ephem config if need be
     start = new Date().getTime()
     pb_refresh = start
     json = json ? json : old_json

@@ -108,6 +108,31 @@ function showSpinner(show) {
 }
 
 
+// Ephemeral configuration - non-account but still saved through reloads
+
+// Saving prefs as a json string
+function saveEphemeral() {
+    if (typeof(window.localStorage) !== "undefined") {
+        window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
+    }
+}
+
+// load ephemeral prefs, replace what we have
+function loadEphemeral() {
+    if (typeof(window.localStorage) !== "undefined") {
+        var str = window.localStorage.getItem("ponymail_config_ephemeral")
+        if (str) {
+            var eprefs = JSON.parse(str)
+            for (i in prefs) {
+                if (eprefs[i]) {
+                    prefs[i] = eprefs[i]
+                }
+            }
+        }
+        
+    }
+}
+
 function isArray(obj) {
     return (obj && obj.constructor && obj.constructor == Array)
 }
