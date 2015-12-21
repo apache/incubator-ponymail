@@ -27,10 +27,6 @@
 // They keep track of the JSON we have received, storing it in the browser,
 // Thus lightening the load on the backend (caching and such)
 
-// These are all variables needed at some point during our work.
-// They keep track of the JSON we have received, storing it in the browser,
-// Thus lightening the load on the backend (caching and such)
-
 var _VERSION_ = "0.6a"
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_ppp = 15; // results per page
@@ -1942,7 +1938,7 @@ function showSpinner(show) {
     if (!obj) {
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
-        obj.innerHTML = "<img src='/images/spinner.gif'><br/>Loading results, please wait..."
+        obj.innerHTML = "<img src='/images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
     if (show) {
