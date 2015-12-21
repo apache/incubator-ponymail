@@ -115,6 +115,7 @@ function showSpinner(show) {
 
 // Saving prefs as a json string
 function saveEphemeral() {
+    // This only works if the browser supports localStorage
     if (typeof(window.localStorage) !== "undefined") {
         window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
     }
@@ -122,13 +123,16 @@ function saveEphemeral() {
 
 // load ephemeral prefs, replace what we have
 function loadEphemeral() {
+    // This only works if the browser supports localStorage
     if (typeof(window.localStorage) !== "undefined") {
         var str = window.localStorage.getItem("ponymail_config_ephemeral")
         if (str) {
             var eprefs = JSON.parse(str)
+            // for each original setting in config.js,
+            // check if we have a different one stored
             for (i in prefs) {
                 if (eprefs[i]) {
-                    prefs[i] = eprefs[i]
+                    prefs[i] = eprefs[i] // override
                 }
             }
         }
