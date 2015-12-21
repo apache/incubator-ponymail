@@ -34,6 +34,7 @@ function toggleCalendar(year) {
 // buildCalendar: build the calendar
 function buildCalendar(firstYear, lastYear) {
     
+    // Build the main calendar (desktop version)
     var dp = document.getElementById('datepicker')
     dp.style.width = "150px"
     dp.innerHTML = "<h3>Archive:</h3>"
@@ -58,6 +59,29 @@ function buildCalendar(firstYear, lastYear) {
         }
         cale += "</div>"
         dp.innerHTML += cale
+    }
+    
+    // Build the mobile version (dropdown)
+    var mdp = document.getElementById('datepicker_mobile')
+    
+    if (mdp) {
+        mdp.innerHTML = ""
+        for (var year = fyear; year >= (firstYear ? firstYear : current_cal_min); year--) {
+            var n = "none";
+            if (fyear == firstYear) {
+                n = "block"
+            }
+            var ye = document.createElement('OPTGROUP');
+            ye.label = year
+            mdp.appendChild(ye)
+            var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
+            for (var y = em; y >= 0; y--) {
+                var m = document.createElement('OPTION');
+                m.textContent = months[y] + ", " + year
+                m.value = year + '-' + (y+1)
+                ye.appendChild(m)
+            }
+        }
     }
 }
 

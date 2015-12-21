@@ -131,13 +131,18 @@
     </div>
       
     <div class="row">
-      <div id="datepicker" class="hidden-xs col-md-2" style="float: left;">
+      <div id="datepicker" class="hidden-xs hidden-sm col-md-2" style="float: left;">
         &nbsp;
       </div>
+      
       <div id="stats" class="hidden-xs hidden-sm hidden-md col-lg-3" style="font-size: 9pt;">
         &nbsp;
       </div>
+      <div id="datepicker_mobile_parent" style="margin-bottom: 5px;" class="col-xs-10 col-sm-10 hidden-md hidden-lg" style="float: left;">
+          Pick a month: <select onchange="toggleEmail(this.value);" id="datepicker_mobile"></select>
+      </div>
       <div id="emails_parent" class="col-xs-10 col-md-8 col-lg-7" style="float: left;">
+        
         <div style="min-height: 36px;">
           <div style="width: 170px; float: left;"><small>View mode: <select onchange="prefs.displayMode=this.value; saveEphemeral(); buildPage();" id="viewmode"></select></small></div>
           <div style="width: calc(100% - 170px); float: right;">
