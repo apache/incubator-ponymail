@@ -19,7 +19,7 @@
 
 
 /******************************************
- Fetched from ponymail_assign_vars.js
+ Fetched from dev/ponymail_assign_vars.js
 ******************************************/
 
 
@@ -86,7 +86,7 @@ var viewModes = {
 
 
 /******************************************
- Fetched from ponymail_composer.js
+ Fetched from dev/ponymail_composer.js
 ******************************************/
 
 
@@ -321,7 +321,7 @@ function compose(eid, lid, type) {
 
 
 /******************************************
- Fetched from ponymail_datepicker.js
+ Fetched from dev/ponymail_datepicker.js
 ******************************************/
 
 
@@ -1013,7 +1013,7 @@ function showCalendarPicker(parent, seedDate) {
 }
 
 /******************************************
- Fetched from ponymail_dom_helpers.js
+ Fetched from dev/ponymail_dom_helpers.js
 ******************************************/
 
 
@@ -1233,7 +1233,7 @@ function popup(title, body, timeout) {
 }
 
 /******************************************
- Fetched from ponymail_email_displays.js
+ Fetched from dev/ponymail_email_displays.js
 ******************************************/
 
 
@@ -1653,7 +1653,7 @@ function getSingleThread(id) {
 
 
 /******************************************
- Fetched from ponymail_email_tools.js
+ Fetched from dev/ponymail_email_tools.js
 ******************************************/
 
 
@@ -1853,7 +1853,7 @@ function unshortenID(mid) {
 
 
 /******************************************
- Fetched from ponymail_helperfuncs.js
+ Fetched from dev/ponymail_helperfuncs.js
 ******************************************/
 
 
@@ -1957,6 +1957,7 @@ function showSpinner(show) {
 
 // Saving prefs as a json string
 function saveEphemeral() {
+    // This only works if the browser supports localStorage
     if (typeof(window.localStorage) !== "undefined") {
         window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
     }
@@ -1964,13 +1965,16 @@ function saveEphemeral() {
 
 // load ephemeral prefs, replace what we have
 function loadEphemeral() {
+    // This only works if the browser supports localStorage
     if (typeof(window.localStorage) !== "undefined") {
         var str = window.localStorage.getItem("ponymail_config_ephemeral")
         if (str) {
             var eprefs = JSON.parse(str)
+            // for each original setting in config.js,
+            // check if we have a different one stored
             for (i in prefs) {
                 if (eprefs[i]) {
-                    prefs[i] = eprefs[i]
+                    prefs[i] = eprefs[i] // override
                 }
             }
         }
@@ -1986,7 +1990,7 @@ function isArray(obj) {
 window.setInterval(checkForSlows, 500)
 
 /******************************************
- Fetched from ponymail_listview_flat.js
+ Fetched from dev/ponymail_listview_flat.js
 ******************************************/
 
 
@@ -2151,7 +2155,7 @@ function loadEmails_flat(id, close, treeview) {
 
 
 /******************************************
- Fetched from ponymail_listview_threaded.js
+ Fetched from dev/ponymail_listview_threaded.js
 ******************************************/
 
 
@@ -2340,7 +2344,7 @@ function loadEmails_threaded(json, state) {
 
 
 /******************************************
- Fetched from ponymail_listview_tree.js
+ Fetched from dev/ponymail_listview_tree.js
 ******************************************/
 
 
@@ -2722,7 +2726,7 @@ function toggleEmails_treeview(id, close, toverride) {
 
 
 /******************************************
- Fetched from ponymail_ngrams.js
+ Fetched from dev/ponymail_ngrams.js
 ******************************************/
 
 
@@ -3013,7 +3017,7 @@ function loadNgrams() {
 }
 
 /******************************************
- Fetched from ponymail_pagebuilder.js
+ Fetched from dev/ponymail_pagebuilder.js
 ******************************************/
 
 
@@ -3449,7 +3453,7 @@ function getListInfo(list, xdomain, nopush) {
 
 
 /******************************************
- Fetched from ponymail_phonebook.js
+ Fetched from dev/ponymail_phonebook.js
 ******************************************/
 
 
@@ -3661,7 +3665,7 @@ function listDomains() {
 
 
 /******************************************
- Fetched from ponymail_search.js
+ Fetched from dev/ponymail_search.js
 ******************************************/
 
 
@@ -3852,7 +3856,7 @@ function addSearchBar() {
 
 
 /******************************************
- Fetched from ponymail_seeders.js
+ Fetched from dev/ponymail_seeders.js
 ******************************************/
 
 
@@ -3898,7 +3902,7 @@ function preGetListInfo(list, xdomain, nopush) {
 
 
 /******************************************
- Fetched from ponymail_stats.js
+ Fetched from dev/ponymail_stats.js
 ******************************************/
 
 
@@ -3933,7 +3937,7 @@ function showStats(json) {
 }
 
 /******************************************
- Fetched from ponymail_timetravel.js
+ Fetched from dev/ponymail_timetravel.js
 ******************************************/
 
 
@@ -4015,7 +4019,7 @@ function timeTravelList(id, jump) {
 }
 
 /******************************************
- Fetched from ponymail_trends.js
+ Fetched from dev/ponymail_trends.js
 ******************************************/
 
 
@@ -4308,7 +4312,7 @@ function gatherTrends() {
 }
 
 /******************************************
- Fetched from ponymail_user_preferences.js
+ Fetched from dev/ponymail_user_preferences.js
 ******************************************/
 
 
@@ -4505,7 +4509,7 @@ function setTheme(theme) {
 }
 
 /******************************************
- Fetched from ponymail_zzz.js
+ Fetched from dev/ponymail_zzz.js
 ******************************************/
 
 
