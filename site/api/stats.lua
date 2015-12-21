@@ -57,7 +57,7 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
-    
+    local lastEmail = 0
     -- statsOnly: Whether to only send statistical info (for n-grams etc), and not the
     -- thread struct and message bodies
     local statsOnly = get.quick
@@ -528,6 +528,10 @@ function handle(r)
         local v = doc.hits.hits[k]
         local email = v._source
         local canUse = true
+        local eepoch = tonumber(email.epoch)
+        if eepoch > lastEmail then
+            lastEmail = eepoch
+        end
         if email.private then
             if account and not rights then
                 rights = aaa.rights(r, account)
@@ -703,7 +707,13 @@ function handle(r)
     listdata.cloud = cloud
     listdata.took = r:clock() - now
     listdata.numparts = allparts
-    listdata.unixtime = os.time()
+    
+    -- date of last email seen
+    if lastEmail == 0 then
+        lastEmail = os.time()
+    end
+    
+    listdata.unixtime = lastEmail
     
     -- Debug time point 9
     table.insert(t, r:clock() - tnow)
