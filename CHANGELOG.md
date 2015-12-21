@@ -4,7 +4,7 @@
 - The statistics panel is now hidden by default
 - Config changes are now persistent through reloads, even if not logged in
   
-## CHANGES in 0.5a:
+## CHANGES in 0.5a (released 2015-12-21):
 
 - Fixed an issue where shortened URLs were not unpacked correctly.
 - Setup can now quietly exit if the system is already set up
