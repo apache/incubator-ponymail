@@ -3151,7 +3151,7 @@ function buildStats(json, state, show) {
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; buildStats(old_json, old_state, true);\">Show stats panel..</div>"
     }
     if (prefs.hideStats == 'no' || show == true) {
-        stats.setAttribute("class", "hidden-xs hidden-sm hidden-md col-lg-3")
+        stats.setAttribute("class", "hidden-xs hidden-sm col-md-3 col-lg-3")
         var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
         document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
