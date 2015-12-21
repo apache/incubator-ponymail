@@ -100,7 +100,7 @@ function showSpinner(show) {
     if (!obj) {
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
-        obj.innerHTML = "<img src='/images/spinner.gif'><br/>Loading results, please wait..."
+        obj.innerHTML = "<img src='/images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
     if (show) {
