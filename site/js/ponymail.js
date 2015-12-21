@@ -1919,6 +1919,9 @@ function GetAsync(theUrl, xstate, callback) {
                         response = cached_urls[theUrl]
                         response.took = t
                     }
+                    if (response.unixtime) {
+                        visited_urls[theUrl] = response.unixtime // use server's unix time if given
+                    }
                     cached_urls[theUrl] = response
                     callback(response, xstate);
                 } catch (e) {

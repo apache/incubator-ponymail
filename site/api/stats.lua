@@ -703,7 +703,7 @@ function handle(r)
     listdata.cloud = cloud
     listdata.took = r:clock() - now
     listdata.numparts = allparts
-    
+    listdata.unixtime = os.time()
     
     -- Debug time point 9
     table.insert(t, r:clock() - tnow)
