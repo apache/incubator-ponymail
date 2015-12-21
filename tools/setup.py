@@ -286,6 +286,7 @@ local config = {
     maxResults = 5000, -- max emails to return in one go. Might need to be bumped for large lists
     admin_oauth = {}, -- list of domains that may do administrative oauth (private list access)
                      -- add 'www.googleapis.com' to the list for google oauth to decide, for instance.
+    oauth_fields = {}, -- used for specifying individual oauth handling parameters.
     antispam = true  -- Whether or not to add anti-spam measures aimed at anonymous users.
 }
 return config

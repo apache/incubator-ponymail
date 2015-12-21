@@ -147,6 +147,21 @@ store settings and notifications, and - provided your mail server is set to acce
 this - a place to reply to emails in the archive.
 
 
+#### Using GitHub OAuth and other client-secret providers ####
+If your OAuth provider requires a client secret, you can specify this in `site/api/lib/config.lua`, as this GitHub example shows:
+
+~~~
+    oauth_fields = {
+        github = {
+            client_secret = "abcdef1",
+            client_id = "abcdef2",
+            oauth_token = "https://github.com/login/oauth/access_token"
+        }
+    }
+~~~
+
+This essentially overrides `config.js` but without showing the data to anyone outside the server.
+
 ### Whitelisting replies via the Web UI ###
 To have Pony Mail accept replies done via the Web UI, you must make sure
 that `site/api/lib/config.lua` contains the appropriate string (or array of strings) matching the domain(s) you wish to allow new email for. To allow replies to everything, set this to `* `(NOT RECOMMENDED).
