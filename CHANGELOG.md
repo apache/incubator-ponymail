@@ -16,7 +16,7 @@
 - Moved the list view title to save some space
 - Improved responsive interface (better resizing and low res display)
 
-## CHANGES in 0.4a:
+## CHANGES in 0.4a (released 2015-11-10):
 
 - Notification pane correctly notes if there are no notifications
 - Trend page now correctly displays dates with 0 emails in the bottom chart
@@ -35,7 +35,7 @@
 - Archiver can be set to only allow specific IP blocks in STDIN mode
 - Further customization of oauth providers
 
-## CHANGES in 0.3a:
+## CHANGES in 0.3a (released 2015-10-15):
 
 - Permalink page now accepts shortened IDs (first 18 chars)
 - Archiver can ignore specific emails (like list owner/system messages)
@@ -48,7 +48,7 @@
 - UTF-8 fixes for the STDIN version of the archiver
 - Archiver can now exit quietly (not bounce) with --quiet in STDIN mode in case of parser errors
 
-## CHANGES in 0.2a:
+## CHANGES in 0.2a (released 2015-10-05):
 
 - Social theme
 - Unified import/archiving methodologies
