@@ -37,6 +37,19 @@ var pm_config = {
             fullname_key: 'name',
             email_key: 'email',
             client_id: 'your.google.app.id.here'
+        },
+        */
+        /* GitHub example
+         * Remember to edit site/api/lib/config.lua and add GitHub to the oauth_fields array!
+        github: {
+            name: "GitHub OAuth",
+            oauth_portal: "https://github.com/login/oauth/authorize",
+            oauth_url: "https://github.com/login/oauth/access_token",
+            fullname_key: 'name',
+            email_key: 'email',
+            construct: true, // needed for GitHub
+            client_id: 'your.github.app.id.here',
+            scope: "user:email"
         }
         */
     },
