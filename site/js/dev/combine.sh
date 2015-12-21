@@ -18,7 +18,7 @@ echo '/*
 // THIS IS AN AUTOMATICALLY COMBINED FILE. PLEASE EDIT dev/*.js!!
 ' > ../ponymail.js
 for f in `ls *.js`; do
-    printf "\n\n/******************************************\n Fetched from ${f}\n******************************************/\n\n" >> ../ponymail.js
+    printf "\n\n/******************************************\n Fetched from dev/${f}\n******************************************/\n\n" >> ../ponymail.js
     sed -s -e '/^\/\*/,/\*\//d' ${f} >> ../ponymail.js
 done
 echo "Done!"
