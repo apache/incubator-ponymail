@@ -168,7 +168,7 @@ function handle(r)
     end
     
     -- d=YYYY-mm translates into s+e being equal to d
-    if not (get.s and get.e) and get.d and get.d:match("%d+%-%d+") then
+    if not (get.s and get.e) and get.d and get.d:match("^%d+%-%d+$") then
         get.s = get.d
         get.e = get.d
     end
