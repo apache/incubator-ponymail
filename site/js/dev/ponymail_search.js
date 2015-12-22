@@ -18,7 +18,7 @@
 
 // toggleEmail: Fetch a list of emails from an ML in a specific year/month
 function toggleEmail(year, mo, nopush) {
-    if (year.search(/-/) && typeof(mo) == 'undefined') {
+    if (typeof year == 'string' && year.search(/-/) && typeof(mo) == 'undefined') {
         var m = year.split(/-/)
         year = parseInt(m[0])
         mo = parseInt(m[1])
