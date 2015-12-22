@@ -61,7 +61,7 @@ function handle(r)
        
     
     -- Get lists
-    local dd = 90
+    local dd = 900
     local daterange = {gt = "now-"..dd.."d" }
     local doc = elastic.raw {
         aggs = {
