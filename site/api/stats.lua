@@ -166,6 +166,12 @@ function handle(r)
     if not get.d then
         get.d = dd
     end
+    
+    -- d=YYYY-mm translates into s+e being equal to d
+    if not (get.s and get.e) and get.d and get.d:match("%d+%-%d+") then
+        get.s = get.d
+        get.e = get.d
+    end
     if get.d and get.d:match("lte=.+") then
         local lte = get.d:match("lte=([0-9]+[wMyd])")
         if lte then
@@ -197,8 +203,8 @@ function handle(r)
         end
     end
     if get.s and get.e then
-        local em = tonumber(get.e:match("(%d+)$"))
-        local ey = tonumber(get.e:match("^(%d+)"))
+        local em = tonumber(get.e:match("%-(%d%d?)$"))
+        local ey = tonumber(get.e:match("^(%d%d%d%d)"))
         ec = days[em]
         if em == 2 and leapYear(ey) then
             ec = ec + 1
