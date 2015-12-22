@@ -52,7 +52,7 @@ function dealWithKeyboard(e) {
 var footer = document.createElement('footer')
 footer.setAttribute("class", 'footer')
 footer.style.height = "32px"
-footer.style.width = "90%"
+footer.style.width = "100%"
 var fd = document.createElement('div')
 fd.setAttribute("class", "container")
 fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href='https://github.com/quenda/ponymail'>Pony Mail v/" + _VERSION_ + "</a>.</p>"

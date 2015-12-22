@@ -347,6 +347,10 @@
 }
 .navbar {min-height:48px !important;}
 
+.navbar .navbar-right {
+     margin: 0px;
+}
+
 
 
 /* Sticky footer styles
@@ -783,4 +787,11 @@ top: 17px;
 .listtablekid:hover {
      cursor: pointer;
      color: #A06;
+}
+
+
+/* Bootstrap fixups */
+.container-fluid .row {
+    margin-left: 0px;
+    margin-right: 0px;
 }
