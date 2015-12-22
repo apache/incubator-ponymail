@@ -337,7 +337,12 @@ function handle(r)
         tnow = r:clock()
         
         for x,y in pairs (doc.aggregations.from.buckets) do
-            local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
+            local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or nil
+            if eml == nil and y.key:match(".- at .- %(") then
+                eml = y.key:match("(.- at .-) %("):gsub(" at ", "@")
+            elseif eml == nil then
+                eml = "unknown"
+            end
             local gravatar = r:md5(eml)
             local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+")
             name = name:gsub("\"", "")
@@ -556,9 +561,14 @@ function handle(r)
         if canUse then
             
             if not config.slow_count then
-                local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
+                local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or nil
+                if eml == nil and email.from:match(".- at .- %(") then
+                    eml = email.from:match("(.- at .-) %("):gsub(" at ", "@")
+                elseif eml == nil then
+                    eml = "unknown"
+                end
                 local gravatar = r:md5(eml)
-                local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+") or "unknown"
+                local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+") or email.from:match("%((.-)%)") or "unknown"
                 email.gravatar = gravatar
                 name = name:gsub("\"", ""):gsub("%s+$", "")
                 local eid = ("%s <%s>"):format(name, eml)
