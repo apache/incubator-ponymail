@@ -33,6 +33,8 @@ from os.path import isfile, join, isdir
 import glob
 import codecs
 import multiprocessing
+import tempfile
+import gzip
 
 try:
     from elasticsearch import Elasticsearch, helpers
@@ -286,6 +288,7 @@ class SlurpThread(Thread):
                     if xlist_override and len(xlist_override) > 3:
                         lid = xlist_override
                     lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
+                    lid = "<%s>" % lid.strip("<>") # We need <> around it!
                     date = message['date']
                     fro = message['from']
                     to = message['to']
@@ -320,6 +323,8 @@ class SlurpThread(Thread):
                                     else:
                                         hval += t[0].decode(t[1],errors='ignore')
                                 dheader[key] = hval
+                            else:
+                                dheader[key] = "(Unknown)"
                         except Exception as err:
                             print("Could not decode headers, ignoring..: %s" % err)
                             okay = False
@@ -345,7 +350,7 @@ class SlurpThread(Thread):
                         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
                     except:
                         okay = False
-                    if body and okay and mdate and {'to','from','subject'} <= set(dheader):
+                    if body and okay and mdate and {'from','subject'} <= set(dheader):
                         attachments, contents = msgfiles(message)
                         if mid == None or not mid:
                             try:
@@ -459,6 +464,8 @@ parser.add_argument('--quick', dest='quick', action='store_true',
                    help='Only grab the first file you can find')
 parser.add_argument('--mod-mbox', dest='modmbox', action='store_true',
                    help='This is mod_mbox, derive list-id and files from it')
+parser.add_argument('--pipermail', dest='pipermail', action='store_true',
+                   help='This is pipermail, derive files from it (list ID has to be set!)')
 parser.add_argument('--lid', dest='listid', type=str, nargs=1,
                    help='Optional List-ID to override source with.')
 parser.add_argument('--project', dest='project', type=str, nargs=1,
@@ -550,6 +557,30 @@ elif source[0] == "h":
                     if quickmode and qn >= 2:
                         break
     
+    if args.pipermail:
+        filebased = True
+        if not list_override:
+            print("You need to specify a list ID with --lid when importing from Pipermail!")
+            sys.exit(-1)
+        ns = r"href=\"(\d+-[a-zA-Z]+\.txt(\.gz)?)\""
+        for mlist in re.finditer(ns, data):
+            ml = mlist.group(1)
+            mldata = urlopen("%s%s" % (source, ml)).read()
+            tmpfile = tempfile.NamedTemporaryFile(mode='w+b', buffering=1, delete=False)
+            try:
+                if ml.find(".gz") != -1:
+                    mldata = gzip.decompress(mldata)
+            except Exception as err:
+                print("This wasn't a gzip file: %s" % err )
+            print(len(mldata))
+            tmpfile.write(mldata)
+            tmpfile.flush()
+            tmpfile.close()
+            lists.append([tmpfile.name, list_override])
+            print("Adding %s/%s to slurp list as %s" % (source, ml, tmpfile.name))
+            if quickmode and qn >= 2:
+                break
+                    
 threads = []
 print("Starting up to %u threads to fetch the %u %s lists" % (multiprocessing.cpu_count(), len(lists), project))
 for i in range(1,multiprocessing.cpu_count()+1):
