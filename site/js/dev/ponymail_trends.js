@@ -222,6 +222,10 @@ function showTrends(json, state) {
     }
     // draw the chart
     quokkaBars("dayCanvas", ['Current timespan', '', 'Previous timespan'], arr, {verts: false, title: "Daily email stats"})
+    
+    // Add ngrams teaser
+    var obj = document.getElementById('ngrams')
+    obj.innerHTML = "Interested in more data? Try our <a href='ngrams.html?" + document.location.search.substr(1) + "'> n-grams page</a>!"
 }
 
 // callback for top10 stats
