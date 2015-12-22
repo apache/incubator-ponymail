@@ -4,6 +4,8 @@
 - The statistics panel is now hidden by default
 - Config changes are now persistent through reloads, even if not logged in
 - The importer can now import from Pipermail archives
+- Improved responsive interface
+- Fixed the >100% width CSS bug
   
 ## CHANGES in 0.5a (released 2015-12-21):
 
