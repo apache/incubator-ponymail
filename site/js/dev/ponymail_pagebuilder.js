@@ -191,8 +191,9 @@ function buildStats(json, state, show) {
     btn.innerHTML = "Hide stats"
     stats.appendChild(btn)
     if (prefs.hideStats == 'yes' || show == false) {
-        document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
-        
+        var dwidth = document.getElementById('datepicker').offsetParent === null ? 0 : document.getElementById('datepicker').offsetWidth
+        var sw =  dwidth + 20;
+        document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
             // If calendar is hidden, we set it to 0 px, otherwise use the offset width
@@ -201,6 +202,7 @@ function buildStats(json, state, show) {
             // set list view to 99% - calendar
             document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         }
+        document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; saveEphemeral(); buildStats(old_json, old_state, true);\">Show stats panel..</div>"
     }
