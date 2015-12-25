@@ -6,6 +6,7 @@
 - The importer can now import from Pipermail archives
 - Improved responsive interface
 - Fixed the >100% width CSS bug
+- Better sizing of some elements in the list view to accommodate smaller screens
   
 ## CHANGES in 0.5a (released 2015-12-21):
 

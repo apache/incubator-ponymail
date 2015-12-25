@@ -320,15 +320,15 @@
 }
 
 .vertical-text {
-    max-width: 260px;
+    max-width: 160px;
     height: 24px;
 	transform: rotate(-90deg);
 	transform-origin: left bottom 0;
     margin: 3px;
     border: 1px solid #666;
     border-radius: 4px;
-    margin-top: 280px;
-    margin-bottom: -260px;
+    margin-top: 250px;
+    margin-bottom: -250px;
     margin-right: 5px;
     margin-left: 5px;
     cursor: pointer;
@@ -337,6 +337,10 @@
 
 .vertical-text:hover {
      background: linear-gradient(to bottom, rgba(255,255,235,1) 0%,rgba(243,243,213,1) 50%,rgba(237,237,207,1) 51%,rgba(255,255,235,1) 100%);
+}
+
+#emails {
+     min-height: 200px;
 }
 
 
@@ -794,4 +798,10 @@ top: 17px;
 .container-fluid .row {
     margin-left: 0px;
     margin-right: 0px;
+}
+
+listview_label {
+     white-space: pre-line;
+     page-break-before: inherit;
+     page-break-after: avoid;
 }
