@@ -195,18 +195,22 @@ function buildStats(json, state, show) {
         
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
-            document.getElementById('emails_parent').style.width = "calc(100% - 190px)"
+            var dwidth = document.getElementById('datepicker').offsetParent === null ? 0 : document.getElementById('datepicker').offsetWidth
+            var sw =  dwidth + 20;
+            document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         }
         stats.setAttribute("class", "col-md-1 vertical-text")
         stats.innerHTML = "<div onclick=\"prefs.hideStats='no'; saveEphemeral(); buildStats(old_json, old_state, true);\">Show stats panel..</div>"
     }
     if (prefs.hideStats == 'no' || show == true) {
         stats.setAttribute("class", "hidden-xs hidden-sm col-md-3 col-lg-3")
-        var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
+        var dwidth = document.getElementById('datepicker').offsetParent === null ? 0 : document.getElementById('datepicker').offsetWidth
+        var sw =  dwidth + 30 + stats.offsetWidth;
         document.getElementById('emails_parent').style.width = "calc(100% - " + sw + "px)"
         // Resize on resize to work around CSS bug. Might wanna move this elsewhere later on..
         window.onresize = function() {
-            var sw = document.getElementById('datepicker').offsetWidth + 30 + stats.offsetWidth;
+            var dwidth = document.getElementById('datepicker').offsetParent === null ? 0 : document.getElementById('datepicker').offsetWidth
+            var sw =  dwidth + 30 + stats.offsetWidth;
             document.getElementById('emails_parent').style.width = "calc(99% - " + sw + "px)"
         }
         stats.removeAttribute("onclick")
