@@ -245,9 +245,9 @@ function buildPage(json, state) {
     document.title = json.list + " - Pony Mail!"
     
     // if we have xdomain, rewrite the wording in quick search.
-    var lcheckall = document.getElementById('lcheckall')
+    var lcheckall = document.getElementById('sloa')
     if (lcheckall && gxdomain) {
-        lcheckall.innerHTML = "Search all " + gxdomain + " lists"
+        lcheckall.innerHTML = "All " + gxdomain + " lists"
     }
     
     // Add Opensearch title to OS image

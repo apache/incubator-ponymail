@@ -32,15 +32,34 @@
     
     
     <!-- Quick search -->
-      <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid;" id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].getAttribute('data'), false, this.elements['checkall'].checked);">
-        <input type="text" name="q" id="q" placeholder="Search list..." style="width: 150px;"/>
-        <input name="d" style="min-width: 32px;" id='dp' data="lte=1M" value="less than 1 month ago" onclick="datePicker(this);" readonly="readonly"/>
-        <input type="checkbox" value="all" id="checkall"><label for="checkall" id="lcheckall" style='font-weight: normal;'>Check all these lists</label> &nbsp;
-        <input type="submit" value="Search!" class="btn btn-primary"/>&nbsp;
-        <a href="javascript:void(0);" onclick="addSearchEngine();"><img src="/images/opensearch.png" id="opensearch" title="Add these MLs as a search engine in your browser"/></a> &nbsp;
-        <input type="button" value="Advanced" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: right;" class="btn btn-warning"/>
-      </form>
     
+            
+    
+      <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid;" id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].getAttribute('data'), false, this.elements['checkall'].checked);">
+        <div style="border-radius: 5px; border: 1px solid #999; float: left; background: #CCC; max-height: 33px;">
+        
+        <input type="checkbox" style="display: none" id="checkall" name="checkall"/>
+                <div class="form-group" style="display: inline; float: left;">
+          <div class="input-group" style="float: left;"> 
+        <a href="" aria-haspopup="true" aria-expanded="false" style="background: #333; color: #EEE; height: 31px; border-right-style: none; border-top-right-radius: 0px;border-bottom-right-radius: 0px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span id="search_concept">This list</span> <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" id="slo" role="menu">
+          <li><a href="javascript:void(0);" onclick="document.getElementById('checkall').checked = false; document.getElementById('search_concept').innerHTML = this.innerHTML;" id="slot">This list</a></li>
+          <li><a href="javascript:void(0);" onclick="document.getElementById('checkall').checked = true; document.getElementById('search_concept').innerHTML = this.innerHTML;"  id="sloa">All lists</a></li>
+        </ul>
+        </div>
+                </div>
+        <input type="text" name="q" id="q" placeholder="Search list..."/>
+        <input name="d" id='dp' data="lte=1M" value="less than 1 month ago" onclick="datePicker(this);" readonly="readonly"/>
+        
+        <button type="submit" style="max-height: 32px; margin-top: -1px; margin-left: 0px;border-left-style: none; border-top-left-radius: 0px;border-bottom-left-radius: 0px;" value="Search!" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"> </span></button>
+        </div>
+        &nbsp;
+        <input type="button" value="Advanced" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: left; margin-left: 4px;" class="btn btn-warning"/>
+        <a href="javascript:void(0);" onclick="addSearchEngine();"><img src="/images/opensearch.png" id="opensearch" title="Add these MLs as a search engine in your browser"/></a> &nbsp;
+      </form>
+           
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="float: left;">
       <ul class="nav navbar-nav" id="listslist">
 

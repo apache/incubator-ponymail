@@ -446,13 +446,19 @@ border: #5cb85c solid 2px;
 
 #q {
     background-position: center left;
-    
-    
-    
-    background: url(/images/search.png) center left, linear-gradient(to bottom, rgba(229,229,229,1) 0%,rgba(255,255,255,1) 100%);
+    background: url(/images/search.png) center left;
     background-repeat: no-repeat;
-    border: 1px inset #999;
     text-indent: 24px;
+}
+
+#q, #dp {
+    background-color: #FFF;
+    border: 1px solid #CCC;
+    border-radius: 0px !important;
+    height: 30px !important;
+    margin: 1px -4px -4px 0 !important;
+    font-size: 10pt;
+    width: 160px;
 }
 
 #popupper {
