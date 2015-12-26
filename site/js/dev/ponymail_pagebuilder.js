@@ -479,3 +479,12 @@ function getListInfo(list, xdomain, nopush) {
     
 }
 
+function setQuickSearchDateRange() {
+    var dp = document.getElementById('dp')
+    var qdr = document.getElementById('qs_date')
+    if (dp && qdr && qdr.innerHTML != dp.value) {
+        qdr.innerHTML = dp.value
+    }
+}
+
+window.setInterval(setQuickSearchDateRange, 250)

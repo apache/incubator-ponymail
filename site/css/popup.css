@@ -449,16 +449,13 @@ border: #5cb85c solid 2px;
     background: url(/images/search.png) center left;
     background-repeat: no-repeat;
     text-indent: 24px;
-}
-
-#q, #dp {
     background-color: #FFF;
     border: 1px solid #CCC;
     border-radius: 0px !important;
     height: 30px !important;
     margin: 1px -4px -4px 0 !important;
     font-size: 10pt;
-    width: 160px;
+    width: 180px;
 }
 
 #popupper {
@@ -471,6 +468,11 @@ border: #5cb85c solid 2px;
 
 .list-group-item:hover {
     background-color: #F7F8F9;
+}
+
+#drh:hover, #drh:hover>input {
+     background: #EEE;
+     cursor: pointer;
 }
 
 select {
@@ -810,4 +812,8 @@ listview_label {
      white-space: pre-line;
      page-break-before: inherit;
      page-break-after: avoid;
+}
+
+.navbar-default {
+     background: #DDD !important;
 }
