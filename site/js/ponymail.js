@@ -334,6 +334,14 @@ var units = {
 // makeSelect: Creates a <select> object with options
 function makeSelect(options, id, selval) {
     var sel = document.createElement('select')
+    sel.addEventListener("focus", function(event){
+        $('html').on('hide.bs.dropdown', function (e) {
+            return false;
+        });
+    });
+    sel.addEventListener("blur", function(event){
+        $('html').unbind('hide.bs.dropdown')
+    });
     sel.setAttribute("name", id)
     sel.setAttribute("id", id)
     // For each options element, create it in the DOM
@@ -580,10 +588,12 @@ function datePicker(parent, seedPeriod) {
                 document.getElementById('datepicker_lti').value = m[1]
                 var sel = document.getElementById('datepicker_lts')
                 for (var i in sel.options) {
-                    if (sel.options[i].value == m[2]) {
-                        sel.options[i].selected = "selected"
-                    } else {
-                        sel.options[i].selected = null
+                    if (parseInt(i) >= 0) {
+                        if (sel.options[i].value == m[2]) {
+                            sel.options[i].selected = "selected"
+                        } else {
+                            sel.options[i].selected = null
+                        }
                     }
                 }
             }
@@ -599,10 +609,12 @@ function datePicker(parent, seedPeriod) {
                 var sel = document.getElementById('datepicker_mts')
                 // Go through the unit values, select the one we use
                 for (var i in sel.options) {
-                    if (sel.options[i].value == m[2]) {
-                        sel.options[i].selected = "selected"
-                    } else {
-                        sel.options[i].selected = null
+                    if (parseInt(i) >= 0) {
+                        if (sel.options[i].value == m[2]) {
+                            sel.options[i].selected = "selected"
+                        } else {
+                            sel.options[i].selected = null
+                        }
                     }
                 }
             }
@@ -860,11 +872,14 @@ function blurDatePicker(evt) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if ((!es || !es.parentNode || (!findParent(es, "datepicker_popup") && !findParent(es, "calendarpicker_popup"))) && !(es ? es : "null").toString().match(/javascript:void/)) {
         document.getElementById('datepicker_popup').style.display = "none"
+        $('html').trigger('hide.bs.dropdown')
     }
 }
 
 // draws the actual calendar inside a calendarPicker object
 function drawCalendarPicker(obj, date) {
+    
+    
     obj.focus()
     
     // Default to NOW for calendar.
@@ -970,6 +985,12 @@ function drawCalendarPicker(obj, date) {
 
 // callback for datePicker; sets the cd value to what date was picked
 function setCalendarDate(what) {
+    $('html').on('hide.bs.dropdown', function (e) {
+        return false;
+    });
+    setTimeout(function() { $('html').unbind('hide.bs.dropdown');}, 250);
+    
+    
     calendarpicker_spawner.value = what
     var div = document.getElementById('calendarpicker_popup')
     div.parentNode.focus()
@@ -3486,7 +3507,15 @@ function getListInfo(list, xdomain, nopush) {
     
 }
 
+function setQuickSearchDateRange() {
+    var dp = document.getElementById('dp')
+    var qdr = document.getElementById('qs_date')
+    if (dp && qdr && qdr.innerHTML != dp.value) {
+        qdr.innerHTML = dp.value
+    }
+}
 
+window.setInterval(setQuickSearchDateRange, 250)
 
 /******************************************
  Fetched from dev/ponymail_phonebook.js
