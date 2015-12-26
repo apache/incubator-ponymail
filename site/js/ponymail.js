@@ -839,7 +839,6 @@ function datePickerDouble(seedPeriod) {
             tspan = 0
         }
     }
-    
     return [dbl, dfrom, dto, tspan]
 }
 
@@ -3353,7 +3352,7 @@ function getListInfo(list, xdomain, nopush) {
                 if (arr[1].match(/-/) && !arr[1].match(/\|/)) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
-                    var dp = document.getElementById('dp')
+                    var dp = document.getElementById('d')
                     current_retention = arr[1]
                     dealtwithit = true
                 } else {
@@ -3386,7 +3385,7 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     //buildCalendar()
-    var dp = document.getElementById('dp')
+    var dp = document.getElementById('d')
     dp.value = datePickerValue(current_retention)
     dp.setAttribute("data", current_retention)
     
@@ -3508,7 +3507,7 @@ function getListInfo(list, xdomain, nopush) {
 }
 
 function setQuickSearchDateRange() {
-    var dp = document.getElementById('dp')
+    var dp = document.getElementById('d')
     var qdr = document.getElementById('qs_date')
     if (dp && qdr && qdr.innerHTML != dp.value) {
         qdr.innerHTML = dp.value
@@ -3814,18 +3813,8 @@ function search(q, d, nopush, all) {
     // for the list title, prepare the date range
     // TODO: improve this much like we have with trends.html
     var arr = datePickerDouble(d)
-    howlong = arr[3]
-    if (isNaN(howlong)) {
-        howlong = "custom date range"
-    } else {
-        if (howlong >= 365) {
-            howlong = "last " + parseInt(howlong/365) + " year" + (howlong>365 ? "s" : "")
-        } else if (howlong >= 30) {
-            howlong = "last " + parseInt(howlong/30) + " month" + (howlong>59 ? "s" : "")
-        } else {
-            howlong = "last " + howlong + " days"
-        }
-    }
+    howlong = datePickerValue(d)
+    howlong = howlong.replace(/^(.)/, function(a){return a.toLocaleLowerCase() })
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
