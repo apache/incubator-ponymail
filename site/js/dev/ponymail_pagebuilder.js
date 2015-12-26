@@ -325,7 +325,7 @@ function getListInfo(list, xdomain, nopush) {
                 if (arr[1].match(/-/) && !arr[1].match(/\|/)) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
-                    var dp = document.getElementById('dp')
+                    var dp = document.getElementById('d')
                     current_retention = arr[1]
                     dealtwithit = true
                 } else {
@@ -358,7 +358,7 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     //buildCalendar()
-    var dp = document.getElementById('dp')
+    var dp = document.getElementById('d')
     dp.value = datePickerValue(current_retention)
     dp.setAttribute("data", current_retention)
     
@@ -480,7 +480,7 @@ function getListInfo(list, xdomain, nopush) {
 }
 
 function setQuickSearchDateRange() {
-    var dp = document.getElementById('dp')
+    var dp = document.getElementById('d')
     var qdr = document.getElementById('qs_date')
     if (dp && qdr && qdr.innerHTML != dp.value) {
         qdr.innerHTML = dp.value
