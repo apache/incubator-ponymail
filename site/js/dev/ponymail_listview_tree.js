@@ -129,14 +129,11 @@ function loadList_treeview(mjson, limit, start, deep) {
         } else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            if (from.length > 20) {
-                from = from.substring(0,20) + "..."
-            }
             var sbody = json[i].body.replace(/</g, "&lt;")
             
             nest += "<li class='list-group-item'>" +
                     
-                    "<div><div style='width: 220px; float: left;'>" +
+                    "<div><div style='width: 190px; float: left; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" +
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
                     from +
                     "</b></div> " +

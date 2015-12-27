@@ -2338,14 +2338,11 @@ function loadList_threaded(mjson, limit, start, deep) {
         else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            if (from.length > 20) {
-                from = from.substring(0,20) + "..."
-            }
             var sbody = json[i].body.replace(/</g, "&lt;")
             
             nest += "<li class='list-group-item'>" +
                     
-                    "<div><div style='width: 220px; float: left;'>" +
+                    "<div><div style='width: 190px; float: left; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" +
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
                     from +
                     "</b></div> " +
@@ -2378,7 +2375,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     } else {
         tnav += '<div style="width: 40%; float: left;">&nbsp;</div>'
     }
-    
+    var remain
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
         tnav += '<div style="width: 40%; float: right;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
@@ -2549,14 +2546,11 @@ function loadList_treeview(mjson, limit, start, deep) {
         } else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            if (from.length > 20) {
-                from = from.substring(0,20) + "..."
-            }
             var sbody = json[i].body.replace(/</g, "&lt;")
             
             nest += "<li class='list-group-item'>" +
                     
-                    "<div><div style='width: 220px; float: left;'>" +
+                    "<div><div style='width: 190px; float: left; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" +
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
                     from +
                     "</b></div> " +
