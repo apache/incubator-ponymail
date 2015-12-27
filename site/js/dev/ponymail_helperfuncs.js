@@ -41,21 +41,32 @@ var cached_urls = {}
 
 function GetAsync(theUrl, xstate, callback) {
     var xmlHttp = null;
+    // Set up request object
     if (window.XMLHttpRequest) {
         xmlHttp = new XMLHttpRequest();
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
+    
+    // Set the start time of the request, used for the 'loading data...' spinner later on
     if (pending_urls) {
         pending_urls[theUrl] = new Date().getTime() / 1000;
     }
+    
+    // Caching feature: if we've seen this URL before, let's try to only fetch it again if it's updated
     var finalURL = theUrl
     if (visited_urls[theUrl]) {
         finalURL += ((finalURL.search(/\?/) == -1) ? '?' : '&') + 'since=' + visited_urls[theUrl]
     }
+    
+    // Set visitation timestamp for now (may change if the result JSON has a unix timestamp of its own)
     visited_urls[theUrl] = new Date().getTime()/1000
+    
+    // GET URL
     xmlHttp.open("GET", finalURL, true);
     xmlHttp.send(null);
+    
+    // Callbacks
     xmlHttp.onprogress = function() {
         checkForSlows()
     }
@@ -64,12 +75,14 @@ function GetAsync(theUrl, xstate, callback) {
         checkForSlows()
     }
     xmlHttp.onreadystatechange = function(state) {
+        // All done, remove from pending list
         if (xmlHttp.readyState == 4) {
             delete pending_urls[theUrl]
         }
         checkForSlows()
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             if (callback) {
+                // Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass
                 try {
                     var response = JSON.parse(xmlHttp.responseText)
                     if (response && typeof response.changed !== 'undefined' && response.changed == false) {
@@ -88,6 +101,7 @@ function GetAsync(theUrl, xstate, callback) {
             }
 
         }
+        // If 404'ed, alert! It is kind of a big deal if we get this
         if (xmlHttp.readyState == 4 && xmlHttp.status == 404) {
             alert("404'ed: " + theUrl)
         }

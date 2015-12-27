@@ -17,6 +17,7 @@
 
 // displayEmail: Shows an email inside a thread
 function displayEmail(json, id, level) {
+    // Level indicates the nestedness if threaded view (indentation)
     level = level ? level : 1
     if (!json.mid && !json.tid) {
         alert("404: Could not find this email!")
@@ -28,6 +29,8 @@ function displayEmail(json, id, level) {
         current_thread_mids[json.mid] = true
         current_email_msgs.push(json)
     }
+    
+    // Save the JSON in our JS array so we don't have to fetch it again later
     saved_emails[json.mid] = json
     var estyle = ""
     
@@ -43,15 +46,23 @@ function displayEmail(json, id, level) {
             window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
         }
     }
+    // Coloring for nested emails
     var cols = ['primary', 'success', 'info', 'warning', 'danger']
+    
+    // Sanitise email ID and find the <div> object it's supposed to go into
     var id_sanitised = id.toString().replace(/@<.+>/, "")
     var thread = document.getElementById('thread_' + id_sanitised)
     if (thread) {
         json.date = formatDate(new Date(json.epoch*1000))
+        // transform <foo.bar.tld> to foo@bar.tld
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
+        
+        // Escape email body, convert < to &lt;
         var ebody = json.body
         ebody = ebody.replace(/</mg, "&lt;")
-        ebody = "\n" + ebody
+        ebody = "\n" + ebody // add a newline at top
+        
+        // If we're compacting quotes in the email, let's...do so with some fuzzy logic
         if (prefs.compactQuotes == 'yes') {
             ebody = ebody.replace(/((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+/mgi, function(inner) {
                 var rnd = (Math.random() * 100).toString()
@@ -62,20 +73,27 @@ function displayEmail(json, id, level) {
                 return html
             })
         }
+        
+        // Turn URLs into <a> tags
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
+        // Get theme (social, default etc) if set locally in browser
         if (typeof(window.localStorage) !== "undefined") {
             var th = window.localStorage.getItem("pm_theme")
             if (th) {
                 prefs.theme = th
             }
         }
+        
+        // Social theme rendering
         if (prefs.theme && prefs.theme == "social") {
+            
+            // Date and sender formatting
             var sdate = new Date(json.epoch*1000).toLocaleString('en-US',  { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })
             var fr = json['from'].replace(/"/g, "").replace(/<.+>/, "").replace(/</g, "&lt;")
             thread.style.background = estyle
             
-            // Don't indent if we're too deeply nested, it gets weird
+            // Don't indent if we're too deeply nested, it gets weird looking
             if (level <= 6) {
                 thread.style.marginLeft = "40px"
             }
@@ -87,11 +105,17 @@ function displayEmail(json, id, level) {
                 thread.innerHTML += ' &nbsp; <a href="javascript:void(0);" onclick="rollup(\'' + id_sanitised + '\');"><label class="label label-primary" title="roll up" style="cursor: pointer; float: right; margin-right: 10px;"><span id="rollup_' + id_sanitised + '" class="glyphicon glyphicon-chevron-up"> </span></label></a> &nbsp; '
             }
             thread.innerHTML += "<br/><br/>"
+            
+            // Make the colored bar to the left that indicates nest level
             var bclass = "bubble-" + cols[parseInt(Math.random() * cols.length - 0.01)]
+            // append body
             thread.innerHTML += "<div class='" + bclass + "' style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</div>'
+            
+            // Do we have attachments in this email?
             if (json.attachments && json.attachments.length > 0) {
                 thread.innerHTML += "<b>Attachments: </b>"
                 for (var a in json.attachments) {
+                    // figure out name and size in kb (or bytes if < 1024)
                     var fd = json.attachments[a]
                     var size = parseInt(fd.size/1024)
                     if (size > 0) {
@@ -103,11 +127,13 @@ function displayEmail(json, id, level) {
                 }
                 thread.innerHTML += "<br/>"
             }
+            // This is for the 'highlight new emails' feature
             if (thread.hasAttribute("meme")) {
                 thread.scrollIntoView()
                 thread.style.background = "rgba(200,200,255, 0.25)"
             }
         }
+        // Default theme
         else {
             thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
             thread.style.background = estyle
@@ -154,6 +180,8 @@ function displayEmail(json, id, level) {
             
                
             thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
+            
+            // Same as with social theme - "highlight new emails"
             if (thread.hasAttribute("meme")) {
                 thread.scrollIntoView()
                 thread.style.background = "rgba(200,200,255, 0.25)"

@@ -63,6 +63,7 @@ function countNewest(eml) {
 function countParts(eml, kv) {
     var n = 0;
     var email = findEml(eml.tid)
+    // kv keeps tracks of duplicate entries, only count each email once
     kv = kv ? kv : {}
     if (!email) {
         return n
@@ -166,6 +167,7 @@ Number.prototype.pad = function(size) {
 }
 
 
+// formatDate: Return a date as YYYY-MM-DD HH:mm
 function formatDate(date){
     return (date.getFullYear() + "-" +
         (date.getMonth()+1).pad(2) + "-" +

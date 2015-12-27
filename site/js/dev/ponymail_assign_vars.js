@@ -57,6 +57,7 @@ var pending_urls = {}
 var pb_refresh = 0
 var treeview_guard = {}
 
+// Links from viewmode to the function that handles them
 var viewModes = {
     threaded: {
         email: loadEmails_threaded,
