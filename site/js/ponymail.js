@@ -3722,7 +3722,7 @@ function seedTable(json) {
     }
     
     // sort lists by name before iterating
-    lists.sort()
+    lists.sort( function(a,b) { return lnum[b] - lnum[a] })
     
     var po = document.createElement("div")
     
