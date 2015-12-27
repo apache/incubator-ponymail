@@ -2334,7 +2334,29 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "</div>" +
                     "</div>" +
                     "<div id='thread_" + i + "' style='display:none';></div></div></li>"
-        } else {
+        }
+        else if (prefs.theme && prefs.theme == "compact") {
+            var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
+            from = from.replace(/\"/g, "")
+            if (from.length > 20) {
+                from = from.substring(0,20) + "..."
+            }
+            var sbody = json[i].body.replace(/</g, "&lt;")
+            
+            nest += "<li class='list-group-item'>" +
+                    
+                    "<div><div style='width: 220px; float: left;'>" +
+                    "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
+                    from +
+                    "</b></div> " +
+                    "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    subs_label + people_label + "&nbsp; " +
+                    "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; overflow: hidden;'>" + sbody +
+                    "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        }
+        else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 200px); white-space:nowrap; overflow: hidden;'>" +
                     d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
@@ -2524,6 +2546,26 @@ function loadList_treeview(mjson, limit, start, deep) {
                     "</div>" +
                     "</div>" +
                     "</div><div id='thread_treeview_" + i + "' style='display:none';></div></li>"
+        } else if (prefs.theme && prefs.theme == "compact") {
+            var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
+            from = from.replace(/\"/g, "")
+            if (from.length > 20) {
+                from = from.substring(0,20) + "..."
+            }
+            var sbody = json[i].body.replace(/</g, "&lt;")
+            
+            nest += "<li class='list-group-item'>" +
+                    
+                    "<div><div style='width: 220px; float: left;'>" +
+                    "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
+                    from +
+                    "</b></div> " +
+                    "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
+                    d + "<a style='overflow:hide;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    subs_label + people_label + "&nbsp; " +
+                    "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; overflow: hidden;'>" + sbody +
+                    "</div></div>" + "<div id='thread_treeview_" + i + "' style='display:none';></div></li>"
         } else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 220px); white-space:nowrap; overflow: hidden;'>" +
