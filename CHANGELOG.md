@@ -7,6 +7,7 @@
 - Improved responsive interface
 - Fixed the >100% width CSS bug
 - Better sizing of some elements in the list view to accommodate smaller screens
+- New unified quick search bar
   
 ## CHANGES in 0.5a (released 2015-12-21):
 

@@ -47,10 +47,12 @@
             &nbsp;-<span id="qs_date" style="padding-left: 5px;">Less than 1 month ago</span> <span style="font-size: 14pt !important;" class="caret"></span>
         </a>
         <ul class="dropdown-menu" id="slo" role="menu">
+          <li><b>Where to search:</b></li>
           <li><a href="javascript:void(0);" onclick="document.getElementById('checkall').checked = false; document.getElementById('qs_list').innerHTML = this.innerHTML + '<br/>';" id="slot">This list</a></li>
           <li><a href="javascript:void(0);" onclick="document.getElementById('checkall').checked = true; document.getElementById('qs_list').innerHTML = this.innerHTML + '<br/>';"  id="sloa">All lists</a></li>
           <li class="divider"></li>
-          <li id='drh'><input style="padding-left: 20px; border: none; cursor: text; min-width: 200px; margin-right: 10px; font-size: 9pt;" name="d" id='d' data="lte=1M" value="Less than 1 month ago" onclick="datePicker(this);" readonly="readonly"/></li>
+          <li><b>Date range:</b></li>
+          <li id='drh'><input title="Click to change the date range" style="padding-left: 20px; border: none; cursor: url(images/daterange.ico), text; min-width: 200px; margin-right: 10px; font-size: 9pt;" name="d" id='d' data="lte=1M" value="Less than 1 month ago" onclick="datePicker(this);" readonly="readonly"/></li>
         </ul>
         </div>
                 </div>
