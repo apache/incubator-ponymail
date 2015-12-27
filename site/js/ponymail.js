@@ -2122,7 +2122,26 @@ function loadList_flat(mjson, limit, start, deep) {
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
         }
-        nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        if (prefs.theme && prefs.theme == 'compact') {
+            var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
+            from = from.replace(/\"/g, "")
+            
+            var sbody = eml.body ? eml.body.replace(/</g, "&lt;") : ""
+            
+            nest += "<li class='list-group-item'>" +
+                    
+                    "<div><div style='width: 190px; float: left; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" +
+                    "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
+                    from +
+                    "</b></div> " +
+                    "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
+                    "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        } else {
+            nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
+        }
     }
     nest += "</ul>"
 
@@ -2134,7 +2153,7 @@ function loadList_flat(mjson, limit, start, deep) {
     var tnav = "<div style='float: left; width: 100%'>"
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
+        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + nstart + ');">Show previous ' + d_ppp + '</a> &nbsp </div>'
     } else {
         tnav += '<div style="width: 50%; float: left;">&nbsp;</div>'
     }
@@ -2157,7 +2176,7 @@ function loadList_flat(mjson, limit, start, deep) {
     // Bottom nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + nstart + ');">Show previous ' + d_ppp + '</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
@@ -2170,7 +2189,7 @@ function loadList_flat(mjson, limit, start, deep) {
     }
     
     if (json.length > (start + limit)) {
-        remain = Math.min(15, json.length - (start + limit))
+        remain = Math.min(d_ppp, json.length - (start + limit))
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
 }
