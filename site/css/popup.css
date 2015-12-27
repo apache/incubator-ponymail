@@ -815,5 +815,6 @@ listview_label {
 }
 
 .navbar-default {
-     background: #DDD !important;
+     background: #EEE !important;
+     border-bottom-color: #CCC;
 }
