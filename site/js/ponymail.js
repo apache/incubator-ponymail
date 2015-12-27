@@ -4556,6 +4556,7 @@ function showPreferences() {
     // social mode
     section.appendChild(generateFormDivs('theme', 'Email view theme:', 'select', {
         social: "Social theme",
+        compact: "Compact theme",
         default: "Default theme"
     }, prefs.theme))
     
