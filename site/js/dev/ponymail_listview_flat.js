@@ -89,7 +89,7 @@ function loadList_flat(mjson, limit, start, deep) {
             
             nest += "<li class='list-group-item'>" +
                     
-                    "<div><div style='width: 190px; float: left; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" +
+                    "<div style='min-height: 32px;'><div style='width: 190px; float: left; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" +
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=32&r=g&d=mm'/>&nbsp;<b>" +
                     from +
                     "</b></div> " +
