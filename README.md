@@ -67,7 +67,7 @@ For a quick guide to installing Pony Mail, please see the guides for:
 2. Install ElasticSearch
 3. go to tools/ and run python setup.py - follow the instructions and enter info
 4. Fiddle a bit with site/js/config.js for now
-5. import mbox data with import-mbox.py if need be
+5. import mbox data with import-mbox.py if need be (see [this doc](docs/IMPORTING.md) for details)
 6. All done :) But please see the [detailed installation instructions](docs/INSTALLING.md) for more details
 
 
