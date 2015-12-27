@@ -24,7 +24,7 @@ function loadList_treeview(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
-    if (prefs.theme && prefs.theme == "social") {
+    if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
     } else {
         d_ppp = 15

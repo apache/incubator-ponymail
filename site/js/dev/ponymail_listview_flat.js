@@ -18,7 +18,7 @@
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
-    if (prefs.theme && prefs.theme == "social") {
+    if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
     } else {
         d_ppp = 15

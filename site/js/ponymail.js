@@ -2059,7 +2059,7 @@ window.setInterval(checkForSlows, 500)
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
-    if (prefs.theme && prefs.theme == "social") {
+    if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
     } else {
         d_ppp = 15
@@ -2230,7 +2230,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
-    if (prefs.theme && prefs.theme == "social") {
+    if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
     } else {
         d_ppp = 15
@@ -2444,7 +2444,7 @@ function loadList_treeview(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
-    if (prefs.theme && prefs.theme == "social") {
+    if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
     } else {
         d_ppp = 15
