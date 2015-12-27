@@ -2927,7 +2927,6 @@ function loadNgrams() {
     var list = a_arr[0]
     var dspan = a_arr[1]
     var query = a_arr[2]
-    
     // Try to detect header searches, if present
     var queries = unescape(query ? query : "").split("||")
     var ngrams = []
@@ -2937,7 +2936,7 @@ function loadNgrams() {
     var plaw = false
     for (var n in queries) {
         var nquery = []
-        var q = queries[n]
+        var q = escape(queries[n])
         if (q == 'avg') {
             avg = true
             continue
@@ -2965,7 +2964,7 @@ function loadNgrams() {
                 if (m) {
                     q = q.replace(m[0], "")
                     // append to the header_foo query
-                    nquery.push("header_" + stuff[k] + "=" + escape(m[1]))
+                    nquery.push("header_" + stuff[k] + "=" + m[1].replace(/([\s&+=])/g, function(a) { return escape(a)}))
                 }
             }
         }
@@ -3006,7 +3005,7 @@ function loadNgrams() {
     // query fields
     
     for (var n in queries) {
-        var q = queries[n];
+        var q = unescape(queries[n]);
         if (q != 'stack' && q != 'topics' && q!= 'avg' && q != 'plaw') {
             ngramboxes++;
             nobj.appendChild(generateFormDivs('query' + ngramboxes, 'Query #' + ngramboxes + ':', 'text', q != undefined ? q : ""))
@@ -4371,7 +4370,7 @@ function gatherTrends() {
     var domain = arr[1]
     
     // Get us some data
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? query : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? escape(query) : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
     document.title = "Stats for " + list + " - Pony Mail!"
 }
 
