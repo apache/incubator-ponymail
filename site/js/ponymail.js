@@ -2134,14 +2134,14 @@ function loadList_flat(mjson, limit, start, deep) {
     var tnav = "<div style='float: left; width: 100%'>"
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
+        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
     } else {
         tnav += '<div style="width: 50%; float: left;">&nbsp;</div>'
     }
-    
+    var remain
     if (json.length > (start + limit)) {
-        remain = Math.min(15, json.length - (start + limit))
-        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+        remain = Math.min(d_ppp, json.length - (start + limit))
+        tnav += '<div style="width: 50%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
     tnav += "</div><br/><br/>"
     
@@ -2157,7 +2157,7 @@ function loadList_flat(mjson, limit, start, deep) {
     // Bottom nav buttons
     if (start > 0) {
         var nstart = Math.max(0, start - limit)
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: left;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + nstart + ');">Show previous 15</a> &nbsp </div>'
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
@@ -2171,7 +2171,7 @@ function loadList_flat(mjson, limit, start, deep) {
     
     if (json.length > (start + limit)) {
         remain = Math.min(15, json.length - (start + limit))
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
 }
 
@@ -2412,7 +2412,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_threaded(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
 
 }
@@ -2588,7 +2588,7 @@ function loadList_treeview(mjson, limit, start, deep) {
     } else {
         tnav += '<div style="width: 40%; float: left;">&nbsp;</div>'
     }
-    
+    var remain
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
         tnav += '<div style="width: 40%; float: right;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_treeview(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
@@ -2622,7 +2622,7 @@ function loadList_treeview(mjson, limit, start, deep) {
     
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_treeview(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_treeview(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
 
 }

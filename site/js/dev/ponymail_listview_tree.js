@@ -168,7 +168,7 @@ function loadList_treeview(mjson, limit, start, deep) {
     } else {
         tnav += '<div style="width: 40%; float: left;">&nbsp;</div>'
     }
-    
+    var remain
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
         tnav += '<div style="width: 40%; float: right;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_treeview(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
@@ -202,7 +202,7 @@ function loadList_treeview(mjson, limit, start, deep) {
     
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
-        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_treeview(false, ' + 15 + ', ' + (start + 15) + ');">Show next ' + remain + '</a></div>'
+        bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_treeview(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
     }
 
 }
