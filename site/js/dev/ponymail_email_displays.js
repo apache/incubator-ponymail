@@ -252,10 +252,10 @@ function displaySingleEmail(json, id) {
 
 
 // displayEmailThreaded: Appends an email to a threaded display of a topic
-function displayEmailThreaded(json, state) {
+function displayEmailThreaded(json, state, threadobj) {
     var level = state.level ? state.level : 1
     var b = state.before
-    var obj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
+    var obj = threadobj ? threadobj : document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
     if (!json.mid && !json.tid) {
         if (obj) {
             obj.innerHTML = "<h2>404!</h2><p>Sorry, we couldn't find this email :("
@@ -302,10 +302,10 @@ function displayEmailThreaded(json, state) {
 
 
 // toggleEmails_threaded: Open up a threaded display of a topic
-function toggleEmails_threaded(id, close, toverride) {
+function toggleEmails_threaded(id, close, toverride, threadobj) {
     current_thread_mids = {}
     current_email_msgs = []
-    var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
+    var thread = threadobj ? threadobj : document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
@@ -380,12 +380,14 @@ function toggleEmails_threaded(id, close, toverride) {
         if (!eml || !eml.from) {
             GetAsync("/api/email.lua?id=" + current_thread_json[id].tid, {
                 blockid: id,
-                thread: current_thread_json[id]
+                thread: current_thread_json[id],
+                object: threadobj,
             }, loadEmails_threaded)
         } else {
             loadEmails_threaded(eml, {
                 blockid: id,
-                thread: current_thread_json[id]
+                thread: current_thread_json[id],
+                object: threadobj
             })
         }
     }

@@ -216,6 +216,6 @@ function loadEmails_threaded(json, state) {
     displayEmailThreaded(json, {
         main: state.blockid,
         before: state.blockid
-    })
+    }, state.object)
     getChildren(state.blockid, state.thread)
 }

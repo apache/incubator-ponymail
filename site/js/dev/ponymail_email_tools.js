@@ -100,7 +100,7 @@ function sortIt(json) {
 function getChildren(main, email, level) {
     level = level ? level : 1
     var pchild = null
-    if (email.children && email.children.sort) {
+    if (email && email.children && email.children.sort) {
         email.children.sort(function(a, b) {
             return b.epoch - a.epoch
         })
@@ -148,8 +148,8 @@ function permaLink(id, type) {
 
 
 // getSingleEmail: fetch an email from ES and go to callback
-function getSingleEmail(id) {
-    GetAsync("/api/email.lua?id=" + id, null, displaySingleEmail)
+function getSingleEmail(id, object) {
+    GetAsync("/api/email.lua?id=" + id, {object: object} , displaySingleEmail)
 }
 
 

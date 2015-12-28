@@ -1492,10 +1492,10 @@ function displaySingleEmail(json, id) {
 
 
 // displayEmailThreaded: Appends an email to a threaded display of a topic
-function displayEmailThreaded(json, state) {
+function displayEmailThreaded(json, state, threadobj) {
     var level = state.level ? state.level : 1
     var b = state.before
-    var obj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
+    var obj = threadobj ? threadobj : document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
     if (!json.mid && !json.tid) {
         if (obj) {
             obj.innerHTML = "<h2>404!</h2><p>Sorry, we couldn't find this email :("
@@ -1542,10 +1542,10 @@ function displayEmailThreaded(json, state) {
 
 
 // toggleEmails_threaded: Open up a threaded display of a topic
-function toggleEmails_threaded(id, close, toverride) {
+function toggleEmails_threaded(id, close, toverride, threadobj) {
     current_thread_mids = {}
     current_email_msgs = []
-    var thread = document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
+    var thread = threadobj ? threadobj : document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
@@ -1620,12 +1620,14 @@ function toggleEmails_threaded(id, close, toverride) {
         if (!eml || !eml.from) {
             GetAsync("/api/email.lua?id=" + current_thread_json[id].tid, {
                 blockid: id,
-                thread: current_thread_json[id]
+                thread: current_thread_json[id],
+                object: threadobj,
             }, loadEmails_threaded)
         } else {
             loadEmails_threaded(eml, {
                 blockid: id,
-                thread: current_thread_json[id]
+                thread: current_thread_json[id],
+                object: threadobj
             })
         }
     }
@@ -1788,7 +1790,7 @@ function sortIt(json) {
 function getChildren(main, email, level) {
     level = level ? level : 1
     var pchild = null
-    if (email.children && email.children.sort) {
+    if (email && email.children && email.children.sort) {
         email.children.sort(function(a, b) {
             return b.epoch - a.epoch
         })
@@ -1836,8 +1838,8 @@ function permaLink(id, type) {
 
 
 // getSingleEmail: fetch an email from ES and go to callback
-function getSingleEmail(id) {
-    GetAsync("/api/email.lua?id=" + id, null, displaySingleEmail)
+function getSingleEmail(id, object) {
+    GetAsync("/api/email.lua?id=" + id, {object: object} , displaySingleEmail)
 }
 
 
@@ -2443,7 +2445,7 @@ function loadEmails_threaded(json, state) {
     displayEmailThreaded(json, {
         main: state.blockid,
         before: state.blockid
-    })
+    }, state.object)
     getChildren(state.blockid, state.thread)
 }
 
@@ -2784,6 +2786,10 @@ function toggleEmails_treeview(id, close, toverride) {
     current_email_msgs = []
     var thread = document.getElementById('thread_treeview_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
+        if (!current_thread_json[id].children || typeof current_thread_json[id].children.length == 'undefined' || current_thread_json[id].children.length == 0) {
+            toggleEmails_threaded(id, close, toverride, thread)
+            return
+        }
         var epoch = null
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {

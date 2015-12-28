@@ -346,6 +346,10 @@ function toggleEmails_treeview(id, close, toverride) {
     current_email_msgs = []
     var thread = document.getElementById('thread_treeview_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
+        if (!current_thread_json[id].children || typeof current_thread_json[id].children.length == 'undefined' || current_thread_json[id].children.length == 0) {
+            toggleEmails_threaded(id, close, toverride, thread)
+            return
+        }
         var epoch = null
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
