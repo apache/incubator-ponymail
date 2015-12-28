@@ -3475,6 +3475,7 @@ function getListInfo(list, xdomain, nopush) {
     }
     if (xdomain == undefined || xdomain == "" && list) {
         xdomain = list.replace(/^.*?@/, "")
+        
     }
     if (!list || list.length <= 1) {
         list = 'dev@' + xdomain
@@ -3547,7 +3548,7 @@ function getListInfo(list, xdomain, nopush) {
             a.appendChild(t)
             li.appendChild(a)
             ll.appendChild(li)
-            if (!all_lists[xdomain][listname]) {
+            if (typeof all_lists[xdomain][listname] == 'undefined') {
                 listname = key
                 list = ln
                 xlist = ln
