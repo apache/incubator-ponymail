@@ -104,6 +104,34 @@ function raw(query, doctype)
     return json or {}, url
 end
 
+
+-- Raw query with scroll/scan
+function scan(query, doctype)
+    local js = JSON.encode(query)
+    doctype = doctype or default_doc
+    local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
+    local result = http.request(url, js)
+    local out = {}
+    local json = JSON.decode(result)
+    if json and json._scroll_id then
+        return json._scroll_id
+    end
+    return nil
+end
+
+function scroll(sid)
+    doctype = doctype or default_doc
+    -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
+    -- But in case we're being proxied, let's just cut off the last part of the URL
+    local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&_scroll_id=" .. sid
+    local result = http.request(url)
+    local json = JSON.decode(result)
+    if json and json._scroll_id then
+        return json, json._scroll_id
+    end
+    return nil
+end
+
 -- Update a document
 function update(doctype, id, query)
     local js = JSON.encode({doc = query })
@@ -141,5 +169,7 @@ return {
     raw = raw,
     index = index,
     default = setDefault,
-    update = update
+    update = update,
+    scan = scan,
+    scroll = scroll
 }
