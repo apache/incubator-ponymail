@@ -85,7 +85,7 @@ function loadList_flat(mjson, limit, start, deep) {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
             
-            var sbody = "&nbsp;" +  (eml.body ? eml.body.replace(/</g, "&lt;") : "")
+            var sbody = (eml.body ? eml.body.replace(/</g, "&lt;") : "") + "&nbsp;"
             
             nest += "<li class='list-group-item'>" +
                     

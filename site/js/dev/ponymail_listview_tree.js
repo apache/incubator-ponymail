@@ -129,7 +129,7 @@ function loadList_treeview(mjson, limit, start, deep) {
         } else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            var sbody = "&nbsp;" + json[i].body.replace(/</g, "&lt;")
+            var sbody = json[i].body.replace(/</g, "&lt;") + "&nbsp;"
             
             nest += "<li class='list-group-item'>" +
                     
