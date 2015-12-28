@@ -112,10 +112,10 @@ function saveDraft() {
 }
 
 // hideComposer: hide the composer (splash) window
-function hideComposer(evt) {
+function hideComposer(evt, nosave) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.getAttribute || !es.getAttribute("class") || (es.nodeName != 'A' && es.getAttribute("class").search(/label/) == -1))  {
-        saveDraft()
+        if (!nosave) saveDraft()
         document.getElementById('splash').style.display = "none"
     }
 }
@@ -150,10 +150,10 @@ function sendEmail(form) {
     }
     // Clear new draft too if need be
     if (typeof(window.sessionStorage) !== "undefined" && composeType == "new") {
-        window.sessionStorage.removeItem("reply_subject__" + xlist)
+        window.sessionStorage.removeItem("reply_subject_" + xlist)
         window.sessionStorage.removeItem("reply_body_" + xlist)
     }
-    hideComposer()
+    hideComposer(null, true)
     
     // Open the annoying popup dialogue :)
     popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.")
