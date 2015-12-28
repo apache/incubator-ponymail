@@ -10,6 +10,7 @@
 - New unified quick search bar
 - Added a new theme, compact, a cross between social and default
 - Lists more than 3 years old are now also displayed, but still sorted by 90 day activity
+- Composer winodw now properly resets once an email has been dispatched
   
 ## CHANGES in 0.5a (released 2015-12-21):
 
