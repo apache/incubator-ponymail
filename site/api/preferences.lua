@@ -78,7 +78,30 @@ function handle(r)
             }
         }
         
+        local ndoc = elastic.raw {
+            aggs = {
+                from = {
+                    terms = {
+                        field = "list_raw",
+                        size = 500000
+                    }
+                }
+            },
+            query = {
+                range = {
+                        date = { gte = "now-90d" }
+                    }
+            }
+        }
+        
         for x,y in pairs (doc.aggregations.from.buckets) do
+            local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
+            if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
+                lists[domain] = lists[domain] or {}
+                lists[domain][list] = 0
+            end
+        end
+        for x,y in pairs (ndoc.aggregations.from.buckets) do
             local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
             if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
                 lists[domain] = lists[domain] or {}
