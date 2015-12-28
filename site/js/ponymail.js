@@ -2784,9 +2784,10 @@ function toggleEmails_treeview(id, close, toverride) {
     current_email_msgs = []
     var thread = document.getElementById('thread_treeview_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
+        var epoch = null
         current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
-            var epoch = latestEmailInThread + "!"
+            epoch = latestEmailInThread + "!"
             var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
             if (xx) {
                 var yy = parseInt(xx)
@@ -2794,7 +2795,6 @@ function toggleEmails_treeview(id, close, toverride) {
                     epoch = yy
                 }
             }
-            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
         }
         
         thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
@@ -2847,6 +2847,9 @@ function toggleEmails_treeview(id, close, toverride) {
         var html = buildTreeview(nesting, [current_thread_json[id]], thread, [true])
         current_thread = current_thread_json[id].tid
         
+        if (epoch !== null) { // only non-null if localstorage works
+            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+        }
         
     }
 }
