@@ -356,6 +356,7 @@ function toggleEmails_treeview(id, close, toverride) {
                     epoch = yy
                 }
             }
+            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
         }
         
         thread.style.display = (thread.style.display == 'none') ? 'block' : 'none';
