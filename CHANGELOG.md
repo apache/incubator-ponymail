@@ -9,6 +9,7 @@
 - Better sizing of some elements in the list view to accommodate smaller screens
 - New unified quick search bar
 - Added a new theme, compact, a cross between social and default
+- Lists more than 3 years old are now also displayed, but still sorted by 90 day activity
   
 ## CHANGES in 0.5a (released 2015-12-21):
 
