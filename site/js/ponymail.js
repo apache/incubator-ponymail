@@ -2126,7 +2126,7 @@ function loadList_flat(mjson, limit, start, deep) {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
             
-            var sbody = eml.body ? eml.body.replace(/</g, "&lt;") : ""
+            var sbody = "&nbsp;" +  (eml.body ? eml.body.replace(/</g, "&lt;") : "")
             
             nest += "<li class='list-group-item'>" +
                     
@@ -2359,7 +2359,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            var sbody = json[i].body.replace(/</g, "&lt;")
+            var sbody = "&nbsp;" + json[i].body.replace(/</g, "&lt;")
             
             nest += "<li class='list-group-item'>" +
                     
@@ -2567,7 +2567,7 @@ function loadList_treeview(mjson, limit, start, deep) {
         } else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = from.replace(/\"/g, "")
-            var sbody = json[i].body.replace(/</g, "&lt;")
+            var sbody = "&nbsp;" + json[i].body.replace(/</g, "&lt;")
             
             nest += "<li class='list-group-item'>" +
                     
