@@ -41,7 +41,7 @@ function leapYear(year)
 end
 
 function handle(r)
-    r.content_type = "text/plain"
+    r.content_type = "application/mbox"
     local get = r:parseargs()
     if get.list and get.date then
         local lid = ("<%s>"):format(get.list:gsub("@", "."):gsub("[<>]", ""))
@@ -49,6 +49,9 @@ function handle(r)
         if not month then
             r:puts("Wrong date format given!\n")
             return cross.OK
+        end
+        if r.headers_out then
+            r.headers_out['Content-Disposition'] = "attachment; filename=" .. month .. ".mbox"
         end
         local y, m = month:match("(%d+)%-(%d+)")
         m = tonumber(m)
