@@ -75,12 +75,11 @@ function sendEmail(form) {
     if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
         window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
         window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
-        
-        // If it's a new non-reply email, clear that box as well
-        if (composeType == "new") {
-            window.sessionStorage.removeItem("reply_subject__" + xlist)
-            window.sessionStorage.removeItem("reply_body_" + xlist)
-        }
+    }
+    // Clear new draft too if need be
+    if (typeof(window.sessionStorage) !== "undefined" && composeType == "new") {
+        window.sessionStorage.removeItem("reply_subject__" + xlist)
+        window.sessionStorage.removeItem("reply_body_" + xlist)
     }
     
     // Open the annoying popup dialogue :)

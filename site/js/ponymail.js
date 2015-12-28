@@ -148,12 +148,11 @@ function sendEmail(form) {
     if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
         window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
         window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
-        
-        // If it's a new non-reply email, clear that box as well
-        if (composeType == "new") {
-            window.sessionStorage.removeItem("reply_subject__" + xlist)
-            window.sessionStorage.removeItem("reply_body_" + xlist)
-        }
+    }
+    // Clear new draft too if need be
+    if (typeof(window.sessionStorage) !== "undefined" && composeType == "new") {
+        window.sessionStorage.removeItem("reply_subject__" + xlist)
+        window.sessionStorage.removeItem("reply_body_" + xlist)
     }
     
     // Open the annoying popup dialogue :)
@@ -3183,7 +3182,7 @@ function buildCalendar(firstYear, lastYear) {
             n = "block"
         }
         dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 110px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
-        var cale = "<div style='float: left; width: 100%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
+        var cale = "<div style='float: left; width: 80%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
             var url = "/list.html?" + xlist + ":" + (year+"-"+(y+1))
