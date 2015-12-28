@@ -281,7 +281,7 @@ function handle(r)
     tnow = r:clock()
     
     for k = #hits, 1, -1 do
-        local v = doc.hits.hits[k]
+        local v = hits[k]
         local email = v._source
         local mid = email['message-id']
         local irt = email['in-reply-to']
