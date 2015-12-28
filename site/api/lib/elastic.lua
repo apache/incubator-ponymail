@@ -123,7 +123,7 @@ function scroll(sid)
     doctype = doctype or default_doc
     -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
     -- But in case we're being proxied, let's just cut off the last part of the URL
-    local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&_scroll_id=" .. sid
+    local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
     local result = http.request(url)
     local json = JSON.decode(result)
     if json and json._scroll_id then
