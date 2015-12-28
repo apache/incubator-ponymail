@@ -45,13 +45,14 @@ function handle(r)
     local get = r:parseargs()
     if get.list and get.date then
         local lid = ("<%s>"):format(get.list:gsub("@", "."):gsub("[<>]", ""))
+        local flid = get.list:gsub("[.@]", "_")
         local month = get.date:match("(%d+%-%d+)")
         if not month then
             r:puts("Wrong date format given!\n")
             return cross.OK
         end
         if r.headers_out then
-            r.headers_out['Content-Disposition'] = "attachment; filename=" .. month .. ".mbox"
+            r.headers_out['Content-Disposition'] = "attachment; filename=" .. flid .. "_" .. month .. ".mbox"
         end
         local y, m = month:match("(%d+)%-(%d+)")
         m = tonumber(m)
