@@ -231,7 +231,7 @@ function handle(r)
     local emails = {}
     local emails_full = {}
     local emls = {}
-    local doc = elastic.raw {
+    local sid = elastic.scan {
         _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw'},
         query = {
             bool = {
@@ -257,13 +257,30 @@ function handle(r)
         },
         size = maxresults
     }
-    local h = #doc.hits.hits
+    local h = 0
+    local maxScrolls = 5
+    local hits = {}
+    while sid ~= nil do
+        maxScrolls = maxScrolls - 1
+        if maxScrolls < 0 then
+            break
+        end
+        doc, sid = elastic.scroll(sid)
+        if doc then
+            h = h + #doc.hits.hits
+            for k, v in pairs(doc.hits.hits) do
+                table.insert(hits, v)
+            end
+        else
+            break
+        end
+    end
     
     -- Debug time point 6
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    for k = #doc.hits.hits, 1, -1 do
+    for k = #hits, 1, -1 do
         local v = doc.hits.hits[k]
         local email = v._source
         local mid = email['message-id']
