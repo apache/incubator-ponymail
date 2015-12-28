@@ -60,32 +60,32 @@ function handle(r)
     end
        
     
-    -- Get lists
-    local dd = 900
-    local daterange = {gt = "now-"..dd.."d" }
-    local doc = elastic.raw {
-        aggs = {
-            from = {
-                terms = {
-                    field = "list_raw",
-                    size = 500000
+    -- Get lists (cached if possible)
+    local lists = {}
+    local nowish = math.floor(os.time() / 300)
+    local cache = r:ivm_get("pm_lists_cache_" ..r.hostname .."-" .. nowish)
+    if cache then
+        lists = JSON.decode(cache)
+    else
+        local doc = elastic.raw {
+            aggs = {
+                from = {
+                    terms = {
+                        field = "list_raw",
+                        size = 500000
+                    }
                 }
             }
-        },
-        query = {
-            range = {
-                    date = daterange
-                }
         }
-    }
-    local lists = {}
-    
-    for x,y in pairs (doc.aggregations.from.buckets) do
-        local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-        if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
-            lists[domain] = lists[domain] or {}
-            lists[domain][list] = y.doc_count
+        
+        for x,y in pairs (doc.aggregations.from.buckets) do
+            local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
+            if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
+                lists[domain] = lists[domain] or {}
+                lists[domain][list] = y.doc_count
+            end
         end
+        r:ivm_set("pm_lists_cache_" ..r.hostname .."-" .. nowish, JSON.encode(lists))
     end
     
     -- Get notifs
