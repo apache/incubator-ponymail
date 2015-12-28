@@ -191,11 +191,13 @@ function loadList_treeview(mjson, limit, start, deep) {
     }
     
     
+    var sublist = xlist.replace(/@/, "-subscribe@")
+    var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
     if (login && login.credentials) {
-        bulk.innerHTML += '<div style="width: 33%; float: left; text-align: center;"><a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a></div>'
-    } else {
-        bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
+        innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
+    bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
+    
     
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
