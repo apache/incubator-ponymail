@@ -56,6 +56,7 @@ var kiddos = []
 var pending_urls = {}
 var pb_refresh = 0
 var treeview_guard = {}
+var mbox_month = null
 
 // Links from viewmode to the function that handles them
 var viewModes = {

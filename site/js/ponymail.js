@@ -64,6 +64,7 @@ var kiddos = []
 var pending_urls = {}
 var pb_refresh = 0
 var treeview_guard = {}
+var mbox_month = null
 
 // Links from viewmode to the function that handles them
 var viewModes = {
@@ -3182,7 +3183,7 @@ function buildCalendar(firstYear, lastYear) {
             n = "block"
         }
         dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 110px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
-        var cale = "<div style='float: left; width: 80%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
+        var cale = "<div style='float: left; width: 100%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
             var url = "/list.html?" + xlist + ":" + (year+"-"+(y+1))
@@ -3490,9 +3491,14 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     //buildCalendar()
+    mbox_month = null;
     var dp = document.getElementById('d')
     dp.value = datePickerValue(current_retention)
     dp.setAttribute("data", current_retention)
+    
+    if (current_retention.search(/^\d+-\d+$/)) {
+        mbox_month = current_retention
+    }
     
     document.getElementById('q').value = unescape(current_query)
     document.getElementById('aq').value = unescape(current_query)
@@ -3879,7 +3885,7 @@ function toggleEmail(year, mo, nopush) {
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     
     // set list title to list and year/month
-    document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")"
+    document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")" + " &nbsp;<a rel='nofollow' href='/api/mbox.lua?list=" + xlist + "&date=" + year + "-" + mo + "'><img src='/images/download.png' title='Download this month as an mbox archive'/></a>"
 }
 
 

@@ -359,9 +359,14 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     //buildCalendar()
+    mbox_month = null;
     var dp = document.getElementById('d')
     dp.value = datePickerValue(current_retention)
     dp.setAttribute("data", current_retention)
+    
+    if (current_retention.search(/^\d+-\d+$/)) {
+        mbox_month = current_retention
+    }
     
     document.getElementById('q').value = unescape(current_query)
     document.getElementById('aq').value = unescape(current_query)

@@ -56,7 +56,7 @@ function toggleEmail(year, mo, nopush) {
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     
     // set list title to list and year/month
-    document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")"
+    document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")" + " &nbsp;<a rel='nofollow' href='/api/mbox.lua?list=" + xlist + "&date=" + year + "-" + mo + "'><img src='/images/download.png' title='Download this month as an mbox archive'/></a>"
 }
 
 
