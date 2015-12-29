@@ -15,6 +15,12 @@
  limitations under the License.
 */
 
+function resetPage() {
+    var obj = document.getElementById('emails')
+    if (obj) {
+        obj.innerHTML = ""
+    }
+}
 
 // toggleEmail: Fetch a list of emails from an ML in a specific year/month
 function toggleEmail(year, mo, nopush) {

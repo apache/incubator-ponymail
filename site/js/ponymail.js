@@ -1920,6 +1920,8 @@ function checkForSlows() {
         if ((now - pending_urls[x]) > 2.5) {
             slows++;
             break
+        } else if (x.search(/stats\.lua/) && (now - pending_urls[x]) > 0.5) {
+            resetPage()
         }
     }
     if (slows == 0) {
@@ -2053,7 +2055,7 @@ function isArray(obj) {
 }
 
 // Check for slow URLs every 0.5 seconds
-window.setInterval(checkForSlows, 500)
+window.setInterval(checkForSlows, 100)
 
 /******************************************
  Fetched from dev/ponymail_listview_flat.js
@@ -3855,6 +3857,12 @@ function listDomains() {
 ******************************************/
 
 
+function resetPage() {
+    var obj = document.getElementById('emails')
+    if (obj) {
+        obj.innerHTML = ""
+    }
+}
 
 // toggleEmail: Fetch a list of emails from an ML in a specific year/month
 function toggleEmail(year, mo, nopush) {
