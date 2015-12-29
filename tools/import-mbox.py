@@ -571,6 +571,7 @@ elif source[0] == "h":
             print("You need to specify a list ID with --lid when importing from Pipermail!")
             sys.exit(-1)
         ns = r"href=\"(\d+-[a-zA-Z]+\.txt(\.gz)?)\""
+        qn = 0
         for mlist in re.finditer(ns, data):
             ml = mlist.group(1)
             mldata = urlopen("%s%s" % (source, ml)).read()
@@ -586,6 +587,7 @@ elif source[0] == "h":
             tmpfile.close()
             lists.append([tmpfile.name, list_override])
             print("Adding %s/%s to slurp list as %s" % (source, ml, tmpfile.name))
+            qn += 1
             if quickmode and qn >= 2:
                 break
                     
