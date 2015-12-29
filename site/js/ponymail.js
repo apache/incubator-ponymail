@@ -92,22 +92,24 @@ var viewModes = {
 function saveDraft() {
     // If the user was composing a new thread, let's save the contents (if any)
     // for next time
-    if (composeType == "new") {
-        if (typeof(window.sessionStorage) !== "undefined") {
-            window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
-            window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
-            window.sessionStorage.setItem("reply_list", xlist)
+    if (document.getElementById('reply_body')) {
+        if (composeType == "new") {
+            if (typeof(window.sessionStorage) !== "undefined") {
+                window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
+                window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
+                window.sessionStorage.setItem("reply_list", xlist)
+            }
+            composeType = ""
+        // Likewise, if composing a reply, save it in case the user wants to revisit
+        // the draft
+        } else if (composeType == "reply" && current_reply_eid) {
+            if (typeof(window.sessionStorage) !== "undefined") {
+                window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
+                window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
+                window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
+            }
+            composeType = ""
         }
-        composeType = ""
-    // Likewise, if composing a reply, save it in case the user wants to revisit
-    // the draft
-    } else if (composeType == "reply" && current_reply_eid) {
-        if (typeof(window.sessionStorage) !== "undefined") {
-            window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
-            window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
-            window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
-        }
-        composeType = ""
     }
 }
 
