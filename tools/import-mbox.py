@@ -63,6 +63,7 @@ fileToLID = {}
 interactive = False
 extension = "*.mbox"
 attachments = False
+piperWeirdness = False
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -351,6 +352,12 @@ class SlurpThread(Thread):
                     except:
                         okay = False
                     if body and okay and mdate and {'from','subject'} <= set(dheader):
+                        # Pipermail transforms from: to something weird - reset that!
+                        if piperWeirdness:
+                            m = re.match(r"(.+) at ([^(]+) \((.+)\)$", dheader['from'])
+                            if m:
+                                dheader['from'] = "%s <%s@%s>" % (m.group(3), m.group(1), m.group(2))
+                                
                         attachments, contents = msgfiles(message)
                         if mid == None or not mid:
                             try:
@@ -559,6 +566,7 @@ elif source[0] == "h":
     
     if args.pipermail:
         filebased = True
+        piperWeirdness = True
         if not list_override:
             print("You need to specify a list ID with --lid when importing from Pipermail!")
             sys.exit(-1)
