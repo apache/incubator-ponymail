@@ -6,7 +6,7 @@ documentation, evangelism, marketing, or helping out other users.
 
 ## Code ##
 
-The Pony Mail code is on GitHub at https://github.com/Humbedooh/ponymail
+The Pony Mail code is on GitHub at https://github.com/quenda/ponymail
 and pull requests are welcome.
 
 ## Mailing lists ##
