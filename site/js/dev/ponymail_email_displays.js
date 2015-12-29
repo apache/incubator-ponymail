@@ -98,7 +98,7 @@ function displayEmail(json, id, level) {
                 thread.style.marginLeft = "40px"
             }
             
-            thread.style.marginTop = "20px"
+            thread.style.marginTop = "40px"
             thread.innerHTML = "<img src='https://secure.gravatar.com/avatar/" + json['gravatar'] + ".jpg?s=48&r=g&d=mm' style='vertical-align:middle'/> &nbsp; <b>" + fr + "</b> - " + sdate
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
             if (level > 1) {
@@ -137,7 +137,7 @@ function displayEmail(json, id, level) {
         else {
             thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
             thread.style.background = estyle
-            thread.innerHTML = ''
+            thread.style.marginTop = "30px"
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
             thread.innerHTML += ' &nbsp; <a href="/thread.html/'+(pm_config.shortLinks ? shortenID(json.mid) : json.mid)+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
             thread.innerHTML += ' &nbsp; <a href="/api/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
