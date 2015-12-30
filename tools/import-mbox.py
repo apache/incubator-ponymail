@@ -78,6 +78,11 @@ ssl = False
 dbname = config.get("elasticsearch", "dbname")
 if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
     ssl = True
+    
+cropout = None
+if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
+    cropout = config.get("debug", "cropout")
+    
 uri = ""
 if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
     uri = config.get("elasticsearch", "uri")
@@ -290,6 +295,8 @@ class SlurpThread(Thread):
                         lid = xlist_override
                     lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
                     lid = "<%s>" % lid.strip("<>") # We need <> around it!
+                    if cropout:
+                        lid = lid.replace(cropout, "")
                     date = message['date']
                     fro = message['from']
                     to = message['to']
