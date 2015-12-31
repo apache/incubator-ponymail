@@ -102,7 +102,7 @@ function loadList_treeview(mjson, limit, start, deep) {
         
         if (prefs.theme && prefs.theme == "social") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
-            from = from.replace(/\"/g, "")
+            from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
                     d +
                     "<a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
@@ -128,7 +128,7 @@ function loadList_treeview(mjson, limit, start, deep) {
                     "</div><div id='thread_treeview_" + i + "' style='display:none';></div></li>"
         } else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
-            from = from.replace(/\"/g, "")
+            from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             var sbody = json[i].body.replace(/</g, "&lt;") + "&nbsp;"
             
             nest += "<li class='list-group-item'>" +

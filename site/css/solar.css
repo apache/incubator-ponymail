@@ -232,3 +232,8 @@ h4 {
   color: #DDD !important;
   width: calc(100% - 2em) !important;
 }
+
+.from_name {
+  color: #EEE;
+  font-weight: bold;
+}

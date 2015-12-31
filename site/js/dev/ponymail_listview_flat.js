@@ -83,7 +83,7 @@ function loadList_flat(mjson, limit, start, deep) {
         }
         if (prefs.theme && prefs.theme == 'compact') {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
-            from = from.replace(/\"/g, "")
+            from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             
             var sbody = (eml.body ? eml.body.replace(/</g, "&lt;") : "") + "&nbsp;"
             
