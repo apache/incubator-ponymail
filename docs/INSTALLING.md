@@ -93,6 +93,8 @@ the --private arg to the python script to mark an email as private:
     foolist-public: "|/usr/bin/python3 /path/to/tools/archiver.py"
 ```
 
+## Importing old data into Pony Mail
+See [this guide](IMPORTING.md) for details on how to import old archives into Pony Mail.
 
 ## Bulk editing lists ##
 You can use `edit-list.py` to perform bulk operations:
