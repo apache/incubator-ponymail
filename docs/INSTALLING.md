@@ -70,6 +70,7 @@ not using a Mailing List manager, you will need to tell Pony Mail which email
 header determines the list ID using the --altheader argument, for instance:
 ```
     foolist: "|/usr/bin/python3 /path/to/tools/archiver.py --altheader delivered-to"
+    foolist-private: "|/usr/bin/python3 /path/to/tools/archiver.py --altheader delivered-to --private"
 ```
 
 If you are using MailMan 3, you can add archiver.py as an archive by following the instructions inside the python script:
