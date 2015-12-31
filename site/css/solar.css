@@ -200,3 +200,14 @@ h3 {
 h4 {
   font-size: 1.4em;
 }
+
+.navbar {
+  background: #374C44 !important;
+  color: #DDD !important;
+  margin-top: -0.5em;
+}
+
+.active a {
+  background: #360 !important;
+  color: #EEE !important;
+}
