@@ -32,7 +32,29 @@ Use the mailman UI or CLI to subscribe foo-public@ to your public lists and
 foo-private to your private lists. Don't worry, the contents of private lists
 are hidden by default till the correct AAA scripting is set up.
 
-### Set up AAA
+
+## ezmlm example:
+First, see the general introduction in the MM2 example, as this applies here as well.
+
+### Create an alias:
+Set up a dot-forward file for a public and a private alias:
+
+~~~
+`.qmail-archive-public`:
+"|/usr/bin/python3 /path/to/tools/archiver.py"
+
+`.qmail-archive-private`:
+"|/usr/bin/python3 /path/to/tools/archiver.py --private"
+~~~
+
+
+### Subscribe the aliases to your mailing lists
+Use the ezmlm CLI to subscribe your new aliases to the lists:
+`ezmlm-sub foolist/ archive-public@yourhost.tld`
+`ezmlm-sub secretlist/ archive-private@yourhost.tld`
+
+
+## Setting up AAA
 If you have an custom OAuth2 provider and a binary approach to private access
 (either/or), you can enable private access to people by having a key/value pair
 called `isMember` set to `true` in your JSON response from the OAuth server,
