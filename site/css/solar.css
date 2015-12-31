@@ -211,3 +211,18 @@ h4 {
   background: #360 !important;
   color: #EEE !important;
 }
+
+.nav a:hover {
+  color: #EEE !important;
+}
+
+.nav .open a {
+  background: #360 !important;
+  color: #EEE !important;
+}
+
+.nav .open a:hover {
+  background: #360 !important;
+  color: #FFF !important;
+  font-weight: bold;
+}
