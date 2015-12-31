@@ -1,5 +1,13 @@
 # Importing Data to Pony Mail #
-Pony Mail supports many ways of importing your old mail archives via the `import-mbox.py` script. For command line argument tips, run `python3 import-mbox.py --help`.
+Pony Mail supports many ways of importing your old mail archives via the
+`import-mbox.py` script. For command line argument tips, run `python3
+import-mbox.py --help`.
+
+Imports are digested equally every time, so you can
+import from the same source multiple times without creating duplicate emails in
+the archive. Both the archiver and the importer use the same digest method, so
+they can overlap. Usually, you'll want to set up the archiver first, and when
+emails start flowing through it, you'll use the importer to import older emails.
 
 ## Importing attachments
 If you wish to import attached files, add the `--attachments` flag to your import command, otherwise, attachments will be stripped.
