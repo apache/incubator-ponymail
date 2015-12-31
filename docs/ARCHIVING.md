@@ -31,3 +31,13 @@ Once done, run `newaliases` to update your alias DB.
 Use the mailman UI or CLI to subscribe foo-public@ to your public lists and
 foo-private to your private lists. Don't worry, the contents of private lists
 are hidden by default till the correct AAA scripting is set up.
+
+### Set up AAA
+If you have an custom OAuth2 provider and a binary approach to private access
+(either/or), you can enable private access to people by having a key/value pair
+called `isMember` set to `true` in your JSON response from the OAuth server,
+provided it is set as an authority in config.lua. This will provide anyone
+defined as a member via OAuth full access to all private lists.
+
+If you use LDAP, you can modify the LDAP queries in the example AAA file to suit
+your organization.
