@@ -84,6 +84,9 @@ If you are using MailMan 3, you can add archiver.py as an archive by following t
   enable: yes
 ```
 
+For older mailing list systems such as Mailman 2 and ezmlm, you can also
+tak a look at our [archiving examples](ARCHIVING.md) page for pointers.
+
 ## Public versus private lists ##
 In MailMan 3, this should be auto-detected and is not a concern.
 When using other ML systems via piping to STDIN, you should add
