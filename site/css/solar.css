@@ -230,5 +230,5 @@ h4 {
 .footer {
   background: #374C44 !important;
   color: #DDD !important;
-  width: calc(100% - 2em);
+  width: calc(100% - 2em) !important;
 }
