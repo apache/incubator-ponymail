@@ -226,3 +226,9 @@ h4 {
   color: #FFF !important;
   font-weight: bold;
 }
+
+.footer {
+  background: #374C44 !important;
+  color: #DDD !important;
+  width: calc(100% - 2em);
+}
