@@ -1,6 +1,11 @@
 # Archiving New Emails to Pony Mail #
 This document exists to extend the [general install guide](INSTALLING.md) provide examples on how to archive emails.
 
+__Note:__ If you plan on [importing old emails from an archive](IMPORTING.md),
+please set up the archiver __first__ so as to create an overlap of new emails
+coming in and old emails being imported. The system is designed to handle this
+without creating duplicate entries in the archive.
+
 ## Mailman 2.x example:
 Set up a Pony Mail mail account/alias on a machine. This can be your local mail
 server, it can be the machine that Pony Mail is on (install sendmail or postfix
