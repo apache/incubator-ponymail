@@ -40,11 +40,11 @@ First, see the general introduction in the MM2 example, as this applies here as 
 Set up a dot-forward file for a public and a private alias:
 
 ~~~
-`.qmail-archive-public`:
-"|/usr/bin/python3 /path/to/tools/archiver.py"
+.qmail-archive-public:
+    "|/usr/bin/python3 /path/to/tools/archiver.py"
 
-`.qmail-archive-private`:
-"|/usr/bin/python3 /path/to/tools/archiver.py --private"
+.qmail-archive-private:
+    "|/usr/bin/python3 /path/to/tools/archiver.py --private"
 ~~~
 
 
