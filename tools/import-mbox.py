@@ -456,16 +456,6 @@ class SlurpThread(Thread):
         print("Done, %u elements left to slurp" % len(lists))
         
 tlpname = "foo"
-if len(sys.argv) == 2:
-    tlpname = sys.argv[1]
-elif len(sys.argv) >= 3:
-    tlpname = sys.argv[1]
-    quickmode = True if sys.argv[2] == "quick" else False
-else:
-    print("Usage: slurp.py tlpname")
-    sys.exit(-1)
-
-
 
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
@@ -496,6 +486,12 @@ parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
 
 args = parser.parse_args()
+
+if len(sys.argv) <= 2:
+    parser.print_help()
+    sys.exit(-1)
+
+
 
 if args.source:
     source = args.source[0]
