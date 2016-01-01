@@ -13,6 +13,7 @@
 - Composer window now properly resets once an email has been dispatched
 - Fixed some import/archive issues with 8bit encoding
 - Fixed an issue where a multi-line in-reply-to could cause import to fail
+- Better fuzzy logic when grouping emails in topics
   
 ## CHANGES in 0.5a (released 2015-12-21):
 
