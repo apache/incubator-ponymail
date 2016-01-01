@@ -3523,7 +3523,7 @@ function getListInfo(list, xdomain, nopush) {
     dp.value = datePickerValue(current_retention)
     dp.setAttribute("data", current_retention)
     
-    if (current_retention.search(/^\d+-\d+$/)) {
+    if (current_retention.toString().search(/^\d+-\d+$/)) {
         mbox_month = current_retention
     }
     
