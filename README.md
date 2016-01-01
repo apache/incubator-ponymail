@@ -6,7 +6,7 @@ to millions of archived messages with hundreds of requests
 per second.
 
 Pony Mail allows you to browse and interact with mailing lists 
-using Mozilla Persona or OAuth2 for authentication.
+using Mozilla Persona or OAuth2 (Google, GitHub, Facebook etc) for authentication.
 
 ![Ponies](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo.png)
 
