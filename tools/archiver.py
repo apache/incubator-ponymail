@@ -261,9 +261,12 @@ class Archiver(object):
             irt = ""
             if 'in-reply-to' in message:
                 try:
-                    irt = "\n".join(message['in-reply-to'])
+                    try:
+                        irt = "\n".join(message['in-reply-to'])
+                    except:
+                        irt = message.get('in-reply-to').__str__()
                 except:
-                    irt = message.get('in-reply-to').__str__()
+                    irt = ""
             ojson = {
                 'from_raw': msg_metadata['from'],
                 'from': msg_metadata['from'],
