@@ -11,6 +11,8 @@
 - Added a new theme, compact, a cross between social and default
 - Lists more than 3 years old are now also displayed, but still sorted by 90 day activity
 - Composer window now properly resets once an email has been dispatched
+- Fixed some import/archive issues with 8bit encoding
+- Fixed an issue where a multi-line in-reply-to could cause import to fail
   
 ## CHANGES in 0.5a (released 2015-12-21):
 
