@@ -285,7 +285,7 @@ class SlurpThread(Thread):
 
                     lid = message['list-id']
                     if not lid or lid == "": # Guess list name in absence
-                        lid = '.'.join(reversed(ml.split("-"))) + ".apache.org"
+                        lid = '.'.join(reversed(ml.split("-"))) + "." + appender
                     
                     # Compact LID to <foo@domain>, discard rest
                     m = re.search(r"(<.+>)", lid)
