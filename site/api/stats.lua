@@ -37,6 +37,20 @@ function sortEmail(thread)
     end
 end
 
+-- findSubject: match an email with an earlier one with the same topic
+-- used for orphaned emails
+function findSubject(gblob, blob, subject, epoch)
+    for k, v in pairs(blob) do
+        if v.subject and v.subject == subject and v.epoch < epoch then
+            local mid = v['message-id']
+            if gblob[mid] then
+                return gblob[mid]
+            end
+        end
+    end
+    return nil
+end
+
 function leapYear(year)
     if (year % 4 == 0) then
         if (year%100 == 0)then                
@@ -622,10 +636,11 @@ function handle(r)
                     irt = irt:gsub("^[a-zA-Z]+:%s+", "")
                 end
             end
-            if emails[irt] then
-                if emails[irt].nest < 50 then
-                    emails[mid].nest = emails[irt].nest + 1
-                    table.insert(emails[irt].children, emails[mid])
+            local point = emails[irt] or findSubject(emails, emls, irt, email.epoch)
+            if point then
+                if point.nest < 50 then
+                    point.nest = point.nest + 1
+                    table.insert(point.children, emails[mid])
                 end
             else
                 if (email['in-reply-to'] ~= JSON.null and #email['in-reply-to'] > 0) then
