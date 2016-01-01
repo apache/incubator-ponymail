@@ -14,7 +14,7 @@ RUN apt-get update
 
 # Install base packages
 RUN apt-get install -y apache2 git lua-cjson lua-sec lua-socket python3 python3-pip
-RUN pip3 install elasticsearch formatflowed
+RUN pip3 install elasticsearch formatflowed netaddr
 
 
 # Download Pony Mail
