@@ -3968,7 +3968,7 @@ function search(q, d, nopush, all) {
 // much the same as search(), but with added stuff for from and subject field searches.
 function searchAll(q, dspan, from, subject, where) {
     keywords = q
-    current_retention = 30
+    current_retention = dspan
     current_query = q
     global_deep = true
     var wherel = "*"
