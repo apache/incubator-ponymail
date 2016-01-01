@@ -204,7 +204,7 @@ class Archiver(object):
                 hval = ""
                 if msg_metadata.get(key):
                     for t in email.header.decode_header(msg_metadata[key]):
-                        if t[1] == None:
+                        if t[1] == None or t[1].find("8bit") != -1:
                             hval += t[0].decode('utf-8') if type(t[0]) is bytes else t[0]
                         else:
                             hval += t[0].decode(t[1],errors='ignore')
@@ -258,6 +258,12 @@ class Archiver(object):
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
                 mid = pmid
+            irt = ""
+            if 'in-reply-to' in message:
+                try:
+                    irt = "\n".join(message['in-reply-to'])
+                except:
+                    irt = message.get('in-reply-to').__str__()
             ojson = {
                 'from_raw': msg_metadata['from'],
                 'from': msg_metadata['from'],
@@ -272,7 +278,7 @@ class Archiver(object):
                 'date': mdatestring,
                 'private': private,
                 'references': msg_metadata['references'],
-                'in-reply-to': msg_metadata['in-reply-to'],
+                'in-reply-to': irt,
                 'body': body.decode('utf-8', errors='replace') if type(body) is bytes else body,
                 'attachments': attachments
             }
@@ -324,8 +330,8 @@ class Archiver(object):
             oldrefs = []
             
             # Is this a direct reply to a pony mail email?
-            if 'in-reply-to' in msg_metadata:
-                dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('in-reply-to'))
+            if irt != "":
+                dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", irt)
                 if dm:
                     cid = dm.group(1)
                     mid = dm.group(2)
@@ -346,7 +352,7 @@ class Archiver(object):
                                     'to': msg_metadata['to'],
                                     'subject': msg_metadata['subject'],
                                     'message-id': msg_metadata['message-id'],
-                                    'in-reply-to': msg_metadata['in-reply-to'],
+                                    'in-reply-to': irt,
                                     'epoch': email.utils.mktime_tz(mdate),
                                     'mid': mid,
                                     'seen': 0
@@ -379,7 +385,7 @@ class Archiver(object):
                                     'to': msg_metadata['to'],
                                     'subject': msg_metadata['subject'],
                                     'message-id': msg_metadata['message-id'],
-                                    'in-reply-to': msg_metadata['in-reply-to'],
+                                    'in-reply-to': mirt,
                                     'epoch': email.utils.mktime_tz(mdate),
                                     'mid': mid,
                                     'seen': 0

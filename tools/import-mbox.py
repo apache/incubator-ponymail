@@ -326,7 +326,7 @@ class SlurpThread(Thread):
                             hval = ""
                             if message.get(key):
                                 for t in email.header.decode_header(message[key]):
-                                    if t[1] == None:
+                                    if t[1] == None or t[1].find("8bit") != -1:
                                         hval += t[0].decode('utf-8', errors='replace') if type(t[0]) is bytes else t[0]
                                     else:
                                         hval += t[0].decode(t[1],errors='ignore')
@@ -382,7 +382,10 @@ class SlurpThread(Thread):
                             mr = message['references']
                         irt = ""
                         if 'in-reply-to' in message:
-                            irt = message['in-reply-to']
+                            try:
+                                irt = "\n".join(message['in-reply-to'])
+                            except:
+                                irt = message.get('in-reply-to').__str__()
 
                         json = {
                             'from_raw': dheader['from'],
