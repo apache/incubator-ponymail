@@ -25,6 +25,16 @@ var units = {
     y: 'year'
 }
 
+function fixupPicker(obj) {
+    obj.addEventListener("focus", function(event){
+        $('html').on('hide.bs.dropdown', function (e) {
+            return false;
+        });
+    });
+    obj.addEventListener("blur", function(event){
+        $('html').unbind('hide.bs.dropdown')
+    });
+}
 // makeSelect: Creates a <select> object with options
 function makeSelect(options, id, selval) {
     var sel = document.createElement('select')
@@ -599,6 +609,7 @@ function drawCalendarPicker(obj, date) {
     
     // back-a-year button
     var a = document.createElement('a')
+    fixupPicker(a)
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()-1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≪"
@@ -606,6 +617,7 @@ function drawCalendarPicker(obj, date) {
     
     // back-a-month button
     a = document.createElement('a')
+    fixupPicker(a)
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&lt;"
@@ -613,6 +625,7 @@ function drawCalendarPicker(obj, date) {
     
     // forward-a-month button
     a = document.createElement('a')
+    fixupPicker(a)
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + mat.getFullYear() + '-' + (mat.getMonth()+2) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "&gt;"
@@ -620,6 +633,7 @@ function drawCalendarPicker(obj, date) {
     
     // forward-a-year button
     a = document.createElement('a')
+    fixupPicker(a)
     a.setAttribute("onclick", "drawCalendarPicker(this.parentNode, '" + (mat.getFullYear()+1) + '-' + (mat.getMonth()+1) + '-' + mat.getDate() + "');")
     a.setAttribute("href", "javascript:void(0);")
     a.innerHTML = "≫"
