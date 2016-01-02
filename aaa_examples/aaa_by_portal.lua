@@ -25,7 +25,7 @@ local config = require 'lib/config'
 -- Allow anyone logged in through Google+ access to private emails
 -- This is a direct string match, not a GLOB
 local valid_portal = "www.googleapis.com"  
-
+local grant_access_to = "*" -- use * for access to all, or specify a (sub)domain to grant access to
 
 -- Get rights (full or no access)
 function getRights(r, usr)
@@ -63,7 +63,7 @@ function getRights(r, usr)
     
     -- Check if admin or if the right oauth portal was used
     if usr.internal.admin or oauth_domain == valid_portal then
-        table.insert(rights, "*")
+        table.insert(rights, grant_access_to)
     end
     return rights
 end

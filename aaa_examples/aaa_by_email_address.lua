@@ -25,7 +25,7 @@ local config = require 'lib/config'
 -- validated emails ending with @foocorp.com have access to all private emails
 -- This is a GLOB, so could also be *@internal.foocorp.com, or *-admin@foocorp.com etc
 local valid_email = "*@foocorp.com" 
-
+local grant_access_to = "*" -- use * for access to all, or specify a (sub)domain to grant access to
 
 -- Is email a valid foocorp email?
 function validateEmail(r, email)
@@ -72,7 +72,7 @@ function getRights(r, usr)
     
     -- Check if email matches foocorp.com
     if usr.internal.admin or validateEmail(r, email) then
-        table.insert(rights, "*")
+        table.insert(rights, grant_access_to)
     end
     return rights
 end
