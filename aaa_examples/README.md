@@ -1,5 +1,14 @@
 # AAA Examples
-This directory contains example AAA libraries for various use cases
+This directory contains example AAA libraries for various use cases.
+These script will require that `site/api/lib/config.lua` has one or more
+OAuth providers specified as authorities, as such:
+
+~~~
+...,
+-- This adds Persona and Google OAuth as authorities
+admin_oauth = { "verifier.login.persona.org", "oauth.google.com" }
+...
+~~~
 
 ### AAA by email address:
 [`aaa_by_email_address.lua`](aaa_by_email_address.lua) checks against a GLOB
