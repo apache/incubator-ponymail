@@ -1,7 +1,8 @@
 # AAA Examples
-This directory contains example AAA libraries for various use cases.
-These script will require that `site/api/lib/config.lua` has one or more
-OAuth providers specified as authorities, as such:
+This directory contains example AAA (Authentication, Authorization and Access)
+libraries for various use cases. These script will require that
+`site/api/lib/config.lua` has one or more OAuth providers specified as
+authorities, as such:
 
 ~~~
 ...,
