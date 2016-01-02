@@ -138,7 +138,8 @@ For private list browsing, Pony Mail supplies an example AAA library in
 `site/api/lib/aaa.lua` that does LDAP lookups to determine which groups a person
 belongs to, and thus which lists said person has access to. The AAA example is
 modelled on the Apache LDAP structure, so you may wish to change this to suit
-your need.
+your need. We have [several simple AAA examples](../aaa_examples/) in the
+`aaa_examples` directory.
 
 If you are looking for an OAuth portal to provide users access to private lists
 in the archive, you will need to add the OAuth domain to config.admin_oauth in
