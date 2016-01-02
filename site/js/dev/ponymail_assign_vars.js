@@ -19,7 +19,7 @@
 // They keep track of the JSON we have received, storing it in the browser,
 // Thus lightening the load on the backend (caching and such)
 
-var _VERSION_ = "0.6a"
+var _VERSION_ = "0.7b"
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_ppp = 15; // results per page
 var open_emails = []
