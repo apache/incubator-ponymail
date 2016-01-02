@@ -17,3 +17,7 @@ access to private lists, provided the OAuth provider used is listed in
 `config.lua` as a valid authority.
 
 
+### AAA by OAuth portal:
+[`aaa_by_portal.lua`](aaa_by_portal.lua) checks which OAuth portal was used to
+log in. If it's the right (Google in the example), then access to private lists
+is granted.
