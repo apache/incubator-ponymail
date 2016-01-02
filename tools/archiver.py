@@ -259,12 +259,12 @@ class Archiver(object):
                     logger.warn("Could not generate MID: %s" % err)
                 mid = pmid
             irt = ""
-            if 'in-reply-to' in message:
+            if 'in-reply-to' in msg_metadata:
                 try:
                     try:
-                        irt = "\n".join(message['in-reply-to'])
+                        irt = "\n".join(msg_metadata['in-reply-to'])
                     except:
-                        irt = message.get('in-reply-to').__str__()
+                        irt = msg_metadata.get('in-reply-to').__str__()
                 except:
                     irt = ""
             ojson = {
