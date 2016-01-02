@@ -21,3 +21,9 @@ access to private lists, provided the OAuth provider used is listed in
 [`aaa_by_portal.lua`](aaa_by_portal.lua) checks which OAuth portal was used to
 log in. If it's the right (Google in the example), then access to private lists
 is granted.
+
+
+### AAA with access list:
+[`aaa_with_subgroups.lua`](aaa_with_subgroups.lua) checks validated accounts
+against an access list, and if found, provides access to a specific set of
+lists for each individual user.
