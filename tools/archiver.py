@@ -226,7 +226,7 @@ class Archiver(object):
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
-            if 'content-type' in message and message['content-type'].find("flowed") != -1:
+            if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
                 body = convertToWrapped(body, character_set="utf-8")
             if isinstance(body, str):
                 body = body.encode('utf-8')
@@ -259,12 +259,12 @@ class Archiver(object):
                     logger.warn("Could not generate MID: %s" % err)
                 mid = pmid
             irt = ""
-            if 'in-reply-to' in message:
+            if 'in-reply-to' in msg_metadata:
                 try:
                     try:
-                        irt = "\n".join(message['in-reply-to'])
+                        irt = "\n".join(msg_metadata['in-reply-to'])
                     except:
-                        irt = message.get('in-reply-to').__str__()
+                        irt = msg_metadata.get('in-reply-to').__str__()
                 except:
                     irt = ""
             ojson = {
