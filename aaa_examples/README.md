@@ -6,7 +6,7 @@ OAuth providers specified as authorities, as such:
 ~~~
 ...,
 -- This adds Persona and Google OAuth as authorities
-admin_oauth = { "verifier.login.persona.org", "oauth.google.com" }
+admin_oauth = { "verifier.login.persona.org", "www.googleapis.com" }
 ...
 ~~~
 
