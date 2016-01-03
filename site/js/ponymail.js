@@ -1821,27 +1821,6 @@ function getChildren(main, email, level) {
             var child = email.children[i]
             if (child.tid != email.mid) {
                 var eml = saved_emails[child.tid]
-                
-                // create div before emails are fetched, in case they arrive in wrong order
-                var node = document.createElement('div')
-                node.style.marginBottom = "20px";
-                node.setAttribute("id", "thread_" + (child.tid).toString().replace(/@<.+>/, ""))
-                
-                document.getElementsByTagName('body')[0].appendChild(node)
-                var parent = document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, "")) : document.getElementById('thread_' + main)
-                if (pchildo) {
-                    try {
-                        parent.insertBefore(node, pchildo)
-                    } catch(e) {
-                        parent.appendChild(node)
-                    }
-                    
-                } else {
-                    parent.appendChild(node)
-                }
-                
-                pchildo = node
-                
                 if (!eml || !eml.from) {
                     GetAsync("/api/email.lua?id=" + child.tid, {
                         main: main,
