@@ -2,6 +2,7 @@
 
 - Fixed a bug where single-email topics in treeview mode would not display
 - Hitting the escape key will now properly close threads in treeview mode
+- Fixed an issue where threads were sometimes sorted the wrong way, time-wise
 
 ## CHANGES in 0.7b:
 
