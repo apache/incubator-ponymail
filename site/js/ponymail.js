@@ -2677,7 +2677,8 @@ function buildTreeview(nesting, list, obj, pbigger) {
     var now = new Date().getTime() / 1000
     for (var i in list) {
         var nvi = ""
-        for (var z = 1; z <= nesting; z++) {
+        // We'll nest to a max depth of 20, to not explode everything
+        for (var z = 1; z <= Math.max(nesting, 20); z++) {
             if (z == nesting) {
                 if (i == (list.length -1)) {
                     nvi += "<img src='/images/treeview_lastchild.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
