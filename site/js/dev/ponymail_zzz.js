@@ -26,14 +26,22 @@ function dealWithKeyboard(e) {
             
             // If datepicker popup is shown, hide it on escape
             var thread = document.getElementById('thread_' + current_thread.toString().replace(/@<.+>/, ""))
+            // try treeview if all else fails
+            if (!thread) {
+                thread = document.getElementById('thread_treeview_' + current_thread.toString().replace(/@<.+>/, ""))
+            }
+            
             if (document.getElementById('datepicker_popup') && document.getElementById('datepicker_popup').style.display == "block") {
                 document.getElementById('datepicker_popup').style.display = "none"
             }
             // otherwise, collapse a thread?
             else if (thread) {
-                    // Close one thread?
                 if (thread.style.display == 'block') {
-                    toggleEmails_threaded(current_thread, true)
+                    if (prefs.displayMode == 'treeview') {
+                        toggleEmails_treeview(current_thread, true);
+                    } else {
+                        toggleEmails_threaded(current_thread, true)
+                    }
                 } else {
                     // Close all threads?
                     kiddos = []
