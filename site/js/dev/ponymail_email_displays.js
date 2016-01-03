@@ -255,7 +255,8 @@ function displaySingleEmail(json, id) {
 function displayEmailThreaded(json, state, threadobj) {
     var level = state.level ? state.level : 1
     var b = state.before
-    var obj = threadobj ? threadobj : document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + b.toString().replace(/@<.+>/, "")) : document.getElementById("thread_" + state.main)
+    var cobj = document.getElementById("thread_" + b.toString().replace(/@<.+>/, ""))
+    var obj = (threadobj && typeof threadobject === 'object') ? threadobj :  ((cobj && typeof cobj === 'object') ? cobj : document.getElementById("thread_" + state.main))
     if (!json.mid && !json.tid) {
         if (obj) {
             obj.innerHTML = "<h2>404!</h2><p>Sorry, we couldn't find this email :("
