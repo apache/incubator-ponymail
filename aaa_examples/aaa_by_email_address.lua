@@ -24,6 +24,7 @@ local config = require 'lib/config'
 
 -- validated emails ending with @foocorp.com have access to all private emails
 -- This is a GLOB, so could also be *@internal.foocorp.com, or *-admin@foocorp.com etc
+-- This AAA module requires strcmp_match which is only found in Apache httpd currently.
 local valid_email = "*@foocorp.com" 
 local grant_access_to = "*" -- use * for access to all, or specify a (sub)domain to grant access to
 
