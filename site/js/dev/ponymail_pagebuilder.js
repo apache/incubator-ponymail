@@ -232,6 +232,27 @@ function buildStats(json, state, show) {
     }
 }
 
+
+// swipeListView: scroll up/down the list view (previous/next page view)
+function swipeListView(e) {
+    var direction = ((e.wheelDelta || -e.detail) < 0) ? 'down' : 'up'
+    var js = old_json //prefs.displayMode == 'flat' ? current_flat_json : current_json
+    var jlen = prefs.displayMode == 'flat' ? current_flat_json.length : js.thread_struct.length
+    if (openEmail() || ($("body").height() > $(window).height())) {
+        return
+    }
+    if (direction == 'down') {
+        if ((jlen - c_page) > d_ppp) {
+            var np = Math.min(jlen, c_page + d_ppp)
+            viewModes[prefs.displayMode].list(js, d_ppp, np, false);
+        }
+    }
+    if (direction == 'up') {
+        var np = Math.max(0, c_page - d_ppp)
+        viewModes[prefs.displayMode].list(js, d_ppp, np, false);
+    }
+}
+
 // buildPage: build the entire page!
 function buildPage(json, state) {
     loadEphemeral(); // load ephem config if need be
@@ -282,6 +303,9 @@ function buildPage(json, state) {
     }
     if (json.took) {
         var rtime = new Date().getTime() - start
+        document.getElementById('emails').addEventListener("mousewheel", swipeListView, false);
+        document.getElementById('emails').addEventListener("DOMMouseScroll", swipeListView, false);
+        
         document.getElementById('emails').innerHTML += "<br/><br/><small><i>Compiled in " + parseInt(json.took / 1000) + "ms, rendered in " + rtime + "ms</i></small>"
     }
     if (json.debug && pm_config.debug) {

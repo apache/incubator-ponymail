@@ -229,3 +229,13 @@ function popup(title, body, timeout) {
             }, (timeout ? timeout : 5) * 1000)
     }
 }
+
+// function for determining if an email is open or not
+function openEmail() {
+    kiddos = []
+    traverseThread(document.body, '(thread|helper)_', 'DIV')
+    for (var i in kiddos) {
+        if (kiddos[i].style.display == 'block') return true
+    }
+    return false
+}

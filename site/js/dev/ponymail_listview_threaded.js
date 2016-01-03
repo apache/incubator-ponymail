@@ -44,6 +44,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     if (!start) {
         start = 0
     }
+    c_page = start
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break

@@ -22,6 +22,7 @@
 var _VERSION_ = "0.8b"
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_ppp = 15; // results per page
+var c_page = 0; // current page position for list view
 var open_emails = []
 var list_year = {}
 var current_retention = "lte=1M" // default timespan for list view

@@ -30,6 +30,7 @@
 var _VERSION_ = "0.8b"
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_ppp = 15; // results per page
+var c_page = 0; // current page position for list view
 var open_emails = []
 var list_year = {}
 var current_retention = "lte=1M" // default timespan for list view
@@ -1266,6 +1267,16 @@ function popup(title, body, timeout) {
     }
 }
 
+// function for determining if an email is open or not
+function openEmail() {
+    kiddos = []
+    traverseThread(document.body, '(thread|helper)_', 'DIV')
+    for (var i in kiddos) {
+        if (kiddos[i].style.display == 'block') return true
+    }
+    return false
+}
+
 /******************************************
  Fetched from dev/ponymail_email_displays.js
 ******************************************/
@@ -2102,6 +2113,7 @@ function loadList_flat(mjson, limit, start, deep) {
     if (!start) {
         start = 0
     }
+    c_page = start
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
@@ -2298,6 +2310,7 @@ function loadList_threaded(mjson, limit, start, deep) {
     if (!start) {
         start = 0
     }
+    c_page = start
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
@@ -2509,6 +2522,7 @@ function loadList_treeview(mjson, limit, start, deep) {
     if (!start) {
         start = 0
     }
+    c_page = start
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
@@ -3399,6 +3413,27 @@ function buildStats(json, state, show) {
     }
 }
 
+
+// swipeListView: scroll up/down the list view (previous/next page view)
+function swipeListView(e) {
+    var direction = ((e.wheelDelta || -e.detail) < 0) ? 'down' : 'up'
+    var js = old_json //prefs.displayMode == 'flat' ? current_flat_json : current_json
+    var jlen = prefs.displayMode == 'flat' ? current_flat_json.length : js.thread_struct.length
+    if (openEmail() || ($("body").height() > $(window).height())) {
+        return
+    }
+    if (direction == 'down') {
+        if ((jlen - c_page) > d_ppp) {
+            var np = Math.min(jlen, c_page + d_ppp)
+            viewModes[prefs.displayMode].list(js, d_ppp, np, false);
+        }
+    }
+    if (direction == 'up') {
+        var np = Math.max(0, c_page - d_ppp)
+        viewModes[prefs.displayMode].list(js, d_ppp, np, false);
+    }
+}
+
 // buildPage: build the entire page!
 function buildPage(json, state) {
     loadEphemeral(); // load ephem config if need be
@@ -3449,6 +3484,9 @@ function buildPage(json, state) {
     }
     if (json.took) {
         var rtime = new Date().getTime() - start
+        document.getElementById('emails').addEventListener("mousewheel", swipeListView, false);
+        document.getElementById('emails').addEventListener("DOMMouseScroll", swipeListView, false);
+        
         document.getElementById('emails').innerHTML += "<br/><br/><small><i>Compiled in " + parseInt(json.took / 1000) + "ms, rendered in " + rtime + "ms</i></small>"
     }
     if (json.debug && pm_config.debug) {
