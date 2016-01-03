@@ -1524,30 +1524,33 @@ function displayEmailThreaded(json, state, threadobj) {
     }
     saved_emails[json.mid] = json
     if (obj) {
-        var node = document.createElement('div')
+        var eobj = document.getElementById("thread_" + (json.mid ? json.mid : json.tid).toString().replace(/@<.+>/, ""))
+        var node = eobj ? eobj : document.createElement('div')
         node.setAttribute("epoch", json.epoch.toString())
         node.style.marginBottom = "20px";
         node.setAttribute("id", "thread_" + (json.mid ? json.mid : json.tid).toString().replace(/@<.+>/, ""))
-        if (state.pchild && document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))) {
-            var pc = document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))
-            try {
-                obj.insertBefore(node, pc)
-            } catch (e) {
+        if (json.mid != b) {
+            
+            if (state.pchild && document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))) {
+                var pc = document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))
+                try {
+                    obj.insertBefore(node, pc)
+                } catch (e) {
+                    if (prefs.sortOrder == 'forward') {
+                        obj.appendChild(node)
+                    } else {
+                        obj.insertBefore(node, obj.firstChild)
+                    }
+                }
+            } else {
                 if (prefs.sortOrder == 'forward') {
                     obj.appendChild(node)
                 } else {
                     obj.insertBefore(node, obj.firstChild)
                 }
             }
-
-        } else {
-            if (prefs.sortOrder == 'forward') {
-                obj.appendChild(node)
-            } else {
-                obj.insertBefore(node, obj.firstChild)
-            }
+            displayEmail(json, (json.tid ? json.tid : json.mid), level)
         }
-        displayEmail(json, (json.tid ? json.tid : json.mid), level)
         if (state.child && state.child.children && state.child.children.length > 0) {
             getChildren(state.main, state.child, level)
         }
@@ -1811,10 +1814,25 @@ function getChildren(main, email, level) {
         email.children.sort(function(a, b) {
             return b.epoch - a.epoch
         })
+        var pchildo = null
         for (var i in email.children) {
             var child = email.children[i]
             if (child.tid != email.mid) {
                 var eml = saved_emails[child.tid]
+                
+                // create div before emails are fetched, in case they arrive in wrong order
+                var node = document.createElement('div')
+                node.style.marginBottom = "20px";
+                node.setAttribute("id", "thread_" + (child.tid).toString().replace(/@<.+>/, ""))
+                
+                document.getElementsByTagName('body')[0].appendChild(node)
+                if (pchildo) {
+                    var parent = document.getElementById('thread_' + main) ? document.getElementById('thread_' + main) : document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, ""))
+                    parent.insertBefore(node, pchildo)
+                }
+                
+                pchildo = node
+                
                 if (!eml || !eml.from) {
                     GetAsync("/api/email.lua?id=" + child.tid, {
                         main: main,
