@@ -30,7 +30,6 @@ function dealWithKeyboard(e) {
             if (!thread) {
                 thread = document.getElementById('thread_treeview_' + current_thread.toString().replace(/@<.+>/, ""))
             }
-            
             if (document.getElementById('datepicker_popup') && document.getElementById('datepicker_popup').style.display == "block") {
                 document.getElementById('datepicker_popup').style.display = "none"
             }
@@ -38,7 +37,8 @@ function dealWithKeyboard(e) {
             else if (thread) {
                 if (thread.style.display == 'block') {
                     if (prefs.displayMode == 'treeview') {
-                        toggleEmails_treeview(current_thread, true);
+                        toggleEmails_threaded(current_thread, true)
+                        toggleEmails_treeview(current_thread, true)
                     } else {
                         toggleEmails_threaded(current_thread, true)
                     }

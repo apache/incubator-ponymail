@@ -2693,7 +2693,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
         
         
         var el = list[i]
-        var friendly_id = (el.mid ? el.mid : el.tid).toString().replace(/@<.+>/, "")
+        var friendly_id = (el.tid ? el.tid : el.mid).toString().replace(/@<.+>/, "")
         
         var node = document.createElement('div')
         node.setAttribute("id", "thread_parent_" + friendly_id)
@@ -2811,12 +2811,12 @@ function toggleEmails_treeview(id, close, toverride) {
     current_email_msgs = []
     var thread = document.getElementById('thread_treeview_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
+        current_thread = id
         if (!current_thread_json[id].children || typeof current_thread_json[id].children.length == 'undefined' || current_thread_json[id].children.length == 0) {
             toggleEmails_threaded(id, close, toverride, thread)
             return
         }
         var epoch = null
-        current_thread = id
         if (typeof(window.localStorage) !== "undefined") {
             epoch = latestEmailInThread + "!"
             var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
@@ -4743,7 +4743,6 @@ function dealWithKeyboard(e) {
             if (!thread) {
                 thread = document.getElementById('thread_treeview_' + current_thread.toString().replace(/@<.+>/, ""))
             }
-            
             if (document.getElementById('datepicker_popup') && document.getElementById('datepicker_popup').style.display == "block") {
                 document.getElementById('datepicker_popup').style.display = "none"
             }
@@ -4751,7 +4750,8 @@ function dealWithKeyboard(e) {
             else if (thread) {
                 if (thread.style.display == 'block') {
                     if (prefs.displayMode == 'treeview') {
-                        toggleEmails_treeview(current_thread, true);
+                        toggleEmails_threaded(current_thread, true)
+                        toggleEmails_treeview(current_thread, true)
                     } else {
                         toggleEmails_threaded(current_thread, true)
                     }
