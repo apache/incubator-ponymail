@@ -26,7 +26,7 @@ function checkForSlows() {
         if ((now - pending_urls[x]) > 2.5) {
             slows++;
             break
-        } else if (x.search(/stats\.lua/) && (now - pending_urls[x]) > 0.5) {
+        } else if (x.search(/stats\.lua/) != -1 && (now - pending_urls[x]) > 0.5) {
             resetPage()
         }
     }
