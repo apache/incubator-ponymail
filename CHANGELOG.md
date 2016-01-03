@@ -1,4 +1,9 @@
-## CHANGES in 0.6a:
+## CHANGES in 0.7b:
+
+- Added several AAA example scripts
+- Fixed a bug where long threads could break the UI (0.6a regression)
+
+## CHANGES in 0.6a (not released):
 
 - Added a caching system for search results to reduce load times
 - The statistics panel is now hidden by default
