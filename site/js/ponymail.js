@@ -1550,6 +1550,8 @@ function displayEmailThreaded(json, state, threadobj) {
                 }
             }
             displayEmail(json, (json.tid ? json.tid : json.mid), level)
+        } else {
+            document.getElementById("thread_" + state.main).appendChild(node)
         }
         if (state.child && state.child.children && state.child.children.length > 0) {
             getChildren(state.main, state.child, level)
@@ -1826,7 +1828,7 @@ function getChildren(main, email, level) {
                 node.setAttribute("id", "thread_" + (child.tid).toString().replace(/@<.+>/, ""))
                 
                 document.getElementsByTagName('body')[0].appendChild(node)
-                var parent = document.getElementById('thread_' + main) ? document.getElementById('thread_' + main) : document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, ""))
+                var parent = document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, "")) ? document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, "")) : document.getElementById('thread_' + main)
                 if (pchildo) {
                     try {
                         parent.insertBefore(node, pchildo)

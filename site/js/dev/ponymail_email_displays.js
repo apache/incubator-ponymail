@@ -294,6 +294,8 @@ function displayEmailThreaded(json, state, threadobj) {
                 }
             }
             displayEmail(json, (json.tid ? json.tid : json.mid), level)
+        } else {
+            document.getElementById("thread_" + state.main).appendChild(node)
         }
         if (state.child && state.child.children && state.child.children.length > 0) {
             getChildren(state.main, state.child, level)
