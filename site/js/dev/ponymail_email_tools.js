@@ -116,9 +116,11 @@ function getChildren(main, email, level) {
                 node.setAttribute("id", "thread_" + (child.tid).toString().replace(/@<.+>/, ""))
                 
                 document.getElementsByTagName('body')[0].appendChild(node)
+                var parent = document.getElementById('thread_' + main) ? document.getElementById('thread_' + main) : document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, ""))
                 if (pchildo) {
-                    var parent = document.getElementById('thread_' + main) ? document.getElementById('thread_' + main) : document.getElementById("thread_" + (email.tid).toString().replace(/@<.+>/, ""))
                     parent.insertBefore(node, pchildo)
+                } else {
+                    parent.appendChild(node)
                 }
                 
                 pchildo = node
