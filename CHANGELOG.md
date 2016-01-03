@@ -1,3 +1,8 @@
+## CHANGES in 0.8b:
+
+- Fixed a bug where single-email topics in treeview mode would not display
+- Hitting the escape key will now properly close threads in treeview mode
+
 ## CHANGES in 0.7b:
 
 - Added several AAA example scripts
