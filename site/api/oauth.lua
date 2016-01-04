@@ -85,6 +85,13 @@ function handle(r)
             name = r.headers_in[config.oauth_fields['internal']['name'] or 0],
             uid = r.headers_in[config.oauth_fields['internal']['uid'] or 0]
         }
+        -- Only use internal thing if localhost is trusted
+        for k, v in pairs(config.admin_oauth or {}) do
+            if r.strcmp_match(oauth_domain, v) then
+                valid = true
+                break
+            end
+        end
     end
     
     -- Did we get something useful from the backend?
