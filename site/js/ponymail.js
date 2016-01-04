@@ -47,6 +47,7 @@ var current_thread_json = {}
 var current_flat_json = {}
 var current_email_msgs = []
 var current_reply_eid = null
+var last_opened_email = null
 var firstVisit = true
 var global_deep = false
 var old_state = {}
@@ -1300,6 +1301,7 @@ function displayEmail(json, id, level) {
     // Save the JSON in our JS array so we don't have to fetch it again later
     saved_emails[json.mid] = json
     var estyle = ""
+    last_opened_email = json.mid
     
     // color based on view before or not??
     if (typeof(window.localStorage) !== "undefined") {
@@ -4770,6 +4772,8 @@ function setTheme(theme) {
 
 // dealWithKeyboard: Handles what happens when you hit the escape key
 function dealWithKeyboard(e) {
+    
+    // escape key: hide composer/settings/thread
     if (e.keyCode == 27) {
         if (document.getElementById('splash').style.display == 'block') {
             document.getElementById('splash').style.display = "none"
@@ -4805,6 +4809,41 @@ function dealWithKeyboard(e) {
             }
         }
     }
+    // H key: show help
+    else if (e.keyCode == 72) {
+        popup("Keyboard shortcuts",
+              "<pre>\
+              <b>H:</b>Show this help menu<br/>\
+              <b>C:</b>Compose a new email to the current list<br/>\
+              <b>R:</b>Reply to the last opened email<br/>\
+              <b>S:</b>Go to the quick search bar<br/>\
+              <b>Esc:</b>Hide/collapse current email or thread<br/>\
+              </pre>\
+              You can also, in some cases, use the mouse wheel to scroll up/down the list view",
+              10
+              )
+    }
+    
+    // The key shortcuts below depend on the splash window being hidden
+    
+    // C key: compose
+    else if (e.keyCode == 67 && document.getElementById('splash').style.display != 'block') {
+        compose(null, xlist, 'new')
+    }
+    // R key: reply
+    else if (e.keyCode == 82 && document.getElementById('splash').style.display != 'block') {
+        if (openEmail() && last_opened_email) {
+            compose(last_opened_email, null, 'reply')
+        }
+    }
+    // S key: quick search
+    else if (e.keyCode == 83 && document.getElementById('splash').style.display != 'block') {
+        if (document.getElementById('q')) {
+            document.getElementById('q').focus()
+        }
+        
+    }
+    
 }
 
 

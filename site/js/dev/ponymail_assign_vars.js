@@ -39,6 +39,7 @@ var current_thread_json = {}
 var current_flat_json = {}
 var current_email_msgs = []
 var current_reply_eid = null
+var last_opened_email = null
 var firstVisit = true
 var global_deep = false
 var old_state = {}

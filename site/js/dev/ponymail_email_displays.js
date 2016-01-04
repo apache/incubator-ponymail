@@ -33,6 +33,7 @@ function displayEmail(json, id, level) {
     // Save the JSON in our JS array so we don't have to fetch it again later
     saved_emails[json.mid] = json
     var estyle = ""
+    last_opened_email = json.mid
     
     // color based on view before or not??
     if (typeof(window.localStorage) !== "undefined") {
