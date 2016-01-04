@@ -460,7 +460,7 @@ border: #5cb85c solid 2px;
 
 #popupper {
     position: fixed;
-    top: calc(50% - 150px);
+    top: calc(30% - 150px);
     left: calc(50% - 250px);
     margin: 0 auto;
     z-index: 100;
