@@ -2729,14 +2729,14 @@ function buildTreeview(nesting, list, obj, pbigger) {
         for (var z = 1; z <= Math.min(nesting, 20); z++) {
             if (z == nesting) {
                 if (i == (list.length -1)) {
-                    nvi += "<img src='/images/treeview_lastchild.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
+                    nvi += "<img src='images/treeview_lastchild.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
                 } else {
-                    nvi += "<img src='/images/treeview_child.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
+                    nvi += "<img src='images/treeview_child.png' style='height: 40px; width: 16px; overflow: hidden; margin-top: -5px;'/>"
                 }
             } else if (pbigger[z+1]) {
-                nvi += "<img src='/images/treeview_parent.png' style='height: 40px; width: 16px; overflow: hidden;margin-top: -5px;'/>"
+                nvi += "<img src='images/treeview_parent.png' style='height: 40px; width: 16px; overflow: hidden;margin-top: -5px;'/>"
             } else {
-                nvi += "<img src='/images/treeview_none.png' style='height: 40px; width: 16px; overflow: hidden;margin-top: -5px;'/>"
+                nvi += "<img src='images/treeview_none.png' style='height: 40px; width: 16px; overflow: hidden;margin-top: -5px;'/>"
             }
         }
         
