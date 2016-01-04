@@ -76,6 +76,15 @@ function handle(r)
         oauth_domain = get.oauth_token:match("https?://(.-)/")
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
+    
+    -- CAS/Internal header auth
+    elseif get.key == 'internal' and config.oauth_fields['internal'] then
+        oauth_domain = "localhost"
+        json = {
+            email = r.headers_in[config.oauth_fields['internal']['email'] or 0],
+            name = r.headers_in[config.oauth_fields['internal']['name'] or 0],
+            uid = r.headers_in[config.oauth_fields['internal']['uid'] or 0]
+        }
     end
     
     -- Did we get something useful from the backend?
