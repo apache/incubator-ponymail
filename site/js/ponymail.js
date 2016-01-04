@@ -198,6 +198,7 @@ function compose(eid, lid, type) {
     
     // If we have a valid dummy email or are replying to an email, then...
     if (email != null) {
+        var truncated = false
         if (login.credentials) {
             current_reply_eid = eid
             // Turn list-id into an actual email address to send to
@@ -280,9 +281,12 @@ function compose(eid, lid, type) {
             // reply-via-mua button
             if (!lid) {
                 // construct long and winding mailto: link
+                // Make sure we don't go over 16k chars in the body,
+                // or we'll risk a namespace error in the link
                 var eml_raw_short = eml_raw
                 var N = 16000
                 if (eml_raw_short.length > N) {
+                    truncated = true
                     eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
                 }
                 var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
@@ -309,9 +313,13 @@ function compose(eid, lid, type) {
             // Same as above, construct mailto: link
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
             eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
+            
+            // Same as before, we have to truncate very large emails
+            // or the URL to MUA won't work and throw a namespace error
             var eml_raw_short = eml_raw
             var N = 16000
             if (eml_raw_short.length > N) {
+                truncated = true
                 eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
             }
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
@@ -325,6 +333,10 @@ function compose(eid, lid, type) {
             // "sorry, but..." text + mua link
             obj.innerHTML += "<p>You need to be logged in to reply online.<br/>If you have a regular mail client, you can reply to this email by clicking below:<br/><h4><a style='color: #FFF;' class='btn btn-success' onclick='hideComposer(event);' href=\"" + link + "\">Reply via Mail Client</a></h4>"
         }
+        if (composeType == 'reply' && truncated) {
+            obj.innerHTML += "<div><br/><i><b>Note: </b>In case of very long emails such as this, the body may be truncated if you choose to reply using your own mail client</i></div>"
+        }
+        
     } else {
         alert("I don't know which list to send an email to, sorry :(")
     }
