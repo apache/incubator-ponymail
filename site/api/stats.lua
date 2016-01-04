@@ -636,7 +636,8 @@ function handle(r)
                     irt = irt:gsub("^[a-zA-Z]+:%s+", "")
                 end
             end
-            local point = emails[irt] or ((email['in-reply-to'] or email['references']) and findSubject(emails, emls, irt, email.epoch))
+            local refpoint = email['in-reply-to'] or email['references'] or ""
+            local point = emails[irt] or (#refpoint > 0 and findSubject(emails, emls, irt, email.epoch))
             if point then
                 if point.nest < 50 then
                     point.nest = point.nest + 1
