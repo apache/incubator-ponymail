@@ -80,10 +80,14 @@ function handle(r)
     -- CAS/Internal header auth
     elseif get.key == 'internal' and config.oauth_fields['internal'] then
         oauth_domain = "localhost"
+        local tbl = r.headers_in
+        if config.oauth_fields['internal'].env and config.oauth_fields['internal'].env == 'subprocess' then
+            tbl = r.subprocess_env
+        end
         json = {
-            email = r.headers_in[config.oauth_fields['internal']['email'] or 0],
-            name = r.headers_in[config.oauth_fields['internal']['name'] or 0],
-            uid = r.headers_in[config.oauth_fields['internal']['uid'] or 0]
+            email = tbl[config.oauth_fields['internal']['email'] or 0],
+            name = tbl[config.oauth_fields['internal']['name'] or 0],
+            uid = tbl[config.oauth_fields['internal']['uid'] or 0]
         }
         -- Only use internal thing if localhost is trusted
         for k, v in pairs(config.admin_oauth or {}) do
