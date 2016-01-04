@@ -62,14 +62,15 @@ function displayEmail(json, id, level) {
         var ebody = json.body
         ebody = ebody.replace(/</mg, "&lt;")
         ebody = "\n" + ebody // add a newline at top
-        
+        var base = pm_config.URLBase ? pm_config.URLBase : ""
+        base = base.replace(/\/+/g, "/")
         // If we're compacting quotes in the email, let's...do so with some fuzzy logic
         if (prefs.compactQuotes == 'yes') {
             ebody = ebody.replace(/((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+/mgi, function(inner) {
                 var rnd = (Math.random() * 100).toString()
                 inner = inner.replace(/>/g, "&gt;")
                 var html = "<div class='bs-callout bs-callout-default' style='margin: 3px; padding: 2px;' id='parent_" + rnd + "'>" +
-                    "<img src='/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
+                    "<img src='" + base + "/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
                     "<div style='display: none;' id='quote_" + rnd + "'>" + inner + "</div></div>"
                 return html
             })
@@ -231,10 +232,12 @@ function displaySingleEmail(json, id) {
         ebody = ebody.replace(/</, "&lt;")
         ebody = "\n" + ebody
         if (true) {
+            var base = pm_config.URLBase ? pm_config.URLBase : ""
+            base = base.replace(/\/+/g, "/")
             ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                 var rnd = (Math.random() * 100).toString()
                 var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
-                    "<img src='/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
+                    "<img src='" + base + "/images/quote.png' title='show/hide original text' onclick='toggleView(\"quote_" + rnd + "\")'/><br/>" +
                     "<div style='display: none;' id='quote_" + rnd + "'>" + inner + "</div></div>"
                 return html
             })
