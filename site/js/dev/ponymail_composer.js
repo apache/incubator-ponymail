@@ -205,6 +205,8 @@ function compose(eid, lid, type) {
             // reply-via-mua button
             if (!lid) {
                 // construct long and winding mailto: link
+                // Make sure we don't go over 16k chars in the body,
+                // or we'll risk a namespace error in the link
                 var eml_raw_short = eml_raw
                 var N = 16000
                 if (eml_raw_short.length > N) {
@@ -234,6 +236,9 @@ function compose(eid, lid, type) {
             // Same as above, construct mailto: link
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
             eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
+            
+            // Same as before, we have to truncate very large emails
+            // or the URL to MUA won't work and throw a namespace error
             var eml_raw_short = eml_raw
             var N = 16000
             if (eml_raw_short.length > N) {
