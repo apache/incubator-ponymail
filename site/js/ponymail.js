@@ -1999,7 +1999,10 @@ function GetAsync(theUrl, xstate, callback) {
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    
+    if (pm_config.URLBase && pm_config.URLBase.length > 0) {
+        theUrl = pm_config.URLBase + theUrl
+        theUrl = theUrl.replace(/\/+/g, "/")
+    }
     // Set the start time of the request, used for the 'loading data...' spinner later on
     if (pending_urls) {
         pending_urls[theUrl] = new Date().getTime() / 1000;
