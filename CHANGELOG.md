@@ -5,6 +5,7 @@
 - Fixed an issue where threads were sometimes sorted the wrong way, time-wise
 - UI shortcut improvements for high resolution users
 - Added additional keyboard shortcuts and a help menu (H key to open)
+- Very long emails can now be replied to via own MUA (albeit truncated)
 
 ## CHANGES in 0.7b:
 

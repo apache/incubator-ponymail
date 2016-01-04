@@ -205,7 +205,12 @@ function compose(eid, lid, type) {
             // reply-via-mua button
             if (!lid) {
                 // construct long and winding mailto: link
-                var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
+                var eml_raw_short = eml_raw
+                var N = 16000
+                if (eml_raw_short.length > N) {
+                    eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
+                }
+                var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
                 
                 // Make a button object
                 var btn = document.createElement('input')
@@ -229,8 +234,13 @@ function compose(eid, lid, type) {
             // Same as above, construct mailto: link
             var eml_raw = "\n\nOn " + email.date + ", " + email.from + " wrote: \n"
             eml_raw += email.body.replace(/([^\r\n]*)/mg, "> $1")
+            var eml_raw_short = eml_raw
+            var N = 16000
+            if (eml_raw_short.length > N) {
+                eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
+            }
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
-            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + escape(subject) + "&In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw)
+            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + escape(subject) + "&In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
             
             // Get compose pane, show it
             var obj = document.getElementById('splash')
