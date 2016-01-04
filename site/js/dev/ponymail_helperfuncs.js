@@ -107,6 +107,10 @@ function GetAsync(theUrl, xstate, callback) {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 404) {
             alert("404'ed: " + theUrl)
         }
+        // If 500'ed, show warning msg! we shouldn't get this, but meh..
+        if (xmlHttp.readyState >= 4 && xmlHttp.status == 500) {
+            popup("Internal Server Error", "Sorry, the request hit a bit snag and errored out. The server responded with: <pre>" + xmlHttp.responseText + "</pre>", 20)
+        }
     }
 }
 
