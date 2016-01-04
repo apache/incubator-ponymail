@@ -362,6 +362,9 @@ class SlurpThread(Thread):
                         # Pipermail transforms from: to something weird - reset that!
                         if piperWeirdness:
                             m = re.match(r"(.+) at ([^(]+) \((.+)\)$", dheader['from'])
+                            # Try just 'foo at bar.tld' if 'foo at bar.tld (foo bar)' isn't working
+                            if not m:
+                                m = re.match(r"(.+) at ([^(]+)$", dheader['from'])
                             if m:
                                 dheader['from'] = "%s <%s@%s>" % (m.group(3), m.group(1), m.group(2))
                                 
