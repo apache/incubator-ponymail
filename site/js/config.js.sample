@@ -50,6 +50,14 @@ var pm_config = {
             construct: true, // needed for GitHub
             client_id: 'your.github.app.id.here',
             scope: "user:email"
+        },
+        */
+        /* Basic Auth example with CAS/whatever
+         * Remember to edit site/api/lib/config.lua and add 'localhost' to the oauth_fields array!
+        internal: {
+            name: "CAS Auth",
+            oauth_portal: "/oauth.html?key=internal&",
+            oauth_url: "/oauth.html?key=internal&",
         }
         */
     },
