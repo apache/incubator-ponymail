@@ -1415,7 +1415,7 @@ function displayEmail(json, id, level) {
                     } else {
                         size = fd.size.toLocaleString() + " bytes"
                     }
-                    thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                    thread.innerHTML += "<a href='api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
                 }
                 thread.innerHTML += "<br/>"
             }
@@ -1454,7 +1454,7 @@ function displayEmail(json, id, level) {
                 thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
             }
             
-            thread.innerHTML += "<b>List: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
+            thread.innerHTML += "<b>List: </b><a href='list.html?" + lid + "'>" + lid + "</a><br/>"
             if (json.attachments && json.attachments.length > 0) {
                 thread.innerHTML += "<b>Attachments: </b>"
                 for (var a in json.attachments) {
@@ -1465,7 +1465,7 @@ function displayEmail(json, id, level) {
                     } else {
                         size = fd.size.toLocaleString() + " bytes"
                     }
-                    thread.innerHTML += "<a href='/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                    thread.innerHTML += "<a href='api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
                 }
                 thread.innerHTML += "<br/>"
             }
@@ -1535,7 +1535,7 @@ function displaySingleEmail(json, id) {
 
         ebody = ebody.replace(re_weburl, "<a href=\"$1\">$1</a>")
 
-        thread.innerHTML += "<b>List ID: </b><a href='/list.html?" + lid + "'>" + lid + "</a><br/>"
+        thread.innerHTML += "<b>List ID: </b><a href='list.html?" + lid + "'>" + lid + "</a><br/>"
         thread.innerHTML += "<br/><pre style='font-family: Hack;'>" + ebody + '</pre>'
     } else {
         alert("Error, " + id + " not found :(")
@@ -2076,7 +2076,7 @@ function showSpinner(show) {
     if (!obj) {
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
-        obj.innerHTML = "<img src='/images/spinner.gif'><br/>Loading data, please wait..."
+        obj.innerHTML = "<img src='images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
     if (show) {
@@ -2193,7 +2193,7 @@ function loadList_flat(mjson, limit, start, deep) {
         }
         var at = ""
         if (eml.attachments && eml.attachments > 0) {
-            at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
+            at = "<img src='images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
         }
         if (prefs.theme && prefs.theme == 'compact') {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
@@ -2208,12 +2208,12 @@ function loadList_flat(mjson, limit, start, deep) {
                     from +
                     "</b></div> " +
                     "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
-                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         } else {
-            nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
+            nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
         }
     }
     nest += "</ul>"
@@ -2408,7 +2408,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
                     d +
-                    "<a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
+                    "<a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" +
                     subject +
@@ -2423,7 +2423,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
                     "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "<br/>" +
-                    "<a class='label label-info' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
+                    "<a class='label label-info' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
                     "</div>" +
@@ -2442,8 +2442,8 @@ function loadList_threaded(mjson, limit, start, deep) {
                     from +
                     "</b></div> " +
                     "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
-                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     subs_label + people_label + "&nbsp; " +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
@@ -2451,8 +2451,8 @@ function loadList_threaded(mjson, limit, start, deep) {
         else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 200px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hidden;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
-                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     subs_label + people_label + "&nbsp; " + "</div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         }
     }
@@ -2618,7 +2618,7 @@ function loadList_treeview(mjson, limit, start, deep) {
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
                     d +
-                    "<a style='" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
+                    "<a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
                     latest +
                     "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" +
                     subject +
@@ -2633,7 +2633,7 @@ function loadList_treeview(mjson, limit, start, deep) {
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
                     "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ json[i].body.replace(/</g, "&lt;") + "<br/>" +
-                    "<a class='label label-info' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
+                    "<a class='label label-info' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
                     latest +
                     "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
                     "</div>" +
@@ -2651,16 +2651,16 @@ function loadList_treeview(mjson, limit, start, deep) {
                     from +
                     "</b></div> " +
                     "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hide;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
-                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    d + "<a style='overflow:hide;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     subs_label + people_label + "&nbsp; " +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_treeview_" + i + "' style='display:none';></div></li>"
         } else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 220px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hide;" + estyle + "' href='/thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
-                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='/api/atom.lua?mid=" + eml.id + "'><img src='/images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
+                    d + "<a style='overflow:hide;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     subs_label + people_label + "</div>" + "<div id='thread_treeview_" + i + "' style='display:none';></div></li>"
         }
     }
@@ -2825,12 +2825,12 @@ function buildTreeview(nesting, list, obj, pbigger) {
         }
         var at = ""
         if (eml.attachments && eml.attachments > 0) {
-            at = "<img src='/images/attachment.png' title='" + eml.attachments + " file(s) attached' style='title='This email has attachments'/> "
+            at = "<img src='images/attachment.png' title='" + eml.attachments + " file(s) attached' style='title='This email has attachments'/> "
         }
         var nw = (16*Math.min(nesting, 20)) + 130
         
         nest += "<li class='list-group-item' style='min-height: 38px !important; border: none; padding: 0px; margin: 0px; padding-top: 5px; padding-bottom: -5px;'><div style='float: left; margin-top: -8px;'>" +
-                nvi + "</div>" + "<div style='width: calc(99% - "+nw+"px); page-break: avoid; white-space: nowrap; overflow: hidden; float:left;'>" + at + "<span style='padding-top: 4px;'><a style='" + estyle + "' href='/thread.html/" +
+                nvi + "</div>" + "<div style='width: calc(99% - "+nw+"px); page-break: avoid; white-space: nowrap; overflow: hidden; float:left;'>" + at + "<span style='padding-top: 4px;'><a style='" + estyle + "' href='thread.html/" +
                 (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"padding-top: 4px; padding-bottom: -4px;\"; loadEmails_flat(\"" +
                 el.tid + "\", false, \""+friendly_id+"\"); return false;'>" + subject + "</a></span> "+
                 "<label style='width: 140px;' class='label label-info'>" + from + "</label></div>" +
@@ -3359,7 +3359,7 @@ function buildStats(json, state, show) {
     }
     stats.innerHTML += (json.emails.length ? json.emails.length : 0) + " emails sent" + ap + ", divided into " + json.no_threads + " topics."
     
-    stats.innerHTML += "[<a href='/trends.html" + document.location.search + "'>details</a>]"
+    stats.innerHTML += "[<a href='trends.html" + document.location.search + "'>details</a>]"
     stats.innerHTML += "<br/>"
 
     var ts = "<table border='0'><tr>"
@@ -3998,7 +3998,7 @@ function toggleEmail(year, mo, nopush) {
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     
     // set list title to list and year/month
-    document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")" + " &nbsp;<a rel='nofollow' href='/api/mbox.lua?list=" + xlist + "&date=" + year + "-" + mo + "'><img src='/images/download.png' title='Download this month as an mbox archive'/></a>"
+    document.getElementById('listtitle').innerHTML = xlist + " (" + months[mo - 1] + ", " + year + ")" + " &nbsp;<a rel='nofollow' href='api/mbox.lua?list=" + xlist + "&date=" + year + "-" + mo + "'><img src='images/download.png' title='Download this month as an mbox archive'/></a>"
 }
 
 
@@ -4337,7 +4337,7 @@ function showTrends(json, state) {
     // Link back to list view if possible
     var lname = json.list.replace(/</, "&lt;")
     if (lname.search(/\*/) == -1) {
-        lname = "<a href='/list.html?" + lname + "'>" + lname + "</a>"
+        lname = "<a href='list.html?" + lname + "'>" + lname + "</a>"
     }
     
     // Set page title
