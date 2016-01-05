@@ -56,8 +56,8 @@ function dealWithKeyboard(e) {
         }
     }
     
-    // Make sure the below shortcuts don't intefere
-    if (document.getElementById('splash').style.display != 'block' && document.activeElement.nodeName != 'INPUT') {
+    // Make sure the below shortcuts don't interfere with normal operations
+    if (document.getElementById('splash').style.display != 'block' && document.activeElement.nodeName != 'INPUT' && !e.ctrlKey) {
             
         // H key: show help
         if (e.keyCode == 72) {
