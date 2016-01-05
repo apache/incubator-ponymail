@@ -207,7 +207,7 @@ function handle(r)
     for x,y in pairs (doc.aggregations.from.buckets) do
         local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
         local gravatar = r:md5(eml)
-        local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+")
+        local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or eml
         name = name:gsub("\"", "")
         table.insert(active_senders, {
             id = y.key,
