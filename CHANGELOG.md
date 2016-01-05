@@ -6,8 +6,9 @@
 - UI shortcut improvements for high resolution users
 - Added additional keyboard shortcuts and a help menu (H key to open)
 - Very long emails can now be replied to via own MUA (albeit truncated)
+- Internal httpd auth is now supported (for use with CAS etc)
 
-## CHANGES in 0.7b:
+## CHANGES in 0.7b (released 2016-01-05):
 
 - Added several AAA example scripts
 - Fixed a bug where long threads could break the UI (0.6a regression)
