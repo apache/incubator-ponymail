@@ -96,7 +96,7 @@ var re_weburl = new RegExp(
     // port number
     "(?::\\d{2,5})?" +
     // resource path
-    "(?:[/?#]\\S*)?" +
+    "(?:[/?#][^\\[\\]() \\t\\r\\n]*)?" +
     ")"
   , "mig"
 );
