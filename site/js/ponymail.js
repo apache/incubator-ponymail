@@ -1320,6 +1320,10 @@ function displayEmail(json, id, level) {
         current_email_msgs.push(json)
     }
     
+    // URI Base
+    var base = pm_config.URLBase ? pm_config.URLBase : ""
+    base = base.replace(/\/+/g, "/")
+    
     // Save the JSON in our JS array so we don't have to fetch it again later
     saved_emails[json.mid] = json
     var estyle = ""
@@ -1415,7 +1419,7 @@ function displayEmail(json, id, level) {
                     } else {
                         size = fd.size.toLocaleString() + " bytes"
                     }
-                    thread.innerHTML += "<a href='api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                    thread.innerHTML += "<a href='" + base + "/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
                 }
                 thread.innerHTML += "<br/>"
             }
@@ -1431,8 +1435,8 @@ function displayEmail(json, id, level) {
             thread.style.background = estyle
             thread.style.marginTop = "30px"
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
-            thread.innerHTML += ' &nbsp; <a href="/thread.html/'+(pm_config.shortLinks ? shortenID(json.mid) : json.mid)+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
-            thread.innerHTML += ' &nbsp; <a href="/api/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
+            thread.innerHTML += ' &nbsp; <a href="' + base + '/thread.html/'+(pm_config.shortLinks ? shortenID(json.mid) : json.mid)+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
+            thread.innerHTML += ' &nbsp; <a href="' + base + '/api/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
             if (level > 1) {
                 thread.innerHTML += ' &nbsp; <a href="javascript:void(0);" onclick="rollup(\'' + id_sanitised + '\');"><label class="label label-primary" title="roll up" style="cursor: pointer; float: right; margin-right: 10px;"><span id="rollup_' + id_sanitised + '" class="glyphicon glyphicon-chevron-up"> </span></label></a> &nbsp; '
             }
@@ -1454,7 +1458,7 @@ function displayEmail(json, id, level) {
                 thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
             }
             
-            thread.innerHTML += "<b>List: </b><a href='list.html?" + lid + "'>" + lid + "</a><br/>"
+            thread.innerHTML += "<b>List: </b><a href='" + base + "/list.html?" + lid + "'>" + lid + "</a><br/>"
             if (json.attachments && json.attachments.length > 0) {
                 thread.innerHTML += "<b>Attachments: </b>"
                 for (var a in json.attachments) {
@@ -1465,7 +1469,9 @@ function displayEmail(json, id, level) {
                     } else {
                         size = fd.size.toLocaleString() + " bytes"
                     }
-                    thread.innerHTML += "<a href='api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
+                    var base = pm_config.URLBase ? pm_config.URLBase : ""
+                    base = base.replace(/\/+/g, "/")
+                    thread.innerHTML += "<a href='" + base + "/api/email.lua?attachment=true&id=" + json.tid + "&file=" + fd.hash + "'>" + fd.filename.replace(/</g, "&lt;") + "</a> (" + size + ") &nbsp; "
                 }
                 thread.innerHTML += "<br/>"
             }
@@ -1521,9 +1527,9 @@ function displaySingleEmail(json, id) {
         var ebody = json.body
         ebody = ebody.replace(/</, "&lt;")
         ebody = "\n" + ebody
+        var base = pm_config.URLBase ? pm_config.URLBase : ""
+        base = base.replace(/\/+/g, "/")
         if (true) {
-            var base = pm_config.URLBase ? pm_config.URLBase : ""
-            base = base.replace(/\/+/g, "/")
             ebody = ebody.replace(/(?:\r?\n)((>+[ \t]*[^\r\n]*\r?\n+)+)/mg, function(inner) {
                 var rnd = (Math.random() * 100).toString()
                 var html = "<div class='bs-callout bs-callout-default' style='padding: 2px;' id='parent_" + rnd + "'>" +
@@ -1535,7 +1541,7 @@ function displaySingleEmail(json, id) {
 
         ebody = ebody.replace(re_weburl, "<a href=\"$1\">$1</a>")
 
-        thread.innerHTML += "<b>List ID: </b><a href='list.html?" + lid + "'>" + lid + "</a><br/>"
+        thread.innerHTML += "<b>List ID: </b><a href='" + base + "/list.html?" + lid + "'>" + lid + "</a><br/>"
         thread.innerHTML += "<br/><pre style='font-family: Hack;'>" + ebody + '</pre>'
     } else {
         alert("Error, " + id + " not found :(")
@@ -3269,7 +3275,7 @@ function buildCalendar(firstYear, lastYear) {
         var cale = "<div style='float: left; width: 80%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
-            var url = "/list.html?" + xlist + ":" + (year+"-"+(y+1))
+            var url = "list.html?" + xlist + ":" + (year+"-"+(y+1))
             cale += "<a href='" + url + "' onclick='return false;'><label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label></a><br/>"
         }
         cale += "</div>"

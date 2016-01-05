@@ -46,7 +46,7 @@ function showTrends(json, state) {
     // Link back to list view if possible
     var lname = json.list.replace(/</, "&lt;")
     if (lname.search(/\*/) == -1) {
-        lname = "<a href='/list.html?" + lname + "'>" + lname + "</a>"
+        lname = "<a href='list.html?" + lname + "'>" + lname + "</a>"
     }
     
     // Set page title
