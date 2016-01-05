@@ -262,7 +262,7 @@ class Archiver(object):
             if 'in-reply-to' in msg_metadata:
                 try:
                     try:
-                        irt = "\n".join(msg_metadata['in-reply-to'])
+                        irt = "".join(msg_metadata['in-reply-to'])
                     except:
                         irt = msg_metadata.get('in-reply-to').__str__()
                 except:

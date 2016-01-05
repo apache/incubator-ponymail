@@ -386,7 +386,7 @@ class SlurpThread(Thread):
                         irt = ""
                         if 'in-reply-to' in message:
                             try:
-                                irt = "\n".join(message['in-reply-to'])
+                                irt = "".join(message['in-reply-to'])
                             except:
                                 irt = message.get('in-reply-to').__str__()
 
