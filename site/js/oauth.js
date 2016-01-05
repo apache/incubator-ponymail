@@ -23,6 +23,10 @@ function GetAsync(theUrl, xstate, callback) {
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
+    if (pm_config.URLBase && pm_config.URLBase.length > 0) {
+        theUrl = pm_config.URLBase + theUrl
+        theUrl = theUrl.replace(/\/+/g, "/")
+    }
     xmlHttp.open("GET", theUrl, true);
     xmlHttp.send(null);
     xmlHttp.onreadystatechange = function(state) {
