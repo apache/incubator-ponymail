@@ -91,7 +91,7 @@ function handle(r)
     if get.q and #get.q > 0 then
         x = {}
         nx = {}
-        local q = get.q
+        local q = get.q:gsub("+", " ") -- apache quirk?
         for k, v in pairs({'from','subject','body'}) do
             y = {}
             z = {}
