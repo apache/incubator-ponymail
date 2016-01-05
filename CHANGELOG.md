@@ -8,6 +8,7 @@
 - Very long emails can now be replied to via own MUA (albeit truncated)
 - Internal httpd auth is now supported (for use with CAS etc)
 - Fixed a bug where the in-reply-to data was garbled internally
+- Various fixups in the URL recognition routine
 
 ## CHANGES in 0.7b (released 2016-01-05):
 
