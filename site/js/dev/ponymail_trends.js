@@ -178,6 +178,11 @@ function showTrends(json, state) {
     
     // Display charts if possible
     if (state.dfrom && state.dto) {
+        if (!pm_config.trendPie) {
+            document.getElementById('trendCanvas').setAttribute("height", "340")
+            document.getElementById('top10pie').setAttribute("height", "0")
+        }
+        
         quokkaBars("trendCanvas", 
         ['Previous timespan', 'Current timespan'], 
         [ 
@@ -249,14 +254,26 @@ function showTop(json, state) {
     top10.innerHTML = "<h3 style='margin: 0px; padding: 0px; text-align: left;'><span class='glyphicon glyphicon-star-empty'> </span> Top 10 participants:</h3>"
     
     var l = "<ul style='margin-left: 0px; padding-left: 0px; list-style: none;'>"
+    var ph = []
+    var max = 0
     for (var i in json.participants) {
         var part = json.participants[i]
+        ph.push({title: part.name, value: part.count})
+        max += part.count
         l += "<li style='font-size: 13px;'><img src='https://secure.gravatar.com/avatar/" + part.gravatar + ".jpg?s=24&r=g&d=mm' style='margin-top: 3px; margin-right: 5px;'/><b>" + part.name.replace(/</, "&lt;") + ": </b>" + part.count + " email" + (part.count == 1 ? "" : "s") + "</li>"
     }
     l += "</ul>"
     top10.innerHTML += l
     
-    obj.insertBefore(top10, obj.childNodes[1])    
+    ph.push({title: 'Others', value: json.hits - max})
+    
+    obj.insertBefore(top10, obj.childNodes[1])
+    
+    if (pm_config.trendPie) {
+        quokkaCircle("top10pie", ph);
+    }
+    
+    
 }
 
 // onload func that figures out what we want and then asks the API for stats
