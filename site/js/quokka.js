@@ -131,6 +131,7 @@ function quokkaCircle(id, tags, opts) {
         ctx.fillRect(left, posY-10, 7, 7);
         
         // Add legend text
+        ctx.shadowColor = "rgba(0,0,0,0)"
         ctx.font="10px Arial";
         ctx.fillStyle = "#000";
         ctx.fillText(tags[k].title + " (" + Math.floor(val) + ")",left+20,posY);
