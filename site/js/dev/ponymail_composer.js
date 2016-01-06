@@ -55,23 +55,20 @@ function hideComposer(evt, nosave) {
 // sendEmail: send an email
 function sendEmail(form) {
     
-    
     // We have a bit of a mix here due to nginx not supporting multipart form data
     var of = []
     for (var k in compose_headers) {
         of.push(k + "=" + encodeURIComponent(compose_headers[k]))
     }
-    
+    // Push the subject and email body into the form data
     of.push("subject=" + encodeURIComponent(document.getElementById('reply_subject').value))
     of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
     
     var request = new XMLHttpRequest();
     request.open("POST", "/api/compose.lua");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send(of.join("&"))
+    request.send(of.join("&")) // send email as a POST string
     
-    var obj = document.getElementById('splash')
-
     // Clear the draft stuff
     if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
         window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
@@ -258,6 +255,7 @@ function compose(eid, lid, type) {
             // "sorry, but..." text + mua link
             obj.innerHTML += "<p>You need to be logged in to reply online.<br/>If you have a regular mail client, you can reply to this email by clicking below:<br/><h4><a style='color: #FFF;' class='btn btn-success' onclick='hideComposer(event);' href=\"" + link + "\">Reply via Mail Client</a></h4>"
         }
+        // truncation warning for very long emails
         if (composeType == 'reply' && truncated) {
             obj.innerHTML += "<div><br/><i><b>Note: </b>In case of very long emails such as this, the body may be truncated if you choose to reply using your own mail client</i></div>"
         }

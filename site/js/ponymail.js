@@ -27,22 +27,22 @@
 // They keep track of the JSON we have received, storing it in the browser,
 // Thus lightening the load on the backend (caching and such)
 
-var _VERSION_ = "0.8b"
+var _VERSION_ = "0.8b" // Current version (as far as we know)
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_ppp = 15; // results per page
 var c_page = 0; // current page position for list view
-var open_emails = []
+var open_emails = [] // cache index for loaded emails
 var list_year = {}
 var current_retention = "lte=1M" // default timespan for list view
 var current_cal_min = 1997 // don't go further back than 1997 in case everything blows up, date-wise
 var keywords = ""
-var current_thread = 0
-var current_thread_mids = {}
-var saved_emails = {}
-var current_query = ""
-var old_json = {}
+var current_thread = 0 // marker for list view; currently open thread/email
+var current_thread_mids = {} // duplicate guard for threading
+var saved_emails = {} // JSON cache for emails
+var current_query = "" // currently active search query
+var old_json = {} // pointer to previously loaded JSON object
 var all_lists = {}
-var current_json = {}
+var current_json = {} // pointer to currently loaded JSON
 var current_thread_json = {}
 var current_flat_json = {}
 var current_email_msgs = []
@@ -62,8 +62,8 @@ var latestEmailInThread = 0
 var composeType = "reply"
 var gxdomain = ""
 var fl = null
-var kiddos = []
-var pending_urls = {}
+var kiddos = [] // DOM tree for traverse functions
+var pending_urls = {} // URL list for GetAsync's support functions (such as the spinner)
 var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
@@ -130,23 +130,20 @@ function hideComposer(evt, nosave) {
 // sendEmail: send an email
 function sendEmail(form) {
     
-    
     // We have a bit of a mix here due to nginx not supporting multipart form data
     var of = []
     for (var k in compose_headers) {
         of.push(k + "=" + encodeURIComponent(compose_headers[k]))
     }
-    
+    // Push the subject and email body into the form data
     of.push("subject=" + encodeURIComponent(document.getElementById('reply_subject').value))
     of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
     
     var request = new XMLHttpRequest();
     request.open("POST", "/api/compose.lua");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send(of.join("&"))
+    request.send(of.join("&")) // send email as a POST string
     
-    var obj = document.getElementById('splash')
-
     // Clear the draft stuff
     if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
         window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
@@ -333,6 +330,7 @@ function compose(eid, lid, type) {
             // "sorry, but..." text + mua link
             obj.innerHTML += "<p>You need to be logged in to reply online.<br/>If you have a regular mail client, you can reply to this email by clicking below:<br/><h4><a style='color: #FFF;' class='btn btn-success' onclick='hideComposer(event);' href=\"" + link + "\">Reply via Mail Client</a></h4>"
         }
+        // truncation warning for very long emails
         if (composeType == 'reply' && truncated) {
             obj.innerHTML += "<div><br/><i><b>Note: </b>In case of very long emails such as this, the body may be truncated if you choose to reply using your own mail client</i></div>"
         }
@@ -856,7 +854,8 @@ function datePickerDouble(seedPeriod) {
     
     // Specific month?
     else if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
-        ptype = 'mr' // just a made up thing...(month range)
+        // just a made up thing...(month range)
+        ptype = 'mr' 
         var mr = seedPeriod.match(/(\d+)-(\d+)/)
         if (mr) {
             rv = seedPeriod
@@ -1774,7 +1773,9 @@ function getSingleThread(id) {
 
 // findEml: Finds and returns an email object based on message ID
 function findEml(id) {
+    // for each email we currently have in the saved JSON array
     for (var i in current_flat_json) {
+        // Does MID match?
         if (current_flat_json[i].id == id) {
             return current_flat_json[i]
         }
@@ -1785,30 +1786,31 @@ function findEml(id) {
 // countSubs: counts the number of replies to an email   
 function countSubs(eml, state) {
     var n = 0;
+    // If first call, start with -1, as the main email will increment this by one
     if (!state) {
         n = -1
     }
+    // construct a duplicate guard hash
     state = state ? state : {}
+    // get email ID - either TID or MID, depends..
     var x = eml.tid ? eml.tid : eml.mid
+    // If we haven't seen this email before in the count, increment by one
     if (!state[x]) {
         n++;
         state[x] = true
     }
 
+    // Also count each child in the thread (and possibly their children)
     for (var i in eml.children) {
-        if (true) {
-            //state[eml.children[i].tid] = true
-            n += countSubs(eml.children[i], state);
-        }
-
+        n += countSubs(eml.children[i], state);
     }
-
     return n
 }
 
 // countNewest: finds the newest email in a thread
 function countNewest(eml) {
     var n = eml.epoch;
+    // for each child, find the oldest and keep that epoch val
     for (var i in eml.children) {
         n = Math.max(n, countNewest(eml.children[i]));
     }
@@ -1824,10 +1826,12 @@ function countParts(eml, kv) {
     if (!email) {
         return n
     }
+    // have we seen any email from this sender before? If not, increment!
     if (!kv[email.from]) {
         kv[email.from] = true
         n++;
     }
+    // Run the counter for each child in the thread..
     for (var i in eml.children) {
         n += countParts(eml.children[i], kv);
     }
@@ -1854,17 +1858,25 @@ function sortIt(json) {
 
 // getChildren: fetch all replies to a topic from ES
 function getChildren(main, email, level) {
+    // nesting level
     level = level ? level : 1
     var pchild = null
+    // if email is a valid thread struct and can be sorted (is array)...
     if (email && email.children && email.children.sort) {
+        // Sort child emails ascending by epoch
         email.children.sort(function(a, b) {
             return a.epoch - b.epoch
         })
         var pchildo = null
+        // for each child in the thread
         for (var i in email.children) {
             var child = email.children[i]
+            // If it's not the parent (don't want a loop!), then..
             if (child.tid != email.mid) {
+                // see if we have a saved copy of the email already
                 var eml = saved_emails[child.tid]
+                
+                // No saved copy? Let's fetch from the backend then!
                 if (!eml || !eml.from) {
                     GetAsync("/api/email.lua?id=" + child.tid, {
                         main: main,
@@ -1873,6 +1885,7 @@ function getChildren(main, email, level) {
                         child: child,
                         level: level+1
                     }, displayEmailThreaded)
+                // Saved copy here? Just show it then!
                 } else {
                     displayEmailThreaded(eml, {
                         main: main,
@@ -1883,6 +1896,7 @@ function getChildren(main, email, level) {
                     })
                 }
             }
+            // set pchild (for proper DOM placement)
             pchild = child.tid
         }
     }
@@ -1903,7 +1917,6 @@ function permaLink(id, type) {
 
 
 
-
 // getSingleEmail: fetch an email from ES and go to callback
 function getSingleEmail(id, object) {
     GetAsync("/api/email.lua?id=" + id, {object: object} , displaySingleEmail)
@@ -1915,6 +1928,7 @@ function seedGetSingleThread(id) {
     GetAsync("/api/preferences.lua", {docall:["/api/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
 
+// Padding prototype, akin to %0[size]u in printf
 Number.prototype.pad = function(size) {
     var str = String(this);
     while (str.length < size) {
@@ -1982,15 +1996,21 @@ function checkForSlows() {
     var slows = 0
     var now = new Date().getTime() / 1000;
     for (var x in pending_urls) {
+        // If a request is more than 2.5 seconds late, tell the spinning wheel to show up
         if ((now - pending_urls[x]) > 2.5) {
             slows++;
             break
+        // If the stats.lua (mail blob fetcher) is > 0.5 secs late, reset the list view
+        // so as to not create the illusion that what you're looking at right now
+        // is the new result.
         } else if (x.search(/stats\.lua/) != -1 && (now - pending_urls[x]) > 0.5) {
             resetPage()
         }
     }
+    // Nothing late atm? hide spinner then!
     if (slows == 0) {
         showSpinner(false)
+    // Something late? Show spinner!
     } else {
         showSpinner(true);
     }
@@ -2078,16 +2098,21 @@ function GetAsync(theUrl, xstate, callback) {
 
 // spinner for checkForSlows
 function showSpinner(show) {
+    // fetch spinner DOM obj
     var obj = document.getElementById('spinner')
+    // If no such obj yet, create it
     if (!obj) {
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
         obj.innerHTML = "<img src='images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
+    // told to show the spinner?
     if (show) {
         obj.style.display = "block"
-    } else {
+    // If told to hide, and it's visible, hide it - otherwise, don't bother
+    // hiding a hidden object
+    } else if (obj.style.display == 'block') {
         obj.style.display = "none"
     }
 }
@@ -2122,11 +2147,12 @@ function loadEphemeral() {
     }
 }
 
+// isArray: check if an object is an array
 function isArray(obj) {
     return (obj && obj.constructor && obj.constructor == Array)
 }
 
-// Check for slow URLs every 0.5 seconds
+// Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)
 
 /******************************************
@@ -2137,33 +2163,56 @@ window.setInterval(checkForSlows, 100)
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
+    
+    // Set displayed posts per page to 10 if social/compact theme
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
+    // otherwise, default to 15 for the rest
     } else {
         d_ppp = 15
     }
+    // Reset the open_emails hash
     open_emails = []
+    // If no limit is specified, fall back to default ppp
     limit = limit ? limit : d_ppp;
+    
+    // If no JSON was passed along (as with page scrolling), fall back to the previously fetched JSON
+    // otherwise, sort mjson by epoch descending
     var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
         return b.epoch - a.epoch
     }) : []) : current_flat_json
+    
+    // Sync previous and current JSON
     current_flat_json = json
+    
+    // get epoch now
     var now = new Date().getTime() / 1000
-    nest = '<ul class="list-group">'
+    
+    // if no start position defined, set it to position 0 (first email)
     if (!start) {
         start = 0
     }
+    
+    // Start nest HTML
+    nest = '<ul class="list-group">'
+    
+    // set current page to where we are now
     c_page = start
+    // iterate through emails from $start til either we hit the last one or ($start + $limit)
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
         }
+        // fetch an email
         var eml = json[i]
+        
+        // truncate subject if too long (do we really still need this?)
         if (eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }
         eml.mid = eml.id
 
+        // label style and title for timestamp - changes if < 1 day ago
         ld = 'default'
         var ti = ''
         if (eml.epoch > (now - 86400)) {
@@ -2171,10 +2220,13 @@ function loadList_flat(mjson, limit, start, deep) {
             ti = "Has activity in the past 24 hours"
         }
         var d = ""
+        // Are we in deep search (multi-list)? If so, we need to add the list name as well
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep && typeof eml.list != undefined && eml.list != null) {
+            // Usual list ID transformation
             var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = elist
+            // using shortlist format? dev@ instead of dev@foo.bar
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
@@ -2183,9 +2235,11 @@ function loadList_flat(mjson, limit, start, deep) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
+        // Get date and format it to YYYY-MM-DD HH:mm
         mdate = new Date(eml.epoch * 1000)
         mdate = formatDate(mdate)
-            
+        
+        // format subject and from to weed out <> tags and <foo@bar.tld> addresses
         var subject = eml.subject.replace(/</mg, "&lt;")
         var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
         from = from.replace(/\"/g, "")
@@ -2198,9 +2252,11 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
         var at = ""
+        // Do we have anything attached to this email? If so, show the attachment icon
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
         }
+        // Compact theme: show a bit of email body as well
         if (prefs.theme && prefs.theme == 'compact') {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
@@ -2218,6 +2274,7 @@ function loadList_flat(mjson, limit, start, deep) {
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        // Other themes: Just show the subject..
         } else {
             nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
         }
@@ -2260,15 +2317,18 @@ function loadList_flat(mjson, limit, start, deep) {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
     
-    
+    // subscribe button
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
+    
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
+    
+    // add them buttons
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
-    
+    // next page
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
@@ -2330,39 +2390,63 @@ function loadList_threaded(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
+    
+    // Set displayed posts per page to 10 if social/compact theme
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
+    // otherwise default to 15
     } else {
         d_ppp = 15
     }
+    // reset open email counter hash
     open_emails = []
+    
+    // set display limit to default ppp if not set by call
     limit = limit ? limit : d_ppp;
+    
+    // If no flat JSON is supplied (as with next/prev page clicks), fall back to the previous JSON,
+    // otherwise, sort it descending by epoch
     var fjson = mjson ? ('emails' in mjson && isArray(mjson.emails) ? mjson.emails.sort(function(a, b) {
         return b.epoch - a.epoch
     }) : []) : current_flat_json
+    // sync JSON
     current_flat_json = fjson
     
+    // same with threaded JSON
     var json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
     current_thread_json = json
     
+    // get $now
     var now = new Date().getTime() / 1000
-    nest = '<ul class="list-group">'
+    
+    // start = start or 0 (first email)
     if (!start) {
         start = 0
     }
+    
+    // start nesting HTML
+    nest = '<ul class="list-group">'
+    
     c_page = start
+    // for each email from start to finish (or page limit), do...
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
         }
+        // Get the email
         var eml = findEml(json[i].tid)
+        
+        // truncate subject (do we need this?)
         if (eml && eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }
+        
+        // do some counting
         var subs = countSubs(json[i])
         var people = countParts(json[i])
         var latest = countNewest(json[i])
 
+        // coloring for labels
         var ls = 'default'
         if (subs > 0) {
             ls = 'primary'
@@ -2373,25 +2457,30 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
         var ld = 'default'
         var ti = ''
+        // orange label for new timestamps
         if (latest > (now - 86400)) {
             ld = 'warning'
             ti = "Has activity in the past 24 hours"
         }
         var d = ''
         var estyle = ""
+        // if deep search (multi-list), show the list name label as well
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if ((qdeep || deep || global_deep) && current_query.length > 0) {
             eml.list = eml.list ? eml.list : eml.list_raw // Sometimes, .list isn't available
             var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = elist
+            // shortlist? show dev@ instead of dev@foo.bar then
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
             d = "<a href='list.html?" + elist2 + "'><label class='label label-warning' style='width: 150px;'>" + elist + "</label></a> &nbsp;"
+            // truncate subject even more if list labels are there
             if (eml.subject.length > 75) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
+        // escape subject
         var subject = eml.subject.replace(/</mg, "&lt;")
         var mdate = new Date(latest * 1000)
         
@@ -2409,6 +2498,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         var people_label = "<label style='visibility:" + pds + "; float: right; margin-right: 8px; ' id='people_"+i+"' class='listview_label label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " <span class='hidden-xs hidden-sm'>people</span></label>"
         var subs_label = "<label id='subs_" + i + "' style='float: right; margin-right: 8px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span>&nbsp;<span style='display: inline-block; width: 16px; text-align: right;'>" + subs + "</span>&nbsp;<span style='display: inline-block; width: 40px; text-align: left;' class='hidden-xs hidden-sm'>" +  (subs != 1 ? "replies" : "reply") + "</span></label>"
         
+        // social theme display
         if (prefs.theme && prefs.theme == "social") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
@@ -2436,6 +2526,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "</div>" +
                     "<div id='thread_" + i + "' style='display:none';></div></div></li>"
         }
+        // compact theme display
         else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
@@ -2454,6 +2545,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         }
+        // default theme display
         else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 200px); white-space:nowrap; overflow: hidden;'>" +
@@ -2500,8 +2592,12 @@ function loadList_threaded(mjson, limit, start, deep) {
     } else {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
+    
+    // subscribe button
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
+    
+    // show subscribe button if logged in
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }

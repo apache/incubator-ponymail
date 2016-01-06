@@ -523,7 +523,8 @@ function datePickerDouble(seedPeriod) {
     
     // Specific month?
     else if (seedPeriod.match(/^(\d+)-(\d+)$/)) {
-        ptype = 'mr' // just a made up thing...(month range)
+        // just a made up thing...(month range)
+        ptype = 'mr' 
         var mr = seedPeriod.match(/(\d+)-(\d+)/)
         if (mr) {
             rv = seedPeriod

@@ -18,7 +18,9 @@
 
 // findEml: Finds and returns an email object based on message ID
 function findEml(id) {
+    // for each email we currently have in the saved JSON array
     for (var i in current_flat_json) {
+        // Does MID match?
         if (current_flat_json[i].id == id) {
             return current_flat_json[i]
         }
@@ -29,30 +31,31 @@ function findEml(id) {
 // countSubs: counts the number of replies to an email   
 function countSubs(eml, state) {
     var n = 0;
+    // If first call, start with -1, as the main email will increment this by one
     if (!state) {
         n = -1
     }
+    // construct a duplicate guard hash
     state = state ? state : {}
+    // get email ID - either TID or MID, depends..
     var x = eml.tid ? eml.tid : eml.mid
+    // If we haven't seen this email before in the count, increment by one
     if (!state[x]) {
         n++;
         state[x] = true
     }
 
+    // Also count each child in the thread (and possibly their children)
     for (var i in eml.children) {
-        if (true) {
-            //state[eml.children[i].tid] = true
-            n += countSubs(eml.children[i], state);
-        }
-
+        n += countSubs(eml.children[i], state);
     }
-
     return n
 }
 
 // countNewest: finds the newest email in a thread
 function countNewest(eml) {
     var n = eml.epoch;
+    // for each child, find the oldest and keep that epoch val
     for (var i in eml.children) {
         n = Math.max(n, countNewest(eml.children[i]));
     }
@@ -68,10 +71,12 @@ function countParts(eml, kv) {
     if (!email) {
         return n
     }
+    // have we seen any email from this sender before? If not, increment!
     if (!kv[email.from]) {
         kv[email.from] = true
         n++;
     }
+    // Run the counter for each child in the thread..
     for (var i in eml.children) {
         n += countParts(eml.children[i], kv);
     }
@@ -98,17 +103,25 @@ function sortIt(json) {
 
 // getChildren: fetch all replies to a topic from ES
 function getChildren(main, email, level) {
+    // nesting level
     level = level ? level : 1
     var pchild = null
+    // if email is a valid thread struct and can be sorted (is array)...
     if (email && email.children && email.children.sort) {
+        // Sort child emails ascending by epoch
         email.children.sort(function(a, b) {
             return a.epoch - b.epoch
         })
         var pchildo = null
+        // for each child in the thread
         for (var i in email.children) {
             var child = email.children[i]
+            // If it's not the parent (don't want a loop!), then..
             if (child.tid != email.mid) {
+                // see if we have a saved copy of the email already
                 var eml = saved_emails[child.tid]
+                
+                // No saved copy? Let's fetch from the backend then!
                 if (!eml || !eml.from) {
                     GetAsync("/api/email.lua?id=" + child.tid, {
                         main: main,
@@ -117,6 +130,7 @@ function getChildren(main, email, level) {
                         child: child,
                         level: level+1
                     }, displayEmailThreaded)
+                // Saved copy here? Just show it then!
                 } else {
                     displayEmailThreaded(eml, {
                         main: main,
@@ -127,6 +141,7 @@ function getChildren(main, email, level) {
                     })
                 }
             }
+            // set pchild (for proper DOM placement)
             pchild = child.tid
         }
     }
@@ -147,7 +162,6 @@ function permaLink(id, type) {
 
 
 
-
 // getSingleEmail: fetch an email from ES and go to callback
 function getSingleEmail(id, object) {
     GetAsync("/api/email.lua?id=" + id, {object: object} , displaySingleEmail)
@@ -159,6 +173,7 @@ function seedGetSingleThread(id) {
     GetAsync("/api/preferences.lua", {docall:["/api/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
 
+// Padding prototype, akin to %0[size]u in printf
 Number.prototype.pad = function(size) {
     var str = String(this);
     while (str.length < size) {

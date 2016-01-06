@@ -18,33 +18,56 @@
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
+    
+    // Set displayed posts per page to 10 if social/compact theme
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
+    // otherwise, default to 15 for the rest
     } else {
         d_ppp = 15
     }
+    // Reset the open_emails hash
     open_emails = []
+    // If no limit is specified, fall back to default ppp
     limit = limit ? limit : d_ppp;
+    
+    // If no JSON was passed along (as with page scrolling), fall back to the previously fetched JSON
+    // otherwise, sort mjson by epoch descending
     var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
         return b.epoch - a.epoch
     }) : []) : current_flat_json
+    
+    // Sync previous and current JSON
     current_flat_json = json
+    
+    // get epoch now
     var now = new Date().getTime() / 1000
-    nest = '<ul class="list-group">'
+    
+    // if no start position defined, set it to position 0 (first email)
     if (!start) {
         start = 0
     }
+    
+    // Start nest HTML
+    nest = '<ul class="list-group">'
+    
+    // set current page to where we are now
     c_page = start
+    // iterate through emails from $start til either we hit the last one or ($start + $limit)
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
         }
+        // fetch an email
         var eml = json[i]
+        
+        // truncate subject if too long (do we really still need this?)
         if (eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }
         eml.mid = eml.id
 
+        // label style and title for timestamp - changes if < 1 day ago
         ld = 'default'
         var ti = ''
         if (eml.epoch > (now - 86400)) {
@@ -52,10 +75,13 @@ function loadList_flat(mjson, limit, start, deep) {
             ti = "Has activity in the past 24 hours"
         }
         var d = ""
+        // Are we in deep search (multi-list)? If so, we need to add the list name as well
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep && typeof eml.list != undefined && eml.list != null) {
+            // Usual list ID transformation
             var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = elist
+            // using shortlist format? dev@ instead of dev@foo.bar
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
@@ -64,9 +90,11 @@ function loadList_flat(mjson, limit, start, deep) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
+        // Get date and format it to YYYY-MM-DD HH:mm
         mdate = new Date(eml.epoch * 1000)
         mdate = formatDate(mdate)
-            
+        
+        // format subject and from to weed out <> tags and <foo@bar.tld> addresses
         var subject = eml.subject.replace(/</mg, "&lt;")
         var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
         from = from.replace(/\"/g, "")
@@ -79,9 +107,11 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
         var at = ""
+        // Do we have anything attached to this email? If so, show the attachment icon
         if (eml.attachments && eml.attachments > 0) {
             at = "<img src='images/attachment.png' title='" + eml.attachments + " file(s) attached' style='float: left; title='This email has attachments'/> "
         }
+        // Compact theme: show a bit of email body as well
         if (prefs.theme && prefs.theme == 'compact') {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
@@ -99,6 +129,7 @@ function loadList_flat(mjson, limit, start, deep) {
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
+        // Other themes: Just show the subject..
         } else {
             nest += "<li class='list-group-item'> " + at + " &nbsp; <a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); return false;'>" + subject + "</a> <label style='float: left; width: 140px;' class='label label-info'>" + from + "</label><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label><div id='thread_" + i + "' style='display:none';></div></li>"
         }
@@ -141,15 +172,18 @@ function loadList_flat(mjson, limit, start, deep) {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
     
-    
+    // subscribe button
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
+    
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
+    
+    // add them buttons
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
-    
+    // next page
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'

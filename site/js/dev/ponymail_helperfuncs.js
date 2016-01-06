@@ -23,15 +23,21 @@ function checkForSlows() {
     var slows = 0
     var now = new Date().getTime() / 1000;
     for (var x in pending_urls) {
+        // If a request is more than 2.5 seconds late, tell the spinning wheel to show up
         if ((now - pending_urls[x]) > 2.5) {
             slows++;
             break
+        // If the stats.lua (mail blob fetcher) is > 0.5 secs late, reset the list view
+        // so as to not create the illusion that what you're looking at right now
+        // is the new result.
         } else if (x.search(/stats\.lua/) != -1 && (now - pending_urls[x]) > 0.5) {
             resetPage()
         }
     }
+    // Nothing late atm? hide spinner then!
     if (slows == 0) {
         showSpinner(false)
+    // Something late? Show spinner!
     } else {
         showSpinner(true);
     }
@@ -119,16 +125,21 @@ function GetAsync(theUrl, xstate, callback) {
 
 // spinner for checkForSlows
 function showSpinner(show) {
+    // fetch spinner DOM obj
     var obj = document.getElementById('spinner')
+    // If no such obj yet, create it
     if (!obj) {
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
         obj.innerHTML = "<img src='images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
+    // told to show the spinner?
     if (show) {
         obj.style.display = "block"
-    } else {
+    // If told to hide, and it's visible, hide it - otherwise, don't bother
+    // hiding a hidden object
+    } else if (obj.style.display == 'block') {
         obj.style.display = "none"
     }
 }
@@ -163,9 +174,10 @@ function loadEphemeral() {
     }
 }
 
+// isArray: check if an object is an array
 function isArray(obj) {
     return (obj && obj.constructor && obj.constructor == Array)
 }
 
-// Check for slow URLs every 0.5 seconds
+// Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)
