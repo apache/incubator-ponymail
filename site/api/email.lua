@@ -36,6 +36,14 @@ function handle(r)
         if #docs == 1 then
             doc = docs[1]
         end
+        
+        -- shortened link maybe?
+        if #docs == 0 and #eid == 18 then
+            docs = elastic.find("mid:" .. r:escape(eid) .. "*", 1, "mbox")
+        end
+        if #docs == 1 then
+            doc = docs[1]
+        end
     end
     
     -- Did we find an email?
