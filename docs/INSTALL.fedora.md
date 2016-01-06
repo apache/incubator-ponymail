@@ -11,13 +11,13 @@ Start by installing the following Fedora packages:
 - luarocks
 
 ~~~
-dnf install -y httpd git lua lua-sec lua-socket python3 luarocks
+sudo dnf install -y httpd git lua lua-sec lua-socket python3 luarocks
 ~~~
 
 Install the missing cjson package via luarocks:
 
 ~~~
-luarocks-5.3 install lua-cjson
+sudo luarocks-5.3 install lua-cjson
 ~~~
 
 Install the required Python 3 modules:
@@ -29,8 +29,8 @@ sudo pip3.4 install elasticsearch formatflowed chardet netaddr
 Install ElasticSearch:
 
 ~~~
-dnf install -y java-1.8.0-openjdk-headless
-rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+sudo dnf install -y java-1.8.0-openjdk-headless
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 
     (The following is taken from the ElasticSearch online guide:)
 
@@ -45,7 +45,7 @@ rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
     enabled=1
 
 
-dnf install -y elasticsearch
+sudo dnf install -y elasticsearch
 ~~~
 
 
@@ -54,21 +54,21 @@ Configure and start up ElasticSearch:
 ~~~
 sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable elasticsearch.service
-/etc/init.d/elasticsearch start
+sudo /etc/init.d/elasticsearch start
 ~~~
 
 
 Check out a copy of Pony Mail:
 ~~~
 cd /var/www
-git clone https://github.com/Humbedooh/ponymail.git
+sudo git clone https://github.com/Humbedooh/ponymail.git
 ~~~
 
 
 Set up Pony Mail:
 ~~~
 cd /var/www/ponymail/tools
-python3.4 setup.py
+sudo python3.4 setup.py
 [... answer questions asked by the setup script ...]
 ~~~
 
@@ -92,14 +92,14 @@ This differs from the normal installation (because of CentOS specifics), so bewa
 (re)start apache:
 
 ~~~
-apachectl restart
+sudo apachectl restart
 ~~~
 
 IF you have SELinux running, you need to allow httpd (apache) to
 be able to connect to remotes, otherwise Pony Mail won't work:
 
 ~~~
-setsebool -P httpd_can_network_connect 1
+sudo setsebool -P httpd_can_network_connect 1
 ~~~
 
 Once this is done, you should now have a *working copy* of Pony Mail!

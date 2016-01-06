@@ -53,7 +53,7 @@ service elasticsearch start
 Set up Pony Mail:
 ~~~
 cd /var/www/ponymail/tools
-python3 setup.py
+sudo python3 setup.py
 [... answer questions asked by the setup script ...]
 ~~~
 
@@ -74,8 +74,8 @@ Set up Apache httpd by adding, for example, the following virtual host configura
 Enable mod_lua and start apache:
 
 ~~~
-a2enmod lua
-service apache start
+sudo a2enmod lua
+sudo service apache start
 ~~~
 
 Once this is done, you should now have a *working copy* of Pony Mail!
