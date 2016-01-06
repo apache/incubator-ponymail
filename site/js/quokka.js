@@ -52,8 +52,8 @@ function quokka_internal_rgb2hex(r, g, b) {
 // Generate color list used for charts
 var colors = [];
 var rgbs = []
-var numColorRows = 3;
-var numColorColumns = 10;
+var numColorRows = 6;
+var numColorColumns = 20;
 for (var x=0;x<numColorRows;x++) {
     for (var y=0;y<numColorColumns;y++) {
         var rnd = [[148, 221, 119], [0, 203, 171], [51, 167, 215] , [35, 160, 253], [218, 54, 188], [16, 171, 246], [110, 68, 206], [21, 49, 248], [142, 104, 210]][y]
@@ -88,6 +88,7 @@ function quokkaCircle(id, tags, opts) {
         total += tags[k].value;
     }
     
+    
     // Draw the empty pie
     var begin = 0;
     var stop = 0;
@@ -104,6 +105,7 @@ function quokkaCircle(id, tags, opts) {
     ctx.shadowBlur = 0;
     
     var posY = 20;
+    var left = 140 + ((canvas.width-140)/2) + 20
     for (k in tags) {
         var val = tags[k].value;
         stop = stop + (2 * Math.PI * (val / total));
@@ -126,14 +128,24 @@ function quokkaCircle(id, tags, opts) {
         begin = stop;
         
         // Make color legend
-        ctx.fillRect(220, posY-10, 10, 10);
+        ctx.fillRect(left, posY-10, 7, 7);
         
         // Add legend text
-        ctx.font="12px Arial";
+        ctx.font="10px Arial";
         ctx.fillStyle = "#000";
-        ctx.fillText(tags[k].title + " (" + Math.floor(val) + ")",240,posY);
+        ctx.fillText(tags[k].title + " (" + Math.floor(val) + ")",left+20,posY);
         
-        posY += 20;
+        posY += 14;
+    }
+    
+    // Draw the stamp
+    base_image = new Image();
+    base_image.src = '/images/logo_large.png';
+    base_image.onload = function(){
+        ctx.globalAlpha = 0.02
+        ctx.scale(0.65,0.65)
+        ctx.drawImage(base_image, (canvas.width/2) - 96, (canvas.height/2) - 64);
+        ctx.globalAlpha = 1
     }
 }
 
