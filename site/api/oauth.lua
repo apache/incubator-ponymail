@@ -76,8 +76,22 @@ function handle(r)
         oauth_domain = get.oauth_token:match("https?://(.-)/")
         local result = https.request(get.oauth_token, r.args)
         valid, json = pcall(function() return JSON.decode(result) end)
-    
-    -- CAS/Internal header auth
+
+    --[[
+        CAS or other internal auth mechanism though request or env headers:
+        Remember to set the 'internal' field vars in config.lua to enable this, for instance:
+        ...
+        oauth_fields = {
+            internal = {
+                email = 'CAS-EMAIL',
+                name = 'CAS-NAME',
+                uid = 'REMOTE-USER',
+                env = 'subprocess' -- use environment vars instead of request headers
+            }
+        },
+        oauth_admin = { "localhost" },
+        ...
+    ]]--
     elseif get.key == 'internal' and config.oauth_fields['internal'] then
         oauth_domain = "localhost"
         local tbl = r.headers_in
