@@ -3490,7 +3490,7 @@ function buildStats(json, state, show) {
         
         // Only logged-in users should be able to see actual email addresses here
         if (login && login.credentials) {
-            stats.innerHTML += "<img src='https://secure.gravatar.com/avatar/" + par.gravatar + ".jpg?s=32&r=g&d=mm' style='vertical-align:middle'/>&nbsp;<a href='javascript:void(0)' onclick='do_search(\"" + par.email + "\", \"" + current_retention + "\")'><b>" + par.name.replace(/[<>]/g, "") + "</a>:</b> " + par.count + " email(s)<br/>";
+            stats.innerHTML += "<img src='https://secure.gravatar.com/avatar/" + par.gravatar + ".jpg?s=32&r=g&d=mm' style='vertical-align:middle'/>&nbsp;<a href='javascript:void(0)' onclick='searchTop(\"" + par.email + "\", current_retention);'><b>" + par.name.replace(/[<>]/g, "") + "</a>:</b> " + par.count + " email(s)<br/>";
         }
         else {
             stats.innerHTML += "<img src='https://secure.gravatar.com/avatar/" + par.gravatar + ".jpg?s=32&r=g&d=mm' style='vertical-align:middle'/>&nbsp;<b title='Log in to see the email address of this person'>" + par.name.replace(/[<>]/g, "") + ":</b> " + par.count + " email(s)<br/>";
@@ -4104,6 +4104,10 @@ function toggleEmail(year, mo, nopush) {
 }
 
 
+// Top 10 search alias - for some reason search() can't be called from there... o.O
+function searchTop(a,b,c,d) {
+    search(a,b,c,d)
+}
 
 // search: run a search
 function search(q, d, nopush, all) {
@@ -4190,38 +4194,6 @@ function searchAll(q, dspan, from, subject, where) {
     return false;
 }
 
-// do_search: run a search and update textboxes
-function do_search(q, d, nopush, all) {
-    document.getElementById('q').value = q
-    document.getElementById('aq').value = q
-    current_retention = d ? d : "lte=1M"
-    current_query = q
-    var arr = xlist.split('@', 2)
-    var listname = arr[0]
-    var domain = arr[1]
-    if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + d + ":" + escape(q));
-    if (global_deep == true) {
-        listname = "*"
-        domain = "*"
-    }
-    var arr = datePickerDouble(d)
-    howlong = arr[3]
-    if (isNaN(howlong)) {
-        howlong = "Custom date range"
-    }
-    else if (howlong >= 365) {
-        howlong = parseInt(howlong/365) + " year" + (howlong>769 ? "s" : "")
-    } else if (howlong >= 30) {
-        howlong = parseInt(howlong/30) + " month" + (howlong>59 ? "s" : "")
-    } else {
-        howlong = howlong + " days"
-    }
-    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
-    clearCalendarHover()
-    return false;
-}
-
 // Adds an opensearch engine to the browser
 function addSearchEngine() {
     window.external.AddSearchProvider("/api/websearch.lua?" + gxdomain)
@@ -4251,12 +4223,16 @@ function seedGetListInfo(json, state) {
     if (typeof json.preferences != undefined && json.preferences) {
         prefs = json.preferences
     }
+    // did the backend supply us with a valid login?
+    // if so, set up the menu bar and save locally
     if (typeof json.login != undefined && json.login) {
         login = json.login
         if (login.credentials) {
             setupUser(login)
         }
     }
+    
+    // Actual callback: render list
     getListInfo(state.l, state.x, state.n)
 }
 
@@ -4265,12 +4241,14 @@ function seedPrefs(json, state) {
     if (typeof json.preferences != undefined && json.preferences) {
         prefs = json.preferences
     }
+    // logged in? render user nav bar then
     if (typeof json.login != undefined && json.login) {
         login = json.login
         if (login.credentials) {
             setupUser(login)
         }
     }
+    // Do we have a callback waiting? if so, run it
     if (state && state.docall) {
         GetAsync(state.docall[0], null, state.docall[1])
     }
@@ -4296,6 +4274,7 @@ function preGetListInfo(list, xdomain, nopush) {
 function showStats(json) {
     var obj = document.getElementById('list_stats')
     
+    // top bar stats
     obj.innerHTML = "<h3 style='margin-top: -10px;'>Overall 14 day activity:</h3>"
     obj.innerHTML += '<span class="glyphicon glyphicon-user"> </span> ' + json.participants.toLocaleString() + " People &nbsp; "
     obj.innerHTML += '<span class="glyphicon glyphicon-envelope"> </span> ' + json.hits.toLocaleString() + ' messages &nbsp';
@@ -4368,11 +4347,13 @@ function timeTravelListRedirect(json, state) {
             }
             var subs = countSubs(json.thread)
             var parts = countParts(json.thread)
+            // If we have subs/people labels available, change them and set the newly found stats
             if (document.getElementById('subs_' + state.id) != null) {
                 document.getElementById('subs_' + state.id).innerHTML = "<span class='glyphicon glyphicon-envelope'> </span> " + subs + " replies"
                 document.getElementById('people_' + state.id).innerHTML = "<span class='glyphicon glyphicon-user'> </span> " + parts + " people"
                 document.getElementById('people_' + state.id).style.visibility = parts > 1 ? "visible" : "hidden"
             }
+            // Note to user whether we found something new or not
             document.getElementById('magic_' + state.id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         }
         // Nope, nothing new - bummer!
@@ -4724,6 +4705,7 @@ function gatherTrends() {
 
 
 // logout: log out a user
+// call the logout URL, then refresh this page - much simple!
 function logout() {
     GetAsync("/api/preferences.lua?logout=true", null, function() { location.href = document.location; })
 }
@@ -4732,18 +4714,23 @@ function logout() {
 // savePreferences: save account prefs to ES
 function savePreferences() {
     var prefarr = []
+    // for each preference
     for (var i in pref_keys) {
         var key = pref_keys[i]
+        // try to fetch the input field holding this pref
         var o = document.getElementById(key)
         var val = o ? o.value : null
+        // if it's a select box, fetch the selected value
         if (o && o.selectedIndex) {
             val = o.options[o.selectedIndex].value
         }
+        // if we found a value, push it to a form hash and the prefs hash
         if (val) {
             prefarr.push(key + "=" + val)
             prefs[key] = val
         }
     }
+    // save preferences on backend
     GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
 }
 
