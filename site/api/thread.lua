@@ -28,7 +28,7 @@ local config = require 'lib/config'
 local emls_thrd
 
 -- func that fetches all children of an original topic email thingy
-function fetchChildren(r, pdoc, c, biglist)
+function fetchChildren(r, pdoc, c, biglist, rights)
     c = (c or 0) + 1
     -- don't fetch more than 250 subtrees, we don't want to nest ad nauseam
     if c > 250 then
@@ -41,9 +41,22 @@ function fetchChildren(r, pdoc, c, biglist)
     local docs = elastic.find('in-reply-to:"' .. r:escape(pdoc['message-id'])..'"', 50, "mbox")
     for k, doc in pairs(docs) do
         -- if we haven't seen this email before, check for its kids and add it to the bunch
-        if not biglist[doc['message-id']] then
+        local canAccess = true
+        if doc.private then
+            canAccess = false
+            local lid = doc.list_raw:match("<[^.]+%.(.-)>")
+            local flid = doc.list_raw:match("<([^.]+%..-)>")
+            for k, v in pairs(rights) do
+                if v == "*" or v == lid or v == flid then
+                    canAccess = true
+                    break
+                end
+            end
+        end
+        
+        if canAccess and (not biglist[doc['message-id']]) then
             biglist[doc['message-id']] = true
-            local mykids = fetchChildren(r, doc, c, biglist)
+            local mykids = fetchChildren(r, doc, c, biglist, rights)
             local dc = {
                 tid = doc.mid,
                 mid = doc.mid,
@@ -57,6 +70,7 @@ function fetchChildren(r, pdoc, c, biglist)
             table.insert(children, dc)
             table.insert(emls_thrd, dc)
         else
+            biglist[doc['message-id']] = true
             docs[k] = nil
         end
     end
@@ -110,14 +124,15 @@ function handle(r)
     -- did we find an email=
     if doc then
         local canAccess = false
-        
+        local rights = {}
         -- if private, can we access it?
         if doc.private then
             local account = user.get(r)
             if account then
                 local lid = doc.list_raw:match("<[^.]+%.(.-)>")
                 local flid = doc.list_raw:match("<([^.]+%..-)>")
-                for k, v in pairs(aaa.rights(r, account)) do
+                rights = aaa.rights(r, account)
+                for k, v in pairs(rights) do
                     if v == "*" or v == lid or v == flid then
                         canAccess = true
                         break
@@ -134,7 +149,7 @@ function handle(r)
         end
         if canAccess and doc and doc.mid then
             table.insert(emls_thrd, doc)
-            doc.children = fetchChildren(r, doc, 1)
+            doc.children = fetchChildren(r, doc, 1, nil, rights)
             doc.tid = doc.mid
             doc.id = doc.request_id
             --doc.body = nil
