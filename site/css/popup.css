@@ -827,7 +827,7 @@ listview_label {
      background: #000;
      max-height: 35px;
 }
-.unifiedsearch input {
+.unifiedsearch #q {
      position: relative;
      border-bottom: inset 1px !important;
      border-top: none !important;
