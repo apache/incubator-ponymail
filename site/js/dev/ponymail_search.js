@@ -66,6 +66,10 @@ function toggleEmail(year, mo, nopush) {
 }
 
 
+// Top 10 search alias - for some reason search() can't be called from there... o.O
+function searchTop(a,b,c,d) {
+    search(a,b,c,d)
+}
 
 // search: run a search
 function search(q, d, nopush, all) {
@@ -148,38 +152,6 @@ function searchAll(q, dspan, from, subject, where) {
         }
     }
     document.getElementById('listtitle').innerHTML = "Deep Search, " + howlong + " view <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
-    clearCalendarHover()
-    return false;
-}
-
-// do_search: run a search and update textboxes
-function do_search(q, d, nopush, all) {
-    document.getElementById('q').value = q
-    document.getElementById('aq').value = q
-    current_retention = d ? d : "lte=1M"
-    current_query = q
-    var arr = xlist.split('@', 2)
-    var listname = arr[0]
-    var domain = arr[1]
-    if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + d + ":" + escape(q));
-    if (global_deep == true) {
-        listname = "*"
-        domain = "*"
-    }
-    var arr = datePickerDouble(d)
-    howlong = arr[3]
-    if (isNaN(howlong)) {
-        howlong = "Custom date range"
-    }
-    else if (howlong >= 365) {
-        howlong = parseInt(howlong/365) + " year" + (howlong>769 ? "s" : "")
-    } else if (howlong >= 30) {
-        howlong = parseInt(howlong/30) + " month" + (howlong>59 ? "s" : "")
-    } else {
-        howlong = howlong + " days"
-    }
-    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q + "&d=" + d, null, buildPage)
-    document.getElementById('listtitle').innerHTML = listname + '@' + domain + " (Quick Search, last " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     clearCalendarHover()
     return false;
 }
