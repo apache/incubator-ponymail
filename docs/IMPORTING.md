@@ -54,3 +54,6 @@ If you have a mix of mbox and non-mbox files in the specific dir, you may wish t
 
 `python3 import-mbox.py --source /tmp/mylists/ --ext .mbox --attachments`
 
+## Test archives
+We have a few test archives for those that wish to test large imports.
+They can be found in gzip format at [http://ponymail.info/mboxes/](http://ponymail.info/mboxes/)
