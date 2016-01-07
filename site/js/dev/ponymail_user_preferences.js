@@ -17,6 +17,7 @@
 
 
 // logout: log out a user
+// call the logout URL, then refresh this page - much simple!
 function logout() {
     GetAsync("/api/preferences.lua?logout=true", null, function() { location.href = document.location; })
 }
@@ -25,18 +26,23 @@ function logout() {
 // savePreferences: save account prefs to ES
 function savePreferences() {
     var prefarr = []
+    // for each preference
     for (var i in pref_keys) {
         var key = pref_keys[i]
+        // try to fetch the input field holding this pref
         var o = document.getElementById(key)
         var val = o ? o.value : null
+        // if it's a select box, fetch the selected value
         if (o && o.selectedIndex) {
             val = o.options[o.selectedIndex].value
         }
+        // if we found a value, push it to a form hash and the prefs hash
         if (val) {
             prefarr.push(key + "=" + val)
             prefs[key] = val
         }
     }
+    // save preferences on backend
     GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
 }
 

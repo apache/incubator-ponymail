@@ -20,6 +20,7 @@
 function showStats(json) {
     var obj = document.getElementById('list_stats')
     
+    // top bar stats
     obj.innerHTML = "<h3 style='margin-top: -10px;'>Overall 14 day activity:</h3>"
     obj.innerHTML += '<span class="glyphicon glyphicon-user"> </span> ' + json.participants.toLocaleString() + " People &nbsp; "
     obj.innerHTML += '<span class="glyphicon glyphicon-envelope"> </span> ' + json.hits.toLocaleString() + ' messages &nbsp';

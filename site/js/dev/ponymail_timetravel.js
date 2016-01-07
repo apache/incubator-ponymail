@@ -57,11 +57,13 @@ function timeTravelListRedirect(json, state) {
             }
             var subs = countSubs(json.thread)
             var parts = countParts(json.thread)
+            // If we have subs/people labels available, change them and set the newly found stats
             if (document.getElementById('subs_' + state.id) != null) {
                 document.getElementById('subs_' + state.id).innerHTML = "<span class='glyphicon glyphicon-envelope'> </span> " + subs + " replies"
                 document.getElementById('people_' + state.id).innerHTML = "<span class='glyphicon glyphicon-user'> </span> " + parts + " people"
                 document.getElementById('people_' + state.id).style.visibility = parts > 1 ? "visible" : "hidden"
             }
+            // Note to user whether we found something new or not
             document.getElementById('magic_' + state.id).innerHTML = "<i>Voila! We've found the oldest email in this thread for you and worked our way forward. Enjoy!</i>"
         }
         // Nope, nothing new - bummer!

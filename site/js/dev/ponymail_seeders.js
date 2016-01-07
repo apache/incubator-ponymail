@@ -21,12 +21,16 @@ function seedGetListInfo(json, state) {
     if (typeof json.preferences != undefined && json.preferences) {
         prefs = json.preferences
     }
+    // did the backend supply us with a valid login?
+    // if so, set up the menu bar and save locally
     if (typeof json.login != undefined && json.login) {
         login = json.login
         if (login.credentials) {
             setupUser(login)
         }
     }
+    
+    // Actual callback: render list
     getListInfo(state.l, state.x, state.n)
 }
 
@@ -35,12 +39,14 @@ function seedPrefs(json, state) {
     if (typeof json.preferences != undefined && json.preferences) {
         prefs = json.preferences
     }
+    // logged in? render user nav bar then
     if (typeof json.login != undefined && json.login) {
         login = json.login
         if (login.credentials) {
             setupUser(login)
         }
     }
+    // Do we have a callback waiting? if so, run it
     if (state && state.docall) {
         GetAsync(state.docall[0], null, state.docall[1])
     }
