@@ -819,3 +819,32 @@ listview_label {
      background: #EEE !important;
      border-bottom-color: #CCC;
 }
+
+.unifiedsearch {
+     border-radius: 10px;
+     border: 2px solid #000;
+     float: left;
+     background: #000;
+     max-height: 35px;
+}
+.unifiedsearch input {
+     position: relative;
+     border-bottom: inset 1px !important;
+     border-top: none !important;
+     padding-top: -1px;
+     max-height: 28px;
+     line-height: 14px !important;
+}
+.unifiedsearch button {
+     border: none !important;
+     margin-top: -2px;
+     margin-right: -2px;
+     margin-left: 0px;
+     margin-bottom: -1px;
+     height: 35px;
+     border-left-style: none;
+     border-radius: 10px;
+     border-top-left-radius: 0px;
+     border-bottom-left-radius: 0px;
+     width: 48px;
+}

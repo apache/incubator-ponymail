@@ -38,7 +38,7 @@
     
       <form style="padding-top: 8px; float: left; page-break-before: avoid; page-break-after: avoid;" id="quickform" action="list.html" method="get" onsubmit="return search(this.elements['q'].value,this.elements['d'].getAttribute('data'), false, this.elements['checkall'].checked);">
         <big style="padding-top: 4px; padding-right: 5px; float: left;">Search:</big>
-        <div style="border-radius: 10px; border: 1px solid #999; float: left; background: #CCC; max-height: 33px;">
+        <div class="unifiedsearch">
         
         <input type="checkbox" style="display: none" id="checkall" name="checkall"/>
                 <div class="form-group" style="display: inline; float: left;">
@@ -60,7 +60,7 @@
         <input type="text" name="q" id="q" placeholder="Type search terms..." style="border-top: none; border-bottom: none;"/>
         
         
-        <button type="submit" title="Search!" style="max-height: 32px; margin-top: -1px; margin-left: 0px;border-left-style: none; border-radius: 10px; border-top-left-radius: 0px;border-bottom-left-radius: 0px;" value="Search!" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"> </span></button>
+        <button type="submit" title="Search!" value="Search!" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"> </span></button>
         </div>
         &nbsp;
         <input type="button" value="Advanced" onclick="toggleView('advanced');toggleView('quicksearch');" style="float: left; margin-left: 4px;" class="btn btn-warning"/>
