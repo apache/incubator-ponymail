@@ -174,7 +174,7 @@ def msgbody(msg):
         firstHTML = msg.get_payload(decode=True)
         
     # this requires a GPL lib, user will have to install it themselves
-    if firstHTML and (not body or len(body) == 0):
+    if firstHTML and (not body or len(body) <= 1):
         body = html2text.html2text(firstHTML)
 
     for charset in pm_charsets(msg):
