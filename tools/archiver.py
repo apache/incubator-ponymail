@@ -62,6 +62,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.RawConfigParser()
 config.read("%s/ponymail.cfg" % path)
 auth = None
+parseHTML = False
+
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
@@ -120,9 +122,10 @@ class Archiver(object):
 
     def __init__(self):
         """ Just initialize ES. """
-        global config, auth
+        global config, auth, parseHTML
         ssl = False
         self.cropout = None
+        self.html = parseHTML
         self.dbname = config.get("elasticsearch", "dbname")
         if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
             ssl = True
@@ -157,20 +160,32 @@ class Archiver(object):
     
     def msgbody(self, msg):
         body = None
-        if msg.is_multipart():    
+        if msg.is_multipart():
             for part in msg.walk():
-                if part.is_multipart(): 
-                    for subpart in part.walk():
-                        if subpart.get_content_type() == 'text/plain':
-                                body = subpart.get_payload(decode=True)
-                                break
-        
-                elif part.get_content_type() == 'text/plain':
-                    body = part.get_payload(decode=True)
-                    break
-        
+                try:
+                    if part.is_multipart(): 
+                        for subpart in part.walk():
+                            if subpart.get_content_type() == 'text/plain':
+                                    body = subpart.get_payload(decode=True)
+                                    break
+                            elif subpart.get_content_type() == 'text/html' and self.html and not firstHTML:
+                                 firstHTML = subpart.get_payload(decode=True)
+            
+                    elif part.get_content_type() == 'text/plain':
+                        body = part.get_payload(decode=True)
+                        break
+                    elif part.get_content_type() == 'text/html' and self.html and not firstHTML:
+                        firstHTML = part.get_payload(decode=True)
+                except:
+                    pass
         elif msg.get_content_type() == 'text/plain':
-            body = msg.get_payload(decode=True) 
+            body = msg.get_payload(decode=True)
+        elif msg.get_content_type() == 'text/html' and self.html and not firstHTML:
+            firstHTML = msg.get_payload(decode=True)
+            
+        # this requires a GPL lib, user will have to install it themselves
+        if firstHTML and (not body or len(body) == 0):
+            body = html2text.html2text(firstHTML)
     
         for charset in pm_charsets(msg):
             try:
@@ -178,7 +193,7 @@ class Archiver(object):
             except:
                 body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
                 
-        return body   
+        return body    
 
     def archive_message(self, mlist, msg):
         """Send the message to the archiver.
@@ -428,6 +443,8 @@ if __name__ == '__main__':
                        help='Use the archive timestamp as the email date instead of the Date header')
     parser.add_argument('--quiet', dest='quiet', action='store_true', 
                        help='Do not exit -1 if the email could not be parsed')
+    parser.add_argument('--html2text', dest='html2text', action='store_true', 
+                       help='Try to convert HTML to text if no text/plain message is found')
     args = parser.parse_args()
     
     foo = Archiver()
@@ -437,6 +454,10 @@ if __name__ == '__main__':
         ispublic = True
         ignorefrom = None
         allowfrom = None
+        if args.html2text:
+            import html2text
+            parseHTML = True
+            
         if args.altheader:
             altheader = args.altheader[0]
             if altheader in msg:
