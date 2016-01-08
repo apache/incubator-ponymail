@@ -164,8 +164,8 @@ def msgbody(msg):
                     body = part.get_payload(decode=True)
                 elif part.get_content_type() == 'text/html' and parseHTML and not firstHTML:
                     firstHTML = part.get_payload(decode=True)
-            except:
-                pass
+            except Exception as err:
+                print("Body parser error: %s" % err)
     elif msg.get_content_type() == 'text/plain':
         body = msg.get_payload(decode=True)
     elif msg.get_content_type() == 'text/html' and parseHTML and not firstHTML:
