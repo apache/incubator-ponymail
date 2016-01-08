@@ -43,6 +43,11 @@ To import from pipermail, you will have to run the import one list at a time. As
 
 `python3 import-mbox.py --source https://your.tld/pipermail/foolist/ --pipermail`
 
+### Pipermail and html-only emails
+While you can convert HTML-only emails to text using `--html2text`, Pipermail has some peculiarities
+where it adds a text/plain message to these emails, thus preventing html2text from working. You can
+circumvent this by using the `--ignorebody "foo"` arg to ignore all text/plain bodies containing `foo`.
+
 While the `project` flag is not needed here, you may wish to specify the list ID for the import.
 
 ## Importing from locally stored mbox files
