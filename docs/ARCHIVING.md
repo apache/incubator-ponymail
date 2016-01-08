@@ -68,3 +68,9 @@ defined as a member via OAuth full access to all private lists.
 
 If you use LDAP, you can modify the LDAP queries in the example AAA file to suit
 your organization.
+
+
+## Importing/Archiving HTML-only emails
+Should you need to import HTML-only emails into the archive, you may enable this
+with the `--html2text` command line arg. This requires that the `html2text` Python3 package
+is installed beforehand.
