@@ -165,7 +165,7 @@ def msgbody(msg):
                     body = part.get_payload(decode=True)
                     break
                 elif part.get_content_type() == 'text/html' and parseHTML and not firstHTML:
-                    firstHTML = subpart.get_payload(decode=True)
+                    firstHTML = part.get_payload(decode=True)
             except:
                 pass
     elif msg.get_content_type() == 'text/plain':
