@@ -173,7 +173,7 @@ def msgbody(msg):
         
     # this requires a GPL lib, user will have to install it themselves
     if firstHTML and (not body or len(body) <= 1):
-        body = html2text.html2text(firstHTML)
+        body = html2text.html2text(firstHTML.decode("utf-8", errors='replace') if type(firstHTML) is bytes else firstHTML)
 
     for charset in pm_charsets(msg):
         try:
