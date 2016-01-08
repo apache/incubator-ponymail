@@ -167,18 +167,18 @@ class Archiver(object):
                     if part.is_multipart(): 
                         for subpart in part.walk():
                             if subpart.get_content_type() == 'text/plain':
-                                    body = subpart.get_payload(decode=True)
-                                    break
+                                body = subpart.get_payload(decode=True)
+                                break
                             elif subpart.get_content_type() == 'text/html' and self.html and not firstHTML:
-                                 firstHTML = subpart.get_payload(decode=True)
+                                firstHTML = subpart.get_payload(decode=True)
             
                     elif part.get_content_type() == 'text/plain':
                         body = part.get_payload(decode=True)
                         break
                     elif part.get_content_type() == 'text/html' and self.html and not firstHTML:
                         firstHTML = part.get_payload(decode=True)
-                except:
-                    pass
+                except Exception as err:
+                    print(err)
         elif msg.get_content_type() == 'text/plain':
             body = msg.get_payload(decode=True)
         elif msg.get_content_type() == 'text/html' and self.html and not firstHTML:
