@@ -64,6 +64,7 @@ interactive = False
 extension = "*.mbox"
 attachments = False
 piperWeirdness = False
+parseHTML = False
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -146,6 +147,8 @@ def pm_charsets(msg):
     return charsets
 
 def msgbody(msg):
+    global parseHTML
+    firstHTML = None
     body = None
     if msg.is_multipart():
         for part in msg.walk():
@@ -155,14 +158,24 @@ def msgbody(msg):
                         if subpart.get_content_type() == 'text/plain':
                                 body = subpart.get_payload(decode=True)
                                 break
+                        elif subpart.get_content_type() == 'text/html' and parseHTML and not firstHTML:
+                             firstHTML = subpart.get_payload(decode=True)
         
                 elif part.get_content_type() == 'text/plain':
                     body = part.get_payload(decode=True)
                     break
+                elif part.get_content_type() == 'text/html' and parseHTML and not firstHTML:
+                    firstHTML = subpart.get_payload(decode=True)
             except:
                 pass
     elif msg.get_content_type() == 'text/plain':
-        body = msg.get_payload(decode=True) 
+        body = msg.get_payload(decode=True)
+    elif msg.get_content_type() == 'text/html' and parseHTML and not firstHTML:
+        firstHTML = msg.get_payload(decode=True)
+        
+    # this requires a GPL lib, user will have to install it themselves
+    if firstHTML and (not body or len(body) == 0):
+        body = html2text.html2text(firstHTML)
 
     for charset in pm_charsets(msg):
         try:
@@ -490,6 +503,8 @@ parser.add_argument('--attachments', dest='attachments', action='store_true',
                    help='Also iport attached files in emails')
 parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
+parser.add_argument('--html2text', dest='html2text', action='store_true',
+                   help='If no text/plain is found, try to parse HTML using html2text')
 
 args = parser.parse_args()
 
@@ -519,6 +534,9 @@ if args.attachments:
     attachments = args.attachments
 if args.ext:
     extension = args.ext[0]
+if args.html2text:
+    import html2text
+    parseHTML = True
 
 baddies = 0
 
