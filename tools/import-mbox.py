@@ -65,7 +65,7 @@ extension = "*.mbox"
 attachments = False
 piperWeirdness = False
 parseHTML = False
-
+iBody = None
 # Fetch config
 config = configparser.RawConfigParser()
 config.read('ponymail.cfg')
@@ -172,7 +172,7 @@ def msgbody(msg):
         firstHTML = msg.get_payload(decode=True)
         
     # this requires a GPL lib, user will have to install it themselves
-    if firstHTML and (not body or len(body) <= 1):
+    if firstHTML and (not body or len(body) <= 1 or (iBody and body.find(iBody) != -1)):
         body = html2text.html2text(firstHTML.decode("utf-8", errors='replace') if type(firstHTML) is bytes else firstHTML)
 
     for charset in pm_charsets(msg):
@@ -503,6 +503,8 @@ parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
 parser.add_argument('--html2text', dest='html2text', action='store_true',
                    help='If no text/plain is found, try to parse HTML using html2text')
+parser.add_argument('--ignorebody', dest='ibody', type=str, nargs=1,
+                   help='Optional email bodies to treat as empty (in conjunction with --html2text)')
 
 args = parser.parse_args()
 
@@ -535,7 +537,8 @@ if args.ext:
 if args.html2text:
     import html2text
     parseHTML = True
-
+if args.ibody:
+    iBody = args.ibody[0]
 baddies = 0
 
 
