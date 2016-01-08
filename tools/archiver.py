@@ -448,6 +448,10 @@ if __name__ == '__main__':
                        help='Try to convert HTML to text if no text/plain message is found')
     args = parser.parse_args()
     
+    if args.html2text:
+        import html2text
+        parseHTML = True
+        
     foo = Archiver()
     try:
         msg = email.message_from_file(sys.stdin)
@@ -455,9 +459,6 @@ if __name__ == '__main__':
         ispublic = True
         ignorefrom = None
         allowfrom = None
-        if args.html2text:
-            import html2text
-            parseHTML = True
             
         if args.altheader:
             altheader = args.altheader[0]
