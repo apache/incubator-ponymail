@@ -147,7 +147,7 @@ def pm_charsets(msg):
     return charsets
 
 def msgbody(msg):
-    global parseHTML
+    global parseHTML, iBody
     firstHTML = None
     body = None
     if msg.is_multipart():
