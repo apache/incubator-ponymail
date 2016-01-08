@@ -160,6 +160,7 @@ class Archiver(object):
     
     def msgbody(self, msg):
         body = None
+        firstHTML = None
         if msg.is_multipart():
             for part in msg.walk():
                 try:
