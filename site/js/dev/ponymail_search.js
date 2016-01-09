@@ -68,6 +68,10 @@ function toggleEmail(year, mo, nopush) {
 
 // Top 10 search alias - for some reason search() can't be called from there... o.O
 function searchTop(a,b,c,d) {
+    var obj = document.getElementById('q')
+    if (obj) {
+        obj.value = a
+    }
     search(a,b,c,d)
 }
 
