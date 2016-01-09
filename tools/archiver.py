@@ -465,7 +465,10 @@ if __name__ == '__main__':
         elif 'altheader' in sys.argv:
             altheader = sys.argv[len(sys.argv)-1]
             if altheader in msg:
-                msg.add_header('list-id', msg.get(altheader))
+                try:
+                    msg.replace_header('list-id', msg.get(altheader))
+                except:
+                    msg.add_header('list-id', msg.get(altheader))
                 
         #Ignore based on --ignore flag?
         if args.ignorefrom:
