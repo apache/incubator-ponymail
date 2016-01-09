@@ -10,6 +10,7 @@
 - Fixed a bug where the in-reply-to data was garbled internally
 - Various fixups in the URL recognition routine
 - HTML-only emails can now be parsed (as markdown) by the archiver
+- Fixed an issue where --altheader was not respected properly if list-id was supplied
 
 ## CHANGES in 0.7b (released 2016-01-05):
 
