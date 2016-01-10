@@ -171,11 +171,12 @@ function compose(eid, lid, type) {
             // Do we have alternate email addresses associated?
             // If so, let the user pick which to send from
             if (login.alternates && login.alternates.length !== undefined) {
-                var alts = [login.credentials.email]
+                var alts = {}
+                alts[login.credentials.email] = login.credentials.email
                 for (var i in login.alternates) {
-                    alts.push(login.alternates[i])
+                    alts[login.alternates[i]] = login.alternates[i]
                 }
-                obj.appendChild(generateFormDivs('alt', 'Send as:', 'select', alts))
+                obj.appendChild(generateFormDivs('alt', 'Send as:', 'select', alts, login.credentials.email))
                 obj.innerHTML += "<div>&nbsp;</div>"
             }
             // Set up a subject text field, populate it
