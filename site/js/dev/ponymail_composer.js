@@ -82,7 +82,7 @@ function sendEmail(form) {
     hideComposer(null, true)
     
     // Open the annoying popup dialogue :)
-    popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.")
+    popup("Email dispatched!", "Provided it passes spam checks, your email should be on its way to the mailing list now. <br/><b>Do note:</b> Some lists are always moderated, so your reply may be held for moderation for a while.", 5, "composer")
 }
 
 

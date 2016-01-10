@@ -216,13 +216,32 @@ function findEpoch(epoch) {
     return null
 }
 
+// popup reminder shutoff mechanism
+function setPopup(pid, close) {
+    if (typeof(window.localStorage) !== "undefined") {
+        window.localStorage.setItem("popup_reminder_" + pid, close)
+    }
+}
+
+
 // Pop-up message display thingy. Used for saying "email sent...I think!"
-function popup(title, body, timeout) {
+function popup(title, body, timeout, pid) {
     var obj = document.getElementById('popupper')
+    if (pid) {
+        if (typeof(window.localStorage) !== "undefined") {
+            var popre = window.localStorage.getItem("popup_reminder_" + pid)
+            if (popre) {
+                return
+            }
+        }
+    }
     if (obj) {
         obj.innerHTML = ""
         obj.style.display = 'block'
         obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='toggleView(\"popupper\")'>Got it!</a></p>"
+        if (pid) {
+            obj.innerHTML += "<br/><input type='checkbox' onclick='setPopup(\""+pid+"\", this.checked);' id='popre'><label for='popre'>Don't show this again</label>"
+        }
         // hide popupper after N seconds, giving people enough time to read it.
         window.setTimeout(function() {
             document.getElementById('popupper').style.display = 'none'
