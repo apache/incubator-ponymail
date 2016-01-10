@@ -39,13 +39,7 @@ function renderAlts(json) {
             alt = alt.replace(/<>"'/g, "")
             obj.innerHTML += alt + " - [<a href='javascript:void(0);' onclick='delAlt(\"" + alt + "\");'>Remove</a>]<br/>"
         }
-        if (json.login.alternates.length == undefined || json.login.alternates.length == 0) {
-            obj.innerHTML = "You do not have any associated email addresses yet"
-        }
-    } else {
-        alert("Boo")
-    }
-    
+    }    
 }
 
 // onLoad function, fetches the needed JSON and renders the notif list
