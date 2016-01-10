@@ -65,6 +65,16 @@ function handle(r)
                 -- construct sender name+address
                 local fr = ([["%s"<%s>]]):format(fname or account.credentials.fullname, account.credentials.email)
                 
+                -- Using alt email??
+                if account.credentials.altemail and post.alt then
+                    for k, v in pairs(account.credentials.altemail) do
+                        if v.email == post.alt then
+                            fr = ([["%s"<%s>]]):format(fname or account.credentials.fullname, v.email)
+                            break
+                        end
+                    end
+                end
+                
                 -- standard headers + headers we need ourselves for parsing in the archiver (notifications etc)
                 local headers = {
                     ['X-PonyMail-Sender'] = r:sha1(account.cid),

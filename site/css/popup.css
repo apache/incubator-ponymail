@@ -848,3 +848,7 @@ listview_label {
      border-bottom-left-radius: 0px;
      width: 48px;
 }
+
+.splash select option {
+     background: #DDD;
+}
