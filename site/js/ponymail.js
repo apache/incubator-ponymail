@@ -138,7 +138,10 @@ function sendEmail(form) {
     // Push the subject and email body into the form data
     of.push("subject=" + encodeURIComponent(document.getElementById('reply_subject').value))
     of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
-    
+    if (login && login.alternates) {
+        of.push("alt=" + encodeURIComponent(document.getElementById('alt').value))
+    }
+        
     var request = new XMLHttpRequest();
     request.open("POST", "/api/compose.lua");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -240,6 +243,16 @@ function compose(eid, lid, type) {
                 subject = ""
             }
             
+            // Do we have alternate email addresses associated?
+            // If so, let the user pick which to send from
+            if (login.alternates && login.alternates.length !== undefined) {
+                var alts = [login.credentials.email]
+                for (var i in login.alternates) {
+                    alts.push(login.alternates[i])
+                }
+                obj.appendChild(generateFormDivs('alt', 'Send as:', 'select', alts))
+                obj.innerHTML += "<div>&nbsp;</div>"
+            } else { alert("no alts")}
             // Set up a subject text field, populate it
             obj.appendChild(document.createTextNode('Subject: '))
             var txt = document.createElement('input')
@@ -4898,6 +4911,16 @@ function setupUser() {
         t.nodeValue = "Notifications (" + login.notifications + ")"
         a.innerHTML += ' <span class="glyphicon glyphicon-star"> </span>'
     }
+    
+    li.appendChild(a)
+    pd.appendChild(li)
+    
+    // Merge accounts item
+    var li = document.createElement("li")
+    var a = document.createElement("a")
+    var t = document.createTextNode("Manage email addresses")
+    a.setAttribute("href", "merge.html")
+    a.appendChild(t)
     
     li.appendChild(a)
     pd.appendChild(li)
