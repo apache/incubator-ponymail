@@ -177,7 +177,7 @@ function compose(eid, lid, type) {
                 }
                 obj.appendChild(generateFormDivs('alt', 'Send as:', 'select', alts))
                 obj.innerHTML += "<div>&nbsp;</div>"
-            } else { alert("no alts")}
+            }
             // Set up a subject text field, populate it
             obj.appendChild(document.createTextNode('Subject: '))
             var txt = document.createElement('input')
