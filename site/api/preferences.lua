@@ -109,7 +109,11 @@ Pony Mail - Email for Ponies and People.
         end
         user.save(r, account, true)
         r.content_type = "text/plain"
-        r:puts("Email address verified! Thanks for shopping at Pony Mail!\n")
+        if verified then
+            r:puts("Email address verified! Thanks for shopping at Pony Mail!\n")
+        else
+            r:puts("Either you supplied an invalid hash or something else went wrong.\n")
+        end
         return cross.OK
     end
     
