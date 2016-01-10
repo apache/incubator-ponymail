@@ -1596,13 +1596,13 @@ function displayEmailThreaded(json, state, threadobj) {
             if (state.pchild && document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))) {
                 var pc = document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))
                 try {
-                    obj.insertBefore(node, pc)
-                } catch (e) {
                     if (prefs.sortOrder == 'forward') {
-                        obj.appendChild(node)
+                        obj.insertAfter(pc, node)
                     } else {
-                        obj.insertBefore(node, obj.firstChild)
+                        obj.insertBefore(pc, node)
                     }
+                } catch (e) {
+                    obj.appendChild(node)
                 }
             } else {
                 if (prefs.sortOrder == 'forward') {
