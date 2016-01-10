@@ -32,7 +32,8 @@ function setupUserAlts(json) {
 function renderAlts(json) {
     if (json.login && json.login.credentials) {
         var obj = document.getElementById('alts')
-        obj.innerHTML = ""
+        var main = json.login.credentials.email.replace(/<>"'/g, "")
+        obj.innerHTML = main + " - primary address<br/>"
         for (var i in json.login.alternates) {
             var alt = json.login.alternates[i]
             alt = alt.replace(/<>"'/g, "")
