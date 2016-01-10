@@ -139,7 +139,7 @@ function sendEmail(form) {
     of.push("subject=" + encodeURIComponent(document.getElementById('reply_subject').value))
     of.push("body=" + encodeURIComponent(document.getElementById('reply_body').value))
     if (login && login.alternates) {
-        of.push("alt=" + encodeURIComponent(document.getElementById('alt').value))
+        of.push("alt=" + encodeURIComponent(document.getElementById('alt').options[document.getElementById('alt').selectedIndex].value))
     }
         
     var request = new XMLHttpRequest();
