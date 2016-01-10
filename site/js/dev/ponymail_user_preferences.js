@@ -191,6 +191,16 @@ function setupUser() {
     li.appendChild(a)
     pd.appendChild(li)
     
+    // Merge accounts item
+    var li = document.createElement("li")
+    var a = document.createElement("a")
+    var t = document.createTextNode("Manage email addresses")
+    a.setAttribute("href", "merge.html")
+    a.appendChild(t)
+    
+    li.appendChild(a)
+    pd.appendChild(li)
+    
     // Logout item
     var li = document.createElement("li")
     var a = document.createElement("a")

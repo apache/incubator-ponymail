@@ -30,7 +30,8 @@ function getUser(r, override)
                     credentials = {
                         email = js.credentials.email,
                         fullname = js.credentials.fullname,
-                        uid = js.credentials.uid
+                        uid = js.credentials.uid,
+                        altemail = js.credentials.altemail
                     },                    
                     cid = cid,
                     internal = {
@@ -63,6 +64,7 @@ function updateUser(r, cid, data)
             uid = data.uid,
             email = data.email,
             fullname = data.fullname,
+            altemail = data.altemail or oaccount.credentials.altemail
         },
         internal = {
             admin = data.admin,
@@ -97,10 +99,13 @@ end
 
 
 -- Save preferences
-function savePreferences(r, usr)
+function savePreferences(r, usr, alts)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.preferences = usr.preferences
+        if alts then
+            js.credentials.altemail = usr.credentials.altemail
+        end
         elastic.index(r, r:sha1(usr.cid), 'account', JSON.encode(js))
     end
 end

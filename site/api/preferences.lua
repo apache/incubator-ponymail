@@ -21,6 +21,8 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
+local smtp = require 'socket.smtp'
+local config = require 'lib/config'
 
 function handle(r)
     local now = r:clock()
@@ -42,6 +44,85 @@ function handle(r)
     if get.logout and account then
         user.logout(r, account)
         r:puts[[{"logut": true}]]
+        return cross.OK
+    end
+    
+    -- associating an email address??
+    if get.associate and account and get.associate:match("^%S+@%S+$") then
+        local fp, lp = get.associate:match("([^@]+)@([^@]+)")
+        if config.no_association then
+            for k, v in pairs(config.no_association) do
+                if r.strcmp_match(lp:lower(), v) or v == "*" then
+                    r:puts(JSON.encode{error="You cannot associate email addresses from this domain"})
+                    return cross.OK
+                end
+            end
+        end
+        
+        local hash = r:md5(math.random(1,999999) .. os.time() .. account.cid)
+        account.credentials.altemail = account.credentials.altemail or {}
+        table.insert(account.credentials.altemail, { email = get.associate, hash = hash, verified = false})
+        user.save(r, account, true)
+        local scheme = "https"
+        if r.port == 80 then
+            scheme = "http"
+        end
+        local domain = ("%s://%s:%u/"):format(scheme, r.hostname, r.port)
+        local vURL = ("%sapi/preferences.lua?verify=true&hash=%s"):format(domain, hash)
+        
+        
+        -- send email
+        local source = smtp.message{
+                headers = {
+                    subject = "Confirm email address merge in Pony Mail"
+                    },
+                body = ([[
+You (or someone else) has requested to merge this email address with the account '%s' in Pony Mail.
+If you wish to complete this merge, please visit %s
+ ...Or don't if you didn't request this
+
+With regards,
+Pony Mail - Email for Ponies and People.
+]]):format(account.credentials.email, vURL)
+            }
+        
+        -- send email!
+        local rv, er = smtp.send{
+            from = ("\"Pony Mail\"<no-reply@%s>"):format(r.hostname),
+            rcpt = get.associate,
+            source = source,
+            server = config.mailserver
+        }
+        r:puts(JSON.encode{requested = rv or er})
+        return cross.OK
+    end
+    
+    -- verify alt email?
+    if get.verify and get.hash and account and account.credentials.altemail then
+        local verified = false
+        for k, v in pairs(account.credentials.altemail) do
+            if v.hash == get.hash then
+                account.credentials.altemail[k].verified = true
+                verified = true
+                break
+            end
+        end
+        user.save(r, account, true)
+        r.content_type = "text/plain"
+        r:puts("Email address verified! Thanks for shopping at Pony Mail!\n")
+        return cross.OK
+    end
+    
+    -- remove alt email?
+    if get.removealt and account and account.credentials.altemail then
+        for k, v in pairs(account.credentials.altemail) do
+            if v.email == get.removealt then
+                account.credentials.altemail[k] = nil
+                break
+            end
+        end
+        user.save(r, account, true)
+        r:puts(JSON.encode{removed = true})
         return cross.OK
     end
 
@@ -133,13 +214,22 @@ function handle(r)
         end
     end
     
+    local alts = {}
+    if account and account.credentials and type(account.credentials.altemail) == "table" then
+        for k, v in pairs(account.credentials.altemail) do
+            if v.verified then
+                table.insert(alts, v.email)
+            end
+        end
+    end
     r:puts(JSON.encode{
         lists = lists,
         descriptions = descs,
         preferences = account.preferences,
         login = {
             credentials = account.credentials,
-            notifications = notifications
+            notifications = notifications,
+            alternates = alts
         },
         took = r:clock() - now
     })
