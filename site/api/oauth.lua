@@ -103,6 +103,10 @@ function handle(r)
             name = tbl[config.oauth_fields['internal']['name'] or 0],
             uid = tbl[config.oauth_fields['internal']['uid'] or 0]
         }
+        -- if httpd borks, bail!
+        if json.uid == '(null)' or json.email == '(null)' then
+            json = nil
+        end
         -- Only use internal thing if localhost is trusted
         for k, v in pairs(config.admin_oauth or {}) do
             if r.strcmp_match(oauth_domain, v) then
