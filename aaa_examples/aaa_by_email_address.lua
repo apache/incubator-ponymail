@@ -79,10 +79,11 @@ function getRights(r, usr)
     -- if enabled, check against alternates
     if useAlternates then
         if usr and usr.credentials and type(usr.credentials.altemail) == "table" then
-        for k, v in pairs(usr.credentials.altemail) do
-            if validateEmail(r, v.email) then
-                validEmail = true
-                break
+            for k, v in pairs(usr.credentials.altemail) do
+                if validateEmail(r, v.email) then
+                    validEmail = true
+                    break
+                end
             end
         end
     end
