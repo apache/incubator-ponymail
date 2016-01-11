@@ -27,6 +27,7 @@ local config = require 'lib/config'
 -- This AAA module requires strcmp_match which is only found in Apache httpd currently.
 local valid_email = "*@foocorp.com" 
 local grant_access_to = "*" -- use * for access to all, or specify a (sub)domain to grant access to
+local useAlternates = false -- also check against alternate email addresses??
 
 -- Is email a valid foocorp email?
 function validateEmail(r, email)
@@ -36,6 +37,7 @@ function validateEmail(r, email)
     end
     return false
 end
+
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
 function getRights(r, usr)
@@ -69,6 +71,20 @@ function getRights(r, usr)
     -- if not a 'good' oauth, then let's forget all about it
     if not authority then
         return rights
+    end
+    
+    -- first, check against primary address
+    local validEmail = valdateEmail(r, email)
+    
+    -- if enabled, check against alternates
+    if useAlternates then
+        if usr and usr.credentials and type(usr.credentials.altemail) == "table" then
+        for k, v in pairs(usr.credentials.altemail) do
+            if validateEmail(r, v.email) then
+                validEmail = true
+                break
+            end
+        end
     end
     
     -- Check if email matches foocorp.com
