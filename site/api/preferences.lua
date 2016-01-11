@@ -68,6 +68,9 @@ function handle(r)
             scheme = "http"
         end
         local domain = ("%s://%s:%u/"):format(scheme, r.hostname, r.port)
+        if r.headers_in['Referer'] and r.headers_in['Referer']:match("merge%.html") then
+            domain = r.headers_in['Referer']:gsub("/merge%.html", "/")
+        end
         local vURL = ("%sapi/preferences.lua?verify=true&hash=%s"):format(domain, hash)
         
         
