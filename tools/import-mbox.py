@@ -293,7 +293,10 @@ class SlurpThread(Thread):
                 if resendTo:
                     print("Delivering message %s via MTA" % message['message-id'] if 'message-id' in message else '??')
                     s = SMTP('localhost')
-                    message.replace_header('To', resendTo)
+                    try:
+                        message.replace_header('To', resendTo)
+                    except:
+                        pass
                     message['cc'] = None
                     s.send_message(message, from_addr=None, to_addrs=(resendTo))
                     continue
