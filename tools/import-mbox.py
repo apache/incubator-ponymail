@@ -515,7 +515,7 @@ parser.add_argument('--html2text', dest='html2text', action='store_true',
                    help='If no text/plain is found, try to parse HTML using html2text')
 parser.add_argument('--ignorebody', dest='ibody', type=str, nargs=1,
                    help='Optional email bodies to treat as empty (in conjunction with --html2text)')
-parser.add_argument('--resend', dest='ibody', type=str, nargs=1,
+parser.add_argument('--resend', dest='resend', type=str, nargs=1,
                    help='DANGER ZONE: Resend every read email to this recipient as a new email')
 
 args = parser.parse_args()
