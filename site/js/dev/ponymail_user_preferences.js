@@ -145,10 +145,10 @@ function setupUser() {
     if (!uimg) {
         return
     }
-    uimg.setAttribute("src", "/images/user.png")
+    uimg.setAttribute("src", "images/user.png")
     uimg.setAttribute("title", "Logged in as " + login.credentials.fullname)
     if (login.notifications && login.notifications > 0) {
-        uimg.setAttribute("src", "/images/user_notif.png")
+        uimg.setAttribute("src", "images/user_notif.png")
         uimg.setAttribute("title", "Logged in as " + login.credentials.fullname + " - You have " + login.notifications + " new notifications!")
     }
     var pd = document.getElementById('prefs_dropdown')
