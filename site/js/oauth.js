@@ -68,7 +68,7 @@ function oauthPortal(key) {
 // page.
 function parseOauthResponse(json) {
     if (json.okay) {
-        location.href = "/"
+        location.href = "./"
     } else {
         popup("Oauth failed", "Authentication failed: " + json.msg)
     }
