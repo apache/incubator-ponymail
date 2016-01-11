@@ -74,7 +74,7 @@ function getRights(r, usr)
     end
     
     -- first, check against primary address
-    local validEmail = valdateEmail(r, email)
+    local validEmail = validateEmail(r, email)
     
     -- if enabled, check against alternates
     if useAlternates then
