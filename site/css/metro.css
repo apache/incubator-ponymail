@@ -14,10 +14,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-
 html {
   font-family: sans-serif;
 }
+
 body {
   margin: 0;
 }
@@ -27,12 +27,14 @@ body {
 }
 
 a:active, a:focus {
-    color: #268bd2;
+  color: #268bd2;
 }
+
 a:active,
 a:hover {
   outline: 0;
 }
+
 h1 {
   font-size: 2em;
 }
@@ -43,16 +45,20 @@ pre {
   font-family: monospace, serif;
   font-size: 1em;
 }
+
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
 q {
   quotes: "\201C" "\201D" "\2018" "\2019";
 }
+
 small {
   font-size: 80%;
 }
+
 sub,
 sup {
   font-size: 75%;
@@ -66,10 +72,12 @@ fieldset {
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
+
 legend {
   border: 0;
   padding: 0;
 }
+
 button,
 input,
 select,
@@ -78,10 +86,12 @@ textarea {
   font-size: 100%;
   margin: 0;
 }
+
 button,
 input {
   line-height: normal;
 }
+
 button,
 
 input[type="checkbox"],
@@ -89,26 +99,32 @@ input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
+
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
+
 textarea {
   overflow: auto;
   vertical-align: top;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
 html {
   font-family: sans-serif;
 }
+
 pre,
 code {
   font-family: sans-serif;
 }
+
 h1,
 h2,
 h3,
@@ -118,25 +134,28 @@ h6 {
   font-family: sans-serif;
   font-weight: 700;
 }
+
 html {
   background-color: #282828;
   color: #9C9C9C;
 }
+
 body {
   background-color: #2E2E2E;
   border: 1pt solid #586e75;
 }
+
 .well {
-    background-color: #041E55;
-    color: #EEE;
+  background-color: #041E55;
+  color: #EEE;
 }
 
 .well li {
-    background-color: #021A4D;
+  background-color: #021A4D;
 }
 
 .well li:hover {
-    background-color: #071E51;
+  background-color: #071E51;
 }
 
 .btn-danger {
@@ -161,8 +180,8 @@ body {
 }
 
 .bubble-info, .bubble-warning, .bubble-danger, .bubble-success, .bubble-primary, .bubble-topic {
-    background: #2D2C2B !important;
-    color: #e5b900;
+  background: #2D2C2B !important;
+  color: #e5b900;
 }
 
 .reply {
@@ -174,28 +193,34 @@ body {
 }
 
 #stats {
-    background-color: #425B00;
-    margin: 10px;
-    border-radius: 5px;
-    border: 1pt solid #597900;
-    color: #EEE;
+  background-color: #425B00;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1pt solid #597900;
+  color: #EEE;
 }
+
 code {
   background-color: #073642;
   padding: 2px;
 }
+
 a {
   color: #FFF;
 }
+
 a:visited {
   color: #FFC;
 }
+
 a:hover {
   color: #FFB;
 }
+
 h1 {
   color: #d33682;
 }
+
 h2,
 h3,
 h4,
@@ -203,6 +228,7 @@ h5,
 h6 {
   color: #EEE;
 }
+
 pre {
   background-color: #002b36;
   color: #839496;
@@ -210,18 +236,23 @@ pre {
   padding: 1em;
   box-shadow: 5pt 5pt 8pt #073642;
 }
+
 pre code {
   background-color: #002b36;
 }
+
 h1 {
   font-size: 2.4em;
 }
+
 h2 {
   font-size: 2.0em;
 }
+
 h3 {
   font-size: 1.4em;
 }
+
 h4 {
   font-size: 1.2em;
 }
