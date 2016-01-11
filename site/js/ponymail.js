@@ -143,7 +143,7 @@ function sendEmail(form) {
     }
         
     var request = new XMLHttpRequest();
-    request.open("POST", "/api/compose.lua");
+    request.open("POST", "api/compose.lua");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send(of.join("&")) // send email as a POST string
     
