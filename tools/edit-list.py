@@ -31,7 +31,7 @@ try:
 except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
-    
+
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -74,17 +74,17 @@ parser.add_argument('--rename', dest='target', type=str, nargs=1,
                    help='(optional) new list ID')
 parser.add_argument('--desc', dest='desc', type=str, nargs=1,
                    help='(optional) new list description')
-parser.add_argument('--private', dest='private', action='store_true', 
+parser.add_argument('--private', dest='private', action='store_true',
                    help='Make all emails in list private')
-parser.add_argument('--public', dest='public', action='store_true', 
+parser.add_argument('--public', dest='public', action='store_true',
                    help='Make all emails in list public')
-parser.add_argument('--delete', dest='delete', action='store_true', 
+parser.add_argument('--delete', dest='delete', action='store_true',
                    help='Delete emails from this list')
-parser.add_argument('--wildcard', dest='glob', action='store_true', 
+parser.add_argument('--wildcard', dest='glob', action='store_true',
                    help='Allow wildcards in --source')
-parser.add_argument('--debug', dest='debug', action='store_true', 
+parser.add_argument('--debug', dest='debug', action='store_true',
                    help='Debug output - very noisy!')
-parser.add_argument('--notag', dest='notag', action='store_true', 
+parser.add_argument('--notag', dest='notag', action='store_true',
                    help='List IDs do not have <> in them')
 
 args = parser.parse_args()
@@ -108,7 +108,7 @@ if args.debug:
 if args.notag:
     notag = args.notag
 
-    
+
 if not sourceLID:
     print("No source list ID specified!")
     parser.print_help()
@@ -125,7 +125,7 @@ if makePublic and makePrivate:
 sourceLID = ("%s" if notag else "<%s>")  % sourceLID.replace("@", ".").strip("<>")
 if targetLID:
     targetLID = "<%s>" % targetLID.replace("@", ".").strip("<>")
-    
+
 print("Beginning list edit:")
 print("  - List ID: %s" % sourceLID)
 if targetLID:
@@ -153,7 +153,7 @@ if desc:
             'description': desc
         }
     )
-    
+
 if targetLID or makePrivate or makePublic or deleteEmails:
     print("Updating docs...")
     then = time.time()
@@ -180,7 +180,7 @@ if targetLID or makePrivate or makePublic or deleteEmails:
     sid = page['_scroll_id']
     scroll_size = page['hits']['total']
     if debug:
-            print(json.dumps(page))
+        print(json.dumps(page))
     js_arr = []
     while (scroll_size > 0):
         page = es.scroll(scroll_id = sid, scroll = '30m')
@@ -205,14 +205,14 @@ if targetLID or makePrivate or makePublic or deleteEmails:
                 '_id': doc,
                 'doc': body
             })
-            
+
             count += 1
             if (count % 500 == 0):
                 print("Processed %u emails..." % count)
                 helpers.bulk(es, js_arr)
                 js_arr = []
-    
+
     if len(js_arr) > 0:
         helpers.bulk(es, js_arr)
-                
+
     print("All done, processed %u docs in %u seconds" % (count, time.time() - then))
