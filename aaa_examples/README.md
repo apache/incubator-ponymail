@@ -1,6 +1,11 @@
 # AAA Examples
 This directory contains example AAA (Authentication, Authorization and Access)
-libraries for various use cases. These script will require that
+libraries for various use cases. 
+
+To activate one of these scripts (or derivatives thereof), simply replace 
+`site/api/lib/aaa.lua` with the AAA script of your choice.
+
+These script will require that
 `site/api/lib/config.lua` has one or more OAuth providers specified as
 authorities, as such:
 
