@@ -66,6 +66,8 @@ attachments = False
 piperWeirdness = False
 parseHTML = False
 iBody = None
+resendTo = None
+
 # Fetch config
 config = configparser.RawConfigParser()
 config.read('ponymail.cfg')
@@ -232,7 +234,7 @@ class BulkThread(Thread):
 class SlurpThread(Thread):
 
     def run(self):
-        global block, y, es, lists, baddies, config
+        global block, y, es, lists, baddies, config, resendTo
         ja = []
         jas = []
         print("Thread started")
@@ -288,6 +290,13 @@ class SlurpThread(Thread):
             count = 0
             LEY = EY
             for message in mailbox.mbox(tmpname):
+                if resendTo:
+                    print("Delivering message %s via MTA" % message['message-id'] if 'message-id' in message else '??')
+                    s = SMTP('localhost')
+                    message.replace_header('To', resendTo)
+                    message['cc'] = None
+                    s.send_message(message, from_addr=None, to_addrs=(resendTo))
+                    continue
                 if (time.time() - stime > 120):
                     print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
                     break
@@ -506,6 +515,8 @@ parser.add_argument('--html2text', dest='html2text', action='store_true',
                    help='If no text/plain is found, try to parse HTML using html2text')
 parser.add_argument('--ignorebody', dest='ibody', type=str, nargs=1,
                    help='Optional email bodies to treat as empty (in conjunction with --html2text)')
+parser.add_argument('--resend', dest='ibody', type=str, nargs=1,
+                   help='DANGER ZONE: Resend every read email to this recipient as a new email')
 
 args = parser.parse_args()
 
@@ -540,6 +551,10 @@ if args.html2text:
     parseHTML = True
 if args.ibody:
     iBody = args.ibody[0]
+if args.resend:
+    resendTo = args.resend[0]
+    from smtplib import SMTP
+    
 baddies = 0
 
 
