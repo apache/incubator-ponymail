@@ -4772,6 +4772,11 @@ function savePreferences() {
     }
     // save preferences on backend
     GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
+    
+    // Save ephemeral settings
+    if (typeof(window.localStorage) !== "undefined") {
+        window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
+    }
 }
 
 // showPreferences: show the account prefs in the splash window
@@ -4951,6 +4956,7 @@ function setTheme(theme) {
         buildPage()
     }
 }
+
 
 /******************************************
  Fetched from dev/ponymail_zzz.js
