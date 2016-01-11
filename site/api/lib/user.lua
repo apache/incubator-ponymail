@@ -64,7 +64,7 @@ function updateUser(r, cid, data)
             uid = data.uid,
             email = data.email,
             fullname = data.fullname,
-            altemail = data.altemail or oaccount.credentials.altemail
+            altemail = data.altemail or (oaccount and oaccount.credentials.altemail) or {}
         },
         internal = {
             admin = data.admin,
