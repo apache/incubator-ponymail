@@ -32,7 +32,7 @@ private.
 * Multi-site, multi-list handling
 * Word clouds
 * Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
-* Supports both custom OAuth, Google Auth and Mozilla Persona
+* Supports both custom OAuth, Google Auth, OAuth.online and Mozilla Persona
 * Atom feeds for all lists (including private ones!)
 * Source view and custom range mbox export
 * Customized trend analysis and n-grams

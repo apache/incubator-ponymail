@@ -1,3 +1,8 @@
+## CHANGES in 0.9b:
+
+- Private lists can be hidden in the index from users without access
+- Added support for OAuth.online in lieu of Persona shutting down
+
 ## CHANGES in 0.8b:
 
 - Fixed a bug where single-email topics in treeview mode would not display
