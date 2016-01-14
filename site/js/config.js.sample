@@ -58,8 +58,15 @@ var pm_config = {
             name: "CAS Auth",
             oauth_portal: "/oauth.html?key=internal&",
             oauth_url: "/oauth.html?key=internal&",
-        }
+        },
         */
+        
+        // OAuth.online
+        online: {
+            name: "OAuth.online",
+            oauth_portal: "https://oauth.online/",
+            oauth_url: "https://verify.oauth.online/token",
+        }
     },
     persona: {
         enabled: true // Is Mozilla Persona something we'd use?

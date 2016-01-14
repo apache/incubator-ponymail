@@ -71,6 +71,11 @@ function handle(r)
             end
         end
         
+    -- OAuth.online callback
+    elseif get.oauth_token and get.key == 'online' then
+        local result = https.request("https://verify.oauth.online/token", r.args)
+        valid, json = pcall(function() return JSON.decode(result) end)
+        
     -- Generic callback (like ASF Oauth2)
     elseif get.state and get.code and get.oauth_token then
         oauth_domain = get.oauth_token:match("https?://(.-)/")
