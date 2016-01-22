@@ -129,9 +129,12 @@ function showSpinner(show) {
     var obj = document.getElementById('spinner')
     // If no such obj yet, create it
     if (!obj) {
+        var base = pm_config.URLBase ? pm_config.URLBase : ""
+        base = base.replace(/\/+/g, "/")
+
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
-        obj.innerHTML = "<img src='images/spinner.gif'><br/>Loading data, please wait..."
+        obj.innerHTML = "<img src='" + base + "/images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
     // told to show the spinner?
