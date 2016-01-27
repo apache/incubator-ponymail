@@ -457,7 +457,7 @@ function displaySingleThread(json) {
         helper.innerHTML += '<label style="padding: 4px; font-size: 10pt; cursor: pointer; float: right;" class="label label-info" onclick="prefs.groupBy=\'thread\'; displaySingleThread();" style="cursor: pointer; float: right;">Click to view as nested thread</label> &nbsp;'
     }
     if (current_thread_json[0]['in-reply-to']) {
-        helper.innerHTML += '<p><i>This appears to not be the first email in this thread (it has <kbd>in-reply-to</kbd> set). If you like, we can try to find the first email in the thread for you: <a href="javascript:void(0);" style="font-size: 10pt; cursor: pointer;" onclick="timeTravelSingleThread();" style="cursor: pointer; ">Go to the first email in this thread</a> &nbsp;</p>'
+        helper.innerHTML += '<div class="alert alert-warning" style="margin-top: 10px;"><p><b>Notice!</b><br>This appears to not be the first email in this thread (it has <q><b>in-reply-to</b></q> set).<br/>If you like, we can try to find the first email in the thread for you:<br/><a href="javascript:void(0);" style="font-size: 10pt; cursor: pointer;" onclick="timeTravelSingleThread();" style="cursor: pointer; " class="btn btn-success">Go to the first email in this thread</a> &nbsp;</p></div>'
     }
     
     loadEmails_threaded(current_thread_json[0], {
