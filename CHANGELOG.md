@@ -3,6 +3,7 @@
 - Private lists can be hidden in the index from users without access
 - Added support for OAuth.online in lieu of Persona shutting down
 - Fixed an issue where LocalStorage limits would break the site
+- Fixed an issue with gravatars not showing up
 
 ## CHANGES in 0.8b:
 
