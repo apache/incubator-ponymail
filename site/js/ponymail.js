@@ -1375,7 +1375,7 @@ function displayEmail(json, id, level) {
                 
             }
         }
-        if (window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
+        if (window.localStorage.getItem("viewed_" + json.mid) && window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
             //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
             var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
             try {
