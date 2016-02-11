@@ -416,7 +416,11 @@ function toggleEmails_treeview(id, close, toverride) {
         current_thread = current_thread_json[id].tid
         
         if (epoch !== null) { // only non-null if localstorage works
-            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+            try {
+                window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+            } catch(e) {
+                
+            }
         }
         
     }

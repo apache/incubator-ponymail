@@ -1368,12 +1368,22 @@ function displayEmail(json, id, level) {
     if (typeof(window.localStorage) !== "undefined") {
         if (! window.localStorage.getItem("viewed_" + json.mid) ){
             //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
-            window.localStorage.setItem("viewed_" + json.mid, json.epoch)
+            
+            try {
+                window.localStorage.setItem("viewed_" + json.mid, json.epoch)
+            } catch(e) {
+                
+            }
         }
         if (window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
             //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
             var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
-            window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
+            try {
+                window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
+            } catch(e) {
+                
+            }
+            
         }
     }
     // Coloring for nested emails
@@ -1534,7 +1544,11 @@ function displaySingleEmail(json, id) {
         if (typeof(window.localStorage) !== "undefined") {
             if (! window.localStorage.getItem("viewed_" + json.id) ){
                 estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
-                window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
+                try {
+                    window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
+                } catch(e) {
+                    
+                }
             }
         }
         thread.setAttribute("class", "reply bs-callout bs-callout-info")
@@ -1659,7 +1673,11 @@ function toggleEmails_threaded(id, close, toverride, threadobj) {
                         epoch = yy
                     }
                 }
-                window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+                try {
+                    window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+                } catch(e) {
+                    
+                }
             }
         }
         
@@ -1750,7 +1768,12 @@ function highlightNewEmails(id) {
                 if (epoch && epoch != pb_refresh) { // did we view this before the last page build?
                     kiddos[i].style.color = "#AAA"
                 } else { // never seen it before, have it at normal color and set the first-view-date
-                    window.localStorage.setItem("first_view_" + mid, pb_refresh)
+                    
+                    try {
+                        window.localStorage.setItem("first_view_" + mid, pb_refresh)
+                    } catch(e) {
+                        
+                    }
                     kiddos[i].style.color = "#000"
                 }
             }
@@ -3070,7 +3093,11 @@ function toggleEmails_treeview(id, close, toverride) {
         current_thread = current_thread_json[id].tid
         
         if (epoch !== null) { // only non-null if localstorage works
-            window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+            try {
+                window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+            } catch(e) {
+                
+            }
         }
         
     }
