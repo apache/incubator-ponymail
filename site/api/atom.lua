@@ -117,7 +117,7 @@ function handle(r)
                         },
                         {
                             range = {
-                                epoch = {
+                                date = {
                                     gt = "now-1M"
                                 }
                             }
