@@ -587,7 +587,7 @@ function handle(r)
                 elseif eml == nil then
                     eml = "unknown"
                 end
-                local gravatar = r:md5(eml)
+                local gravatar = r:md5(eml:lower())
                 local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+") or email.from:match("%((.-)%)") or "unknown"
                 email.gravatar = gravatar
                 name = name:gsub("\"", ""):gsub("%s+$", "")

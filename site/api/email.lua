@@ -129,7 +129,7 @@ function handle(r)
                     doc.to = nil
                     doc.cc = nil
                 end      
-                doc.gravatar = r:md5(eml)
+                doc.gravatar = r:md5(eml:lower())
                 r:puts(JSON.encode(doc))
             end
         else
