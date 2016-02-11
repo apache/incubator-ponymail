@@ -114,6 +114,13 @@ function handle(r)
                                 default_field = "subject",
                                 query = qs
                             }
+                        },
+                        {
+                            range = {
+                                epoch = {
+                                    gt = "now-1M"
+                                }
+                            }
                         }
                 }}
             },
