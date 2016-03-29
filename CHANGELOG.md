@@ -5,6 +5,7 @@
 - Fixed an issue where LocalStorage limits would break the site
 - Fixed an issue with gravatars not showing up
 - UI can now auto-scale, allowing as many results per page as screen height will support
+- Users can add favorite lists to their user menu (shortcuts)
 
 ## CHANGES in 0.8b:
 
