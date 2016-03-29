@@ -2046,6 +2046,43 @@ function unshortenID(mid) {
 
 
 /******************************************
+ Fetched from dev/ponymail_favorites.js
+******************************************/
+
+
+// Callback func for favorite/forget
+// this just alerts and reverses the fav button
+function favCallback(json, state) {
+    var fvb = document.getElementById('favbtn')
+    if (state[0]) {
+        alert(state[1] + " added to favorites!")
+        // fav button? set it to a 'remove' button
+        if (fvb) {
+            fvb.innerHTML = ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-default" onclick="favorite(false, \'' + xlist + '\');">Remove from favorites</a>'
+        }
+    } else {
+        alert(state[1] + " removed from favorites!")
+        // remove button exists? set it to a 'fav this' button
+        if (fvb) {
+            fvb.innerHTML = ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-info" onclick="favorite(true, \'' + xlist + '\');">Add list to favorites</a>'
+        }
+    }
+}
+
+// Favorite/forget call: either sub or unsub a list from favorites
+function favorite(sub, list) {
+    // favorite?
+    if (sub) {
+        GetAsync("/api/preferences.lua?addfav="+list, [sub,list], favCallback)
+    }
+    // forget?
+    else {
+        GetAsync("/api/preferences.lua?remfav="+list, [sub,list], favCallback)
+    }
+    
+}
+
+/******************************************
  Fetched from dev/ponymail_helperfuncs.js
 ******************************************/
 
@@ -2403,6 +2440,24 @@ function loadList_flat(mjson, limit, start, deep) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
     
+    // Favorite or forget
+    if (login && login.credentials && xlist) {
+        var found = false
+        for (var i in (login.favorites || [])) {
+            if (login.favorites[i] == xlist) {
+                found = true
+                break
+            }
+        }
+        innerbuttons += '<span id="favbtn">'
+        if (found) {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-default" onclick="favorite(false, \'' + xlist + '\');">Remove from favorites</a>'
+        } else {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-info" onclick="favorite(true, \'' + xlist + '\');">Add list to favorites</a>'
+        }
+        innerbuttons += '</span>'
+    }
+    
     // add them buttons
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
@@ -2691,6 +2746,25 @@ function loadList_threaded(mjson, limit, start, deep) {
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
+    
+    // Favorite or forget
+    if (login && login.credentials && xlist) {
+        var found = false
+        for (var i in (login.favorites || [])) {
+            if (login.favorites[i] == xlist) {
+                found = true
+                break
+            }
+        }
+        innerbuttons += '<span id="favbtn">'
+        if (found) {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-default" onclick="favorite(false, \'' + xlist + '\');">Remove from favorites</a>'
+        } else {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-info" onclick="favorite(true, \'' + xlist + '\');">Add list to favorites</a>'
+        }
+        innerbuttons += '</span>'
+    }
+    
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
     
@@ -2914,6 +2988,23 @@ function loadList_treeview(mjson, limit, start, deep) {
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
+    }
+    // Favorite or forget
+    if (login && login.credentials && xlist) {
+        var found = false
+        for (var i in (login.favorites || [])) {
+            if (login.favorites[i] == xlist) {
+                found = true
+                break
+            }
+        }
+        innerbuttons += '<span id="favbtn">'
+        if (found) {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-default" onclick="favorite(false, \'' + xlist + '\');">Remove from favorites</a>'
+        } else {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-info" onclick="favorite(true, \'' + xlist + '\');">Add list to favorites</a>'
+        }
+        innerbuttons += '</span>'
     }
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     

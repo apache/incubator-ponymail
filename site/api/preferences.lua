@@ -148,6 +148,46 @@ Pony Mail - Email for Ponies and People.
         return cross.OK
     end
        
+    -- Adding a favorite list
+    if get.addfav and account then
+        local add = get.addfav
+        local favs = account.favorites or {}
+        local found = false
+        -- ensure it's not already there....
+        for k, v in pairs(favs) do
+            if v == add then
+                found = true
+                break
+            end
+        end
+        -- if not found, add it
+        if not found then
+            table.insert(favs, add)
+        end
+        -- save prefs
+        account.favorites = favs
+        user.favs(r, account)
+        r:puts[[{"saved": true}]]
+        return cross.OK
+    end
+    
+    -- Removing a favorite list
+    if get.remfav and account then
+        local rem = get.remfav
+        local favs = account.favorites or {}
+        -- ensure it's here....
+        for k, v in pairs(favs) do
+            if v == rem then
+                favs[k] = nil
+                break
+            end
+        end
+        -- save prefs
+        account.favorites = favs
+        user.favs(r, account)
+        r:puts[[{"saved": true}]]
+        return cross.OK
+    end
     
     -- Get lists (cached if possible)
     local lists = {}
@@ -289,6 +329,7 @@ Pony Mail - Email for Ponies and People.
         descriptions = descs,
         preferences = account.preferences,
         login = {
+            favorites = account.favorites,
             credentials = account.credentials,
             notifications = notifications,
             alternates = alts

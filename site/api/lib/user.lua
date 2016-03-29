@@ -41,6 +41,7 @@ function getUser(r, override)
                         ip = r.useragent_ip
                     },
                     preferences = js.preferences,
+                    favorites = js.favorites
                 }
                 return login
             end
@@ -55,9 +56,11 @@ function updateUser(r, cid, data)
     
     -- Does this account exists? If so, grab the prefs first
     local prefs = nil
+    local favs = nil
     local oaccount = getUser(r, cid)
     if oaccount and oaccount.preferences then
         prefs = oaccount.preferences
+        favs = oaccount.favorites
     end
     elastic.index(r, r:sha1(cid), 'account', JSON.encode{
         credentials = {
@@ -73,7 +76,8 @@ function updateUser(r, cid, data)
             ip = r.useragent_ip
         },
         cid = cid,
-        preferences = prefs
+        preferences = prefs,
+        favorites = favs
     })
     r:setcookie{
         key = "ponymail",
@@ -110,9 +114,19 @@ function savePreferences(r, usr, alts)
     end
 end
 
+-- Save favorites
+function saveFavorites(r, usr)
+    if usr and usr.cid then
+        local js = elastic.get('account', r:sha1(usr.cid))
+        js.favorites = usr.favorites
+        elastic.index(r, r:sha1(usr.cid), 'account', JSON.encode(js))
+    end
+end
+
 return {
     get = getUser,
     logout = logoutUser,
     save = savePreferences,
-    update = updateUser
+    update = updateUser,
+    favs = saveFavorites
 }

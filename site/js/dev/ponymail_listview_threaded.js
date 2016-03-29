@@ -247,6 +247,25 @@ function loadList_threaded(mjson, limit, start, deep) {
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
+    
+    // Favorite or forget
+    if (login && login.credentials && xlist) {
+        var found = false
+        for (var i in (login.favorites || [])) {
+            if (login.favorites[i] == xlist) {
+                found = true
+                break
+            }
+        }
+        innerbuttons += '<span id="favbtn">'
+        if (found) {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-default" onclick="favorite(false, \'' + xlist + '\');">Remove from favorites</a>'
+        } else {
+            innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-info" onclick="favorite(true, \'' + xlist + '\');">Add list to favorites</a>'
+        }
+        innerbuttons += '</span>'
+    }
+    
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
     
