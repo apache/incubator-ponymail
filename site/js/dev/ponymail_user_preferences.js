@@ -113,6 +113,12 @@ function showPreferences() {
         no: "No"
     }, prefs.hideStats))
     
+    // autoScale mode
+    section.appendChild(generateFormDivs('autoScale', 'Scale results per page to window height:', 'select', {
+        no: "No",
+        yes: "Yes"
+    }, prefs.autoScale))
+    
     var btn = document.createElement('input')
     btn.setAttribute("type", "button")
     btn.setAttribute("class", "btn btn-warning")

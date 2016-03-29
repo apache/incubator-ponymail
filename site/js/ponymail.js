@@ -2230,12 +2230,24 @@ window.setInterval(checkForSlows, 100)
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
     
-    // Set displayed posts per page to 10 if social/compact theme
+    // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
-    // otherwise, default to 15 for the rest
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / (prefs.theme == 'social' ? 128 : 48) ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
+    // otherwise default to 15 or auto-scale
     } else {
         d_ppp = 15
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / 28 ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
     }
     // Reset the open_emails hash
     open_emails = []
@@ -2457,12 +2469,24 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
     }
     
-    // Set displayed posts per page to 10 if social/compact theme
+    // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
-    // otherwise default to 15
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / (prefs.theme == 'social' ? 128 : 48) ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
+    // otherwise default to 15 or auto-scale
     } else {
         d_ppp = 15
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / 28 ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
     }
     // reset open email counter hash
     open_emails = []
@@ -2704,10 +2728,24 @@ function loadList_treeview(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
+    // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / (prefs.theme == 'social' ? 128 : 48) ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
+    // otherwise default to 15 or auto-scale
     } else {
         d_ppp = 15
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / 28 ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
     }
     open_emails = []
     limit = limit ? limit : d_ppp;
@@ -4877,6 +4915,12 @@ function showPreferences() {
         yes: "Yes",
         no: "No"
     }, prefs.hideStats))
+    
+    // autoScale mode
+    section.appendChild(generateFormDivs('autoScale', 'Scale results per page to window height:', 'select', {
+        no: "No",
+        yes: "Yes"
+    }, prefs.autoScale))
     
     var btn = document.createElement('input')
     btn.setAttribute("type", "button")

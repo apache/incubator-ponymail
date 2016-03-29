@@ -91,9 +91,10 @@ var prefs = {
     notifications: 'direct',        // Notify on direct or indirect replies to your posts?
     hideStats: 'yes',               // Hide the email statistics window?
     theme: 'default',               // Set to 'social' to default to the social theme
+    autoScale: 'no',                // Whether to scale results-per-page to window height (4K screens etc)
     loggedIn: false
 }
 
 // array of prefs we have now. This is needed in case we change/break the existing
 // structure saved in elasticsearch for users. Update when needed!
-var pref_keys = ['displayMode','groupBy','sortOrder','compactQuotes','notifications','hideStats','theme', 'fullname']
+var pref_keys = ['displayMode','groupBy','sortOrder','compactQuotes','notifications','hideStats','theme', 'fullname', 'autoScale']

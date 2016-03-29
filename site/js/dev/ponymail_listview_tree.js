@@ -24,10 +24,24 @@ function loadList_treeview(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
+    // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / (prefs.theme == 'social' ? 128 : 48) ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
+    // otherwise default to 15 or auto-scale
     } else {
         d_ppp = 15
+        if (prefs.autoScale && prefs.autoScale == 'yes') {
+            d_ppp = Math.floor( ( (window.innerHeight - 450) / 28 ) / 5 ) * 5
+            if (d_ppp <= 0) {
+                d_ppp = 5
+            }
+        }
     }
     open_emails = []
     limit = limit ? limit : d_ppp;
