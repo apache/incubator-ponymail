@@ -861,8 +861,8 @@ li .dropdown-submenu.pull-left {
 
 .dropdown-submenu.pull-left>.dropdown-menu {
      position: relative !important;
-     left: -195px !important;
+     left: -235px !important;
      top: -20px !important;
-     width: 200px;
+     width: 240px;
      border-radius:6px 0 6px 6px;
 }
