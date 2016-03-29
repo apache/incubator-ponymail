@@ -4,6 +4,7 @@
 - Added support for OAuth.online in lieu of Persona shutting down
 - Fixed an issue where LocalStorage limits would break the site
 - Fixed an issue with gravatars not showing up
+- UI can now auto-scale, allowing as many results per page as screen height will support
 
 ## CHANGES in 0.8b:
 
