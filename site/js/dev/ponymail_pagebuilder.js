@@ -288,6 +288,7 @@ function buildPage(json, state) {
         var opt = document.createElement('option')
         opt.setAttribute("value", mode)
         opt.text = mode
+        opt.title = viewModes[mode].description
         if (mode == prefs.displayMode) {
             opt.setAttribute("selected", "selected")
         }

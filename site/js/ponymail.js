@@ -72,15 +72,18 @@ var mbox_month = null
 var viewModes = {
     threaded: {
         email: loadEmails_threaded,
-        list: loadList_threaded
+        list: loadList_threaded,
+        description: 'Grouped by threads'
     },
     flat: {
         email: loadEmails_flat,
-        list: loadList_flat
+        list: loadList_flat,
+        description: 'Flat list (one email per line)'
     },
     treeview: {
         email: loadEmails_flat,
-        list: loadList_treeview
+        list: loadList_treeview,
+        description: 'Threaded with treeview'
     },
 }
 
@@ -3672,6 +3675,7 @@ function buildPage(json, state) {
         var opt = document.createElement('option')
         opt.setAttribute("value", mode)
         opt.text = mode
+        opt.title = viewModes[mode].description
         if (mode == prefs.displayMode) {
             opt.setAttribute("selected", "selected")
         }
