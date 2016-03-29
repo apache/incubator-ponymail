@@ -841,3 +841,28 @@ listview_label {
 .splash select option {
      background: #DDD;
 }
+
+.dropdown-submenu {
+    position:relative;
+}
+.dropdown-submenu>.dropdown-menu {
+    top:0;
+    left:100%;
+    margin-top:-6px;
+    margin-left:-1px;
+    border-radius:0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+    display:inline-block;
+}
+li .dropdown-submenu.pull-left {
+    height: 24px !important;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+     position: relative !important;
+     left: -195px !important;
+     top: -20px !important;
+     width: 200px;
+     border-radius:6px 0 6px 6px;
+}

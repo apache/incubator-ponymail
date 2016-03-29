@@ -205,6 +205,36 @@ function setupUser() {
     li.appendChild(a)
     pd.appendChild(li)
     
+    // Favorites
+    if (login.favorites && login.favorites.length > 0) {
+        var li = document.createElement("li")
+        li.setAttribute("class", "dropdown-submenu pull-left")
+        var a = document.createElement("a")
+        var t = document.createTextNode("Favorite lists")
+        a.setAttribute("href", "#")
+        a.appendChild(t)
+        var ul = document.createElement('ul')
+        ul.setAttribute("class", "dropdown-menu")
+        a.setAttribute("tabindex", "-1")
+        li.appendChild(a)
+        ul.style.left = "0"
+        li.appendChild(ul)
+        for (var i in login.favorites) {
+            var l = login.favorites[i]
+            var sli = document.createElement('li')
+            sli.setAttribute("class", "pull-left")
+            var st = document.createTextNode(l)
+            var sa = document.createElement('a')
+            sa.setAttribute("href", "list.html?" + l)
+            sa.appendChild(st)
+            sli.appendChild(sa)
+            ul.appendChild(sli)
+        }
+        
+        pd.appendChild(li)
+    }
+    
+    
     // Merge accounts item
     var li = document.createElement("li")
     var a = document.createElement("a")
