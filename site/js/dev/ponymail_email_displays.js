@@ -297,6 +297,7 @@ function displayEmailThreaded(json, state, threadobj) {
         node.setAttribute("epoch", json.epoch.toString())
         node.style.marginBottom = "20px";
         node.setAttribute("id", "thread_" + (json.mid ? json.mid : json.tid).toString().replace(/@<.+>/, ""))
+        node.style.display = "block" // hack so openEmail will state that there's an email open.
         if (json.mid != b) {
             
             if (state.pchild && document.getElementById("thread_" + state.pchild.toString().replace(/@<.+>/, ""))) {
@@ -472,6 +473,14 @@ function displaySingleThread(json) {
     }
     // set tab title
     document.title = current_thread_json[0].subject + " - Pony Mail"
+    
+    // Set up for reply-to pane if not present already (for permalink view)
+    last_opened_email = current_thread_json[0].eid
+    if (!saved_emails[last_opened_email]) {
+        saved_emails[last_opened_email] = current_thread_json[0]
+        xlist = current_thread_json[0].list
+    }
+     
     
     helper.innerHTML = "<h4 style='margin: 0px; padding: 5px;'>Viewing email #" + mid + " (and replies):</h4>"
     if (prefs.groupBy == 'thread') {
