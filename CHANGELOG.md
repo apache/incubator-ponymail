@@ -6,6 +6,7 @@
 - Fixed an issue with gravatars not showing up
 - UI can now auto-scale, allowing as many results per page as screen height will support
 - Users can add favorite lists to their user menu (shortcuts)
+- Reply-to and compose now works from the permalink page
 
 ## CHANGES in 0.8b:
 
@@ -29,7 +30,7 @@
 - Fixed a bug where long threads could break the UI (0.6a regression)
 
 ## CHANGES in 0.6a (not released):
-
+ 
 - Added a caching system for search results to reduce load times
 - The statistics panel is now hidden by default
 - Config changes are now persistent through reloads, even if not logged in
