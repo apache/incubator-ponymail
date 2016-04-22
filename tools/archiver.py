@@ -430,6 +430,8 @@ class Archiver(object):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line options.')
+    parser.add_argument('--lid', dest='lid', type=str, nargs=1,
+                       help='Alternate specific list ID')
     parser.add_argument('--altheader', dest='altheader', type=str, nargs=1,
                        help='Alternate header for list ID')
     parser.add_argument('--allowfrom', dest='allowfrom', type=str, nargs=1,
@@ -472,6 +474,14 @@ if __name__ == '__main__':
                     msg.replace_header('List-ID', msg.get(altheader))
                 except:
                     msg.add_header('list-id', msg.get(altheader))
+        
+        # Set specific LID?
+        if args.lid and len(args.lid[0]) > 3:
+            try:
+                msg.replace_header('List-ID', args.lid[0])
+            except:
+                msg.add_header('list-id', args.lid[0])
+                
                 
         #Ignore based on --ignore flag?
         if args.ignorefrom:
