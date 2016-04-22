@@ -74,6 +74,8 @@ parser.add_argument('--wordcloud', dest='wc', action='store_true',
                    help='Enable word cloud')
 parser.add_argument('--skiponexist', dest='soe', action='store_true', 
                    help='Skip setup if ES index exists')
+parser.add_argument('--noindex', dest='noi', action='store_true', 
+                   help="Don't make an ES index, assume it exists")
 parser.add_argument('--nocloud', dest='nwc', action='store_true', 
                    help='Do not enable word cloud')
 args = parser.parse_args()    
@@ -142,118 +144,120 @@ while wc == "":
 
 print("Okay, I got all I need, setting up Pony Mail...")
 
-print("Creating index " + dbname)
-
-es = Elasticsearch([
-    {
-        'host': hostname,
-        'port': port,
-        'use_ssl': False,
-        'url_prefix': ''
-    }],
-    max_retries=5,
-    retry_on_timeout=True
-    )
-mappings = {
-    "mbox" : {
-      "properties" : {
-        "@import_timestamp" : {
-          "type" : "date",
-          "format" : "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+if not args.noi:
+    print("Creating index " + dbname)
+    
+    es = Elasticsearch([
+        {
+            'host': hostname,
+            'port': port,
+            'use_ssl': False,
+            'url_prefix': ''
+        }],
+        max_retries=5,
+        retry_on_timeout=True
+        )
+    mappings = {
+        "mbox" : {
+          "properties" : {
+            "@import_timestamp" : {
+              "type" : "date",
+              "format" : "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
+            },
+            "@version" : {
+              "type" : "long"
+            },
+            "body" : {
+              "type" : "string"
+            },
+            "date" : {
+              "type" : "date",
+              "store" : True,
+              "format" : "yyyy/MM/dd HH:mm:ss",
+              "index" : "not_analyzed"
+            },
+            "epoch" : {
+              "type" : "double",
+              "index" : "not_analyzed"
+            },
+            "from" : {
+              "type" : "string"
+            },
+            "from_raw" : {
+              "type" : "string",
+              "index" : "not_analyzed"
+            },
+            "in-reply-to" : {
+              "type" : "string"
+            },
+            "list" : {
+              "type" : "string"
+            },
+            "list_raw" : {
+              "type" : "string",
+              "index" : "not_analyzed"
+            },
+            "message-id" : {
+              "type" : "string"
+            },
+            "mid" : {
+              "type" : "string"
+            },
+            "private" : {
+              "type" : "boolean"
+            },
+            "references" : {
+              "type" : "string"
+            },
+            "subject" : {
+              "type" : "string"
+            },
+            "to" : {
+              "type" : "string"
+            }
+          }
         },
-        "@version" : {
-          "type" : "long"
+        "mbox_source" : {
+          "properties" : {
+            "source" : {
+              "type" : "string",
+              "index" : "not_analyzed"
+            }
+          }
         },
-        "body" : {
-          "type" : "string"
+        "attachment" : {
+          "properties" : {
+            "source" : {
+              "type" : "binary"
+            }
+          }
         },
-        "date" : {
-          "type" : "date",
-          "store" : True,
-          "format" : "yyyy/MM/dd HH:mm:ss",
-          "index" : "not_analyzed"
-        },
-        "epoch" : {
-          "type" : "double",
-          "index" : "not_analyzed"
-        },
-        "from" : {
-          "type" : "string"
-        },
-        "from_raw" : {
-          "type" : "string",
-          "index" : "not_analyzed"
-        },
-        "in-reply-to" : {
-          "type" : "string"
-        },
-        "list" : {
-          "type" : "string"
-        },
-        "list_raw" : {
-          "type" : "string",
-          "index" : "not_analyzed"
-        },
-        "message-id" : {
-          "type" : "string"
-        },
-        "mid" : {
-          "type" : "string"
-        },
-        "private" : {
-          "type" : "boolean"
-        },
-        "references" : {
-          "type" : "string"
-        },
-        "subject" : {
-          "type" : "string"
-        },
-        "to" : {
-          "type" : "string"
+        "mbox_source" : {
+          "properties" : {
+            "source" : {
+              "type" : "binary"
+            }
+          }
         }
       }
-    },
-    "mbox_source" : {
-      "properties" : {
-        "source" : {
-          "type" : "string",
-          "index" : "not_analyzed"
-        }
-      }
-    },
-    "attachment" : {
-      "properties" : {
-        "source" : {
-          "type" : "binary"
-        }
-      }
-    },
-    "mbox_source" : {
-      "properties" : {
-        "source" : {
-          "type" : "binary"
-        }
-      }
-    }
-  }
-
-# Check if index already exists
-if es.indices.exists(dbname):
-    if args.soe:
-        print("Index already exists and SOE set, exiting quietly")
-        sys.exit(0)
-    else:
-        print("Error: ElasticSearch index %s already exists!" % dbname)
-        sys.exit(-1)
+    
+    # Check if index already exists
+    if es.indices.exists(dbname):
+        if args.soe:
+            print("Index already exists and SOE set, exiting quietly")
+            sys.exit(0)
+        else:
+            print("Error: ElasticSearch index %s already exists!" % dbname)
+            sys.exit(-1)
+            
         
-        
-res = es.indices.create(index = dbname, body = {
-            "mappings" : mappings
-        }
-    )
-
-print("Index created!")
+    res = es.indices.create(index = dbname, body = {
+                "mappings" : mappings
+            }
+        )
+    
+    print("Index created!")
+    
 print("Writing importer config (ponymail.cfg)")
 
 with open("ponymail.cfg", "w") as f:
