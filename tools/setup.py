@@ -249,10 +249,7 @@ if es.indices.exists(dbname):
         
         
 res = es.indices.create(index = dbname, body = {
-            "mappings" : mappings,
-            "settings" : {
-                "number_of_shards" : 6
-            }
+            "mappings" : mappings
         }
     )
 
