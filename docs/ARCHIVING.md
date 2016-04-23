@@ -90,6 +90,6 @@ You can either use it to just crop away something:
 ~~~
  [debug]
   #Replace '*.bar.tld' with '*.blorg.bar.tld'
-  cropout:  <([a-z]+)\.bar\.tld> \1.blorg.bar.tld
+  cropout:  <([a-z]+)\.bar\.tld> <\1.blorg.bar.tld>
 ~~~
   
