@@ -74,3 +74,22 @@ your organization.
 Should you need to import HTML-only emails into the archive, you may enable this
 with the `--html2text` command line arg. This requires that the `html2text` Python3 package
 is installed beforehand.
+
+## Munging list IDs
+If you need to rewrite list IDs on the fly as emails come in, you can use the debug.cropout 
+setting for this (in `ponymail.cfg`). 
+
+You can either use it to just crop away something:
+~~~
+ [debug]
+  # Remove 'foo' from all list IDs
+  cropout:  foo
+~~~
+
+ Or you can use it as a regex substitution:
+~~~
+ [debug]
+  #Replace '*.bar.tld' with '*.blorg.bar.tld'
+  cropout:  <([a-z]+)\.bar\.tld> \1.blorg.bar.tld
+~~~
+  
