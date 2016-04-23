@@ -208,7 +208,13 @@ class Archiver(object):
         else:
             lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
         if self.cropout:
-            lid = lid.replace(self.cropout, "")
+            crops = self.cropout.split(" ")
+            # Regex replace?
+            if len(crops) == 2:
+                lid = re.sub(crops[0], crops[1], lid)
+            # Standard crop out?
+            else:
+                lid = lid.replace(self.cropout, "")
         
         format = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
