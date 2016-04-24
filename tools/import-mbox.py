@@ -649,8 +649,9 @@ elif source[0] == "h":
                 break
                     
 threads = []
-print("Starting up to %u threads to fetch the %u %s lists" % (multiprocessing.cpu_count(), len(lists), project))
-for i in range(1,multiprocessing.cpu_count()+1):
+cc = int( multiprocessing.cpu_count() / 2) + 1
+print("Starting up to %u threads to fetch the %u %s lists" % (cc, len(lists), project))
+for i in range(1,cc+1):
     t = SlurpThread()
     threads.append(t)
     t.start()
