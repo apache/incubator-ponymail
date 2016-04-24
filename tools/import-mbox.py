@@ -303,7 +303,7 @@ class SlurpThread(Thread):
                     message['cc'] = None
                     s.send_message(message, from_addr=None, to_addrs=(resendTo))
                     continue
-                if (time.time() - stime > 120):
+                if (time.time() - stime > 360): # break out after 6 minutes, it shouldn't take this long..!
                     print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
                     break
                 if 'subject' in message:
@@ -323,7 +323,14 @@ class SlurpThread(Thread):
                     lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
                     lid = "<%s>" % lid.strip("<>") # We need <> around it!
                     if cropout:
-                        lid = lid.replace(cropout, "")
+                        crops = cropout.split(" ")
+                        # Regex replace?
+                        if len(crops) == 2:
+                            lid = re.sub(crops[0], crops[1], lid)
+                        # Standard crop out?
+                        else:
+                            lid = lid.replace(cropout, "")
+                    
                     date = message['date']
                     fro = message['from']
                     to = message['to']
