@@ -234,8 +234,10 @@ class Archiver(object):
         if not msg_metadata.get('message-id'):
             msg_metadata['message-id'] = mid
         mdate = None
+        uid_mdate = 0 # mdate for UID generation
         try:
             mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
+            uid_mdate = email.utils.mktime_tz(mdate) # Only set if Date header is valid
         except:
             pass
         if not mdate and msg_metadata.get('archived-at'):
@@ -273,7 +275,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
+                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), email.utils.mktime_tz(uid_mdate), lid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
