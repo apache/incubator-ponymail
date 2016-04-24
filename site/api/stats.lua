@@ -39,9 +39,10 @@ end
 
 -- findSubject: match an email with an earlier one with the same topic
 -- used for orphaned emails
-function findSubject(gblob, blob, subject, epoch)
+function findSubject(gblob, blob, subject, epoch, maxAge)
+    local subj = subject:gsub("^[A-Za-z]:%s+", "")
     for k, v in pairs(blob) do
-        if v.subject and v.subject == subject and v.epoch < epoch then
+        if v.subject and v.subject == subj and v.epoch < epoch and (not maxAge or (maxAge and v.epoch >= (epoch - (maxAge*86400)))) then
             local mid = v['message-id']
             if gblob[mid] then
                 return gblob[mid]
@@ -664,6 +665,11 @@ function handle(r)
             end
             local refpoint = email['in-reply-to'] or email['references'] or ""
             local point = emails[irt] or (#refpoint > 0 and findSubject(emails, emls, irt, email.epoch))
+            -- Try a little harder??
+            if not point and email.subject:match("^[A-Za-z]+:%s+") then  -- if this is a 'Re:' or 'Aw:' or 'Fwd:', try to find parent anyway
+                point = findSubject(emails, emls, irt, email.epoch, 30) -- at most, go back 30 days. if not, then they don't belong together...I guess
+            end
+                
             if point then
                 if point.nest < 50 then
                     point.nest = point.nest + 1
