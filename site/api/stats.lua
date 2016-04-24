@@ -508,54 +508,80 @@ function handle(r)
     local emails_full = {}
     local emls = {}
     local senders = {}
-    local doc = elastic.raw {
-        _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private', 'attachments', 'body'},
-        query = {
-            bool = {
-                must = {
-                    {
-                        range = {
-                            date = daterange
+    
+    local dhh = {}
+    
+    -- construct thread query
+    local squery = {
+            _source = {'message-id','in-reply-to','from','subject','epoch','references','list_raw', 'private', 'attachments', 'body'},
+            query = {
+                bool = {
+                    must = {
+                        {
+                            range = {
+                                date = daterange
+                            }
+                        },
+                        sterm,
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = qs
+                            }
                         }
-                    },
-                    sterm,
-                    {
-                        query_string = {
-                            default_field = "subject",
-                            query = qs
+                },
+                    must_not = {
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = nqs
+                            }
                         }
-                    }
+                }}
             },
-                must_not = {
-                    {
-                        query_string = {
-                            default_field = "subject",
-                            query = nqs
-                        }
+            
+            sort = {
+                {
+                    epoch = {
+                        order = "desc"
                     }
-            }}
-        },
-        
-        sort = {
-            {
-                epoch = {
-                    order = "desc"
-                }
-            }  
-        },
-        size = maxresults
-    }
-    local h = #doc.hits.hits
+                }  
+            },
+            size = maxresults
+        }
+    
+    -- If max results limit is beyond 10k, we have to do a scan/scroll to fetch it.
+    if maxresults > 10000 then
+        local sid = elastic.scan(squery) -- get scroll ID
+        if sid then -- if results
+            local js, sid = elastic.scroll(sid)
+            while js and js.hits and js.hits.hits and #js.hits.hits > 0 do -- scroll as long as we get new results
+                for k, v in pairs(js.hits.hits) do
+                    table.insert(dhh, v)
+                end
+                if not sid then -- break if last scroll
+                    break
+                end
+                js, sid = elastic.scroll(sid)
+            end
+        end
+    -- otherwise, we can just do a standard raw query
+    else
+        local doc = elastic.raw(squery)
+        dhh = doc.hits.hits
+    end
+
+    local h = #dhh
     
     -- Debug time point 7
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
     -- Sometimes ES screws up, so let's sort for it!
-    table.sort (doc.hits.hits, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
+    table.sort (dhh, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     
-    for k = #doc.hits.hits, 1, -1 do
-        local v = doc.hits.hits[k]
+    for k = #dhh, 1, -1 do
+        local v = dhh[k]
         local email = v._source
         local canUse = true
         local eepoch = tonumber(email.epoch)
