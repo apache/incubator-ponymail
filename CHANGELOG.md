@@ -8,6 +8,8 @@
 - Users can add favorite lists to their user menu (shortcuts)
 - Reply-to and compose now works from the permalink page
 - Archiver can now set an explicit List ID from command-line
+- Archiver and importer can now do on-the-fly regex List ID replacement
+- Increased import parsing timeout from 2 to 6 minutes per mbox file
 
 ## CHANGES in 0.8b:
 
