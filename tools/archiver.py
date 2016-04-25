@@ -462,7 +462,10 @@ if __name__ == '__main__':
         
     foo = Archiver()
     try:
-        msg = email.message_from_file(sys.stdin)
+        try:
+            msg = email.message_from_file(sys.stdin)
+        except Exception as err:
+            print("STDIN parser exception: %s" % err)
         
         # We're reading from STDIN, so let's fake an MM3 call
         ispublic = True
