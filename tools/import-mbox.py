@@ -378,8 +378,10 @@ class SlurpThread(Thread):
                     else:
                         mdt = message['date']
                     mdate = None
+                    uid_mdate = 0
                     try:
                         mdate = email.utils.parsedate_tz(mdt)
+                        uid_mdate = email.utils.mktime_tz(mdate)
                     except:
                         pass
                     if not mdate or mdate[0] < (LEY-1):
@@ -412,7 +414,7 @@ class SlurpThread(Thread):
                                 else:
                                     mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@" + appender
                             print("No MID found, setting to %s" % mid)
-                        mid2 = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), email.utils.mktime_tz(mdate), lid)
+                        mid2 = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), uid_mdate, lid)
                         count += 1
                         mr = ""
                         if 'references' in message:
