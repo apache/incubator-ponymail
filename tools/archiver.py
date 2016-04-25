@@ -462,12 +462,8 @@ if __name__ == '__main__':
         
     foo = Archiver()
     try:
-        try:
-            msg = email.message_from_file(sys.stdin)
-        except:
-            print("Standard file processing failed, trying binary...")
-            msg = email.message_from_binary_file(sys.stdin)
-            
+        msg = email.message_from_file(sys.stdin)
+        
         # We're reading from STDIN, so let's fake an MM3 call
         ispublic = True
         ignorefrom = None
