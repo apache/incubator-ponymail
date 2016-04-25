@@ -275,7 +275,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(uid_mdate), lid)
+                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
