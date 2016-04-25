@@ -78,7 +78,7 @@ def parse_attachment(part):
             attachment['size'] = len(fd)
             attachment['filename'] = None
             h = hashlib.sha256(fd).hexdigest()
-            b64 = codecs.encode(fd, "base64").decode('ascii', errors='ignore')
+            b64 = codecs.encode(fd, "base64").decode('ascii', 'ignore')
             attachment['hash'] = h
             for param in dispositions[1:]:
                 key,val = param.split("=")
@@ -184,7 +184,7 @@ class Archiver(object):
             
         # this requires a GPL lib, user will have to install it themselves
         if firstHTML and (not body or len(body) <= 1):
-            body = html2text.html2text(firstHTML.decode("utf-8", errors='replace') if type(firstHTML) is bytes else firstHTML)
+            body = html2text.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
     
         for charset in pm_charsets(msg):
             try:
@@ -275,7 +275,7 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), email.utils.mktime_tz(uid_mdate), lid)
+                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), email.utils.mktime_tz(uid_mdate), lid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
@@ -304,7 +304,7 @@ class Archiver(object):
                 'private': private,
                 'references': msg_metadata['references'],
                 'in-reply-to': irt,
-                'body': body.decode('utf-8', errors='replace') if type(body) is bytes else body,
+                'body': body.decode('utf-8', 'replace') if type(body) is bytes else body,
                 'attachments': attachments
             }
             
@@ -462,7 +462,12 @@ if __name__ == '__main__':
         
     foo = Archiver()
     try:
-        msg = email.message_from_file(sys.stdin)
+        try:
+            msg = email.message_from_file(sys.stdin)
+        except:
+            print("Standard file processing failed, trying binary...")
+            msg = email.message_from_binary_file(sys.stdin)
+            
         # We're reading from STDIN, so let's fake an MM3 call
         ispublic = True
         ignorefrom = None
