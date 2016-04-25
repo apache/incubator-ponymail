@@ -24,7 +24,7 @@ function getUser(r, override)
     if override or (ocookie and #ocookie > 43) then
         local cookie, cid = r:unescape(ocookie or ""):match("([a-f0-9]+)==(.+)")
         if override or (cookie and #cookie >= 40 and cid) then
-            local js = pcall(function() return elastic.get('account', r:sha1(override or cid)) end) or nil
+            local _, js = pcall(function() return elastic.get('account', r:sha1(override or cid)) end) or nil
             if js and js.credentials and (override or (cookie == js.internal.cookie)) then
                 login = {
                     credentials = {
