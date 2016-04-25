@@ -31,6 +31,10 @@ function getHits(query, size, doc, sitem)
     local url = config.es_url .. doc .. "/_search?q="..query.."&sort=" .. sitem .. ":desc&size=" .. size
     local result = http.request(url)
     local out = {}
+    if not result then
+        error("Could not contact database backend!")
+        return nil
+    end
     local json = JSON.decode(result)
     local out = {}
     if json and json.hits and json.hits.hits then
@@ -47,6 +51,10 @@ function getDoc (ty, id)
     local url = config.es_url  .. ty .. "/" .. id
     local result = http.request(url)
     local out = {}
+    if not result then
+        error("Could not contact database backend!")
+        return nil
+    end
     local json = JSON.decode(result)
     if json and json._source then
         json._source.request_id = json._id
@@ -63,6 +71,10 @@ function getHeaders(query, size, doc)
     local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
     local result = http.request(url)
     local out = {}
+    if not result then
+        error("Could not contact database backend!")
+        return nil
+    end
     local json = JSON.decode(result)
     local out = {}
     if json and json.hits and json.hits.hits then
@@ -84,6 +96,10 @@ function getHeadersReverse(query, size, doc)
     local out = {}
     local json = JSON.decode(result)
     local out = {}
+    if not result then
+        error("Could not contact database backend!")
+        return nil
+    end
     if json and json.hits and json.hits.hits then
         for k, v in pairs(json.hits.hits) do
             v._source.request_id = v._id
@@ -100,6 +116,10 @@ function raw(query, doctype)
     local url = config.es_url .. doctype .. "/_search"
     local result = http.request(url, js)
     local out = {}
+    if not result then
+        error("Could not contact database backend!")
+        return nil
+    end
     local json = JSON.decode(result)
     return json or {}, url
 end
@@ -112,6 +132,10 @@ function scan(query, doctype)
     local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
     local result = http.request(url, js)
     local out = {}
+    if not result then
+        error("Could not contact database backend!")
+        return nil
+    end
     local json = JSON.decode(result)
     if json and json._scroll_id then
         return json._scroll_id
