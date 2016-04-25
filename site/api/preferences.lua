@@ -297,15 +297,17 @@ Pony Mail - Email for Ponies and People.
     -- Get notifs
     local notifications = 0
     if account then
-        local notifs = pcall(function() return elastic.find("seen:0 AND recipient:" .. r:sha1(account.cid), 10, "notifications") end) or {}
+        local _, notifs = pcall(function() return elastic.find("seen:0 AND recipient:" .. r:sha1(account.cid), 10, "notifications") end)
         if notifs and #notifs > 0 then
             notifications = #notifs
         end
     end
      
     account = account or {}
-    local descs = pcall(function() return elastic.find("*", 9999, "mailinglists", "name") end) or {}
-    
+    local _, descs = pcall(function() return elastic.find("*", 9999, "mailinglists", "name") end) or nil
+    if not descs then
+        descs = {}
+    end
     -- try to extrapolate foo@bar.tld here
     for k, v in pairs(descs) do
         local l, d = v.list:match("<([^.]+)%.(.-)>")
