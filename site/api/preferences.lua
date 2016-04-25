@@ -297,7 +297,7 @@ Pony Mail - Email for Ponies and People.
     -- Get notifs
     local notifications = 0
     if account then
-        local notifs = elastic.find("seen:0 AND recipient:" .. r:sha1(account.cid), 10, "notifications")
+        local notifs = pcall(function() return elastic.find("seen:0 AND recipient:" .. r:sha1(account.cid), 10, "notifications") end) or {}
         if notifs and #notifs > 0 then
             notifications = #notifs
         end
