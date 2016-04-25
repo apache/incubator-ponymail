@@ -56,6 +56,7 @@ import codecs
 import configparser
 import os
 import fnmatch
+import io
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -63,6 +64,7 @@ config = configparser.RawConfigParser()
 config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
+
 
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
@@ -474,10 +476,12 @@ if __name__ == '__main__':
         parseHTML = True
         
     foo = Archiver()
+    input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+    
     try:
+        msgstring = input_stream.read()
         try:
-            msgstring = sys.stdin.read()
-            msg = email.message_from_bytes(msgstring.encode('ascii', 'ignore'))
+            msg = email.message_from_string(msgstring)
         except Exception as err:
             print("STDIN parser exception: %s" % err)
         
