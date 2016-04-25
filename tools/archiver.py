@@ -134,14 +134,27 @@ class Archiver(object):
         uri = ""
         if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
             uri = config.get("elasticsearch", "uri")
-        self.es = Elasticsearch([
+        dbs = [
             {
                 'host': config.get("elasticsearch", "hostname"),
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
                 'url_prefix': uri,
                 'http_auth': auth
-            }],
+            }]
+        # Backup ES?
+        if config.has_option("elasticsearch", "backup") and config.get("elasticsearch", "backup") != "":
+            backup = config.get("elasticsearch", "backup")
+            dbs.append(
+                {
+                'host': config.get("elasticsearch", "backup"),
+                'port': int(config.get("elasticsearch", "port")),
+                'use_ssl': ssl,
+                'url_prefix': uri,
+                'http_auth': auth
+            }
+            )
+        self.es = Elasticsearch(dbs,
             max_retries=5,
             retry_on_timeout=True
             )
@@ -464,7 +477,7 @@ if __name__ == '__main__':
     try:
         try:
             msgstring = sys.stdin.read()
-            msg = email.message_from_bytes(msgstring.decode('ascii', 'ignore'))
+            msg = email.message_from_bytes(msgstring.encode('ascii', 'ignore'))
         except Exception as err:
             print("STDIN parser exception: %s" % err)
         
