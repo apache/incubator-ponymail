@@ -372,6 +372,7 @@ class SlurpThread(Thread):
                             okay = False
                     mdt = ""
                     if not 'date' in message and 'received' in message:
+                        print("No Date header found, resorting to Received")
                         m = re.search(r"(\d+ \S+ \d{4} \d\d:\d\d:\d\d ([-+]\d{4})?)", message['received'])
                         if m:
                             mdt = m.group(1)
@@ -414,7 +415,7 @@ class SlurpThread(Thread):
                                 else:
                                     mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@" + appender
                             print("No MID found, setting to %s" % mid)
-                        mid2 = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest(), uid_mdate, lid)
+                        mid2 = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
                         count += 1
                         mr = ""
                         if 'references' in message:
