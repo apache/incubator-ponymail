@@ -304,7 +304,7 @@ Pony Mail - Email for Ponies and People.
     end
      
     account = account or {}
-    local descs = elastic.find("*", 9999, "mailinglists", "name")
+    local descs = pcall(function() return elastic.find("*", 9999, "mailinglists", "name") end) or {}
     
     -- try to extrapolate foo@bar.tld here
     for k, v in pairs(descs) do
