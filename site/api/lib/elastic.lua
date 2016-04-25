@@ -22,6 +22,18 @@ local JSON = require 'cjson'
 local config = require 'lib/config'
 local default_doc = "mbox"
 
+-- http code return check
+function checkReturn(code)
+    if not code or code ~= 200 then
+        if not code then
+            error("Could not contact database backend!")
+        else
+            error("Backend Database returned code " .. code .. "!")
+        end
+        return nil
+    end
+end
+
 -- Standard ES query, returns $size results of any doc of type $doc, sorting by $sitem
 function getHits(query, size, doc, sitem)
     doc = doc or "mbox"
@@ -29,12 +41,9 @@ function getHits(query, size, doc, sitem)
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?q="..query.."&sort=" .. sitem .. ":desc&size=" .. size
-    local result = http.request(url)
+    local result, hc = http.request(url)
     local out = {}
-    if not result then
-        error("Could not contact database backend!")
-        return nil
-    end
+    checkReturn(hc)
     local json = JSON.decode(result)
     local out = {}
     if json and json.hits and json.hits.hits then
@@ -49,12 +58,9 @@ end
 -- Get a single document
 function getDoc (ty, id)
     local url = config.es_url  .. ty .. "/" .. id
-    local result = http.request(url)
+    local result, hc = http.request(url)
     local out = {}
-    if not result then
-        error("Could not contact database backend!")
-        return nil
-    end
+    checkReturn(hc)
     local json = JSON.decode(result)
     if json and json._source then
         json._source.request_id = json._id
@@ -69,12 +75,9 @@ function getHeaders(query, size, doc)
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
-    local result = http.request(url)
+    local result, hc = http.request(url)
     local out = {}
-    if not result then
-        error("Could not contact database backend!")
-        return nil
-    end
+    checkReturn(hc)
     local json = JSON.decode(result)
     local out = {}
     if json and json.hits and json.hits.hits then
@@ -92,14 +95,11 @@ function getHeadersReverse(query, size, doc)
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=epoch:desc&size=" .. size
-    local result = http.request(url)
+    local result, hc = http.request(url)
     local out = {}
     local json = JSON.decode(result)
     local out = {}
-    if not result then
-        error("Could not contact database backend!")
-        return nil
-    end
+    checkReturn(hc)
     if json and json.hits and json.hits.hits then
         for k, v in pairs(json.hits.hits) do
             v._source.request_id = v._id
@@ -114,12 +114,9 @@ function raw(query, doctype)
     local js = JSON.encode(query)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search"
-    local result = http.request(url, js)
+    local result, hc = http.request(url, js)
     local out = {}
-    if not result then
-        error("Could not contact database backend!")
-        return nil
-    end
+    checkReturn(hc)
     local json = JSON.decode(result)
     return json or {}, url
 end
@@ -130,12 +127,9 @@ function scan(query, doctype)
     local js = JSON.encode(query)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
-    local result = http.request(url, js)
+    local result, hc = http.request(url, js)
     local out = {}
-    if not result then
-        error("Could not contact database backend!")
-        return nil
-    end
+    checkReturn(hc)
     local json = JSON.decode(result)
     if json and json._scroll_id then
         return json._scroll_id
@@ -148,7 +142,8 @@ function scroll(sid)
     -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
     -- But in case we're being proxied, let's just cut off the last part of the URL
     local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
-    local result = http.request(url)
+    local result, hc = http.request(url)
+    checkReturn(hc)
     local json = JSON.decode(result)
     if json and json._scroll_id then
         return json, json._scroll_id
@@ -161,7 +156,7 @@ function update(doctype, id, query)
     local js = JSON.encode({doc = query })
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/" .. id .. "/_update"
-    local result = http.request(url, js)
+    local result, hc = http.request(url, js)
     local out = {}
     local json = JSON.decode(result)
     return json or {}, url
