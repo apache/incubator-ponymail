@@ -463,7 +463,8 @@ if __name__ == '__main__':
     foo = Archiver()
     try:
         try:
-            msg = email.message_from_file(sys.stdin)
+            msgstring = sys.stdin.read()
+            msg = email.message_from_bytes(msgstring.decode('ascii', 'ignore'))
         except Exception as err:
             print("STDIN parser exception: %s" % err)
         
