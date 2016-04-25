@@ -25,7 +25,7 @@ local default_doc = "mbox"
 -- http code return check
 function checkReturn(code)
     if not code or code ~= 200 then
-        if not code then
+        if not code or code == "closed" then
             error("Could not contact database backend!")
         else
             error("Backend Database returned code " .. code .. "!")
