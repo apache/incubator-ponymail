@@ -101,7 +101,7 @@ function handle(r)
     local now = r:clock()
     local get = r:parseargs()
     local eid = (get.id or ""):gsub("\"", "")
-    local doc = elastic.get("mbox", eid or "hmm")
+    local _, doc = pcall(function() return elastic.get("mbox", eid or "hmm") end)
     emls_thrd = {}
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.subject then
