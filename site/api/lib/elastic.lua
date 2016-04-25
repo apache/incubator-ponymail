@@ -169,7 +169,7 @@ function index(r, id, ty, body)
         id = r:sha1(ty .. (math.random(1,99999999)*os.time()) .. ':' .. r:clock())
     end
     local url = config.es_url .. ty .. "/" .. id
-    local result = http.request(url, body)
+    local result, hc = http.request(url, body)
     local out = {}
     local json = JSON.decode(result)
     return json or {}
