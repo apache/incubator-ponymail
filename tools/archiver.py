@@ -484,7 +484,7 @@ if __name__ == '__main__':
         parseHTML = True
         
     foo = Archiver()
-    input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+    input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
     
     try:
         msgstring = input_stream.read()
