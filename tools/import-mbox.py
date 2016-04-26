@@ -198,10 +198,11 @@ def msgfactory(fp):
 
 
 class BulkThread(Thread):
-    def assign(self, json, xes, dtype = 'mbox'):
+    def assign(self, json, xes, dtype = 'mbox', wc = 'quorum'):
         self.json = json
         self.xes = xes
         self.dtype = dtype
+        self.wc = wc
 
     def insert(self):
         global config
@@ -218,6 +219,7 @@ class BulkThread(Thread):
             #js['@import_timestamp'] = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime())
             js_arr.append({
                 '_op_type': 'index',
+                '_consistency': self.wc,
                 '_index': iname,
                 '_type': self.dtype,
                 '_id': js['mid'],

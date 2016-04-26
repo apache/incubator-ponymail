@@ -129,8 +129,11 @@ class Archiver(object):
         self.cropout = None
         self.html = parseHTML
         self.dbname = config.get("elasticsearch", "dbname")
+        self.consistency = 'quorum'
         if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
             ssl = True
+        if config.has_option("elasticsearch", "write") and config.get("elasticsearch", "write") != "":
+            self.consistency = config.get('elasticsearch', 'write')
         if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
             self.cropout = config.get("debug", "cropout")
         uri = ""
@@ -338,6 +341,7 @@ class Archiver(object):
                 index=self.dbname,
                 doc_type="mbox",
                 id=mid,
+                consistency = self.consistency,
                 body = ojson
             )
             
@@ -345,6 +349,7 @@ class Archiver(object):
                 index=self.dbname,
                 doc_type="mbox_source",
                 id=mid,
+                consistency = self.consistency,
                 body = {
                     "message-id": msg_metadata['message-id'],
                     "source": msg.as_string()
@@ -357,6 +362,7 @@ class Archiver(object):
                     index=self.dbname,
                     doc_type="mailinglists",
                     id=lid,
+                    consistency = self.consistency,
                     body = {
                         'list': lid,
                         'name': mlist.list_name,
@@ -382,6 +388,7 @@ class Archiver(object):
                             self.es.index(
                                 index=indexname,
                                 doc_type="notifications",
+                                consistency = self.consistency,
                                 body = {
                                     'type': 'direct',
                                     'recipient': cid,
@@ -414,6 +421,7 @@ class Archiver(object):
                             oldrefs.append(cid)
                             self.es.index(
                                 index=self.dbname,
+                                consistency = self.consistency,
                                 doc_type="notifications",
                                 body = {
                                     'type': 'indirect',
