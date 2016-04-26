@@ -152,10 +152,13 @@ function scroll(sid)
 end
 
 -- Update a document
-function update(doctype, id, query)
+function update(doctype, id, query, consistency)
     local js = JSON.encode({doc = query })
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/" .. id .. "/_update"
+    if consistency then
+        url = url .. "?write_consistency=" .. consistency
+    end
     local result, hc = http.request(url, js)
     local out = {}
     local json = JSON.decode(result)
@@ -163,12 +166,15 @@ function update(doctype, id, query)
 end
 
 -- Put a new document somewhere
-function index(r, id, ty, body)
+function index(r, id, ty, body, consistency)
     local js = JSON.encode(query)
     if not id then
         id = r:sha1(ty .. (math.random(1,99999999)*os.time()) .. ':' .. r:clock())
     end
     local url = config.es_url .. ty .. "/" .. id
+    if consistency then
+        url = url .. "?write_consistency=" .. consistency
+    end
     local result, hc = http.request(url, body)
     local out = {}
     local json = JSON.decode(result)
