@@ -1,4 +1,4 @@
-# Installing Pony Mail on Ubuntu 14.04: #
+# Installing Pony Mail on Ubuntu 14.04 or 16.04: #
 Start by installing the following Ubuntu packages:
 
 - apache2
@@ -23,9 +23,9 @@ sudo pip3 install elasticsearch formatflowed netaddr
 Install ElasticSearch:
 
 ~~~
-sudo apt-get openjdk-7-jre-headless
+sudo apt-get default-jre-headless
 wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb http://packages.elastic.co/elasticsearch/1.7/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-1.7.list
+echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 sudo apt-get update && sudo apt-get install elasticsearch
 ~~~
 
@@ -42,6 +42,19 @@ Check out a copy of Pony Mail:
 ~~~
 cd /var/www
 git clone https://github.com/Humbedooh/ponymail.git
+~~~
+
+Configure Elasticsearch to automatically start during bootup. For Ubuntu <= 14.10:
+
+~~~
+sudo update-rc.d elasticsearch defaults 95 10
+~~~
+
+For Ubuntu >= 15.04:
+
+~~~
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable elasticsearch.service
 ~~~
 
 Start up ElasticSearch:
