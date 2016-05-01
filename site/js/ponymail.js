@@ -1651,7 +1651,7 @@ function displayEmailThreaded(json, state, threadobj) {
             document.getElementById("thread_" + state.main).appendChild(node)
         }
         if (state.child && state.child.children && state.child.children.length > 0) {
-            getChildren(state.main, state.child, level)
+            getChildren(state.main, state.child, level, node)
         }
     } else {
         alert("Could not find parent object, thread_" + state.main)
@@ -1931,7 +1931,7 @@ function sortIt(json) {
 
 
 // getChildren: fetch all replies to a topic from ES
-function getChildren(main, email, level) {
+function getChildren(main, email, level, pnode) {
     // nesting level
     level = level ? level : 1
     var pchild = null
@@ -1949,6 +1949,13 @@ function getChildren(main, email, level) {
             if (child.tid != email.mid) {
                 // see if we have a saved copy of the email already
                 var eml = saved_emails[child.tid]
+                
+                // Placeholder for the email, so we don't lose our sorting
+                if (pnode) {
+                    var node = document.createElement('div')
+                    node.setAttribute("id", "thread_" + (child.mid ? child.mid : child.tid).toString().replace(/@<.+>/, ""))
+                    pnode.appendChild(node)
+                }
                 
                 // No saved copy? Let's fetch from the backend then!
                 if (!eml || !eml.from) {

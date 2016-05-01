@@ -323,7 +323,7 @@ function displayEmailThreaded(json, state, threadobj) {
             document.getElementById("thread_" + state.main).appendChild(node)
         }
         if (state.child && state.child.children && state.child.children.length > 0) {
-            getChildren(state.main, state.child, level)
+            getChildren(state.main, state.child, level, node)
         }
     } else {
         alert("Could not find parent object, thread_" + state.main)
