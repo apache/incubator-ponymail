@@ -68,6 +68,7 @@ piperWeirdness = False
 parseHTML = False
 iBody = None
 resendTo = None
+timeout = 600
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -237,7 +238,7 @@ class BulkThread(Thread):
 class SlurpThread(Thread):
 
     def run(self):
-        global block, y, es, lists, baddies, config, resendTo
+        global block, y, es, lists, baddies, config, resendTo, timeout
         ja = []
         jas = []
         print("Thread started")
@@ -312,7 +313,7 @@ class SlurpThread(Thread):
                     message['cc'] = None
                     s.send_message(message, from_addr=None, to_addrs=(resendTo))
                     continue
-                if (time.time() - stime > 360): # break out after 6 minutes, it shouldn't take this long..!
+                if (time.time() - stime > timeout): # break out after N seconds, it shouldn't take this long..!
                     print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
                     break
                 if 'subject' in message:
@@ -544,6 +545,8 @@ parser.add_argument('--ignorebody', dest='ibody', type=str, nargs=1,
                    help='Optional email bodies to treat as empty (in conjunction with --html2text)')
 parser.add_argument('--resend', dest='resend', type=str, nargs=1,
                    help='DANGER ZONE: Resend every read email to this recipient as a new email')
+parser.add_argument('--timeout', dest='timeout', type=int, nargs=1,
+                   help='Optional timeout in secs for importing an mbox/maildir file (default is 600 seconds)')
 
 args = parser.parse_args()
 
@@ -583,7 +586,8 @@ if args.ibody:
 if args.resend:
     resendTo = args.resend[0]
     from smtplib import SMTP
-    
+if args.timeout:
+    timeout = args.timeout[0]
 baddies = 0
 
 
