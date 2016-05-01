@@ -55,6 +55,7 @@ appender = "apache.org"
 
 
 source = "./"
+maildir = False
 list_override = None
 project = ""
 recursive = False
@@ -288,10 +289,16 @@ class SlurpThread(Thread):
                 with open(tmpname, "w") as f:
                     f.write(inp)
                     f.close()
-    
+
             count = 0
             LEY = EY
-            for message in mailbox.mbox(tmpname):
+
+            if maildir:
+                messages = mailbox.Maildir(tmpname)
+            else:
+                messages = mailbox.mbox(tmpname)
+
+            for message in messages:
                 if resendTo:
                     print("Delivering message %s via MTA" % message['message-id'] if 'message-id' in message else '??')
                     s = SMTP('localhost')
@@ -505,6 +512,8 @@ tlpname = "foo"
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source to scan (either http(s):// or file path)')
+parser.add_argument('--dir', dest='dir', action='store_true',
+                   help='Input is in Maildir format')
 parser.add_argument('--recursive', dest='recursive', action='store_true', 
                    help='Do a recursive scan (sub dirs etc)')
 parser.add_argument('--interactive', dest='interactive', action='store_true',
@@ -546,6 +555,8 @@ if len(sys.argv) <= 2:
 
 if args.source:
     source = args.source[0]
+if args.dir:
+    maildir = args.dir
 if args.listid:
     list_override = args.listid[0]
 if args.project:
@@ -599,7 +610,10 @@ def globDir(d):
 if source[0] == "/" or source[0] == ".":
     print("Doing file based import")
     filebased = True
-    globDir(source)
+    if maildir:
+        lists.append([source, fileToLID.get(source) if fileToLID.get(source) else list_override])
+    else:
+        globDir(source)
     
 
 # HTTP(S) based import?
