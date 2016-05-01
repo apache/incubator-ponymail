@@ -20,7 +20,7 @@ private.
 
 
 ### Features include: ###
-* Importing from standard mbox files, Pipermail or an mod_mbox-driven site
+* Importing from standard mbox files, maildir directory, Pipermail or an mod_mbox-driven site
 * Public and private list viewing based on auth
 * Cross-list threading
 * OpenSearch support for browsers (can add as search engine)
