@@ -386,7 +386,7 @@ class Archiver(object):
                         if doc:
                             oldrefs.append(cid)
                             self.es.index(
-                                index=indexname,
+                                index=self.dbname,
                                 doc_type="notifications",
                                 consistency = self.consistency,
                                 body = {
