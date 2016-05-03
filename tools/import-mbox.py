@@ -339,6 +339,8 @@ class SlurpThread(Thread):
                     mid = message['message-id']
 
                     lid = message['list-id']
+                    if args.requirelid and (not lid or lid == ""):
+                        continue
                     if not lid or lid == "": # Guess list name in absence
                         lid = '.'.join(reversed(ml.split("-"))) + "." + appender
                     
@@ -561,6 +563,8 @@ parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
 parser.add_argument('--html2text', dest='html2text', action='store_true',
                    help='If no text/plain is found, try to parse HTML using html2text')
+parser.add_argument('--requirelid', dest='requirelid', action='store_true',
+                   help='Require a List ID to be present, ignore otherwise')
 parser.add_argument('--ignorebody', dest='ibody', type=str, nargs=1,
                    help='Optional email bodies to treat as empty (in conjunction with --html2text)')
 parser.add_argument('--resend', dest='resend', type=str, nargs=1,
