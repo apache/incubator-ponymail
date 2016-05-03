@@ -75,6 +75,7 @@ def parse_attachment(part):
         dispositions = cd.strip().split(";")
         if dispositions[0].lower() == "attachment":
             fd = part.get_payload(decode=True)
+            if not fd: return None, None
             attachment = {}
             attachment['content_type'] = part.get_content_type()
             attachment['size'] = len(fd)
@@ -83,7 +84,8 @@ def parse_attachment(part):
             b64 = codecs.encode(fd, "base64").decode('ascii', 'ignore')
             attachment['hash'] = h
             for param in dispositions[1:]:
-                key,val = param.split("=")
+                if not '=' in param: continue
+                key,val = param.split("=", 1)
                 if key.lower().strip() == "filename":
                     val = val.strip(' "')
                     print("Found attachment: %s" % val)
@@ -282,8 +284,9 @@ class Archiver(object):
                             body = body.encode('utf-8')
                     except:
                         body = None
-        if body:
-            attachments, contents = self.msgfiles(msg)
+
+        attachments, contents = self.msgfiles(msg)
+        if body or attachments:
             private = False
             if hasattr(mlist, 'archive_public') and mlist.archive_public == True:
                 private = False
@@ -293,7 +296,8 @@ class Archiver(object):
                 private = True
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
+                mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
+                print(mid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
@@ -475,6 +479,8 @@ if __name__ == '__main__':
                        help='Use the archive timestamp as the email date instead of the Date header')
     parser.add_argument('--quiet', dest='quiet', action='store_true', 
                        help='Do not exit -1 if the email could not be parsed')
+    parser.add_argument('--verbose', dest='verbose', action='store_true', 
+                       help='Output additional log messages')
     parser.add_argument('--html2text', dest='html2text', action='store_true', 
                        help='Try to convert HTML to text if no text/plain message is found')
     args = parser.parse_args()
@@ -482,6 +488,10 @@ if __name__ == '__main__':
     if args.html2text:
         import html2text
         parseHTML = True
+
+    if args.verbose:
+        import logging
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
         
     foo = Archiver()
     input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
@@ -512,7 +522,7 @@ if __name__ == '__main__':
                     msg.replace_header('List-ID', msg.get(altheader))
                 except:
                     msg.add_header('list-id', msg.get(altheader))
-        
+
         # Set specific LID?
         if args.lid and len(args.lid[0]) > 3:
             try:
@@ -562,6 +572,9 @@ if __name__ == '__main__':
                 lid = foo.archive_message(msg_metadata, msg)
                 print("%s: Done archiving to %s!" % (email.utils.formatdate(), lid))
             except Exception as err:
+                if args.verbose:
+                    import traceback
+                    traceback.print_exc()
                 print("Archiving failed!: %s" % err)
                 raise Exception("Archiving to ES failed")
         else:
