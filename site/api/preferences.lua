@@ -277,16 +277,18 @@ Pony Mail - Email for Ponies and People.
             for x,y in pairs (pdoc.aggregations.from.buckets) do
                 local canAccess = false
                 local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-                local flid = list .. "." .. domain
-                for k, v in pairs(rights) do
-                    if v == "*" or v == domain or v == flid then
-                        canAccess = true
-                        break
+                if list and domain then
+                    local flid = list .. "." .. domain
+                    for k, v in pairs(rights) do
+                        if v == "*" or v == domain or v == flid then
+                            canAccess = true
+                            break
+                        end
                     end
-                end
-                if not canAccess then
-                    lists[domain] = lists[domain] or {}
-                    lists[domain][list] = nil
+                    if not canAccess then
+                        lists[domain] = lists[domain] or {}
+                        lists[domain][list] = nil
+                    end
                 end
             end
         else
