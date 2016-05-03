@@ -266,6 +266,7 @@ class SlurpThread(Thread):
             EY = 1980
             EM = 1
             stime = time.time()
+            dFile = False
             if filebased:
                 
                 tmpname = mla[0]
@@ -284,6 +285,7 @@ class SlurpThread(Thread):
                             tmpfile.close()
                             tmpname = tmpfile.name
                             filename = tmpname
+                            dFile = True # Slated for deletion upon having been read
                             print("%s -> %u bytes" % (tmpname, len(bmd)))
                     except Exception as err:
                         print("This wasn't a gzip file: %s" % err )
@@ -506,6 +508,8 @@ class SlurpThread(Thread):
                     baddies += 1
             if filebased:
                 print("Parsed %u records from %s" % (count, filename))
+                if dFile:
+                    os.unlink(tmpname)
             else:
                 print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
                 os.unlink(tmpname)
