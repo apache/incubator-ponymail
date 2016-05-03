@@ -271,6 +271,22 @@ class SlurpThread(Thread):
                 tmpname = mla[0]
                 filename = mla[0]
                 xlist_override = mla[1]
+                if filename.find(".gz") != -1:
+                    print("Decompressing %s..." % filename)
+                    try:
+                        with open(filename, "rb") as bf:
+                            bmd = bf.read()
+                            bf.close()
+                            bmd = gzip.decompress(bmd)
+                            tmpfile = tempfile.NamedTemporaryFile(mode='w+b', buffering=1, delete=False)
+                            tmpfile.write(bmd)
+                            tmpfile.flush()
+                            tmpfile.close()
+                            tmpname = tmpfile.name
+                            filename = tmpname
+                            print("%s -> %u bytes" % (tmpname, len(bmd)))
+                    except Exception as err:
+                        print("This wasn't a gzip file: %s" % err )
                 print("Slurping %s" % filename)
             else:
                 ml = mla[0]
