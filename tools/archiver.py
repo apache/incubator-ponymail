@@ -214,19 +214,15 @@ class Archiver(object):
                 
         return body    
 
-    def archive_message(self, mlist, msg):
-        """Send the message to the archiver.
+    def compute_updates(self, lid, private, msg):
+        """Determine what needs to be sent to the archiver.
 
-        :param mlist: The IMailingList object.
+        :param lid: The list id
         :param msg: The message object.
         """
 
-        lid = None
-        m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
-        if m:
-            lid = m.group(1)
-        else:
-            lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+        ojson = None
+
         if self.cropout:
             crops = self.cropout.split(" ")
             # Regex replace?
@@ -287,17 +283,9 @@ class Archiver(object):
 
         attachments, contents = self.msgfiles(msg)
         if body or attachments:
-            private = False
-            if hasattr(mlist, 'archive_public') and mlist.archive_public == True:
-                private = False
-            elif hasattr(mlist, 'archive_public') and mlist.archive_public == False:
-                private = True
-            elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
-                private = True
             pmid = mid
             try:
                 mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
-                print(mid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
@@ -329,122 +317,154 @@ class Archiver(object):
                 'body': body.decode('utf-8', 'replace') if type(body) is bytes else body,
                 'attachments': attachments
             }
+
+        self.msg_metadata = msg_metadata
+        self.irt = irt
+
+        return  ojson, contents
             
-            if contents:
-                for key in contents:
-                    self.es.index(
-                        index=self.dbname,
-                        doc_type="attachment",
-                        id=key,
-                        body = {
-                            'source': contents[key]
-                        }
-                    )
-        
-            self.es.index(
-                index=self.dbname,
-                doc_type="mbox",
-                id=mid,
-                consistency = self.consistency,
-                body = ojson
-            )
-            
-            self.es.index(
-                index=self.dbname,
-                doc_type="mbox_source",
-                id=mid,
-                consistency = self.consistency,
-                body = {
-                    "message-id": msg_metadata['message-id'],
-                    "source": msg.as_string()
-                }
-            )
-            
-            # If MailMan and list info is present, save/update it in ES:
-            if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
+    def archive_message(self, mlist, msg):
+        """Send the message to the archiver.
+
+        :param mlist: The IMailingList object.
+        :param msg: The message object.
+        """
+
+        lid = None
+        m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
+        if m:
+            lid = m.group(1)
+        else:
+            lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+
+        private = False
+        if hasattr(mlist, 'archive_public') and mlist.archive_public == True:
+            private = False
+        elif hasattr(mlist, 'archive_public') and mlist.archive_public == False:
+            private = True
+        elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
+            private = True
+
+        ojson, contents = self.compute_updates(lid, private, msg)
+
+        msg_metadata = self.msg_metadata
+        irt = self.irt
+
+        if contents:
+            for key in contents:
                 self.es.index(
                     index=self.dbname,
-                    doc_type="mailinglists",
-                    id=lid,
-                    consistency = self.consistency,
+                    doc_type="attachment",
+                    id=key,
                     body = {
-                        'list': lid,
-                        'name': mlist.list_name,
-                        'description': mlist.description,
-                        'private': private
+                        'source': contents[key]
                     }
                 )
-            
-            if logger:
-                logger.info("Pony Mail archived message %s successfully" % mid)
-            oldrefs = []
-            
-            # Is this a direct reply to a pony mail email?
-            if irt != "":
-                dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", irt)
-                if dm:
-                    cid = dm.group(1)
-                    mid = dm.group(2)
-                    if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
-                        doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
-                        if doc:
-                            oldrefs.append(cid)
-                            self.es.index(
-                                index=self.dbname,
-                                doc_type="notifications",
-                                consistency = self.consistency,
-                                body = {
-                                    'type': 'direct',
-                                    'recipient': cid,
-                                    'list': lid,
-                                    'private': private,
-                                    'date': msg_metadata['date'],
-                                    'from': msg_metadata['from'],
-                                    'to': msg_metadata['to'],
-                                    'subject': msg_metadata['subject'],
-                                    'message-id': msg_metadata['message-id'],
-                                    'in-reply-to': irt,
-                                    'epoch': email.utils.mktime_tz(mdate),
-                                    'mid': mid,
-                                    'seen': 0
-                                }
-                            )
-                            if logger:
-                                logger.info("Notification sent to %s for %s" % (cid, mid))
+    
+        self.es.index(
+            index=self.dbname,
+            doc_type="mbox",
+            id=ojson['mid'],
+            consistency = self.consistency,
+            body = ojson
+        )
+        
+        self.es.index(
+            index=self.dbname,
+            doc_type="mbox_source",
+            id=ojson['mid'],
+            consistency = self.consistency,
+            body = {
+                "message-id": msg_metadata['message-id'],
+                "source": msg.as_string()
+            }
+        )
+        
+        # If MailMan and list info is present, save/update it in ES:
+        if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
+            self.es.index(
+                index=self.dbname,
+                doc_type="mailinglists",
+                id=lid,
+                consistency = self.consistency,
+                body = {
+                    'list': lid,
+                    'name': mlist.list_name,
+                    'description': mlist.description,
+                    'private': private
+                }
+            )
+        
+        if logger:
+            logger.info("Pony Mail archived message %s successfully" % mid)
+        oldrefs = []
+        
+        # Is this a direct reply to a pony mail email?
+        if irt != "":
+            dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", irt)
+            if dm:
+                cid = dm.group(1)
+                mid = dm.group(2)
+                if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
+                    doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
+                    if doc:
+                        oldrefs.append(cid)
+                        self.es.index(
+                            index=self.dbname,
+                            doc_type="notifications",
+                            consistency = self.consistency,
+                            body = {
+                                'type': 'direct',
+                                'recipient': cid,
+                                'list': lid,
+                                'private': private,
+                                'date': msg_metadata['date'],
+                                'from': msg_metadata['from'],
+                                'to': msg_metadata['to'],
+                                'subject': msg_metadata['subject'],
+                                'message-id': msg_metadata['message-id'],
+                                'in-reply-to': irt,
+                                'epoch': email.utils.mktime_tz(mdate),
+                                'mid': mid,
+                                'seen': 0
+                            }
+                        )
+                        if logger:
+                            logger.info("Notification sent to %s for %s" % (cid, mid))
 
-            # Are there indirect replies to pony emails?
-            if msg_metadata.get('references'):
-                for im in re.finditer(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references')):
-                    cid = im.group(1)
-                    mid = im.group(2)
-                    if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
-                        doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
-                        
-                        # does the user want to be notified of indirect replies?
-                        if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
-                            oldrefs.append(cid)
-                            self.es.index(
-                                index=self.dbname,
-                                consistency = self.consistency,
-                                doc_type="notifications",
-                                body = {
-                                    'type': 'indirect',
-                                    'recipient': cid,
-                                    'list': lid,
-                                    'private': private,
-                                    'date': msg_metadata['date'],
-                                    'from': msg_metadata['from'],
-                                    'to': msg_metadata['to'],
-                                    'subject': msg_metadata['subject'],
-                                    'message-id': msg_metadata['message-id'],
-                                    'in-reply-to': mirt,
-                                    'epoch': email.utils.mktime_tz(mdate),
-                                    'mid': mid,
-                                    'seen': 0
-                                }
-                            )
-                            if logger:
-                                logger.info("Notification sent to %s for %s" % (cid, mid))
+        # Are there indirect replies to pony emails?
+        if msg_metadata.get('references'):
+            for im in re.finditer(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references')):
+                cid = im.group(1)
+                mid = im.group(2)
+                if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
+                    doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
+                    
+                    # does the user want to be notified of indirect replies?
+                    if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
+                        oldrefs.append(cid)
+                        self.es.index(
+                            index=self.dbname,
+                            consistency = self.consistency,
+                            doc_type="notifications",
+                            body = {
+                                'type': 'indirect',
+                                'recipient': cid,
+                                'list': lid,
+                                'private': private,
+                                'date': msg_metadata['date'],
+                                'from': msg_metadata['from'],
+                                'to': msg_metadata['to'],
+                                'subject': msg_metadata['subject'],
+                                'message-id': msg_metadata['message-id'],
+                                'in-reply-to': mirt,
+                                'epoch': email.utils.mktime_tz(mdate),
+                                'mid': mid,
+                                'seen': 0
+                            }
+                        )
+                        if logger:
+                            logger.info("Notification sent to %s for %s" % (cid, mid))
         return lid
             
     def list_url(self, mlist):
