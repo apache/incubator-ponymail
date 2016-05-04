@@ -176,7 +176,9 @@ function displayEmail(json, id, level) {
             }
             if (json.private) {
                 thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
-                thread.style.backgroundImage = "url(/images/private.png)"
+                if (level == 1) {
+                    thread.style.backgroundImage = "url(/images/private.png)"
+                }
             }
             
             thread.innerHTML += "<b>List: </b><a href='" + base + "/list.html?" + lid + "'>" + lid + "</a><br/>"
@@ -199,7 +201,7 @@ function displayEmail(json, id, level) {
             
             var pv = ""
             if (json.private) {
-                    pv = "background: url(/images/private.png);"
+                    pv = "background: none !important;"
                 }
             thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal; " + pv + "'>" + ebody + '</pre>'
             
