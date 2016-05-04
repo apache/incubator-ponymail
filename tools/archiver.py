@@ -26,6 +26,11 @@ Enable the module by adding the following to your mailman.cfg file::
 class: mailman_ponymail_plugin.Archiver
 enable: yes
 
+and by adding the following to ponymail.cfg:
+
+[mailman]
+plugin: true
+
 OR, to use the STDIN version (non-MM3 mailing list managers),
 sub someone to the list(s) and add this to their .forward file:
 "|/usr/bin/env python3.4 /path/to/archiver.py"
@@ -56,7 +61,7 @@ config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
 
-if config.has_section('archiver.ponymail'):
+if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from zope.interface import implementer
     from mailman.interfaces.archiver import IArchiver
     from mailman.interfaces.archiver import ArchivePolicy
@@ -103,7 +108,7 @@ def pm_charsets(msg):
 
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
-    if config.has_section('archiver.ponymail'):
+    if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
         implementer(IArchiver)
     name = "ponymail"
 
