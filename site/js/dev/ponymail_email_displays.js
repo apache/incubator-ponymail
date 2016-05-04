@@ -197,8 +197,11 @@ function displayEmail(json, id, level) {
                 thread.innerHTML += "<br/>"
             }
             
-               
-            thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</pre>'
+            var pv = ""
+            if (json.private) {
+                    pv = "background: url(/images/private.png);"
+                }
+            thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal; " + pv + "'>" + ebody + '</pre>'
             
             // Same as with social theme - "highlight new emails"
             if (thread.hasAttribute("meme")) {
