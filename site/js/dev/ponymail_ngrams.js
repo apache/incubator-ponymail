@@ -109,8 +109,8 @@ function addNgram(json, state) {
     for (var i in ngram_names) {
         var nn = []
         var name = unescape(ngram_names[i])
-        while (name.match(/(.*)&?header_([^=]+)=([^=&]+)&?/)) {
-            var m = name.match(/(.*)&?header_([^=]+)=([^&=]+)&?(.*)/)
+        while (name.match(/(.*)&?(?:header_)?([^=]+)=([^=&]+)&?/)) {
+            var m = name.match(/(.*)&?(?:header_)?([^=]+)=([^&=]+)&?(.*)/)
             name = m[1] + m[4]
             nn.push(m[2] + ": " + m[3])
         }
