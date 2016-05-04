@@ -463,7 +463,7 @@ function getListInfo(list, xdomain, nopush) {
             }
         }
         if (overlaps.length > 0) {
-            ll.innerHTML += '<li class="dropdown navbar-right" id="otherlists"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other lists:<span class="caret"></span></a><ul class="dropdown-menu" id="otherlists_dropdown"></ul></li>'
+            ll.innerHTML += '<li class="dropdown navbar-right" id="otherlists"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other lists:<span class="caret"></span></a><ul class="dropdown-menu" style="overflow: scroll;" id="otherlists_dropdown"></ul></li>'
             var ul = document.getElementById('otherlists_dropdown')
             for (var i in overlaps) {
                 var key = overlaps[i]
