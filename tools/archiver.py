@@ -35,15 +35,6 @@ sub someone to the list(s) and add this to their .forward file:
 # Change this index name to whatever you picked!!
 indexname = "ponymail_alpha"
 logger = None
-if __name__ != '__main__':
-    from zope.interface import implementer
-    from mailman.interfaces.archiver import IArchiver
-    from mailman.interfaces.archiver import ArchivePolicy
-    import logging
-    logger = logging.getLogger("mailman.archiver")
-else:
-    import sys
-    import argparse
 
 from elasticsearch import Elasticsearch
 import hashlib
@@ -65,6 +56,15 @@ config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
 
+if config.has_section('archiver.ponymail'):
+    from zope.interface import implementer
+    from mailman.interfaces.archiver import IArchiver
+    from mailman.interfaces.archiver import ArchivePolicy
+    import logging
+    logger = logging.getLogger("mailman.archiver")
+elif __name__ == '__main__':
+    import sys
+    import argparse
 
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
@@ -103,7 +103,7 @@ def pm_charsets(msg):
 
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
-    if __name__ != '__main__':
+    if config.has_section('archiver.ponymail'):
         implementer(IArchiver)
     name = "ponymail"
 
