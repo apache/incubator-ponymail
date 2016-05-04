@@ -3360,10 +3360,10 @@ function addNgram(json, state) {
     for (var i in ngram_names) {
         var nn = []
         var name = unescape(ngram_names[i])
-        while (name.match(/(.*?)&?(?:header_)?([^=]+)=([^=&]+)&?/)) {
-            var m = name.match(/(.*?)&?(?:header_)?([^=]+)=([^&=]+)&?(.*)/)
-            name = m[1] + m[4]
-            nn.push(m[2] + ": " + m[3])
+        while (name.match(/([^=]+)=([^=&]+)&?/)) {
+            var m = name.match(/([^=]+)=([^&=]+)&?/)
+            name = name.replace(m[0], "")
+            nn.push(m[1] + ": " + m[2])
         }
         if (name.match(/&?q=(.[^&=]+)/)) {
             nn.push("query: " + name.match(/&?q=(.[^&=]+)/)[1])
