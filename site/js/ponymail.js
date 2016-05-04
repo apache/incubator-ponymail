@@ -3482,7 +3482,7 @@ function loadNgrams() {
                 }
             }
         }
-        if (q.length > 0) {
+        if (q.length > 0 && !q.match(/=/)) {
             nquery.push("q=" + q)
         }
         ngrams.push(nquery.join("&"))
