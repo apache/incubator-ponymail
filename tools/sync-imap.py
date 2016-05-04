@@ -27,6 +27,7 @@ See usage for instructions.
 import argparse
 import configparser
 import elasticsearch
+from elasticsearch import helpers as eshelper
 import imaplib
 import os
 import pwd
@@ -155,16 +156,37 @@ for result in results[1]:
 
 # delete items from elasticsearch that are not present in imap
 
+queue1 = []
+queue2 = []
 for mid, _id in db.items():
-    if not mid in mail:
-        es.delete(index=iname, id=_id, doc_type='mbox')
-        es.delete(index=iname, id=_id, doc_type='mbox_source')
-        print("deleted: " + mid)
+    if True: # not mid in mail:
+        queue1.append({
+            '_op_type': 'delete',
+            '_index': iname,
+            '_type': 'mbox',
+            '_id': _id
+        })
+        queue2.append({
+            '_op_type': 'delete',
+            '_index': iname,
+            '_type': 'mbox_source',
+            '_id': _id
+        })
+        print("deleting: " + mid)
+
+while len(queue1) > 0:
+    eshelper.bulk(es, queue1[0:1024])
+    del queue1[0:1024]
+
+while len(queue2) > 0:
+    eshelper.bulk(es, queue2[0:1024])
+    del queue2[0:1024]
 
 # add new items to elasticsearch from imap
 
 for mid, uid in mail.items():
     if not mid in db:
+        print("indexing %s" % mid)
         argv = [sys.executable, 'archiver.py', '--lid=%s' % es_list]
         if verbose: argv.append('--verbose')
         if html2text: argv.append('--html2text')
@@ -172,5 +194,4 @@ for mid, uid in mail.items():
         child.stdin.write(imap.uid('fetch', uid, '(RFC822)')[1][0][1])
         child.stdin.close()
         rc = child.wait()
-        print("inserted: %s, rc = %d" % (mid, rc))
-
+        if rc != 0: print("rc %d" % rc)
