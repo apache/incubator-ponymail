@@ -3360,6 +3360,9 @@ function addNgram(json, state) {
     for (var i in ngram_names) {
         var nn = []
         var name = unescape(ngram_names[i])
+        if (name.match(/^q=[a-z_]+=/)) {
+            name = name.replace(/^q=/, "")
+        }
         while (name.match(/([^=]+)=([^=&]+)&?/)) {
             var m = name.match(/([^=]+)=([^&=]+)&?/)
             name = name.replace(m[0], "")
@@ -3482,7 +3485,7 @@ function loadNgrams() {
                 }
             }
         }
-        if (q.length > 0 && !q.match(/(=|%3D)/)) {
+        if (q.length > 0) {
             nquery.push("q=" + q)
         }
         ngrams.push(nquery.join("&"))
