@@ -231,7 +231,7 @@ function loadNgrams() {
                 }
             }
         }
-        if (q.length > 0 && !q.match(/=/)) {
+        if (q.length > 0 && !q.match(/(=|%3D)/)) {
             nquery.push("q=" + q)
         }
         ngrams.push(nquery.join("&"))
