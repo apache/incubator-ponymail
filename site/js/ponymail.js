@@ -1504,6 +1504,7 @@ function displayEmail(json, id, level) {
             }
             if (json.private) {
                 thread.innerHTML += "<font color='#C00'><b>Private: </b> YES</font><br/>"
+                thread.style.backgroundImage = "url(/images/private.png)"
             }
             
             thread.innerHTML += "<b>List: </b><a href='" + base + "/list.html?" + lid + "'>" + lid + "</a><br/>"
