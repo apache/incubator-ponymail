@@ -191,7 +191,7 @@ Pony Mail - Email for Ponies and People.
     
     -- Get lists (cached if possible)
     local lists = {}
-    local nowish = math.floor(os.time() / 300)
+    local nowish = math.floor(os.time() / 600)
     local cache = r:ivm_get("pm_lists_cache_" ..r.hostname .."-" .. nowish)
     if cache then
         lists = JSON.decode(cache)
@@ -244,7 +244,11 @@ Pony Mail - Email for Ponies and People.
         -- private emails inside lists. If found and the current user
         -- does not have access, the list is hidden
         if config.hidePrivate then
-            local pdoc = elastic.raw {
+            local cache = r:ivm_get("pm_lists_cache_private_" ..r.hostname .."-" .. nowish)
+            if cache then
+                pdoc = JSON.decode(cache)
+            else
+                pdoc = elastic.raw {
                 aggs = {
                     from = {
                         terms = {
@@ -270,6 +274,8 @@ Pony Mail - Email for Ponies and People.
                     }
                 }
             }
+                r:ivm_set("pm_lists_cache_private_" ..r.hostname .."-" .. nowish, JSON.encode(pdoc))
+            end
             local rights = {}
             if account then
                 rights = aaa.rights(r, account)
