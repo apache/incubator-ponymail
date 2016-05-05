@@ -60,6 +60,7 @@ config = configparser.RawConfigParser()
 config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
+iBody = None
 
 if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from zope.interface import implementer
@@ -187,6 +188,7 @@ class Archiver(object):
     
     
     def msgbody(self, msg):
+        global iBody
         body = None
         firstHTML = None
         if msg.is_multipart():
@@ -211,7 +213,7 @@ class Archiver(object):
             firstHTML = msg.get_payload(decode=True)
             
         # this requires a GPL lib, user will have to install it themselves
-        if firstHTML and (not body or len(body) <= 1):
+        if firstHTML and (not body or len(body) <= 1 or (iBody and str(body).find(str(iBody)) != -1)):
             body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
     
         for charset in pm_charsets(msg):

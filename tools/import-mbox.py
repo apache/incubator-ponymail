@@ -59,12 +59,10 @@ source = "./"
 maildir = False
 list_override = None
 project = ""
-recursive = False
 filebased = False
 fileToLID = {}
 interactive = False
 extension = "*.mbox"
-attachments = False
 piperWeirdness = False
 parseHTML = False
 iBody = None
@@ -312,8 +310,6 @@ parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source to scan (either http(s):// or file path)')
 parser.add_argument('--dir', dest='dir', action='store_true',
                    help='Input is in Maildir format')
-parser.add_argument('--recursive', dest='recursive', action='store_true', 
-                   help='Do a recursive scan (sub dirs etc)')
 parser.add_argument('--interactive', dest='interactive', action='store_true',
                    help='Ask for help when possible')
 parser.add_argument('--quick', dest='quick', action='store_true',
@@ -332,8 +328,6 @@ parser.add_argument('--domain', dest='domain', type=str, nargs=1,
                    help='Optional domain extension for MIDs and List ID reconstruction)')
 parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
-parser.add_argument('--attachments', dest='attachments', action='store_true',
-                   help='Also iport attached files in emails')
 parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
 parser.add_argument('--html2text', dest='html2text', action='store_true',
@@ -365,23 +359,19 @@ if args.project:
     project = args.project[0]
 if args.domain:
     appender = args.domain[0]
-if args.recursive:
-    recursive = args.recursive
 if args.interactive:
     interactive = args.interactive
 if args.quick:
     quickmode = args.quick
 if args.private:
     private = args.private
-if args.attachments:
-    attachments = args.attachments
 if args.ext:
     extension = args.ext[0]
 if args.html2text:
     import html2text
     parseHTML = True
 if args.ibody:
-    iBody = args.ibody[0]
+    archiver.iBody = args.ibody[0]
 if args.resend:
     resendTo = args.resend[0]
     from smtplib import SMTP
