@@ -129,12 +129,15 @@ class Archiver(object):
         "x-mailman-rule-misses",
     ]
 
-    def __init__(self):
+    def __init__(self, parseHTML=False):
         """ Just initialize ES. """
-        global config, auth, parseHTML
+        global config, auth
         ssl = False
         self.cropout = None
         self.html = parseHTML
+        if parseHTML:
+           import html2text
+           self.html2text = html2text.html2text
         self.dbname = config.get("elasticsearch", "dbname")
         self.consistency = 'quorum'
         if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
@@ -209,7 +212,7 @@ class Archiver(object):
             
         # this requires a GPL lib, user will have to install it themselves
         if firstHTML and (not body or len(body) <= 1):
-            body = html2text.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
+            body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
     
         for charset in pm_charsets(msg):
             try:
@@ -287,6 +290,7 @@ class Archiver(object):
                         body = None
 
         attachments, contents = self.msgfiles(msg)
+        irt = ""
         if body or attachments:
             pmid = mid
             try:
@@ -295,7 +299,6 @@ class Archiver(object):
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
                 mid = pmid
-            irt = ""
             if 'in-reply-to' in msg_metadata:
                 try:
                     try:
@@ -511,14 +514,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     if args.html2text:
-        import html2text
         parseHTML = True
 
     if args.verbose:
         import logging
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
         
-    foo = Archiver()
+    foo = Archiver(parseHTML = parseHTML)
     input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
     
     try:
