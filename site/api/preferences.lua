@@ -239,66 +239,67 @@ Pony Mail - Email for Ponies and People.
             end
         end
         
+        -- save temporary list in cache
+        r:ivm_set("pm_lists_cache_" ..r.hostname .."-" .. nowish, JSON.encode(lists))
+        
         -- hide private lists?
         -- this invalidates any cache there is and forces a check for
         -- private emails inside lists. If found and the current user
         -- does not have access, the list is hidden
-        if config.hidePrivate then
-            local cache = r:ivm_get("pm_lists_cache_private_" ..r.hostname .."-" .. nowish)
-            if cache then
-                pdoc = JSON.decode(cache)
-            else
-                pdoc = elastic.raw {
-                aggs = {
-                    from = {
-                        terms = {
-                            field = "list_raw",
-                            size = 500000
-                        }
+    end
+    if config.hidePrivate then
+        local cache = r:ivm_get("pm_lists_cache_private_" ..r.hostname .."-" .. nowish)
+        if cache then
+            pdoc = JSON.decode(cache)
+        else
+            pdoc = elastic.raw {
+            aggs = {
+                from = {
+                    terms = {
+                        field = "list_raw",
+                        size = 500000
                     }
-                },
-                query = {
-                    bool = {
-                        must = {
-                            {
-                                range = {
-                                        date = { gte = "now-90d" }
-                                    },
-                            },
-                            {
-                                term = {
-                                    private = true
-                                }
+                }
+            },
+            query = {
+                bool = {
+                    must = {
+                        {
+                            range = {
+                                    date = { gte = "now-90d" }
+                                },
+                        },
+                        {
+                            term = {
+                                private = true
                             }
                         }
                     }
                 }
             }
-                r:ivm_set("pm_lists_cache_private_" ..r.hostname .."-" .. nowish, JSON.encode(pdoc))
-            end
-            local rights = {}
-            if account then
-                rights = aaa.rights(r, account)
-            end
-            for x,y in pairs (pdoc.aggregations.from.buckets) do
-                local canAccess = false
-                local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-                if list and domain then
-                    local flid = list .. "." .. domain
-                    for k, v in pairs(rights) do
-                        if v == "*" or v == domain or v == flid then
-                            canAccess = true
-                            break
-                        end
-                    end
-                    if not canAccess then
-                        lists[domain] = lists[domain] or {}
-                        lists[domain][list] = nil
+        }
+            r:ivm_set("pm_lists_cache_private_" ..r.hostname .."-" .. nowish, JSON.encode(pdoc))
+        end
+        local rights = {}
+        if account then
+            rights = aaa.rights(r, account)
+        end
+        for x,y in pairs (pdoc.aggregations.from.buckets) do
+            local canAccess = false
+            local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
+            if list and domain then
+                local flid = list .. "." .. domain
+                for k, v in pairs(rights) do
+                    if v == "*" or v == domain or v == flid then
+                        canAccess = true
+                        break
                     end
                 end
+                if not canAccess then
+                    lists[domain] = lists[domain] or {}
+                    lists[domain][list] = nil
+                end
             end
-        else
-            r:ivm_set("pm_lists_cache_" ..r.hostname .."-" .. nowish, JSON.encode(lists))
         end
     end
     
