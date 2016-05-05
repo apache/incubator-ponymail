@@ -37,7 +37,7 @@ function handle(r)
     local listdata = {}
 
     
-    local nowish = math.floor(os.time() / 900)
+    local nowish = math.floor(os.time() / 1800)
     
     local cache = r:ivm_get("pminfo_cache_" ..r.hostname .."-" .. nowish)
     if cache then
@@ -232,7 +232,7 @@ function handle(r)
     local emails_full = {}
     local emls = {}
     local sid = elastic.scan {
-        _source = {'message-id','in-reply-to','to','from','subject','epoch','references','list_raw'},
+        _source = {'message-id','in-reply-to','subject','epoch','references'},
         query = {
             bool = {
                 must = {
