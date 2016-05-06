@@ -4104,6 +4104,9 @@ function showDomains(l) {
     pg.appendChild(ul)
     
     var ls = "abcdefghijklmnopqrstuvwxyz".split("")
+    if (login && login.favorites && login.favorites.length > 0) {
+        ls.append('★')
+    }
     for (var i in ls) {
         var xl = ls[i]
         if (l == xl) {
@@ -4158,13 +4161,21 @@ function seedDomains(json) {
         domlist[letter] = domlist[letter] ? domlist[letter] : []
         domlist[letter].push(dom)
     }
-    
+    if (login && login.favorites && login.favorites.length > 0) {
+        domlist['★'] = []
+        for (mli in login.favorites) {
+            domlist['★'].push(login.favorites[mli])
+        }
+    }
     var po = document.createElement("div")
     
     po.style.textAlign = "left"
     po.style.margin = "0px"
     var x = 0;
     var ls = "abcdefghijklmnopqrstuvwxyz".split("")
+    if (login && login.favorites && login.favorites.length > 0) {
+        ls.append('★')
+    }
     for (var i in ls) {
         var l = ls[i]
         fl = fl ? fl : l
