@@ -83,7 +83,7 @@ function handle(r)
                 body = ([[
 You (or someone else) has requested to merge this email address with the account '%s' in Pony Mail.
 If you wish to complete this merge, please visit %s
- ...Or don't if you didn't request this
+ ...Or don't if you didn't request this, just ignore this email.
 
 With regards,
 Pony Mail - Email for Ponies and People.
