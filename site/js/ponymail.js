@@ -4106,6 +4106,7 @@ function showDomains(l) {
     var ls = "abcdefghijklmnopqrstuvwxyz".split("")
     if (login && login.favorites && login.favorites.length > 0) {
         ls.push('★')
+        pg.style.width = "701px"
     }
     for (var i in ls) {
         var xl = ls[i]
@@ -4175,6 +4176,7 @@ function seedDomains(json) {
     var ls = "abcdefghijklmnopqrstuvwxyz".split("")
     if (login && login.favorites && login.favorites.length > 0) {
         ls.push('★')
+        
     }
     for (var i in ls) {
         var l = ls[i]
