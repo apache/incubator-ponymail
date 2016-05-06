@@ -45,6 +45,10 @@ except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
     
+# change working directory to location of this script
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 y = 0
 baddies = 0
 block = Lock()
@@ -57,6 +61,7 @@ appender = "apache.org"
 
 source = "./"
 maildir = False
+imap = False
 list_override = None
 project = ""
 filebased = False
@@ -174,7 +179,18 @@ class SlurpThread(Thread):
             EM = 1
             stime = time.time()
             dFile = False
-            if filebased:
+            if maildir:
+                messages = mailbox.Maildir(tmpname)
+            elif imap:
+                y -= 1 # TODO don't understand the increment above
+                imap4 = mla[2]
+                def mailgen(list):
+                    for uid in list:
+                        msgbytes = imap4.uid('fetch', uid, '(RFC822)')[1][0][1]
+                        yield email.message_from_bytes(msgbytes)
+                messages = mailgen(mla[0])
+                xlist_override = mla[1]
+            elif filebased:
                 
                 tmpname = mla[0]
                 filename = mla[0]
@@ -197,6 +213,8 @@ class SlurpThread(Thread):
                     except Exception as err:
                         print("This wasn't a gzip file: %s" % err )
                 print("Slurping %s" % filename)
+                messages = mailbox.mbox(tmpname)
+
             else:
                 ml = mla[0]
                 mboxfile = mla[1]
@@ -215,14 +233,10 @@ class SlurpThread(Thread):
                 with open(tmpname, "w") as f:
                     f.write(inp)
                     f.close()
+                messages = mailbox.mbox(tmpname)
 
             count = 0
             LEY = EY
-
-            if maildir:
-                messages = mailbox.Maildir(tmpname)
-            else:
-                messages = mailbox.mbox(tmpname)
 
             for message in messages:
                 if resendTo:
@@ -285,6 +299,8 @@ class SlurpThread(Thread):
                 print("Parsed %u records from %s" % (count, filename))
                 if dFile:
                     os.unlink(tmpname)
+            elif imap:
+                print("Parsed %u records from imap" % count)
             else:
                 print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
                 os.unlink(tmpname)
@@ -460,6 +476,102 @@ elif source[0] == "h":
             if quickmode and qn >= 2:
                 break
                     
+# IMAP(S) based import?
+elif source[0] == "i":
+    imap = True
+    import urllib, getpass, imaplib
+    url = urllib.parse.urlparse(source)
+    
+    port = url.port or (143 if url.scheme == 'imap' else 993)
+    user = url.username or getpass.getuser()
+    password = url.password or getpass.getpass('IMAP Password: ')
+    folder = url.path.strip('/') or 'INBOX'
+    listname = list_override or "<%s/%s.%s>" % (user, folder, url.hostname)
+
+    # fetch message-id => _id pairs from elasticsearch
+
+    es = Elasticsearch()
+    result = es.search(scroll = '5m', 
+        body = {
+            'size': 1024, 
+            'fields': ['message-id'], 
+            'query': {'match': {'list': listname}}
+        }
+    )
+
+    db = {}
+    while len(result['hits']['hits']) > 0:
+        for hit in result['hits']['hits']:
+            db[hit['fields']['message-id'][0]] = hit['_id']
+        result = es.scroll(scroll='5m', scroll_id=result['_scroll_id'])
+
+    # fetch message-id => uid pairs from imap
+
+    if url.scheme == 'imaps':
+        imap4 = imaplib.IMAP4_SSL(url.hostname, port)
+    else:
+        imap4 = imaplib.IMAP4(url.hostname, port)
+    imap4.login(user, password)
+    imap4.select(folder, readonly=True)
+    results = imap4.uid('search', None, 'ALL')
+    uids = b','.join(results[1][0].split())
+    results = imap4.uid('fetch', uids, '(BODY[HEADER.FIELDS (MESSAGE-ID)])')
+
+    mail = {}
+    uid_re = re.compile(b'^\d+ \(UID (\d+) BODY\[')
+    mid_re = re.compile(b'^Message-ID:\s*(.*?)\s*$', re.I)
+    uid = None
+    for result in results[1]:
+        for line in result:
+            if isinstance(line, bytes):
+                match = uid_re.match(line)
+                if match:
+                    uid = match.group(1)
+                else:
+                     match = mid_re.match(line)
+                     if match:
+                         try:
+                             mail[match.group(1).decode('utf-8')] = uid
+                             uid = None
+                         except ValueError:
+                             pass
+
+    # delete items from elasticsearch that are not present in imap
+
+    queue1 = []
+    queue2 = []
+    for mid, _id in db.items():
+        if not mid in mail:
+            queue1.append({
+                '_op_type': 'delete',
+                '_index': dbname,
+                '_type': 'mbox',
+                '_id': _id
+            })
+            queue2.append({
+                '_op_type': 'delete',
+                '_index': dbname,
+                '_type': 'mbox_source',
+                '_id': _id
+            })
+            print("deleting: " + mid)
+
+    while len(queue1) > 0:
+        eshelper.bulk(es, queue1[0:1024])
+        del queue1[0:1024]
+
+    while len(queue2) > 0:
+        eshelper.bulk(es, queue2[0:1024])
+        del queue2[0:1024]
+
+    # add new items to elasticsearch from imap
+
+    uids = []
+    for mid, uid in mail.items():
+        if not mid in db:
+            uids.append(uid)
+    lists.append([uids, listname, imap4])
+
 threads = []
 cc = int( multiprocessing.cpu_count() / 2) + 1
 print("Starting up to %u threads to fetch the %u %s lists" % (cc, len(lists), project))
