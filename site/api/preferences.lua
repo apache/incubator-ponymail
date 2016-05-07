@@ -266,7 +266,7 @@ Pony Mail - Email for Ponies and People.
                     must = {
                         {
                             range = {
-                                    date = { gte = "now-90d" }
+                                    date = { gte = "now-20y" }
                                 },
                         },
                         {
