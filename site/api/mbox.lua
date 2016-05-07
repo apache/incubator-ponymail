@@ -95,7 +95,7 @@ function handle(r)
                 }
             }  
         },
-        size = 20000
+        size = 10000
         }
         
         local mfile = ""
