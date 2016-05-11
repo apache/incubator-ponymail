@@ -225,15 +225,15 @@ Pony Mail - Email for Ponies and People.
         
         
         for x,y in pairs (doc.aggregations.from.buckets) do
-            local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-            if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
+            local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
+            if domain and domain:match("^[-_a-z0-9.]+$") and #domain > 3 and list:match("^[-_a-z0-9.]+$") then
                 lists[domain] = lists[domain] or {}
                 lists[domain][list] = 0
             end
         end
         for x,y in pairs (ndoc.aggregations.from.buckets) do
-            local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-            if domain and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
+            local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
+            if domain and domain:match("^[-_a-z0-9.]+$") and #domain > 3 and list:match("^[-_a-z0-9.]+$") then
                 lists[domain] = lists[domain] or {}
                 lists[domain][list] = y.doc_count
             end
@@ -287,7 +287,7 @@ Pony Mail - Email for Ponies and People.
         for x,y in pairs (pdoc.aggregations.from.buckets) do
             local canAccess = false
             local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
-            if list and domain then
+            if list and domain and #list > 0 and #domain > 0 then
                 local flid = list .. "." .. domain
                 for k, v in pairs(rights) do
                     if v == "*" or v == domain or v == flid then
