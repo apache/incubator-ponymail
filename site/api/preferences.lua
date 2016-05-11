@@ -287,7 +287,7 @@ Pony Mail - Email for Ponies and People.
         for x,y in pairs (pdoc.aggregations.from.buckets) do
             local canAccess = false
             local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
-            if list and domain and #list > 0 and #domain > 0 then
+            if list and domain and #list > 0 and #domain > 2 then
                 local flid = list .. "." .. domain
                 for k, v in pairs(rights) do
                     if v == "*" or v == domain or v == flid then
