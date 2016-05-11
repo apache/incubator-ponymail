@@ -286,7 +286,7 @@ Pony Mail - Email for Ponies and People.
         end
         for x,y in pairs (pdoc.aggregations.from.buckets) do
             local canAccess = false
-            local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
+            local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
             if list and domain then
                 local flid = list .. "." .. domain
                 for k, v in pairs(rights) do
@@ -319,7 +319,7 @@ Pony Mail - Email for Ponies and People.
     end
     -- try to extrapolate foo@bar.tld here
     for k, v in pairs(descs) do
-        local l, d = v.list:match("<([^.]+)%.(.-)>")
+        local l, d = v.list:lower():match("<([^.]+)%.(.-)>")
         if l and d then
             descs[k].lid = ("%s@%s"):format(l, d)
         else
