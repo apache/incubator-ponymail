@@ -62,8 +62,9 @@ function oauthPortal(key) {
             }
         }
         var rdir = ""
-        if (document.location.search.size > 1) {
-            rdir = "&redirect=" + document.location.search.substr(1)
+        var ss = document.location.search.match(/REDIRECT=(.+)/)
+        if (ss) {
+            rdir = "&redirect=" + ss[1]
         }
         location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state + rdir) + cid
     }
@@ -130,7 +131,7 @@ function oauthWelcome(args) {
         args = window.location.hash.substring(1)
     }
     // Is this a callback from an oauth provider? If so, run the oauth stuff
-    if (args && args.length >= 40) {
+    if (args && args.length >= 40 && !args.match(/^REDIRECT=/)) {
         var redir = null
         // Redirecting somewhere?
         var m = args.match(/redirect=([^&]+)/i)
