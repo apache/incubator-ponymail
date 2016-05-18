@@ -73,7 +73,9 @@ function parseOauthResponse(json) {
             window.sessionStorage.removeItem("ponymail_redirect_oauth")
             location.href = wloc
         }
-        location.href = "./"
+        else {
+            location.href = "./"
+        }
     } else {
         popup("Oauth failed", "Authentication failed: " + json.msg)
     }
