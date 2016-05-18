@@ -65,8 +65,9 @@ function oauthPortal(key) {
         var ss = document.location.search.match(/REDIRECT=(.+)/)
         if (ss) {
             rdir = "&redirect=" + ss[1]
+            wloc = wloc.replace("REDIRECT="+ss[1], "")
         }
-        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state + rdir) + cid
+        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(wloc + "?key=" + key + "&state=" + state + rdir) + cid
     }
 }
 
