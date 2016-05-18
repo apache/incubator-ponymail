@@ -51,9 +51,8 @@ function oauthPortal(key) {
     var ot = pm_config.oauth[key]
     var state = parseInt(Math.random()*1000000000) + '' + parseInt(Math.random()*1000000000)
     // google is different (as usual)
-    var wloc = window.location
     if (key == 'google') {
-        location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(wloc)
+        location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(window.location)
     } else {
         var cid = ""
         if (ot.construct) {
@@ -61,26 +60,20 @@ function oauthPortal(key) {
                 cid += "&" + k + "=" + escape(ot[k])
             }
         }
-        var rdir = ""
-        var ss = document.location.search.match(/REDIRECT=(.+)/)
-        if (ss) {
-            rdir = "&redirect=" + ss[1]
-            wloc = wloc.replace("REDIRECT="+ss[1], "")
-        }
-        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(wloc + "?key=" + key + "&state=" + state + rdir) + cid
+        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state) + cid
     }
 }
 
 // Callback for oauth response from backend. if okay, send user back to front
 // page.
-function parseOauthResponse(json, state) {
+function parseOauthResponse(json) {
     if (json.okay) {
-        if (state && state.redir) {
-            location.href = state.redir
+        if (window.sessionStorage.getItem("ponymail_redirect_oauth")) {
+            var wloc = window.sessionStorage.getItem("ponymail_redirect_oauth")
+            window.sessionStorage.removeItem("ponymail_redirect_oauth")
+            location.href = wloc
         }
-        else {
-            location.href = "./"
-        }
+        location.href = "./"
     } else {
         popup("Oauth failed", "Authentication failed: " + json.msg)
     }
@@ -132,13 +125,7 @@ function oauthWelcome(args) {
         args = window.location.hash.substring(1)
     }
     // Is this a callback from an oauth provider? If so, run the oauth stuff
-    if (args && args.length >= 40 && !args.match(/^REDIRECT=/)) {
-        var redir = null
-        // Redirecting somewhere?
-        var m = args.match(/redirect=([^&]+)/i)
-        if (m) {
-            redir = m[1]
-        }
+    if (args && args.length >= 40) {
         var key = args.match(/key=([a-z]+)/i)
         if (key) {
             key = key[1]
@@ -148,12 +135,13 @@ function oauthWelcome(args) {
         }
         if (key && key.length > 0 && pm_config.oauth[key]) {
             document.getElementById('oauthtypes').innerHTML = "Logging you in, hang on..!"
-            GetAsync("/api/oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {redir: redir}, parseOauthResponse)
+            GetAsync("/api/oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {}, parseOauthResponse)
         } else {
             alert("Key missing or invalid! " + key)
         }
     // Not a callback, let's just show which oauth/persona options are enabled.
     } else {
+        window.sessionStorage.setItem("ponymail_redirect_oauth", document.referrer)
         oauthOptions()
     }
 }
