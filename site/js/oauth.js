@@ -51,8 +51,9 @@ function oauthPortal(key) {
     var ot = pm_config.oauth[key]
     var state = parseInt(Math.random()*1000000000) + '' + parseInt(Math.random()*1000000000)
     // google is different (as usual)
+    var wloc = window.location
     if (key == 'google') {
-        location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(window.location)
+        location.href = ot.oauth_portal + "?state=" + state + "&client_id=" + (ot.client_id ? ot.client_id : "") + "&response_type=id_token&scope=email&redirect_uri=" + escape(wloc)
     } else {
         var cid = ""
         if (ot.construct) {
@@ -60,15 +61,24 @@ function oauthPortal(key) {
                 cid += "&" + k + "=" + escape(ot[k])
             }
         }
-        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state) + cid
+        var rdir = ""
+        if (document.location.search.size > 1) {
+            rdir = "&redirect=" + document.location.search.substr(1)
+        }
+        location.href = ot.oauth_portal + "?state=" + state + "&redirect_uri=" + escape(window.location + "?key=" + key + "&state=" + state + rdir) + cid
     }
 }
 
 // Callback for oauth response from backend. if okay, send user back to front
 // page.
-function parseOauthResponse(json) {
+function parseOauthResponse(json, state) {
     if (json.okay) {
-        location.href = "./"
+        if (state && state.redir) {
+            location.href = state.redir
+        }
+        else {
+            location.href = "./"
+        }
     } else {
         popup("Oauth failed", "Authentication failed: " + json.msg)
     }
@@ -121,6 +131,12 @@ function oauthWelcome(args) {
     }
     // Is this a callback from an oauth provider? If so, run the oauth stuff
     if (args && args.length >= 40) {
+        var redir = null
+        // Redirecting somewhere?
+        var m = args.match(/redirect=([^&]+)/i)
+        if (m) {
+            redir = m[1]
+        }
         var key = args.match(/key=([a-z]+)/i)
         if (key) {
             key = key[1]
@@ -130,7 +146,7 @@ function oauthWelcome(args) {
         }
         if (key && key.length > 0 && pm_config.oauth[key]) {
             document.getElementById('oauthtypes').innerHTML = "Logging you in, hang on..!"
-            GetAsync("/api/oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {}, parseOauthResponse)
+            GetAsync("/api/oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {redir: redir}, parseOauthResponse)
         } else {
             alert("Key missing or invalid! " + key)
         }
