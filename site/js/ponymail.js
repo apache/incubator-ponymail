@@ -4010,9 +4010,13 @@ function getListInfo(list, xdomain, nopush) {
             li.appendChild(a)
             ll.appendChild(li)
             if (typeof all_lists[xdomain][listname] == 'undefined') {
-                listname = key
-                list = ln
-                xlist = ln
+                if ((list && list.length > 1) && (!login || !login.credentials)) {
+                    popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='/oauth.html'>Logging in</a> to resolve the situation.")
+                } else {
+                    listname = key
+                    list = ln
+                    xlist = ln
+                }
             }
             if (list == ln) {
                 li.setAttribute("class", "active " + collapse)
