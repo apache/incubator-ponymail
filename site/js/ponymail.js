@@ -3927,7 +3927,14 @@ function getListInfo(list, xdomain, nopush) {
         
     }
     if (!list || list.length <= 1) {
-        list = 'dev@' + xdomain
+        
+        // List may be private...who knows?
+        if (list.length > 1 && (!login || !login.credentials)) {
+            popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='/oauth.html'>Logging in</a> to resolve the situation.")
+        }
+        else {
+            list = 'dev@' + xdomain
+        }
     }
     if (!firstVisit && !nopush) {
         window.history.pushState({}, "", "list.html?" + xlist);
