@@ -476,6 +476,13 @@ function displaySingleThread(json) {
     var helper = document.createElement('div')
     helper.setAttribute("id", "helper_0")
     thread.appendChild(helper)
+    
+    // Sometimes emails are hidden for anonymous users, let's make 'em know...
+    if (!current_thread_json[0]) {
+        if (!login || !login.credentials) {
+            popup("Email not found!", "Sorry, it seems like we couldn't find this email for you. It may be private and hidden for non-authenticated users, in which case you could <a href='/oauth.html'>Log in</a> and see if that helps.")
+        }
+    }
     var mid = current_thread_json[0].mid.replace(/[<>]/g, "")
     if (mid.length > 40) {
         mid = mid.substring(0,40) + "..."
