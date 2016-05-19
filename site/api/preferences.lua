@@ -239,6 +239,15 @@ Pony Mail - Email for Ponies and People.
             end
         end
         
+        -- do we need to remove junk?
+        if config.listsDisplay then
+            for k, v in pairs(lists) do
+                if not k:match(config.listsDisplay) then
+                    lists[k] = nil
+                end
+            end
+        end
+        
         -- save temporary list in cache
         r:ivm_set("pm_lists_cache_" ..r.hostname .."-" .. nowish, JSON.encode(lists))
         
