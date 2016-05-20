@@ -4073,7 +4073,7 @@ function getListInfo(list, xdomain, nopush) {
         for (var n in kiddos) {
             kiddos[n].setAttribute("class", "label label-default label-hover")
         }
-        document.getElementById('listtitle').innerHTML = list + ", last month"
+        document.getElementById('listtitle').innerHTML = list + ", last month <a href='api/atom.lua?list=" + list + "'><img src='images/atom.png'></a>"
         if (current_query == "") {
             global_deep = false
             current_query = ""
