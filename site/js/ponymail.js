@@ -3948,6 +3948,14 @@ function getListInfo(list, xdomain, nopush) {
         }
         else {
             if (listnames.length > 0 && xdomain) {
+                for (var i in listnames) {
+                    // do we have a dev list? :3
+                    if (listnames[i] == 'dev') {
+                        window.location.search = 'dev@' + xdomain
+                        return
+                    }
+                }
+                // no dev list, find the busiest one!
                 window.location.search = listnames[0] + '@' + xdomain
             }
         }
