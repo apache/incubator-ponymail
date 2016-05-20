@@ -143,13 +143,14 @@ function handle(r)
             local canUse = true
             if email.private then
                 if account and not rights then
-                    rights = aaa.rights(r, account.credentials.uid or account.credentials.email)
+                    rights = aaa.rights(r, account)
                 end
                 canUse = false
                 if account then
                     local lid = email.list_raw:match("<[^.]+%.(.-)>")
+                    local flid = email.list_raw:match("<([^.]+%..-)>")
                     for k, v in pairs(rights or {}) do
-                        if v == "*" or v == lid then
+                        if v == "*" or v == lid or v == flid then
                             canUse = true
                             break
                         end
