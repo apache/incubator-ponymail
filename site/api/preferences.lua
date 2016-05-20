@@ -239,15 +239,6 @@ Pony Mail - Email for Ponies and People.
             end
         end
         
-        -- do we need to remove junk?
-        if config.listsDisplay then
-            for k, v in pairs(lists) do
-                if not k:match(config.listsDisplay) then
-                    lists[k] = nil
-                end
-            end
-        end
-        
         -- save temporary list in cache
         r:ivm_set("pm_lists_cache_" ..r.hostname .."-" .. nowish, JSON.encode(lists))
         
@@ -289,6 +280,7 @@ Pony Mail - Email for Ponies and People.
         }
             r:ivm_set("pm_lists_cache_private_" ..r.hostname .."-" .. nowish, JSON.encode(pdoc))
         end
+        
         local rights = {}
         if account then
             rights = aaa.rights(r, account)
@@ -311,6 +303,16 @@ Pony Mail - Email for Ponies and People.
             end
         end
     end
+    
+        -- do we need to remove junk?
+    if config.listsDisplay then
+        for k, v in pairs(lists) do
+            if not k:match(config.listsDisplay) then
+                lists[k] = nil
+            end
+        end
+    end
+
     
     -- Get notifs
     local notifications = 0
