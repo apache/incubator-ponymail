@@ -3926,6 +3926,19 @@ function getListInfo(list, xdomain, nopush) {
         xdomain = list.replace(/^.*?@/, "")
         
     }
+    
+    // Sort lists by usage before we enter here...
+    var listnames = []
+    if (all_lists[xdomain]) {
+        for (var key in all_lists[xdomain]) {
+            listnames.push(key)
+        }
+        var overlaps = []
+        listnames = listnames.sort(function(a, b) {
+            return all_lists[xdomain][b] - all_lists[xdomain][a]
+        })
+        
+        
     if (!list || list.length <= 1) {
         
         // List may be private...who knows?
@@ -3933,7 +3946,9 @@ function getListInfo(list, xdomain, nopush) {
             popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='/oauth.html'>Logging in</a> to resolve the situation.")
         }
         else {
-            list = 'dev@' + xdomain
+            if (listnames[0] && xdomain) {
+                window.location.search = listnames[0] + '@' + xdomain
+            }
         }
     }
     if (!firstVisit && !nopush) {
@@ -3982,14 +3997,6 @@ function getListInfo(list, xdomain, nopush) {
     if (all_lists[xdomain]) {
         var ll = document.getElementById('listslist')
         ll.innerHTML = ""
-        var listnames = []
-        for (var key in all_lists[xdomain]) {
-            listnames.push(key)
-        }
-        var overlaps = []
-        listnames = listnames.sort(function(a, b) {
-            return all_lists[xdomain][b] - all_lists[xdomain][a]
-        })
         for (var i in listnames) {
 
             var key = listnames[i]
