@@ -3937,6 +3937,7 @@ function getListInfo(list, xdomain, nopush) {
         listnames = listnames.sort(function(a, b) {
             return all_lists[xdomain][b] - all_lists[xdomain][a]
         })
+    }
         
         
     if (!list || list.length <= 1) {
@@ -3946,7 +3947,7 @@ function getListInfo(list, xdomain, nopush) {
             popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='/oauth.html'>Logging in</a> to resolve the situation.")
         }
         else {
-            if (listnames[0] && xdomain) {
+            if (listnames.length > 0 && xdomain) {
                 window.location.search = listnames[0] + '@' + xdomain
             }
         }
