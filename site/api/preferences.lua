@@ -74,12 +74,15 @@ function handle(r)
         end
         local vURL = ("%sapi/preferences.lua?verify=true&hash=%s"):format(domain, hash)
         
+        local mldom = r.headers_in['Referer'] and r.headers_in['Referer']:match("https?://([^/:]+)") or r.hostname
+        if not mldom then mldom = r.hostname end
         
         -- send email
         local source = smtp.message{
                 headers = {
                     subject = "Confirm email address merge in Pony Mail",
-                    to = get.associate
+                    to = get.associate,
+                    from = ("\"Pony Mail\"<no-reply@%s>"):format(mldom)
                     },
                 body = ([[
 You (or someone else) has requested to merge this email address with the account '%s' in Pony Mail.
