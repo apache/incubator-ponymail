@@ -78,7 +78,8 @@ function handle(r)
         -- send email
         local source = smtp.message{
                 headers = {
-                    subject = "Confirm email address merge in Pony Mail"
+                    subject = "Confirm email address merge in Pony Mail",
+                    to = get.associate
                     },
                 body = ([[
 You (or someone else) has requested to merge this email address with the account '%s' in Pony Mail.
