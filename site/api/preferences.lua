@@ -109,9 +109,13 @@ Pony Mail - Email for Ponies and People.
     if get.verify and get.hash and account and account.credentials.altemail then
         local verified = false
         for k, v in pairs(account.credentials.altemail) do
-            if v.hash == get.hash then
+            if v and (not v == JSON.null) and v.hash == get.hash then
                 account.credentials.altemail[k].verified = true
                 verified = true
+                break
+            end
+            if v == JSON.null then
+                table.remove(account.credentials.altemail, k)
                 break
             end
         end
@@ -129,7 +133,7 @@ Pony Mail - Email for Ponies and People.
     if get.removealt and account and account.credentials.altemail then
         for k, v in pairs(account.credentials.altemail) do
             if v.email == get.removealt then
-                account.credentials.altemail[k] = nil
+                table.remove(account.credentials.altemail, k)
                 break
             end
         end
@@ -345,6 +349,13 @@ Pony Mail - Email for Ponies and People.
     local alts = {}
     if account and account.credentials and type(account.credentials.altemail) == "table" then
         for k, v in pairs(account.credentials.altemail) do
+                
+            -- null check from previous corruptions
+            if v == JSON.null then
+                table.remove(account.credentials.altemail, k)
+                break
+            end
+            
             if v.verified then
                 table.insert(alts, v.email)
             end
