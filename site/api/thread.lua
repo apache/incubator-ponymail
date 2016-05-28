@@ -28,7 +28,7 @@ local config = require 'lib/config'
 local emls_thrd
 
 -- func that fetches all children of an original topic email thingy
-function fetchChildren(r, pdoc, c, biglist, rights)
+function fetchChildren(r, pdoc, c, biglist, rights, account)
     c = (c or 0) + 1
     -- don't fetch more than 250 subtrees, we don't want to nest ad nauseam
     if c > 250 then
@@ -56,7 +56,10 @@ function fetchChildren(r, pdoc, c, biglist, rights)
         
         if canAccess and (not biglist[doc['message-id']]) then
             biglist[doc['message-id']] = true
-            local mykids = fetchChildren(r, doc, c, biglist, rights)
+            local mykids = fetchChildren(r, doc, c, biglist, rights, account)
+            if not account and config.antispam then
+                doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+            end
             local dc = {
                 tid = doc.mid,
                 mid = doc.mid,
@@ -121,13 +124,13 @@ function handle(r)
     end
     local doclist = {}
     
-    -- did we find an email=
+    -- did we find an email?
     if doc then
         local canAccess = false
         local rights = {}
+        local account = user.get(r)
         -- if private, can we access it?
         if doc.private then
-            local account = user.get(r)
             if account then
                 local lid = doc.list_raw:match("<[^.]+%.(.-)>")
                 local flid = doc.list_raw:match("<([^.]+%..-)>")
@@ -148,8 +151,11 @@ function handle(r)
             canAccess = true
         end
         if canAccess and doc and doc.mid then
+            if not account and config.antispam then
+                doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+            end
             table.insert(emls_thrd, doc)
-            doc.children = fetchChildren(r, doc, 1, nil, rights)
+            doc.children = fetchChildren(r, doc, 1, nil, rights, account)
             doc.tid = doc.mid
             doc.id = doc.request_id
             --doc.body = nil
