@@ -5330,7 +5330,7 @@ footer.style.height = "32px"
 footer.style.width = "100%"
 var fd = document.createElement('div')
 fd.setAttribute("class", "container")
-fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href='https://github.com/quenda/ponymail'>Pony Mail v/" + _VERSION_ + "</a>.</p>"
+fd.innerHTML = "<p class='muted' style='text-align: center;'>Powered by <a href='https://ponymail.incubator.apache.org/'>Apache Pony Mail (Incubating) v/" + _VERSION_ + "</a>.</p>"
 footer.appendChild(fd)
 document.body.appendChild(footer)
 
