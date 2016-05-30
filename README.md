@@ -1,5 +1,5 @@
 # Pony Mail
-<img src="https://github.com/Humbedooh/ponymail/blob/master/site/images/logo_large.png" align="left"/><br/><br/>
+<img src="https://github.com/apache/incubator-ponymail/blob/master/site/images/logo_large.png" align="left"/><br/><br/>
 Pony Mail is a web-based mail archive browser
 licensed under the Apache License v/2.0 and built to scale 
 to millions of archived messages with hundreds of requests 
@@ -8,11 +8,11 @@ per second.
 Pony Mail allows you to browse and interact with mailing lists 
 using Mozilla Persona or OAuth2 (Google, GitHub, Facebook etc) for authentication.
 
-![Ponies](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo.png)
+![Ponies](https://github.com/apache/incubator-ponymail/blob/master/site/images/demo.png)
 
-![Trends](https://github.com/Humbedooh/ponymail/blob/master/site/images/demo_trends.png)
+![Trends](https://github.com/apache/incubator-ponymail/blob/master/site/images/demo_trends.png)
 
-See [http://ponymail.info](http://ponymail.info) or [http://fosslists.org](http://fosslists.org) for a demo.
+See [https://lists.apache.org.org](https://lists.apache.org) for a demo.
 
 Pony Mail works in both public, private and mixed-mode, allowing you 
 to have one unified place for all your communication, both public and 
@@ -81,8 +81,8 @@ To contribute to Pony Mail, follow these steps (also see [this doc](docs/CONTRIB
 
 - Fork the repo
 - Subscribe to the Pony Mail dev list:
-  - Either send an email to dev-subscribe@ponymail.info OR
-  - Visit http://ponymail.info/list.html?dev@ponymail.info (You can use Persona or Google Auth)
+  - Either send an email to dev-subscribe@ponymail.incubator.apache.org OR
+  - Visit https://lists.apache.org/list.html?dev@ponymail.apache.org (You can use Persona or ASF OAuth)
 - Find something to fix or help out with
 - Let us know what you want to do, and we'll add you to our contributors list!
 - Join us on #ponymail on the Freenode IRC network
