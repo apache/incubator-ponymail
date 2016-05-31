@@ -40,7 +40,7 @@ You will need the following software installed on your machine:
 
 ## Download and Install ##
 
-- Download the git repo: `git clone https://github.com/Humbedooh/ponymail.git`
+- Download the git repo: `git clone https://github.com/apache/incubator-ponymail.git`
 - Start ElasticSearch on the machine it needs to run on.
 - Run setup.py in the `tools` dir:
 ```

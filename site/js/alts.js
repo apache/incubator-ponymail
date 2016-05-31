@@ -39,7 +39,11 @@ function renderAlts(json) {
             alt = alt.replace(/<>"'/g, "")
             obj.innerHTML += alt + " - [<a href='javascript:void(0);' onclick='delAlt(\"" + alt + "\");'>Remove</a>]<br/>"
         }
-    }    
+    }  else {
+        var obj = document.getElementById('alts')
+        obj.innerHTML = "You need to be logged in to manage alternate addresses."
+    }
+    
 }
 
 // onLoad function, fetches the needed JSON and renders the notif list

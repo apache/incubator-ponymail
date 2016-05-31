@@ -75,7 +75,7 @@ function handle(r)
                             range = {
                                 date = {
                                     gte = ("%04d/%02d/%02d 00:00:00"):format(y,m,1),
-                                    lte = ("%04d/%02d/%02d 00:00:00"):format(y,m,d)
+                                    lte = ("%04d/%02d/%02d 23:59:59"):format(y,m,d)
                                 }
                             }
                         },

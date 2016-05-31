@@ -28,20 +28,20 @@ us know either through an issue/PR here or on the mailing list.
 
 ## Code ##
 
-The Pony Mail code is on GitHub at https://github.com/quenda/ponymail
+The Pony Mail code is on GitHub at https://github.com/apache/incubator-ponymail
 and pull requests are welcome.
 
 ## Mailing lists ##
 
 Developers list:
- - list: dev@ponymail.info
- - subscribe addr: dev-subscribe@ponymail.info
- - Online version: http://ponymail.info/list.html?dev@ponymail.info
+ - list: dev@ponymail.incubator.apache.org
+ - subscribe addr: dev-subscribe@ponymail.incubator.apache.org
+ - Online version: http://lists.apache.org/list.html?dev@ponymail.incubator.apache.org
     
-Bugs list:
- - list: bugs@ponymail.info
- - subscribe addr: bugs-subscribe@ponymail.info
- - Online version: http://ponymail.info/list.html?bugs@ponymail.info
+Issues list:
+ - list: issues@ponymail.incubator.apache.org
+ - subscribe addr: issues-subscribe@ponymail.incubator.apache.org
+ - Online version: http://lists.apache.org/list.html?bugs@ponymail.incubator.apache.org
 
 ## Chat ##
     

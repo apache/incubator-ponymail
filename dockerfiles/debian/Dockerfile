@@ -32,10 +32,10 @@ RUN pip3 install elasticsearch formatflowed netaddr
 
 
 # Download Pony Mail
-RUN git clone https://github.com/Humbedooh/ponymail.git /var/www/ponymail
+RUN git clone https://github.com/apache/incubator-ponymail.git /var/www/ponymail
 
 # Add httpd config
-ADD https://raw.githubusercontent.com/Humbedooh/ponymail/master/dockerfiles/ponymail_httpd_docker.conf /etc/apache2/sites-enabled/000-default.conf
+ADD https://raw.githubusercontent.com/apache/incubator-ponymail/master/dockerfiles/ponymail_httpd_docker.conf /etc/apache2/sites-enabled/000-default.conf
 
 
 # Start ElasticSearch, set up Pony Mail
