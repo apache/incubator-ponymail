@@ -61,7 +61,7 @@ sudo /etc/init.d/elasticsearch start
 Check out a copy of Pony Mail:
 ~~~
 cd /var/www
-sudo git clone https://github.com/Humbedooh/ponymail.git
+sudo git clone https://github.com/apache/incubator-ponymail.git
 ~~~
 
 

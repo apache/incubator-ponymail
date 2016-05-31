@@ -41,7 +41,7 @@ apxs -I/usr/include/lua5.2 -cia mod_lua.c lua_*.c -lm -llua5.2
 Check out a copy of Pony Mail:
 ~~~
 cd /var/www
-git clone https://github.com/Humbedooh/ponymail.git
+git clone https://github.com/apache/incubator-ponymail.git
 ~~~
 
 Configure Elasticsearch to automatically start during bootup. For Ubuntu <= 14.10:
