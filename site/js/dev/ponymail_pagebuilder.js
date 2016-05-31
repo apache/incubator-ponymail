@@ -371,7 +371,7 @@ function getListInfo(list, xdomain, nopush) {
             }
         }
     }
-    if (xdomain == undefined || xdomain == "" && list) {
+    if ((xdomain == undefined || xdomain == "") && list) {
         xdomain = list.replace(/^.*?@/, "")
         
     }
@@ -415,6 +415,10 @@ function getListInfo(list, xdomain, nopush) {
     }
 
     //buildCalendar()
+    // Bail if no list is still found - search.html probably
+    if (!list) {
+        return
+    }
     mbox_month = null;
     var dp = document.getElementById('d')
     dp.value = datePickerValue(current_retention)
