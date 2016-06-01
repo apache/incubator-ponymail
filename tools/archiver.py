@@ -26,6 +26,11 @@ Enable the module by adding the following to your mailman.cfg file::
 class: mailman_ponymail_plugin.Archiver
 enable: yes
 
+and by adding the following to ponymail.cfg:
+
+[mailman]
+plugin: true
+
 OR, to use the STDIN version (non-MM3 mailing list managers),
 sub someone to the list(s) and add this to their .forward file:
 "|/usr/bin/env python3.4 /path/to/archiver.py"
@@ -35,15 +40,6 @@ sub someone to the list(s) and add this to their .forward file:
 # Change this index name to whatever you picked!!
 indexname = "ponymail_alpha"
 logger = None
-if __name__ != '__main__':
-    from zope.interface import implementer
-    from mailman.interfaces.archiver import IArchiver
-    from mailman.interfaces.archiver import ArchivePolicy
-    import logging
-    logger = logging.getLogger("mailman.archiver")
-else:
-    import sys
-    import argparse
 
 from elasticsearch import Elasticsearch
 import hashlib
@@ -64,7 +60,17 @@ config = configparser.RawConfigParser()
 config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
+iBody = None
 
+if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
+    from zope.interface import implementer
+    from mailman.interfaces.archiver import IArchiver
+    from mailman.interfaces.archiver import ArchivePolicy
+    import logging
+    logger = logging.getLogger("mailman.archiver")
+elif __name__ == '__main__':
+    import sys
+    import argparse
 
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
@@ -75,6 +81,7 @@ def parse_attachment(part):
         dispositions = cd.strip().split(";")
         if dispositions[0].lower() == "attachment":
             fd = part.get_payload(decode=True)
+            if not fd: return None, None
             attachment = {}
             attachment['content_type'] = part.get_content_type()
             attachment['size'] = len(fd)
@@ -83,7 +90,8 @@ def parse_attachment(part):
             b64 = codecs.encode(fd, "base64").decode('ascii', 'ignore')
             attachment['hash'] = h
             for param in dispositions[1:]:
-                key,val = param.split("=")
+                if not '=' in param: continue
+                key,val = param.split("=", 1)
                 if key.lower().strip() == "filename":
                     val = val.strip(' "')
                     print("Found attachment: %s" % val)
@@ -101,7 +109,7 @@ def pm_charsets(msg):
 
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
-    if __name__ != '__main__':
+    if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
         implementer(IArchiver)
     name = "ponymail"
 
@@ -122,12 +130,15 @@ class Archiver(object):
         "x-mailman-rule-misses",
     ]
 
-    def __init__(self):
+    def __init__(self, parseHTML=False):
         """ Just initialize ES. """
-        global config, auth, parseHTML
+        global config, auth
         ssl = False
         self.cropout = None
         self.html = parseHTML
+        if parseHTML:
+           import html2text
+           self.html2text = html2text.html2text
         self.dbname = config.get("elasticsearch", "dbname")
         self.consistency = 'quorum'
         if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
@@ -177,6 +188,7 @@ class Archiver(object):
     
     
     def msgbody(self, msg):
+        global iBody
         body = None
         firstHTML = None
         if msg.is_multipart():
@@ -201,8 +213,8 @@ class Archiver(object):
             firstHTML = msg.get_payload(decode=True)
             
         # this requires a GPL lib, user will have to install it themselves
-        if firstHTML and (not body or len(body) <= 1):
-            body = html2text.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
+        if firstHTML and (not body or len(body) <= 1 or (iBody and str(body).find(str(iBody)) != -1)):
+            body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
     
         for charset in pm_charsets(msg):
             try:
@@ -212,19 +224,15 @@ class Archiver(object):
                 
         return body    
 
-    def archive_message(self, mlist, msg):
-        """Send the message to the archiver.
+    def compute_updates(self, lid, private, msg):
+        """Determine what needs to be sent to the archiver.
 
-        :param mlist: The IMailingList object.
+        :param lid: The list id
         :param msg: The message object.
         """
 
-        lid = None
-        m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
-        if m:
-            lid = m.group(1)
-        else:
-            lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+        ojson = None
+
         if self.cropout:
             crops = self.cropout.split(" ")
             # Regex replace?
@@ -282,23 +290,17 @@ class Archiver(object):
                             body = body.encode('utf-8')
                     except:
                         body = None
-        if body:
-            attachments, contents = self.msgfiles(msg)
-            private = False
-            if hasattr(mlist, 'archive_public') and mlist.archive_public == True:
-                private = False
-            elif hasattr(mlist, 'archive_public') and mlist.archive_public == False:
-                private = True
-            elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
-                private = True
+
+        attachments, contents = self.msgfiles(msg)
+        irt = ""
+        if body or attachments:
             pmid = mid
             try:
-                mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
+                mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
                 mid = pmid
-            irt = ""
             if 'in-reply-to' in msg_metadata:
                 try:
                     try:
@@ -325,122 +327,154 @@ class Archiver(object):
                 'body': body.decode('utf-8', 'replace') if type(body) is bytes else body,
                 'attachments': attachments
             }
+
+        self.msg_metadata = msg_metadata
+        self.irt = irt
+
+        return  ojson, contents
             
-            if contents:
-                for key in contents:
-                    self.es.index(
-                        index=self.dbname,
-                        doc_type="attachment",
-                        id=key,
-                        body = {
-                            'source': contents[key]
-                        }
-                    )
-        
-            self.es.index(
-                index=self.dbname,
-                doc_type="mbox",
-                id=mid,
-                consistency = self.consistency,
-                body = ojson
-            )
-            
-            self.es.index(
-                index=self.dbname,
-                doc_type="mbox_source",
-                id=mid,
-                consistency = self.consistency,
-                body = {
-                    "message-id": msg_metadata['message-id'],
-                    "source": msg.as_string()
-                }
-            )
-            
-            # If MailMan and list info is present, save/update it in ES:
-            if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
+    def archive_message(self, mlist, msg):
+        """Send the message to the archiver.
+
+        :param mlist: The IMailingList object.
+        :param msg: The message object.
+        """
+
+        lid = None
+        m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
+        if m:
+            lid = m.group(1)
+        else:
+            lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+
+        private = False
+        if hasattr(mlist, 'archive_public') and mlist.archive_public == True:
+            private = False
+        elif hasattr(mlist, 'archive_public') and mlist.archive_public == False:
+            private = True
+        elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
+            private = True
+
+        ojson, contents = self.compute_updates(lid, private, msg)
+
+        msg_metadata = self.msg_metadata
+        irt = self.irt
+
+        if contents:
+            for key in contents:
                 self.es.index(
                     index=self.dbname,
-                    doc_type="mailinglists",
-                    id=lid,
-                    consistency = self.consistency,
+                    doc_type="attachment",
+                    id=key,
                     body = {
-                        'list': lid,
-                        'name': mlist.list_name,
-                        'description': mlist.description,
-                        'private': private
+                        'source': contents[key]
                     }
                 )
-            
-            if logger:
-                logger.info("Pony Mail archived message %s successfully" % mid)
-            oldrefs = []
-            
-            # Is this a direct reply to a pony mail email?
-            if irt != "":
-                dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", irt)
-                if dm:
-                    cid = dm.group(1)
-                    mid = dm.group(2)
-                    if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
-                        doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
-                        if doc:
-                            oldrefs.append(cid)
-                            self.es.index(
-                                index=self.dbname,
-                                doc_type="notifications",
-                                consistency = self.consistency,
-                                body = {
-                                    'type': 'direct',
-                                    'recipient': cid,
-                                    'list': lid,
-                                    'private': private,
-                                    'date': msg_metadata['date'],
-                                    'from': msg_metadata['from'],
-                                    'to': msg_metadata['to'],
-                                    'subject': msg_metadata['subject'],
-                                    'message-id': msg_metadata['message-id'],
-                                    'in-reply-to': irt,
-                                    'epoch': email.utils.mktime_tz(mdate),
-                                    'mid': mid,
-                                    'seen': 0
-                                }
-                            )
-                            if logger:
-                                logger.info("Notification sent to %s for %s" % (cid, mid))
+    
+        self.es.index(
+            index=self.dbname,
+            doc_type="mbox",
+            id=ojson['mid'],
+            consistency = self.consistency,
+            body = ojson
+        )
+        
+        self.es.index(
+            index=self.dbname,
+            doc_type="mbox_source",
+            id=ojson['mid'],
+            consistency = self.consistency,
+            body = {
+                "message-id": msg_metadata['message-id'],
+                "source": msg.as_string()
+            }
+        )
+        
+        # If MailMan and list info is present, save/update it in ES:
+        if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
+            self.es.index(
+                index=self.dbname,
+                doc_type="mailinglists",
+                id=lid,
+                consistency = self.consistency,
+                body = {
+                    'list': lid,
+                    'name': mlist.list_name,
+                    'description': mlist.description,
+                    'private': private
+                }
+            )
+        
+        if logger:
+            logger.info("Pony Mail archived message %s successfully" % mid)
+        oldrefs = []
+        
+        # Is this a direct reply to a pony mail email?
+        if irt != "":
+            dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", irt)
+            if dm:
+                cid = dm.group(1)
+                mid = dm.group(2)
+                if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
+                    doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
+                    if doc:
+                        oldrefs.append(cid)
+                        self.es.index(
+                            index=self.dbname,
+                            doc_type="notifications",
+                            consistency = self.consistency,
+                            body = {
+                                'type': 'direct',
+                                'recipient': cid,
+                                'list': lid,
+                                'private': private,
+                                'date': msg_metadata['date'],
+                                'from': msg_metadata['from'],
+                                'to': msg_metadata['to'],
+                                'subject': msg_metadata['subject'],
+                                'message-id': msg_metadata['message-id'],
+                                'in-reply-to': irt,
+                                'epoch': email.utils.mktime_tz(mdate),
+                                'mid': mid,
+                                'seen': 0
+                            }
+                        )
+                        if logger:
+                            logger.info("Notification sent to %s for %s" % (cid, mid))
 
-            # Are there indirect replies to pony emails?
-            if msg_metadata.get('references'):
-                for im in re.finditer(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references')):
-                    cid = im.group(1)
-                    mid = im.group(2)
-                    if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
-                        doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
-                        
-                        # does the user want to be notified of indirect replies?
-                        if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
-                            oldrefs.append(cid)
-                            self.es.index(
-                                index=self.dbname,
-                                consistency = self.consistency,
-                                doc_type="notifications",
-                                body = {
-                                    'type': 'indirect',
-                                    'recipient': cid,
-                                    'list': lid,
-                                    'private': private,
-                                    'date': msg_metadata['date'],
-                                    'from': msg_metadata['from'],
-                                    'to': msg_metadata['to'],
-                                    'subject': msg_metadata['subject'],
-                                    'message-id': msg_metadata['message-id'],
-                                    'in-reply-to': mirt,
-                                    'epoch': email.utils.mktime_tz(mdate),
-                                    'mid': mid,
-                                    'seen': 0
-                                }
-                            )
-                            if logger:
-                                logger.info("Notification sent to %s for %s" % (cid, mid))
+        # Are there indirect replies to pony emails?
+        if msg_metadata.get('references'):
+            for im in re.finditer(r"pony-([a-f0-9]+)-([a-f0-9]+)@", msg_metadata.get('references')):
+                cid = im.group(1)
+                mid = im.group(2)
+                if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
+                    doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
+                    
+                    # does the user want to be notified of indirect replies?
+                    if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
+                        oldrefs.append(cid)
+                        self.es.index(
+                            index=self.dbname,
+                            consistency = self.consistency,
+                            doc_type="notifications",
+                            body = {
+                                'type': 'indirect',
+                                'recipient': cid,
+                                'list': lid,
+                                'private': private,
+                                'date': msg_metadata['date'],
+                                'from': msg_metadata['from'],
+                                'to': msg_metadata['to'],
+                                'subject': msg_metadata['subject'],
+                                'message-id': msg_metadata['message-id'],
+                                'in-reply-to': mirt,
+                                'epoch': email.utils.mktime_tz(mdate),
+                                'mid': mid,
+                                'seen': 0
+                            }
+                        )
+                        if logger:
+                            logger.info("Notification sent to %s for %s" % (cid, mid))
         return lid
             
     def list_url(self, mlist):
@@ -475,15 +509,20 @@ if __name__ == '__main__':
                        help='Use the archive timestamp as the email date instead of the Date header')
     parser.add_argument('--quiet', dest='quiet', action='store_true', 
                        help='Do not exit -1 if the email could not be parsed')
+    parser.add_argument('--verbose', dest='verbose', action='store_true', 
+                       help='Output additional log messages')
     parser.add_argument('--html2text', dest='html2text', action='store_true', 
                        help='Try to convert HTML to text if no text/plain message is found')
     args = parser.parse_args()
     
     if args.html2text:
-        import html2text
         parseHTML = True
+
+    if args.verbose:
+        import logging
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
         
-    foo = Archiver()
+    foo = Archiver(parseHTML = parseHTML)
     input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
     
     try:
@@ -512,7 +551,7 @@ if __name__ == '__main__':
                     msg.replace_header('List-ID', msg.get(altheader))
                 except:
                     msg.add_header('list-id', msg.get(altheader))
-        
+
         # Set specific LID?
         if args.lid and len(args.lid[0]) > 3:
             try:
@@ -562,6 +601,9 @@ if __name__ == '__main__':
                 lid = foo.archive_message(msg_metadata, msg)
                 print("%s: Done archiving to %s!" % (email.utils.formatdate(), lid))
             except Exception as err:
+                if args.verbose:
+                    import traceback
+                    traceback.print_exc()
                 print("Archiving failed!: %s" % err)
                 raise Exception("Archiving to ES failed")
         else:
