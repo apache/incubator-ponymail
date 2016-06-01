@@ -299,6 +299,11 @@ class Archiver(object):
                 # Use full message as bytes for mid?
                 if config.has_section('archiver') and config.has_option("archiver", "generator") and config.get("archiver", "generator") == "full":
                     mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
+                elif config.has_section('archiver') and config.has_option("archiver", "generator") and config.get("archiver", "generator") == "medium":
+                    xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
+                    xbody += bytes(lid)
+                    xbody += bytes(uid_mdate)
+                    mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
                 else:
                     # Or revert to the old way?
                     mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
