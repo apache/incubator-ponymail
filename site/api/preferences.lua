@@ -80,13 +80,13 @@ function handle(r)
         -- send email
         local source = smtp.message{
                 headers = {
-                    subject = "Confirm email address merge in Pony Mail",
+                    subject = "Confirm email address association in Pony Mail",
                     to = get.associate,
                     from = ("\"Pony Mail\"<no-reply@%s>"):format(mldom)
                     },
                 body = ([[
-You (or someone else) has requested to merge this email address with the account '%s' in Pony Mail.
-If you wish to complete this merge, please visit %s
+You (or someone else) has requested to associate this email address with the account '%s' in Pony Mail.
+If you wish to complete this association, please visit %s
  ...Or don't if you didn't request this, just ignore this email.
 
 With regards,
@@ -109,7 +109,7 @@ Pony Mail - Email for Ponies and People.
     if get.verify and get.hash and account and account.credentials.altemail then
         local verified = false
         for k, v in pairs(account.credentials.altemail) do
-            if v and (not v == JSON.null) and v.hash == get.hash then
+            if v and not (v == JSON.null) and v.hash == get.hash then
                 account.credentials.altemail[k].verified = true
                 verified = true
                 break
