@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.4
+ 
 # -*- coding: utf-8 -*-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -35,6 +36,7 @@ import codecs
 import multiprocessing
 import tempfile
 import gzip
+import archiver
 
 try:
     from elasticsearch import Elasticsearch, helpers
@@ -43,27 +45,29 @@ except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
     
+# change working directory to location of this script
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 y = 0
 baddies = 0
 block = Lock()
 lists = []
 start = time.time()
 quickmode = False
-lid_override = None
 private = False
 appender = "apache.org"
 
 
 source = "./"
 maildir = False
+imap = False
 list_override = None
 project = ""
-recursive = False
 filebased = False
 fileToLID = {}
 interactive = False
 extension = "*.mbox"
-attachments = False
 piperWeirdness = False
 parseHTML = False
 iBody = None
@@ -104,100 +108,6 @@ es = Elasticsearch([
     )
 
 rootURL = ""
-
-def parse_attachment(part):
-    cd = part.get("Content-Disposition", None)
-    if cd:
-        dispositions = cd.strip().split(";")
-        if dispositions[0].lower() == "attachment":
-            try:
-                fd = part.get_payload(decode=True)
-                if fd:
-                    attachment = {}
-                    attachment['content_type'] = part.get_content_type()
-                    attachment['size'] = len(fd)
-                    attachment['filename'] = None
-                    h = hashlib.sha256(fd).hexdigest()
-                    b64 = codecs.encode(fd, "base64").decode('ascii')
-                    attachment['hash'] = h
-                    for param in dispositions[1:]:
-                        key,val = param.split("=", 1)
-                        if key.lower().strip() == "filename":
-                            val = val.strip(' "')
-                            print("Found attachment: %s" % val)
-                            attachment['filename'] = val
-                    if attachment['filename']:
-                        return attachment, b64 # Return meta data and contents separately
-            except:
-                pass
-    return None, None
-
-def msgfiles(msg):
-        attachments = []
-        contents = {}
-        if msg.is_multipart():    
-            for part in msg.walk():
-                part_meta, part_file = parse_attachment(part)
-                if part_meta:
-                    attachments.append(part_meta)
-                    contents[part_meta['hash']] = part_file
-        return attachments, contents
-    
-def pm_charsets(msg):
-    charsets = set({})
-    for c in msg.get_charsets():
-        if c is not None:
-            charsets.update([c])
-    return charsets
-
-def msgbody(msg):
-    global parseHTML, iBody
-    firstHTML = None
-    body = None
-    if msg.is_multipart():
-        for part in msg.walk():
-            try:
-                if part.is_multipart(): 
-                    for subpart in part.walk():
-                        if subpart.get_content_type() == 'text/plain' and not body:
-                                body = subpart.get_payload(decode=True)
-                        elif subpart.get_content_type() == 'text/html' and parseHTML and not firstHTML:
-                             firstHTML = subpart.get_payload(decode=True)
-        
-                elif part.get_content_type() == 'text/plain' and not body:
-                    body = part.get_payload(decode=True)
-                elif part.get_content_type() == 'text/html' and parseHTML and not firstHTML:
-                    firstHTML = part.get_payload(decode=True)
-            except Exception as err:
-                print("Body parser error: %s" % err)
-    elif msg.get_content_type() == 'text/plain':
-        body = msg.get_payload(decode=True)
-    elif msg.get_content_type() == 'text/html' and parseHTML and not firstHTML:
-        firstHTML = msg.get_payload(decode=True)
-        
-    # this requires a GPL lib, user will have to install it themselves
-    if firstHTML and (not body or len(body) <= 1 or (iBody and str(body).find(str(iBody)) != -1)):
-        print("No body found as text/plain, converting HTML to text")
-        body = html2text.html2text(firstHTML.decode("utf-8", errors='replace') if type(firstHTML) is bytes else firstHTML)
-
-    for charset in pm_charsets(msg):
-        try:
-            body = body.decode(charset) if type(body) is bytes else body
-        except:
-            body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
-            
-    return body  
-
-
-def msgfactory(fp):
-    try:
-        return email.message_from_file(fp)
-    except Exception as err:
-        # Don't return None since that will
-        # stop the mailbox iterator
-        print("hmm: %s" % err)
-        return None
-
 
 class BulkThread(Thread):
     def assign(self, json, xes, dtype = 'mbox', wc = 'quorum'):
@@ -247,6 +157,8 @@ class SlurpThread(Thread):
         mboxfile = ""
         filename = ""
         xlist_override = None
+
+        foo = archiver.Archiver(parseHTML = parseHTML)
     
         while len(lists) > 0:
             print("%u elements left to slurp" % len(lists))
@@ -267,7 +179,18 @@ class SlurpThread(Thread):
             EM = 1
             stime = time.time()
             dFile = False
-            if filebased:
+            if maildir:
+                messages = mailbox.Maildir(tmpname)
+            elif imap:
+                y -= 1 # TODO don't understand the increment above
+                imap4 = mla[2]
+                def mailgen(list):
+                    for uid in list:
+                        msgbytes = imap4.uid('fetch', uid, '(RFC822)')[1][0][1]
+                        yield email.message_from_bytes(msgbytes)
+                messages = mailgen(mla[0])
+                xlist_override = mla[1]
+            elif filebased:
                 
                 tmpname = mla[0]
                 filename = mla[0]
@@ -290,6 +213,8 @@ class SlurpThread(Thread):
                     except Exception as err:
                         print("This wasn't a gzip file: %s" % err )
                 print("Slurping %s" % filename)
+                messages = mailbox.mbox(tmpname)
+
             else:
                 ml = mla[0]
                 mboxfile = mla[1]
@@ -308,14 +233,10 @@ class SlurpThread(Thread):
                 with open(tmpname, "w") as f:
                     f.write(inp)
                     f.close()
+                messages = mailbox.mbox(tmpname)
 
             count = 0
             LEY = EY
-
-            if maildir:
-                messages = mailbox.Maildir(tmpname)
-            else:
-                messages = mailbox.mbox(tmpname)
 
             for message in messages:
                 if resendTo:
@@ -334,184 +255,52 @@ class SlurpThread(Thread):
                 if (time.time() - stime > timeout): # break out after N seconds, it shouldn't take this long..!
                     print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
                     break
-                if 'subject' in message:
-                    subject = message['subject']       # Could possibly be None.
-                    mid = message['message-id']
 
-                    lid = message['list-id']
-                    if args.requirelid and (not lid or lid == ""):
-                        continue
-                    if not lid or lid == "": # Guess list name in absence
-                        lid = '.'.join(reversed(ml.split("-"))) + "." + appender
-                    
-                    # Compact LID to <foo@domain>, discard rest
-                    m = re.search(r"(<.+>)", lid)
-                    if m:
-                        lid = m.group(1)
-                    if xlist_override and len(xlist_override) > 3:
-                        lid = xlist_override
-                    lid = lid.replace("@",".") # we want foo.bar.org, not foo@bar.org
-                    lid = "<%s>" % lid.strip("<>") # We need <> around it!
-                    if cropout:
-                        crops = cropout.split(" ")
-                        # Regex replace?
-                        if len(crops) == 2:
-                            lid = re.sub(crops[0], crops[1], lid)
-                        # Standard crop out?
-                        else:
-                            lid = lid.replace(cropout, "")
-                    
-                    date = message['date']
-                    fro = message['from']
-                    to = message['to']
-                    body = msgbody(message)
-                    try:
-                        if 'content-type' in message and message['content-type'].find("flowed") != -1:
-                            body = convertToWrapped(body, character_set="utf-8")
-                        if isinstance(body, str):
-                            body = body.encode('utf-8')
-                    except Exception as err:
-                        try:
-                            body = body.decode(chardet.detect(body)['encoding'])
-                        except Exception as err:
-                            try:
-                                body = body.decode('latin-1')
-                            except:
-                                try:
-                                    if isinstance(body, str):
-                                        body = body.encode('utf-8')
-                                except:
-                                    body = None
+                json, contents = foo.compute_updates(list_override, private, message)
 
-                    okay = True
-                    dheader = {}
-                    for key in ['to','from','subject','message-id']:
-                        try:
-                            hval = ""
-                            if message.get(key):
-                                for t in email.header.decode_header(message[key]):
-                                    if t[1] == None or t[1].find("8bit") != -1:
-                                        hval += t[0].decode('utf-8', errors='replace') if type(t[0]) is bytes else t[0]
-                                    else:
-                                        hval += t[0].decode(t[1],errors='ignore')
-                                dheader[key] = hval
-                            else:
-                                dheader[key] = "(Unknown)"
-                        except Exception as err:
-                            print("Could not decode headers, ignoring..: %s" % err)
-                            okay = False
-                    mdt = ""
-                    if not 'date' in message and 'received' in message:
-                        print("No Date header found, resorting to Received")
-                        m = re.search(r"(\d+ \S+ \d{4} \d\d:\d\d:\d\d ([-+]\d{4})?)", message['received'])
-                        if m:
-                            mdt = m.group(1)
-                    else:
-                        mdt = message['date']
-                    mdate = None
-                    uid_mdate = 0
-                    try:
-                        mdate = email.utils.parsedate_tz(mdt)
-                        uid_mdate = email.utils.mktime_tz(mdate)
-                    except:
-                        pass
-                    if not mdate or mdate[0] < (LEY-1):
-                        print("Date is wrong or missing here, setting to %s" % ( LEY))
-                        mdate = datetime.datetime(LEY, EM, 1).timetuple()
-                    else:
-                        LEY = mdate[0] # Gather evidence 'n'stuff!
-                    mdatestring = ""
-                    try:
-                        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
-                    except:
-                        okay = False
-                    if body and okay and mdate and {'from','subject'} <= set(dheader):
-                        # Pipermail transforms from: to something weird - reset that!
-                        if piperWeirdness:
-                            m = re.match(r"(.+) at ([^(]+) \((.+)\)$", dheader['from'])
-                            # Try just 'foo at bar.tld' if 'foo at bar.tld (foo bar)' isn't working
-                            if not m:
-                                m = re.match(r"(.+) at ([^(]+)$", dheader['from'])
-                            if m:
-                                dheader['from'] = "%s <%s@%s>" % (m.group(3), m.group(1), m.group(2))
-                                
-                        attachments, contents = msgfiles(message)
-                        if mid == None or not mid:
-                            try:
-                                mid = hashlib.sha256(body if type(body) is bytes else body.encode('ascii', errors='ignore')).hexdigest() + "@" + lid + "@" + appender
-                            except:
-                                if filebased:
-                                    mid = hashlib.sha256("%f-%f-%s" % (random.random(), time.time(), filename) ).hexdigest()+ "@" + appender
-                                else:
-                                    mid = hashlib.sha256("%f-%f-%s-%s" % (random.random(), time.time(), ml, mboxfile) ).hexdigest()+ "@" + appender
-                            print("No MID found, setting to %s" % mid)
-                        mid2 = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
-                        count += 1
-                        mr = ""
-                        if 'references' in message:
-                            mr = message['references']
-                        irt = ""
-                        if 'in-reply-to' in message:
-                            try:
-                                irt = "".join(message['in-reply-to'])
-                            except:
-                                irt = message.get('in-reply-to').__str__()
+                if json:
+                    json_source = {
+                        'mid': json['mid'],
+                        'message-id': json['message-id'],
+                        'source': message.as_bytes().decode('utf-8', errors='replace')
+                    }
 
-                        json = {
-                            'from_raw': dheader['from'],
-                            'from': dheader['from'],
-                            'to': dheader['to'],
-                            'subject': dheader['subject'],
-                            'cc': message.get('cc'),
-                            'message-id': mid,
-                            'mid': mid2,
-                            'epoch': email.utils.mktime_tz(mdate),
-                            'list': lid,
-                            'list_raw': lid,
-                            'date': mdatestring,
-                            'private': private,
-                            'references': mr,
-                            'in-reply-to': irt,
-                            'body': body.decode('utf-8', errors='replace') if type(body) is bytes else body,
-                            'attachments': attachments
-                        }
-                        json_source = {
-                            'mid': mid2,
-                            'message-id': mid,
-                            'source': message.as_bytes().decode('utf-8', errors='replace')
-                        }
-                        ja.append(json)
-                        jas.append(json_source)
-                        if contents:
-                            iname = config.get("elasticsearch", "dbname")
-                            if not args.dry:
-                                for key in contents:
-                                    es.index(
-                                        index=iname,
-                                        doc_type="attachment",
-                                        id=key,
-                                        body = {
-                                            'source': contents[key]
-                                        }
-                                    )
-                        if len(ja) >= 40:
-                            if not args.dry:
-                                bulk = BulkThread()
-                                bulk.assign(ja, es, 'mbox')
-                                bulk.insert()
-                            ja = []
-                            
-                            if not args.dry:
-                                bulks = BulkThread()
-                                bulks.assign(jas, es, 'mbox_source')
-                                bulks.insert()
-                            jas = []
+                    count += 1
+                    ja.append(json)
+                    jas.append(json_source)
+                    if contents:
+                        iname = config.get("elasticsearch", "dbname")
+                        if not args.dry:
+                            for key in contents:
+                                es.index(
+                                    index=iname,
+                                    doc_type="attachment",
+                                    id=key,
+                                    body = {
+                                        'source': contents[key]
+                                    }
+                                )
+                    if len(ja) >= 40:
+                        if not args.dry:
+                            bulk = BulkThread()
+                            bulk.assign(ja, es, 'mbox')
+                            bulk.insert()
+                        ja = []
+                        
+                        if not args.dry:
+                            bulks = BulkThread()
+                            bulks.assign(jas, es, 'mbox_source')
+                            bulks.insert()
+                        jas = []
                 else:
                     baddies += 1
+
             if filebased:
                 print("Parsed %u records from %s" % (count, filename))
                 if dFile:
                     os.unlink(tmpname)
+            elif imap:
+                print("Parsed %u records from imap" % count)
             else:
                 print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
                 os.unlink(tmpname)
@@ -537,8 +326,6 @@ parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source to scan (either http(s):// or file path)')
 parser.add_argument('--dir', dest='dir', action='store_true',
                    help='Input is in Maildir format')
-parser.add_argument('--recursive', dest='recursive', action='store_true', 
-                   help='Do a recursive scan (sub dirs etc)')
 parser.add_argument('--interactive', dest='interactive', action='store_true',
                    help='Ask for help when possible')
 parser.add_argument('--quick', dest='quick', action='store_true',
@@ -557,8 +344,6 @@ parser.add_argument('--domain', dest='domain', type=str, nargs=1,
                    help='Optional domain extension for MIDs and List ID reconstruction)')
 parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
-parser.add_argument('--attachments', dest='attachments', action='store_true',
-                   help='Also iport attached files in emails')
 parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
 parser.add_argument('--html2text', dest='html2text', action='store_true',
@@ -585,28 +370,24 @@ if args.source:
 if args.dir:
     maildir = args.dir
 if args.listid:
-    list_override = args.listid[0]
+    list_override = '<%s>' % args.listid[0].strip('<>')
 if args.project:
     project = args.project[0]
 if args.domain:
     appender = args.domain[0]
-if args.recursive:
-    recursive = args.recursive
 if args.interactive:
     interactive = args.interactive
 if args.quick:
     quickmode = args.quick
 if args.private:
     private = args.private
-if args.attachments:
-    attachments = args.attachments
 if args.ext:
     extension = args.ext[0]
 if args.html2text:
     import html2text
     parseHTML = True
 if args.ibody:
-    iBody = args.ibody[0]
+    archiver.iBody = args.ibody[0]
 if args.resend:
     resendTo = args.resend[0]
     from smtplib import SMTP
@@ -695,6 +476,102 @@ elif source[0] == "h":
             if quickmode and qn >= 2:
                 break
                     
+# IMAP(S) based import?
+elif source[0] == "i":
+    imap = True
+    import urllib, getpass, imaplib
+    url = urllib.parse.urlparse(source)
+    
+    port = url.port or (143 if url.scheme == 'imap' else 993)
+    user = url.username or getpass.getuser()
+    password = url.password or getpass.getpass('IMAP Password: ')
+    folder = url.path.strip('/') or 'INBOX'
+    listname = list_override or "<%s/%s.%s>" % (user, folder, url.hostname)
+
+    # fetch message-id => _id pairs from elasticsearch
+
+    es = Elasticsearch()
+    result = es.search(scroll = '5m', 
+        body = {
+            'size': 1024, 
+            'fields': ['message-id'], 
+            'query': {'match': {'list': listname}}
+        }
+    )
+
+    db = {}
+    while len(result['hits']['hits']) > 0:
+        for hit in result['hits']['hits']:
+            db[hit['fields']['message-id'][0]] = hit['_id']
+        result = es.scroll(scroll='5m', scroll_id=result['_scroll_id'])
+
+    # fetch message-id => uid pairs from imap
+
+    if url.scheme == 'imaps':
+        imap4 = imaplib.IMAP4_SSL(url.hostname, port)
+    else:
+        imap4 = imaplib.IMAP4(url.hostname, port)
+    imap4.login(user, password)
+    imap4.select(folder, readonly=True)
+    results = imap4.uid('search', None, 'ALL')
+    uids = b','.join(results[1][0].split())
+    results = imap4.uid('fetch', uids, '(BODY[HEADER.FIELDS (MESSAGE-ID)])')
+
+    mail = {}
+    uid_re = re.compile(b'^\d+ \(UID (\d+) BODY\[')
+    mid_re = re.compile(b'^Message-ID:\s*(.*?)\s*$', re.I)
+    uid = None
+    for result in results[1]:
+        for line in result:
+            if isinstance(line, bytes):
+                match = uid_re.match(line)
+                if match:
+                    uid = match.group(1)
+                else:
+                     match = mid_re.match(line)
+                     if match:
+                         try:
+                             mail[match.group(1).decode('utf-8')] = uid
+                             uid = None
+                         except ValueError:
+                             pass
+
+    # delete items from elasticsearch that are not present in imap
+
+    queue1 = []
+    queue2 = []
+    for mid, _id in db.items():
+        if not mid in mail:
+            queue1.append({
+                '_op_type': 'delete',
+                '_index': dbname,
+                '_type': 'mbox',
+                '_id': _id
+            })
+            queue2.append({
+                '_op_type': 'delete',
+                '_index': dbname,
+                '_type': 'mbox_source',
+                '_id': _id
+            })
+            print("deleting: " + mid)
+
+    while len(queue1) > 0:
+        eshelper.bulk(es, queue1[0:1024])
+        del queue1[0:1024]
+
+    while len(queue2) > 0:
+        eshelper.bulk(es, queue2[0:1024])
+        del queue2[0:1024]
+
+    # add new items to elasticsearch from imap
+
+    uids = []
+    for mid, uid in mail.items():
+        if not mid in db:
+            uids.append(uid)
+    lists.append([uids, listname, imap4])
+
 threads = []
 cc = int( multiprocessing.cpu_count() / 2) + 1
 print("Starting up to %u threads to fetch the %u %s lists" % (cc, len(lists), project))
