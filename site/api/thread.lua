@@ -27,6 +27,20 @@ local config = require 'lib/config'
 
 local emls_thrd
 
+-- anonymizer func
+function anonymize(doc)
+    if doc.from and #doc.from > 0 then
+        doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+    end
+    if doc.cc and #doc.cc > 0 then
+        doc.cc = doc.cc:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+    end
+    if doc.to and #doc.to > 0 then
+        doc.to = doc.to:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+    end
+    return doc
+end
+
 -- func that fetches all children of an original topic email thingy
 function fetchChildren(r, pdoc, c, biglist, rights, account)
     c = (c or 0) + 1
@@ -58,7 +72,7 @@ function fetchChildren(r, pdoc, c, biglist, rights, account)
             biglist[doc['message-id']] = true
             local mykids = fetchChildren(r, doc, c, biglist, rights, account)
             if not account and config.antispam then
-                doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                doc = anonymize(doc)
             end
             local dc = {
                 tid = doc.mid,
@@ -152,7 +166,7 @@ function handle(r)
         end
         if canAccess and doc and doc.mid then
             if not account and config.antispam then
-                doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                doc = anonymize(doc)
             end
             table.insert(emls_thrd, doc)
             doc.children = fetchChildren(r, doc, 1, nil, rights, account)
