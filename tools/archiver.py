@@ -301,8 +301,8 @@ class Archiver(object):
                     mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
                 elif config.has_section('archiver') and config.has_option("archiver", "generator") and config.get("archiver", "generator") == "medium":
                     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
-                    xbody += bytes(lid)
-                    xbody += bytes(uid_mdate)
+                    xbody += bytes(lid, encoding='ascii')
+                    xbody += bytes(mdatestring, encoding='ascii')
                     mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
                 else:
                     # Or revert to the old way?
