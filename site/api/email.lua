@@ -24,6 +24,20 @@ local user = require 'lib/user'
 local cross = require 'lib/cross'
 local config = require 'lib/config'
 
+-- anonymizer func
+function anonymize(doc)
+    if doc.from and #doc.from > 0 then
+        doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+    end
+    if doc.cc and #doc.cc > 0 then
+        doc.cc = doc.cc:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+    end
+    if doc.to and #doc.to > 0 then
+        doc.to = doc.to:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+    end
+    return doc
+end
+
 function handle(r)
     r.content_type = "application/json"
     local get = r:parseargs()
@@ -112,7 +126,7 @@ function handle(r)
                     eml = "unknown"
                 end
                 if not account then -- anonymize email address if not logged in
-                    doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+                    doc = anonymize(doc)
                     if doc.from_raw then
                         doc.from_raw = doc.from_raw:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
                     end
