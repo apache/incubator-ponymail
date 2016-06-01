@@ -139,7 +139,7 @@ function handle(r)
                 
                 
                 -- Anonymize to/cc if full_headers is false
-                if not config.full_headers then
+                if not config.full_headers or not account then
                     doc.to = nil
                     doc.cc = nil
                 end      
