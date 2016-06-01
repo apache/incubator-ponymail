@@ -296,7 +296,12 @@ class Archiver(object):
         if body or attachments:
             pmid = mid
             try:
-                mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
+                # Use full message as bytes for mid?
+                if config.has_section('archiver') and config.has_option("archiver", "generator") and config.get("archiver", "generator") == "full":
+                    mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
+                else:
+                    # Or revert to the old way?
+                    mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
@@ -475,7 +480,7 @@ class Archiver(object):
                         )
                         if logger:
                             logger.info("Notification sent to %s for %s" % (cid, mid))
-        return lid
+        return lid, ojson['mid']
             
     def list_url(self, mlist):
         """ Gots
@@ -598,8 +603,8 @@ if __name__ == '__main__':
             msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
             
             try:
-                lid = foo.archive_message(msg_metadata, msg)
-                print("%s: Done archiving to %s!" % (email.utils.formatdate(), lid))
+                lid, mid = foo.archive_message(msg_metadata, msg)
+                print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
             except Exception as err:
                 if args.verbose:
                     import traceback
