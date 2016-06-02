@@ -196,7 +196,7 @@ function formatDate(date, dtz){
     ttz = 0
     var plus = "-"
     if (tz < 0) {
-        plus = ""
+        plus = "+"
         tz = Math.abs(tz)
     }
     while (tz >= 60) {
