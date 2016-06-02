@@ -194,9 +194,9 @@ Number.prototype.pad = function(size) {
 function formatDate(date, dtz){
     tz = new Date().getTimezoneOffset()
     ttz = 0
-    var plus = "+"
+    var plus = "-"
     if (tz < 0) {
-        plus = "-"
+        plus = ""
         tz = Math.abs(tz)
     }
     while (tz >= 60) {
