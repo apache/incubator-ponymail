@@ -2046,7 +2046,7 @@ function formatDate(date, dtz){
         ttz++
     }
     ttz = (ttz*100) + tz
-    while (ttz.length < 4) ttz = "0" + ttz
+    while (String(ttz).length < 4) ttz = "0" + String(ttz)
     return (date.getFullYear() + "-" +
         (date.getMonth()+1).pad(2) + "-" +
         date.getDate().pad(2) + " " +
