@@ -2042,7 +2042,7 @@ function formatDate(date, dtz){
         tz = Math.abs(tz)
     }
     while (tz >= 60) {
-        tz--;
+        tz-= 60;
         ttz++
     }
     ttz = (ttz*100) + tz
