@@ -2052,7 +2052,7 @@ function formatDate(date, dtz){
         date.getDate().pad(2) + " " +
         date.getHours().pad(2) + ":" +
         date.getMinutes().pad(2)) +
-        (dtz ? "(" + plus + ttz + ")" : "")
+        (dtz ? " (" + plus + ttz + ")" : "")
 }
 
 
