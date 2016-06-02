@@ -1,7 +1,6 @@
 ## CHANGES in 0.9b:
 
 - Private lists can be hidden in the index from users without access
-- Added support for OAuth.online in lieu of Persona shutting down
 - Fixed an issue where LocalStorage limits would break the site
 - Fixed an issue with gravatars not showing up
 - UI can now auto-scale, allowing as many results per page as screen height will support
@@ -12,6 +11,9 @@
 - Increased import parsing timeout from 2 to 6 minutes per mbox file
 - Private emails are now more clearly marked as such in the UI
 - Logging in via OAuth now remembers where you left off
+- Added support for Maildir imports
+- Added three distinct Message-ID generators (short, medium, full)
+- Fixed some issues with email association
 
 ## CHANGES in 0.8b:
 
