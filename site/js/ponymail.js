@@ -1396,7 +1396,7 @@ function displayEmail(json, id, level) {
     var id_sanitised = id.toString().replace(/@<.+>/, "")
     var thread = document.getElementById('thread_' + id_sanitised)
     if (thread) {
-        json.date = formatDate(new Date(json.epoch*1000))
+        json.date = formatDate(new Date(json.epoch*1000), true)
         // transform <foo.bar.tld> to foo@bar.tld
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         
@@ -2033,12 +2033,26 @@ Number.prototype.pad = function(size) {
 
 
 // formatDate: Return a date as YYYY-MM-DD HH:mm
-function formatDate(date){
+function formatDate(date, dtz){
+    tz = new Date().getTimezoneOffset()
+    ttz = 0
+    var plus = "+"
+    if (tz < 0) {
+        plus = "-"
+        tz = Math.abs(tz)
+    }
+    while (tz >= 60) {
+        tz--;
+        ttz++
+    }
+    ttz = (ttz*100) + tz
+    while (ttz.length < 4) ttz = "0" + ttz
     return (date.getFullYear() + "-" +
         (date.getMonth()+1).pad(2) + "-" +
         date.getDate().pad(2) + " " +
         date.getHours().pad(2) + ":" +
-        date.getMinutes().pad(2))        
+        date.getMinutes().pad(2)) +
+        (dtz ? "(" + plus + ttz + ")" : "")
 }
 
 

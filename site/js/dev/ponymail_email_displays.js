@@ -68,7 +68,7 @@ function displayEmail(json, id, level) {
     var id_sanitised = id.toString().replace(/@<.+>/, "")
     var thread = document.getElementById('thread_' + id_sanitised)
     if (thread) {
-        json.date = formatDate(new Date(json.epoch*1000))
+        json.date = formatDate(new Date(json.epoch*1000), true)
         // transform <foo.bar.tld> to foo@bar.tld
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         

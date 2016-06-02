@@ -191,12 +191,26 @@ Number.prototype.pad = function(size) {
 
 
 // formatDate: Return a date as YYYY-MM-DD HH:mm
-function formatDate(date){
+function formatDate(date, dtz){
+    tz = new Date().getTimezoneOffset()
+    ttz = 0
+    var plus = "+"
+    if (tz < 0) {
+        plus = "-"
+        tz = Math.abs(tz)
+    }
+    while (tz >= 60) {
+        tz--;
+        ttz++
+    }
+    ttz = (ttz*100) + tz
+    while (ttz.length < 4) ttz = "0" + ttz
     return (date.getFullYear() + "-" +
         (date.getMonth()+1).pad(2) + "-" +
         date.getDate().pad(2) + " " +
         date.getHours().pad(2) + ":" +
-        date.getMinutes().pad(2))        
+        date.getMinutes().pad(2)) +
+        (dtz ? "(" + plus + ttz + ")" : "")
 }
 
 
