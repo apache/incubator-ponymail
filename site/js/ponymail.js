@@ -67,7 +67,16 @@ var pending_urls = {} // URL list for GetAsync's support functions (such as the 
 var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
+var storageAvailable = false
 
+try {
+    if (typeof(window.sessionStorage) !== "undefined") {
+        window.sessionStorage.setItem("pm_test", "1")
+        storageAvailable = true
+    }
+} catch(e) {
+    storageAvailable = false
+}
 // Links from viewmode to the function that handles them
 var viewModes = {
     threaded: {
@@ -98,22 +107,24 @@ function saveDraft() {
     // If the user was composing a new thread, let's save the contents (if any)
     // for next time
     if (document.getElementById('reply_body')) {
-        if (composeType == "new") {
-            if (typeof(window.sessionStorage) !== "undefined") {
-                window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
-                window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
-                window.sessionStorage.setItem("reply_list", xlist)
+        if (storageAvailable) {
+            if (composeType == "new") {
+                if (typeof(window.sessionStorage) !== "undefined") {
+                    window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
+                    window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
+                    window.sessionStorage.setItem("reply_list", xlist)
+                }
+                composeType = ""
+            // Likewise, if composing a reply, save it in case the user wants to revisit
+            // the draft
+            } else if (composeType == "reply" && current_reply_eid) {
+                if (typeof(window.sessionStorage) !== "undefined") {
+                    window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
+                    window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
+                    window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
+                }
+                composeType = ""
             }
-            composeType = ""
-        // Likewise, if composing a reply, save it in case the user wants to revisit
-        // the draft
-        } else if (composeType == "reply" && current_reply_eid) {
-            if (typeof(window.sessionStorage) !== "undefined") {
-                window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
-                window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
-                window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
-            }
-            composeType = ""
         }
     }
 }
@@ -154,14 +165,16 @@ function sendEmail(form) {
     request.send(of.join("&")) // send email as a POST string
     
     // Clear the draft stuff
-    if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
-        window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
-        window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
-    }
-    // Clear new draft too if need be
-    if (typeof(window.sessionStorage) !== "undefined" && composeType == "new") {
-        window.sessionStorage.removeItem("reply_subject_" + xlist)
-        window.sessionStorage.removeItem("reply_body_" + xlist)
+    if (storageAvailable) {
+        if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
+            window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
+            window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
+        }
+        // Clear new draft too if need be
+        if (typeof(window.sessionStorage) !== "undefined" && composeType == "new") {
+            window.sessionStorage.removeItem("reply_subject_" + xlist)
+            window.sessionStorage.removeItem("reply_body_" + xlist)
+        }
     }
     hideComposer(null, true)
     
@@ -274,14 +287,17 @@ function compose(eid, lid, type) {
             obj.appendChild(area)
             
             // Do we need to fetch cache here?
-            if (composeType == "new" && typeof(window.sessionStorage) !== "undefined" &&
-                window.sessionStorage.getItem("reply_subject_" + xlist)) {
-                area.innerHTML = window.sessionStorage.getItem("reply_body_" + xlist)
-                txt.value = window.sessionStorage.getItem("reply_subject_" + xlist)
-            } else if (composeType == "reply" && typeof(window.sessionStorage) !== "undefined" &&
-                window.sessionStorage.getItem("reply_subject_eid_" + eid)) {
-                area.innerHTML = window.sessionStorage.getItem("reply_body_eid_" + eid)
-                txt.value = window.sessionStorage.getItem("reply_subject_eid_" + eid)
+            if (storageAvailable) {
+                    
+                if (composeType == "new" && typeof(window.sessionStorage) !== "undefined" &&
+                    window.sessionStorage.getItem("reply_subject_" + xlist)) {
+                    area.innerHTML = window.sessionStorage.getItem("reply_body_" + xlist)
+                    txt.value = window.sessionStorage.getItem("reply_subject_" + xlist)
+                } else if (composeType == "reply" && typeof(window.sessionStorage) !== "undefined" &&
+                    window.sessionStorage.getItem("reply_subject_eid_" + eid)) {
+                    area.innerHTML = window.sessionStorage.getItem("reply_body_eid_" + eid)
+                    txt.value = window.sessionStorage.getItem("reply_subject_eid_" + eid)
+                }
             }
             
             // submit button
@@ -1368,25 +1384,27 @@ function displayEmail(json, id, level) {
     last_opened_email = json.mid
     
     // color based on view before or not??
-    if (typeof(window.localStorage) !== "undefined") {
-        if (! window.localStorage.getItem("viewed_" + json.mid) ){
-            //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
-            
-            try {
-                window.localStorage.setItem("viewed_" + json.mid, json.epoch)
-            } catch(e) {
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            if (! window.localStorage.getItem("viewed_" + json.mid) ){
+                //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
+                
+                try {
+                    window.localStorage.setItem("viewed_" + json.mid, json.epoch)
+                } catch(e) {
+                    
+                }
+            }
+            if (window.localStorage.getItem("viewed_" + json.mid) && window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
+                //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
+                var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
+                try {
+                    window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
+                } catch(e) {
+                    
+                }
                 
             }
-        }
-        if (window.localStorage.getItem("viewed_" + json.mid) && window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
-            //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
-            var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
-            try {
-                window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
-            } catch(e) {
-                
-            }
-            
         }
     }
     // Coloring for nested emails
@@ -1422,10 +1440,12 @@ function displayEmail(json, id, level) {
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
         // Get theme (social, default etc) if set locally in browser
-        if (typeof(window.localStorage) !== "undefined") {
-            var th = window.localStorage.getItem("pm_theme")
-            if (th) {
-                prefs.theme = th
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                var th = window.localStorage.getItem("pm_theme")
+                if (th) {
+                    prefs.theme = th
+                }
             }
         }
         
@@ -1550,13 +1570,15 @@ function displaySingleEmail(json, id) {
 
     var thread = document.getElementById('email')
     if (thread) {
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + json.id) ){
-                estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
-                try {
-                    window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
-                } catch(e) {
-                    
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + json.id) ){
+                    estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
+                    try {
+                        window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
+                    } catch(e) {
+                        
+                    }
                 }
             }
         }
@@ -1673,20 +1695,22 @@ function toggleEmails_threaded(id, close, toverride, threadobj) {
     var thread = threadobj ? threadobj : document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         current_thread = id
-        if (typeof(window.localStorage) !== "undefined") {
-            var epoch = latestEmailInThread + "!"
-            if (current_thread_json[id]) {
-                var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
-                if (xx) {
-                    var yy = parseInt(xx)
-                    if (yy >= parseInt(latestEmailInThread)) {
-                        epoch = yy
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                var epoch = latestEmailInThread + "!"
+                if (current_thread_json[id]) {
+                    var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+                    if (xx) {
+                        var yy = parseInt(xx)
+                        if (yy >= parseInt(latestEmailInThread)) {
+                            epoch = yy
+                        }
                     }
-                }
-                try {
-                    window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
-                } catch(e) {
-                    
+                    try {
+                        window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+                    } catch(e) {
+                        
+                    }
                 }
             }
         }
@@ -1769,25 +1793,27 @@ function toggleEmails_threaded(id, close, toverride, threadobj) {
 // actually viewed before.
 function highlightNewEmails(id) {
     // This currently requires localStorage to store the view data
-    if (typeof(window.localStorage) !== "undefined") {
-        kiddos = []
-        var t = document.getElementById("thread_" + id)
-        if (t) {
-            traverseThread(t, 'thread') // find all child elements called 'thread*'
-            // For each email in this thread, check (or set) when it was first viewed
-            for (var i in kiddos) {
-                var mid = kiddos[i].getAttribute("id")
-                var epoch = window.localStorage.getItem("first_view_" + mid)
-                if (epoch && epoch != pb_refresh) { // did we view this before the last page build?
-                    kiddos[i].style.color = "#AAA"
-                } else { // never seen it before, have it at normal color and set the first-view-date
-                    
-                    try {
-                        window.localStorage.setItem("first_view_" + mid, pb_refresh)
-                    } catch(e) {
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            kiddos = []
+            var t = document.getElementById("thread_" + id)
+            if (t) {
+                traverseThread(t, 'thread') // find all child elements called 'thread*'
+                // For each email in this thread, check (or set) when it was first viewed
+                for (var i in kiddos) {
+                    var mid = kiddos[i].getAttribute("id")
+                    var epoch = window.localStorage.getItem("first_view_" + mid)
+                    if (epoch && epoch != pb_refresh) { // did we view this before the last page build?
+                        kiddos[i].style.color = "#AAA"
+                    } else { // never seen it before, have it at normal color and set the first-view-date
                         
+                        try {
+                            window.localStorage.setItem("first_view_" + mid, pb_refresh)
+                        } catch(e) {
+                            
+                        }
+                        kiddos[i].style.color = "#000"
                     }
-                    kiddos[i].style.color = "#000"
                 }
             }
         }
@@ -2271,27 +2297,30 @@ function showSpinner(show) {
 // Saving prefs as a json string
 function saveEphemeral() {
     // This only works if the browser supports localStorage
-    if (typeof(window.localStorage) !== "undefined") {
-        window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
+        }
     }
 }
 
 // load ephemeral prefs, replace what we have
 function loadEphemeral() {
     // This only works if the browser supports localStorage
-    if (typeof(window.localStorage) !== "undefined") {
-        var str = window.localStorage.getItem("ponymail_config_ephemeral")
-        if (str) {
-            var eprefs = JSON.parse(str)
-            // for each original setting in config.js,
-            // check if we have a different one stored
-            for (i in prefs) {
-                if (eprefs[i]) {
-                    prefs[i] = eprefs[i] // override
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            var str = window.localStorage.getItem("ponymail_config_ephemeral")
+            if (str) {
+                var eprefs = JSON.parse(str)
+                // for each original setting in config.js,
+                // check if we have a different one stored
+                for (i in prefs) {
+                    if (eprefs[i]) {
+                        prefs[i] = eprefs[i] // override
+                    }
                 }
             }
         }
-        
     }
 }
 
@@ -2407,9 +2436,11 @@ function loadList_flat(mjson, limit, start, deep) {
         
         // style based on view before or not??
         var estyle = ""
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.id) ){
-                estyle = "font-weight: bold;"
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + eml.id) ){
+                    estyle = "font-weight: bold;"
+                }
             }
         }
         var at = ""
@@ -2563,10 +2594,12 @@ function loadEmails_flat(id, close, treeview) {
 
 // loadList_threaded: Same as above, but threaded display
 function loadList_threaded(mjson, limit, start, deep) {
-    if (typeof(window.localStorage) !== "undefined") {
-        var th = window.localStorage.getItem("pm_theme")
-        if (th) {
-            prefs.theme = th
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
+            }
         }
     }
     
@@ -2679,9 +2712,11 @@ function loadList_threaded(mjson, limit, start, deep) {
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
-                estyle = "font-weight: bold;"
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
+                    estyle = "font-weight: bold;"
+                }
             }
         }
         
@@ -2842,10 +2877,12 @@ function loadEmails_threaded(json, state) {
 
 // loadList_treeview: Load a list as a treeview object, grouped by threads
 function loadList_treeview(mjson, limit, start, deep) {
-    if (typeof(window.localStorage) !== "undefined") {
-        var th = window.localStorage.getItem("pm_theme")
-        if (th) {
-            prefs.theme = th
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
+            }
         }
     }
     // Set displayed posts per page to 10 if social/compact theme, or auto-scale
@@ -2931,9 +2968,11 @@ function loadList_treeview(mjson, limit, start, deep) {
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
-                estyle = "font-weight: bold;"
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
+                    estyle = "font-weight: bold;"
+                }
             }
         }
         var people_label = "<label style='visibility:" + pds + "; float: right; margin-right: 8px; ' id='people_"+i+"' class='listview_label label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " <span class='hidden-xs hidden-sm'>people</span></label>"
@@ -3209,13 +3248,15 @@ function toggleEmails_treeview(id, close, toverride) {
             return
         }
         var epoch = null
-        if (typeof(window.localStorage) !== "undefined") {
-            epoch = latestEmailInThread + "!"
-            var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
-            if (xx) {
-                var yy = parseInt(xx)
-                if (yy >= parseInt(latestEmailInThread)) {
-                    epoch = yy
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                epoch = latestEmailInThread + "!"
+                var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+                if (xx) {
+                    var yy = parseInt(xx)
+                    if (yy >= parseInt(latestEmailInThread)) {
+                        epoch = yy
+                    }
                 }
             }
         }
@@ -5033,8 +5074,10 @@ function savePreferences() {
     GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
     
     // Save ephemeral settings
-    if (typeof(window.localStorage) !== "undefined") {
-        window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
+        }
     }
 }
 
@@ -5247,11 +5290,15 @@ function setupUser() {
 // set theme, both in prefs and localstorage (for non-logged-in-users)
 function setTheme(theme) {
     prefs.theme = theme
-    if (typeof(window.localStorage) !== "undefined") {
-        window.localStorage.setItem("pm_theme", theme)
-    }
-    if (document.getElementById('emails')) {
-        buildPage()
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            window.localStorage.setItem("pm_theme", theme)
+        }
+        if (document.getElementById('emails')) {
+            buildPage()
+        }
+    } else {
+        alert("You need to have session and local storage enabled to set a theme!")
     }
 }
 

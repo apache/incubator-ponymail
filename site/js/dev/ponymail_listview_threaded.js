@@ -18,10 +18,12 @@
 
 // loadList_threaded: Same as above, but threaded display
 function loadList_threaded(mjson, limit, start, deep) {
-    if (typeof(window.localStorage) !== "undefined") {
-        var th = window.localStorage.getItem("pm_theme")
-        if (th) {
-            prefs.theme = th
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
+            }
         }
     }
     
@@ -134,9 +136,11 @@ function loadList_threaded(mjson, limit, start, deep) {
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
-                estyle = "font-weight: bold;"
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
+                    estyle = "font-weight: bold;"
+                }
             }
         }
         

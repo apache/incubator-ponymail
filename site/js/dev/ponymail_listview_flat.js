@@ -113,9 +113,11 @@ function loadList_flat(mjson, limit, start, deep) {
         
         // style based on view before or not??
         var estyle = ""
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.id) ){
-                estyle = "font-weight: bold;"
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + eml.id) ){
+                    estyle = "font-weight: bold;"
+                }
             }
         }
         var at = ""

@@ -18,10 +18,12 @@
 
 // loadList_treeview: Load a list as a treeview object, grouped by threads
 function loadList_treeview(mjson, limit, start, deep) {
-    if (typeof(window.localStorage) !== "undefined") {
-        var th = window.localStorage.getItem("pm_theme")
-        if (th) {
-            prefs.theme = th
+    if (storageAvailable) {
+        if (typeof(window.localStorage) !== "undefined") {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
+            }
         }
     }
     // Set displayed posts per page to 10 if social/compact theme, or auto-scale
@@ -107,9 +109,11 @@ function loadList_treeview(mjson, limit, start, deep) {
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
-                estyle = "font-weight: bold;"
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
+                    estyle = "font-weight: bold;"
+                }
             }
         }
         var people_label = "<label style='visibility:" + pds + "; float: right; margin-right: 8px; ' id='people_"+i+"' class='listview_label label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " <span class='hidden-xs hidden-sm'>people</span></label>"
@@ -385,13 +389,15 @@ function toggleEmails_treeview(id, close, toverride) {
             return
         }
         var epoch = null
-        if (typeof(window.localStorage) !== "undefined") {
-            epoch = latestEmailInThread + "!"
-            var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
-            if (xx) {
-                var yy = parseInt(xx)
-                if (yy >= parseInt(latestEmailInThread)) {
-                    epoch = yy
+        if (storageAvailable) {
+            if (typeof(window.localStorage) !== "undefined") {
+                epoch = latestEmailInThread + "!"
+                var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+                if (xx) {
+                    var yy = parseInt(xx)
+                    if (yy >= parseInt(latestEmailInThread)) {
+                        epoch = yy
+                    }
                 }
             }
         }

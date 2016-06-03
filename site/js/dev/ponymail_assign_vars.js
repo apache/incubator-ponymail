@@ -59,7 +59,16 @@ var pending_urls = {} // URL list for GetAsync's support functions (such as the 
 var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
+var storageAvailable = false
 
+try {
+    if (typeof(window.sessionStorage) !== "undefined") {
+        window.sessionStorage.setItem("pm_test", "1")
+        storageAvailable = true
+    }
+} catch(e) {
+    storageAvailable = false
+}
 // Links from viewmode to the function that handles them
 var viewModes = {
     threaded: {
