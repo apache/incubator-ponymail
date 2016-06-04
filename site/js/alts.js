@@ -52,7 +52,12 @@ function listAlts() {
 }
 
 function newAlt(addr) {
-    GetAsync("/api/preferences.lua?associate=" + addr, null, function() { alert("An association request has been sent to the specified email address. Please check your inbox! Depending on grey-listing etc, it may take up to 15 minutes before your confirmation email arrives.")})
+    if (addr.match(/^([^\s@]+@[^\s@]+)$/) && addr.length > 6) {
+        GetAsync("/api/preferences.lua?associate=" + addr, null, function() { alert("An association request has been sent to the specified email address. Please check your inbox! Depending on grey-listing etc, it may take up to 15 minutes before your confirmation email arrives.")})
+    } else {
+        alert("Please enter a valid email address!")
+    }
+    
     return false;
 }
 
