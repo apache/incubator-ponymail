@@ -73,6 +73,7 @@ parseHTML = False
 iBody = None
 resendTo = None
 timeout = 600
+fromFilter = None
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -239,6 +240,9 @@ class SlurpThread(Thread):
             LEY = EY
 
             for message in messages:
+                # If --filter is set, discard any messages not matching by continuing to next email
+                if fromFilter and 'from' in message and message['from'].find(fromFilter) == -1:
+                    continue
                 if resendTo:
                     print("Delivering message %s via MTA" % message['message-id'] if 'message-id' in message else '??')
                     s = SMTP('localhost')
@@ -356,6 +360,8 @@ parser.add_argument('--resend', dest='resend', type=str, nargs=1,
                    help='DANGER ZONE: Resend every read email to this recipient as a new email')
 parser.add_argument('--timeout', dest='timeout', type=int, nargs=1,
                    help='Optional timeout in secs for importing an mbox/maildir file (default is 600 seconds)')
+parser.add_argument('--filter', dest = 'fromfilter', type=str, nargs=1,
+                    help = 'Optional sender filter: Only import emails from this address')
 
 args = parser.parse_args()
 
@@ -388,6 +394,8 @@ if args.html2text:
     parseHTML = True
 if args.ibody:
     archiver.iBody = args.ibody[0]
+if args.fromfilter:
+    fromFilter = args.fromfilter[0]
 if args.resend:
     resendTo = args.resend[0]
     from smtplib import SMTP
