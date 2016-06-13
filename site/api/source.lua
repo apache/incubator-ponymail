@@ -26,16 +26,16 @@ function handle(r)
     r.content_type = "text/plain"
     local get = r:parseargs()
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")
-    local doc = elastic.get("mbox_source", eid or "hmm")
+    local doc = elastic.get("mbox", eid or "hmm")
     
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.subject then
-        local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox_source")
+        local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
         if #docs == 1 then
             doc = docs[1]
         end
     end
-    if doc and doc.source then
+    if doc then
         local canAccess = false
         if doc.private then
             local account = user.get(r)
@@ -56,7 +56,12 @@ function handle(r)
         end
         if canAccess then
             doc.tid = doc.request_id
-            r:puts(doc.source)
+            local doc_raw = elastic.get('mbox_source', doc.request_id)
+            if doc_raw then
+                r:puts(doc_raw.source)
+            else
+                r:puts("No such email")
+            end
         else
             r:puts("You do not have access to view this email, sorry.")
         end
