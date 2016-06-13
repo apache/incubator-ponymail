@@ -271,7 +271,7 @@ class Archiver(object):
         elif not mdate:
             print("Date seems totally wrong, setting to _now_ instead.")
             mdate = time.gmtime()
-        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(email.utils.mktime_tz(mdate)))
+        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
