@@ -14,6 +14,10 @@
 - Added support for Maildir imports
 - Added three distinct Message-ID generators (short, medium, full)
 - Fixed some issues with email association
+- Added obfuscation mechanism to the list editor
+- Added a dry-run feature to the list editor (no changes made)
+- Added a single-message edit feature for the liste editor
+
 
 ## CHANGES in 0.8b:
 
