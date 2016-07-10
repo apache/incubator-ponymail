@@ -1,4 +1,4 @@
-# Apache Pony Mail (Incubating)
+# Apache Pony Mail (Incubating) v/0.9
 <img src="https://github.com/apache/incubator-ponymail/blob/master/site/images/logo_large.png" align="left"/><br/><br/>
 Apache Pony Mail (Incubating) is a web-based mail archive browser
 licensed under the Apache License v/2.0 and built to scale 
