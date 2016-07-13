@@ -270,7 +270,8 @@ class Archiver(object):
             mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
         elif not mdate:
             print("Date seems totally wrong, setting to _now_ instead.")
-            mdate = time.gmtime()
+            mdate = time.gmtime() # Get a standard 9-tuple
+            mdate = mdate + (0, ) # Fake a TZ (10th element)
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
