@@ -232,7 +232,8 @@ class Archiver(object):
         """
 
         ojson = None
-
+        if not lid:
+            lid= msg.get('list-id')
         if self.cropout:
             crops = self.cropout.split(" ")
             # Regex replace?
