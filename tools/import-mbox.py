@@ -74,6 +74,8 @@ iBody = None
 resendTo = None
 timeout = 600
 fromFilter = None
+dedup = False
+dedupped = 0
 
 # Fetch config
 config = configparser.RawConfigParser()
@@ -238,7 +240,8 @@ class SlurpThread(Thread):
 
             count = 0
             LEY = EY
-
+            
+            
             for message in messages:
                 # If --filter is set, discard any messages not matching by continuing to next email
                 if fromFilter and 'from' in message and message['from'].find(fromFilter) == -1:
@@ -261,6 +264,31 @@ class SlurpThread(Thread):
                     break
 
                 json, contents = foo.compute_updates(list_override, private, message)
+                
+                # If --dedup is active, try to filter out any messages that already exist
+                if json and dedup and message.get('message-id', None):
+                    res = es.search(
+                        index=iname,
+                        doc_type="mbox",
+                        size = 1,
+                        body = {
+                            'query': {
+                                'bool': {
+                                    'must': [
+                                        {
+                                            'term': {
+                                                'message-id': message.get('message-id', None)
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    )
+                    if res and len(res['hits']['hits']) > 0:
+                        print("Dedupping %s" % json['message-id'])
+                        dedupped += 1
+                        continue
 
                 if json:
                     json_source = {
@@ -354,6 +382,8 @@ parser.add_argument('--html2text', dest='html2text', action='store_true',
                    help='If no text/plain is found, try to parse HTML using html2text')
 parser.add_argument('--requirelid', dest='requirelid', action='store_true',
                    help='Require a List ID to be present, ignore otherwise')
+parser.add_argument('--dedup', dest='dedup', action='store_true',
+                   help='Try to dedup messages based on ID before importing')
 parser.add_argument('--ignorebody', dest='ibody', type=str, nargs=1,
                    help='Optional email bodies to treat as empty (in conjunction with --html2text)')
 parser.add_argument('--resend', dest='resend', type=str, nargs=1,
@@ -387,6 +417,8 @@ if args.quick:
     quickmode = args.quick
 if args.private:
     private = args.private
+if args.dedup:
+    dedup = args.dedup
 if args.ext:
     extension = args.ext[0]
 if args.html2text:
@@ -593,3 +625,5 @@ for t in threads:
     t.join()
 
 print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (y, int(time.time() - start), baddies))
+if dedupped > 0:
+    print("%u records were not inserted due to deduplication" % dedupped)
