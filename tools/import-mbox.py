@@ -267,6 +267,7 @@ class SlurpThread(Thread):
                 
                 # If --dedup is active, try to filter out any messages that already exist
                 if json and dedup and message.get('message-id', None):
+                    iname = config.get("elasticsearch", "dbname")
                     res = es.search(
                         index=iname,
                         doc_type="mbox",
