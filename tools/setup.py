@@ -198,7 +198,8 @@ if not args.noi:
               "index" : "not_analyzed"
             },
             "message-id" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             },
             "mid" : {
               "type" : "string"
