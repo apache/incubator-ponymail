@@ -151,7 +151,7 @@ class BulkThread(Thread):
 class SlurpThread(Thread):
 
     def run(self):
-        global block, y, es, lists, baddies, config, resendTo, timeout
+        global block, y, es, lists, baddies, config, resendTo, timeout, dedupped, dedup
         ja = []
         jas = []
         print("Thread started")
