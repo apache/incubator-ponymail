@@ -64,6 +64,7 @@ fetch = (url, xstate, callback, snap, nocreds) ->
                     # JSON parse failed? Pass on the response as plain text then
                     catch e
                         callback(xmlHttp.responseText, xstate)
+    return
 
 # post: like fetch, but do a POST with standard text fields
 # - url: URL to POST to
@@ -109,6 +110,7 @@ post = (url, args, xstate, callback, snap) ->
                     # JSON parse failed? Try passing on as plain text
                     catch e
                         callback(xmlHttp.responseText, xstate)
+    return
 
 # postJSON: Same as post, but send vars as a JSON object
 postJSON = (url, json, xstate, callback, snap) ->
@@ -145,3 +147,4 @@ postJSON = (url, json, xstate, callback, snap) ->
                     # Fall back to plain text if parse failed
                     catch e
                         callback(xmlHttp.responseText, xstate)
+    return
