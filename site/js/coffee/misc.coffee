@@ -27,6 +27,14 @@ Number.prototype.pretty = (fix) ->
         return String(this.toFixed(fix)).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
     return String(this.toFixed(0)).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
 
+# Number padding
+# usage: 123.pad(6) -> 000123
+Number.prototype.pad = (n) ->
+    str = String(this)
+    if str.length < n
+        str = "0".repeat(n-str.length) + str
+    return str
+
 
 # isArray: function to detect if an object is an array
 isArray = ( value ) ->
