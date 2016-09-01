@@ -31,8 +31,11 @@ mk = (type, params, children) ->
             # Standard string value?
             if typeof v == "string"
                 r.setAttribute(k, v)
+            # Are we passing a list of data to set? concatenate then
+            else if isArray(v)
+                r.setAttribute(k, v.join(" "))
             # Are we trying to set multiple sub elements, like a style?
-            else if typeof(v) == "object" and not isArray(v)
+            else if typeof(v) == "object"
                 for x,y of v
                     r[k][x] = y
     
