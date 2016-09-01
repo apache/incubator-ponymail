@@ -20,7 +20,7 @@
 # - type: HTML element type (div, table, p etc) to produce
 # - params: hash of element params to add (class, style etc)
 # - children: optional child or children objects to insert into the new element
-# Example: mk('div', { class: "footer", style: "font-weight: bold;"}, "Some text inside a div")
+# Example: mk('div', { class: "footer", style: {fontWeight: "bold"}}, "Some text inside a div")
 mk = (type, params, children) ->
     # create the raw element
     r = document.createElement(type)
@@ -28,8 +28,13 @@ mk = (type, params, children) ->
     # If params have been passed, set them
     if params
         for k, v of params
-            if v
+            # Standard string value?
+            if typeof v == "string"
                 r.setAttribute(k, v)
+            # Are we trying to set multiple sub elements, like a style?
+            else if typeof(v) == "object" and not isArray(v)
+                for x,y of v
+                    r[k][x] = y
     
     # If any children have been passed, add them to the element 
     if children
