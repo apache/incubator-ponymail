@@ -33,27 +33,27 @@ mk = (type, params, children) ->
     if params
         for k, v of params
             # Standard string value?
-            if typeof v == "string"
+            if typeof v is "string"
                 r.setAttribute(k, v)
             # Are we passing a list of data to set? concatenate then
             else if isArray(v)
                 r.setAttribute(k, v.join(" "))
             # Are we trying to set multiple sub elements, like a style?
-            else if typeof(v) == "object"
+            else if typeof(v) is "object"
                 for x,y of v
                     r[k][x] = y
     
     # If any children have been passed, add them to the element 
     if children
         # If string, convert to textNode using txt()
-        if typeof children == "string"
+        if typeof children is "string"
             app(r, txt(children))
         else
             # If children is an array of elems, iterate and add
             if isArray children
                 for k in children
                     # String? Convert via txt() then
-                    if typeof k == "string"
+                    if typeof k is "string"
                         app(r, txt(k))
                     # Plain element, add normally
                     else
@@ -72,14 +72,14 @@ app = (a,b) ->
     if isArray b
         for item in b
             # String? Convert to textNode first then
-            if typeof item == "string"
+            if typeof item is "string"
                 item = txt(item)
             # Otherwise just add it
             a.appendChild(item)
     # Otherwise, just add
     else
         # String? Convert first
-        if typeof b == "string"
+        if typeof b is "string"
             a.appendChild(txt(b))
         # Not a string, add normally
         return a.appendChild(b)
@@ -100,14 +100,18 @@ get = (a) ->
 
 # Cog: Loading panel for when waiting for a response
 cog = (div, size = 200) ->
-        idiv = document.createElement('div')
-        idiv.setAttribute("class", "icon")
-        idiv.setAttribute("style", "text-align: center; vertical-align: middle; height: 500px;")
-        i = document.createElement('i')
-        i.setAttribute("class", "fa fa-spin fa-cog")
-        i.setAttribute("style", "font-size: " + size + "pt !important; color: #AAB;")
-        idiv.appendChild(i)
-        idiv.appendChild(document.createElement('br'))
-        idiv.appendChild(document.createTextNode('Loading data, please wait...'))
+        idiv = mk('div', { class: "icon", style: {
+            texAlign: 'center',
+            verticalAlign: 'middle',
+            height: '500px'
+            }
+        )
+        
+        i = mk('i', { class: 'fa fa-spin fa-cog', style: {
+            fontSize: size+'pt !important',
+            color: '#AAB'
+            }
+        )
+        app(idiv, [i, mk('br'), "Loading data, please wait..."])
         div.innerHTML = ""
         div.appendChild(idiv)
