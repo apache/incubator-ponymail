@@ -105,13 +105,13 @@ cog = (div, size = 200) ->
             verticalAlign: 'middle',
             height: '500px'
             }
-        )
+        })
         
         i = mk('i', { class: 'fa fa-spin fa-cog', style: {
             fontSize: size+'pt !important',
             color: '#AAB'
             }
-        )
+        })
         app(idiv, [i, mk('br'), "Loading data, please wait..."])
         div.innerHTML = ""
         div.appendChild(idiv)
