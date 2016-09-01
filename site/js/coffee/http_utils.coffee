@@ -15,6 +15,10 @@
  limitations under the License.
 ###
 
+####################################################
+# This is http_utils.coffee: HTTP Request library  #
+####################################################
+
 # fetch: Fetches a URL.
 # Params:
 # - url: URL to fetch

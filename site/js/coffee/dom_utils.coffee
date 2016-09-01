@@ -15,6 +15,10 @@
  limitations under the License.
 ###
 
+####################################################
+# This is dom_utils.coffee: DOM handling utilities #
+####################################################
+
 # mk: DOM creator
 # args:
 # - type: HTML element type (div, table, p etc) to produce
