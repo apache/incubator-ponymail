@@ -23,7 +23,12 @@
 window.onpopstate = (event) ->
     listView(null, true)
 
-
+parseURL = () ->
+    [list, month, query] = window.location.search.substr(1).split(":", 3)
+    ponymail_list = list
+    ponymail_month = month
+    ponymail_query = query
+    
 
 listView = (hash, reParse) ->
     ### Get the HTML filename ###
