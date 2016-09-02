@@ -20,13 +20,22 @@
 ####################################################
 
 ###*
-# mk: DOM creator
+# HTML: DOM creator class
 # args:
 # - type: HTML element type (div, table, p etc) to produce
 # - params: hash of element params to add (class, style etc)
 # - children: optional child or children objects to insert into the new element
-# Example: mk('div', { class: "footer", style: {fontWeight: "bold"}}, "Some text inside a div")
+# Example:
+# div = new HTML('div', {
+#    class: "footer",
+#    style: {
+#        fontWeight: "bold"
+#    }
+#}, "Some text inside a div")
 ###
+
+
+
 class HTML
     constructor: (type, params, children) ->
         ### create the raw element ###
