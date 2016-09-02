@@ -24,13 +24,13 @@ class Calendar
         now = new Date()
         
         ### Split start and end into years and months ###
-        [sYear, sMonth] = start.split("-")
+        [sYear, sMonth] = String(start).split("-")
         
         [eYear, eMonth] = [now.getFullYear(), now.getMonth()+1]
         
         ### If end year+month given, use it ###
         if end
-            [eYear, eMonth] = end.split("-")
+            [eYear, eMonth] = String(end).split("-")
             
         ### Make sure months are there, otherwise set them ###
         if not sMonth
