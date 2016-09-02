@@ -27,43 +27,44 @@
 # - children: optional child or children objects to insert into the new element
 # Example: mk('div', { class: "footer", style: {fontWeight: "bold"}}, "Some text inside a div")
 ###
-mk = (type, params, children) ->
-    ### create the raw element ###
-    r = document.createElement(type)
-    
-    ### If params have been passed, set them ###
-    if isHash(params)
-        for k, v of params
-            ### Standard string value? ###
-            if typeof v is "string"
-                r.setAttribute(k, v)
-            else if isArray(v)
-                ### Are we passing a list of data to set? concatenate then ###
-                r.setAttribute(k, v.join(" "))
-            else if isHash(v)
-                ### Are we trying to set multiple sub elements, like a style? ###
-                for x,y of v
-                    r[k][x] = y
-    
-    ### If any children have been passed, add them to the element  ###
-    if children
-        ### If string, convert to textNode using txt() ###
-        if typeof children is "string"
-            app(r, txt(children))
-        else
-            ### If children is an array of elems, iterate and add ###
-            if isArray children
-                for k in children
-                    ### String? Convert via txt() then ###
-                    if typeof k is "string"
-                        app(r, txt(k))
-                    else
-                        ### Plain element, add normally ###
-                        app(r, k)
+class HTML
+    constructor: (type, params, children) ->
+        ### create the raw element ###
+        r = document.createElement(type)
+        
+        ### If params have been passed, set them ###
+        if isHash(params)
+            for k, v of params
+                ### Standard string value? ###
+                if typeof v is "string"
+                    r.setAttribute(k, v)
+                else if isArray(v)
+                    ### Are we passing a list of data to set? concatenate then ###
+                    r.setAttribute(k, v.join(" "))
+                else if isHash(v)
+                    ### Are we trying to set multiple sub elements, like a style? ###
+                    for x,y of v
+                        r[k][x] = y
+        
+        ### If any children have been passed, add them to the element  ###
+        if children
+            ### If string, convert to textNode using txt() ###
+            if typeof children is "string"
+                app(r, txt(children))
             else
-                ### Just a single element, add it ###
-                app(r, children)
-    return r
+                ### If children is an array of elems, iterate and add ###
+                if isArray children
+                    for k in children
+                        ### String? Convert via txt() then ###
+                        if typeof k is "string"
+                            app(r, txt(k))
+                        else
+                            ### Plain element, add normally ###
+                            app(r, k)
+                else
+                    ### Just a single element, add it ###
+                    app(r, children)
+        return r
 
 ###*
 # App: Shortcut for document.appendChild with modifications
