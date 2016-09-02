@@ -90,7 +90,6 @@ toggleYear = function(div) {
   /* For each year, hide if not this year, else show */
   results = [];
   for (y = j = ref1 = parseInt(sYear), ref2 = parseInt(eYear); ref1 <= ref2 ? j <= ref2 : j >= ref2; y = ref1 <= ref2 ? ++j : --j) {
-    alert(y);
     if (y === year) {
       results.push(get('calendar_months_' + y).show(true));
     } else {
