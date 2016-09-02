@@ -19,17 +19,19 @@
 # This is dom_utils.coffee: DOM handling utilities #
 ####################################################
 
+###*
 # mk: DOM creator
 # args:
 # - type: HTML element type (div, table, p etc) to produce
 # - params: hash of element params to add (class, style etc)
 # - children: optional child or children objects to insert into the new element
 # Example: mk('div', { class: "footer", style: {fontWeight: "bold"}}, "Some text inside a div")
+###
 mk = (type, params, children) ->
-    # create the raw element
+    ### create the raw element ###
     r = document.createElement(type)
     
-    # If params have been passed, set them
+    ### If params have been passed, set them ###
     if params
         for k, v of params
             # Standard string value?
@@ -43,62 +45,64 @@ mk = (type, params, children) ->
                 for x,y of v
                     r[k][x] = y
     
-    # If any children have been passed, add them to the element 
+    ### If any children have been passed, add them to the element  ###
     if children
-        # If string, convert to textNode using txt()
+        ### If string, convert to textNode using txt() ###
         if typeof children is "string"
             app(r, txt(children))
         else
-            # If children is an array of elems, iterate and add
+            ### If children is an array of elems, iterate and add ###
             if isArray children
                 for k in children
-                    # String? Convert via txt() then
+                    ### String? Convert via txt() then ###
                     if typeof k is "string"
                         app(r, txt(k))
-                    # Plain element, add normally
+                    ### Plain element, add normally ###
                     else
                         app(r, k)
-            # Just a single element, add it
+            ### Just a single element, add it ###
             else
                 app(r, children)
     return r
 
+###*
 # App: Shortcut for document.appendChild with modifications
 # - a: the element to add things to
 # - b: one or more elements to add.
 # Example: app(get('mydiv'), "Add some text to mydiv")
+###
 app = (a,b) ->
-    # If it's a list of elems, iterate
+    ### If it's a list of elems, iterate ###
     if isArray b
         for item in b
-            # String? Convert to textNode first then
+            ### String? Convert to textNode first then ###
             if typeof item is "string"
                 item = txt(item)
-            # Otherwise just add it
+            ### Otherwise just add it ###
             a.appendChild(item)
-    # Otherwise, just add
+    ### Otherwise, just add ###
     else
-        # String? Convert first
+        ###  String? Convert first ###
         if typeof b is "string"
             a.appendChild(txt(b))
-        # Not a string, add normally
+        ### Not a string, add normally ###
         return a.appendChild(b)
 
 
-# Set: shortcut for a.setAttribute(b,c)
+### Set: shortcut for a.setAttribute(b,c) ###
 set = (a, b, c) ->
     return a.setAttribute(b,c)
 
-# txt: shortcut for creating a text node
+### txt: shortcut for creating a text node ###
 txt = (a) ->
     return document.createTextNode(a)
 
-# Get: Shortcut for doc.getElementById
+### Get: Shortcut for doc.getElementById ###
 get = (a) ->
     return document.getElementById(a)
 
 
-# Cog: Loading panel for when waiting for a response
+### Cog: Loading panel for when waiting for a response ###
 cog = (div, size = 200) ->
         idiv = mk('div', { class: "icon", style: {
             texAlign: 'center',

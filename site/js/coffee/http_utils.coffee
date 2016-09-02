@@ -47,7 +47,7 @@
 
 class HTTPRequest
     constructor: (@url, @args) ->
-        # Set internal class data, determine request type
+        ### Set internal class data, determine request type ###
         @state = @args.state
         @method = if @args.data then 'POST' else 'GET'
         @data = @args.data
@@ -57,17 +57,17 @@ class HTTPRequest
         @snap = @args.snap || pm_snap
         @nocreds = @args.nocreds || false
         
-        # Construct request object
+        ### Construct request object ###
         if window.XMLHttpRequest
             @request = new XMLHttpRequest();
         else
             @request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        # Default to sending credentials
+        ### Default to sending credentials ###
         if not @nocreds
             @request.withCredentials = true
         
-        # Determine what to send as data (if anything)
+        ### Determine what to send as data (if anything) ###
         @rdata = null
         if @method is 'POST'
             if @datatype == 'json'
@@ -75,61 +75,61 @@ class HTTPRequest
             else
                 @rdata = @formdata(@data)
                 
-        # If tasked with appending data to the URL, do so
+        ### If tasked with appending data to the URL, do so ###
         if @getdata
             tmp = @formdata(@getdata)
             if tmp.length > 0
-                # Do we have form data here aleady? if so, append the new
-                # by adding an ampersand first
+                ### Do we have form data here aleady? if so, append the new ###
+                ### by adding an ampersand first ###
                 if @url.match(/\?/)
                     @url += "&" + tmp
-                # No form data yet, add a ? and then the data
+                ### No form data yet, add a ? and then the data ###
                 else
                     @url += "?" + tmp
                 
-        # Use @method on URL
+        ### Use @method on URL ###
         @request.open(@method, @url, true)
         
-        # Send data
+        ### Send data ###
         @request.send(@rdata)
         
-        # Set onChange behavior
+        ### Set onChange behavior ###
         @request.onreadystatechange = @onchange
         
-        # all done!
+        ### all done! ###
         return this
         
-    # HTTPRequest state change calback
+    ### HTTPRequest state change calback ###
     onchange: () ->
-            # Internal Server Error: Try to call snap
+            ### Internal Server Error: Try to call snap ###
             if @request.readyState == 4 and @request.status == 500
                 if @snap
                     @snap(@state)
-            # 200 OK, everything is okay, try to parse JSON response
+            ### 200 OK, everything is okay, try to parse JSON response ###
             if @request.readyState == 4 and @request.status == 200
                 if @callback
-                    # Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass
+                    ### Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass ###
                     try
-                        # Parse JSON response
+                        ### Parse JSON response ###
                         @response = JSON.parse(@request.responseText)
-                        # If loginRequired (rare!), redirect to oauth page
+                        ### If loginRequired (rare!), redirect to oauth page ###
                         if @response && @response.loginRequired
                             location.href = "/oauth.html"
                             return
-                        # Otherwise, call the callback function
+                        ### Otherwise, call the callback function ###
                         @callback(@response, @state);
-                    # JSON parse failed? Pass on the response as plain text then
+                    ### JSON parse failed? Pass on the response as plain text then ###
                     catch e
                         @callback(@request.responseText, @state)
         
-    # Standard form data joiner for POST data
+    ### Standard form data joiner for POST data ###
     formdata: (kv) ->
         ar = []
-        # For each key/value pair
+        ### For each key/value pair ###
         for k,v of kv
-            # Only append if the value is non-empty
+            ### Only append if the value is non-empty ###
             if v and v != ""
-                # URI-Encode value and add to an array
+                ###  URI-Encode value and add to an array ###
                 ar.push(k + "=" + encodeURIComponent(v))
-        # Join the array with ampersands, so we get "foo=bar&foo2=baz"
+        ### Join the array with ampersands, so we get "foo=bar&foo2=baz" ###
         return ar.join("&")

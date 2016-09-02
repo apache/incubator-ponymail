@@ -20,23 +20,28 @@
 # This is misc.coffee: Miscellaneous utility functions #
 ########################################################
 
+###*
 # Number prettification prototype:
 # Converts 1234567 into 1,234,567 etc
+###
 Number.prototype.pretty = (fix) ->
     if (fix)
         return String(this.toFixed(fix)).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
     return String(this.toFixed(0)).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
 
+###*
 # Number padding
 # usage: 123.pad(6) -> 000123
+###
 Number.prototype.pad = (n) ->
     str = String(this)
+    ### Do we need to pad? if so, do it using String.repeat ###
     if str.length < n
         str = "0".repeat(n-str.length) + str
     return str
 
 
-# isArray: function to detect if an object is an array
+### isArray: function to detect if an object is an array ###
 isArray = ( value ) ->
     value and
         typeof value is 'object' and

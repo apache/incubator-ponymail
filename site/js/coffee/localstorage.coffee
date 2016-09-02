@@ -15,8 +15,10 @@
  limitations under the License.
 ###
 
+###*
 # Init: Test if localStorage is available or not
 # If not, fall back to plain global var storage (not effective, but meh)
+###
 pm_storage_available = false
 pm_storage_globvar = {}
 try 
@@ -27,23 +29,25 @@ catch e
     pm_storage_available = false
     
 
+###*
 # dbWrite: Store a key/val pair
 # Example: dbWrite("ponies", "They are awesome!")
+###
 dbWrite = (key, value) ->
-    # Can we use localStorage?
+    ### Can we use localStorage? ###
     if pm_storage_available
         return window.localStorage.setItem(key, value)
-    # Guess not, fall back to (ineffective) global var
+    ### Guess not, fall back to (ineffective) global var ###
     else
         pm_storage_globvar[key] = value
         return true
     
-# dbRead: Given a key, read the corresponding value from storage
+### dbRead: Given a key, read the corresponding value from storage ###
 dbRead = (key) ->
-    # Do we have localStorage?
+    ### Do we have localStorage? ###
     if pm_storage_available
         return window.localStorage.getItem(key)
-    # Nope, try global var
+    ### Nope, try global var ###
     else
         return pm_storage_globvar[key]
     
