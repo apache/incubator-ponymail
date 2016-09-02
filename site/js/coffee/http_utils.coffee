@@ -31,6 +31,18 @@
 # - - callback: function to call when request has returned a response
 # - - snap: snap function in case of internal server error or similar
 # - - nocreds: don't pass on cookies?
+
+# Example POST request:
+#    HTTPRequest("/api/foo.lua", {
+#        state: {
+#            ponies: true
+#        },
+#        callback: foofunc,
+#        data: {
+#            list: "foo.bar"
+#        }
+#   })
+
 class HTTPRequest
     constructor = (@url, @args) ->
         @state = @args.state
