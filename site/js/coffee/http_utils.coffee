@@ -45,6 +45,7 @@
 
 class HTTPRequest
     constructor = (@url, @args) ->
+        # Set internal class data, determine request type
         @state = @args.state
         @method = if @args.data then 'POST' else 'GET'
         @data = @args.data
@@ -85,28 +86,29 @@ class HTTPRequest
                     @url += "?" + tmp
                 
         # Use @method on URL
-        @requestobj.open(@method, @url, true)
+        @request.open(@method, @url, true)
         
         # Send data
-        @requestobj.send(@rdata)
+        @request.send(@rdata)
         
         # Set onChange behavior
-        @requestobj.onreadystatechange = @onchange
+        @request.onreadystatechange = @onchange
         
         # all done!
         
+    # HTTPRequest state change calback
     onchange = () ->
             # Internal Server Error: Try to call snap
-            if @requestobj.readyState == 4 and @requestobj.status == 500
+            if @request.readyState == 4 and @request.status == 500
                 if @snap
                     @snap(@state)
             # 200 OK, everything is okay, try to parse JSON response
-            if @requestobj.readyState == 4 and @requestobj.status == 200
+            if @request.readyState == 4 and @request.status == 200
                 if @callback
                     # Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass
                     try
                         # Parse JSON response
-                        @response = JSON.parse(xmlHttp.responseText)
+                        @response = JSON.parse(@request.responseText)
                         # If loginRequired (rare!), redirect to oauth page
                         if @response && @response.loginRequired
                             location.href = "/oauth.html"
@@ -115,7 +117,7 @@ class HTTPRequest
                         @callback(@response, @state);
                     # JSON parse failed? Pass on the response as plain text then
                     catch e
-                        @callback(@requestobj.responseText, @state)
+                        @callback(@request.responseText, @state)
         
     # Standard form data joiner for POST data
     formdata = (kv) ->
