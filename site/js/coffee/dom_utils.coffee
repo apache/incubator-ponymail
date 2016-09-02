@@ -30,41 +30,41 @@
 class HTML
     constructor: (type, params, children) ->
         ### create the raw element ###
-        r = document.createElement(type)
+        @element = document.createElement(type)
         
         ### If params have been passed, set them ###
         if isHash(params)
-            for k, v of params
+            for key, val of params
                 ### Standard string value? ###
-                if typeof v is "string"
-                    r.setAttribute(k, v)
-                else if isArray(v)
+                if typeof val is "string"
+                    @element.setAttribute(key, val)
+                else if isArray(val)
                     ### Are we passing a list of data to set? concatenate then ###
-                    r.setAttribute(k, v.join(" "))
-                else if isHash(v)
+                    @element.setAttribute(key, val.join(" "))
+                else if isHash(val)
                     ### Are we trying to set multiple sub elements, like a style? ###
-                    for x,y of v
-                        r[k][x] = y
+                    for subkey,subval of val
+                        @element[key][subkey] = subval
         
         ### If any children have been passed, add them to the element  ###
         if children
             ### If string, convert to textNode using txt() ###
             if typeof children is "string"
-                app(r, txt(children))
+                @element.inject(txt(children))
             else
                 ### If children is an array of elems, iterate and add ###
                 if isArray children
-                    for k in children
+                    for child in children
                         ### String? Convert via txt() then ###
-                        if typeof k is "string"
-                            app(r, txt(k))
+                        if typeof child is "string"
+                            @element.inject(txt(child))
                         else
                             ### Plain element, add normally ###
-                            app(r, k)
+                            @element.inject(k)
                 else
                     ### Just a single element, add it ###
-                    app(r, children)
-        return r
+                    @element.inject(children)
+        return @element
 
 ###*
 # App: Shortcut for document.appendChild with modifications
