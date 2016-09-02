@@ -19,132 +19,100 @@
 # This is http_utils.coffee: HTTP Request library  #
 ####################################################
 
-# fetch: Fetches a URL.
-# Params:
-# - url: URL to fetch
-# - xstate: JS state object to pass on to callback
-# - callback: callback function to utilize the response
-# - snap: optional callback if fetch fails (error 500)
-# - nocreds: set to True to disable sending credentials (cookies etc)
-# Example: fetch("/api/foo.lua", {pony: true}, callbackfunc, null, true)
-fetch = (url, xstate, callback, snap, nocreds) ->
-    xmlHttp = null;
-    
-    # Set up request object
-    if window.XMLHttpRequest
-        xmlHttp = new XMLHttpRequest();
-    else
-        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-    if not nocreds
-        xmlHttp.withCredentials = true
-    
-    # GET URL
-    xmlHttp.open("GET", url, true);
-    xmlHttp.send(null);
-    
-    # Check for request state response change
-    xmlHttp.onreadystatechange = (state) ->
+# HTTPRequest: Fire off a HTTP request.
+# Args:
+# - url: The URL to request (may be relative or absolute)
+# - args:
+# - - state: A callback stateful object
+# - - data: Any form/JSON data to send along if POST (method is derived
+#           from whether data is attached or not)
+# - - getdata: Any form vars to append to the URL as URI-encoded formdata
+# - - datatype: 'form' or 'json' data?
+# - - callback: function to call when request has returned a response
+# - - snap: snap function in case of internal server error or similar
+# - - nocreds: don't pass on cookies?
+class HTTPRequest
+    constructor = (@url, @args) ->
+        @state = @args.state
+        @method = if @args.data then 'POST' else 'GET'
+        @data = @args.data
+        @getdata = @args.get
+        @datatype = @args.datatype || 'form'
+        @callback = @args.callback
+        @snap = @args.snap || pm_snap
+        @nocreds = @args.nocreds || false
+        
+        # Construct request object
+        if window.XMLHttpRequest
+            @request = new XMLHttpRequest();
+        else
+            @request = new ActiveXObject("Microsoft.XMLHTTP");
+        
+        # Default to sending credentials
+        if not @nocreds
+            @request.withCredentials = true
+        
+        # Determine what to send as data (if anything)
+        @rdata = null
+        if @method is 'POST'
+            if @datatype == 'json'
+                @rdata = JSON.stringify(@data)
+            else
+                @rdata = @formdata(@data)
+                
+        # If tasked with appending data to the URL, do so
+        if @getdata
+            tmp = @formdata(@getdata)
+            if tmp.length > 0
+                # Do we have form data here aleady? if so, append the new
+                # by adding an ampersand first
+                if @url.match(/\?/)
+                    @url += "&" + tmp
+                # No form data yet, add a ? and then the data
+                else
+                    @url += "?" + tmp
+                
+        # Use @method on URL
+        @requestobj.open(@method, @url, true)
+        
+        # Send data
+        @requestobj.send(@rdata)
+        
+        # Set onChange behavior
+        @requestobj.onreadystatechange = @onchange
+        
+        # all done!
+        
+    onchange = () ->
             # Internal Server Error: Try to call snap
-            if xmlHttp.readyState == 4 and xmlHttp.status == 500
-                if snap
-                    snap(xstate)
+            if @requestobj.readyState == 4 and @requestobj.status == 500
+                if @snap
+                    @snap(@state)
             # 200 OK, everything is okay, try to parse JSON response
-            if xmlHttp.readyState == 4 and xmlHttp.status == 200
-                if callback
+            if @requestobj.readyState == 4 and @requestobj.status == 200
+                if @callback
                     # Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass
                     try
                         # Parse JSON response
-                        response = JSON.parse(xmlHttp.responseText)
+                        @response = JSON.parse(xmlHttp.responseText)
                         # If loginRequired (rare!), redirect to oauth page
-                        if response && response.loginRequired
+                        if @response && @response.loginRequired
                             location.href = "/oauth.html"
                             return
                         # Otherwise, call the callback function
-                        callback(response, xstate);
+                        @callback(@response, @state);
                     # JSON parse failed? Pass on the response as plain text then
                     catch e
-                        callback(xmlHttp.responseText, xstate)
-    return
-
-# post: like fetch, but do a POST with standard text fields
-# - url: URL to POST to
-# - args: hash of keys/vals to convert into a POST request
-# - xstate: state to pass on to callback
-# - callback: calback function for response
-# - snap: callback in case of error 500
-post = (url, args, xstate, callback, snap) ->
-    xmlHttp = null;
-    # Set up request object
-    if window.XMLHttpRequest
-        xmlHttp = new XMLHttpRequest();
-    else
-        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-    xmlHttp.withCredentials = true
-    
-    # Construct form data string to POST.
-    ar = []
-    for k,v of args
-        if v and v != ""
-            ar.push(k + "=" + encodeURIComponent(v))
-    fdata = ar.join("&")
-    
-    
-    # POST URL
-    xmlHttp.open("POST", url, true);
-    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlHttp.send(fdata);
-    
-    # Check for response
-    xmlHttp.onreadystatechange = (state) ->
-            # Internal Server Error: call snap function
-            if xmlHttp.readyState == 4 and xmlHttp.status == 500
-                if snap
-                    snap(xstate)
-            # 200 Okay, parse response and run callback
-            if xmlHttp.readyState == 4 and xmlHttp.status == 200
-                if callback
-                    # Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass
-                    try
-                        response = JSON.parse(xmlHttp.responseText)
-                        callback(response, xstate);
-                    # JSON parse failed? Try passing on as plain text
-                    catch e
-                        callback(xmlHttp.responseText, xstate)
-    return
-
-# postJSON: Same as post, but send vars as a JSON object
-postJSON = (url, json, xstate, callback, snap) ->
-    xmlHttp = null;
-    # Set up request object
-    if window.XMLHttpRequest
-        xmlHttp = new XMLHttpRequest();
-    else
-        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-    xmlHttp.withCredentials = true
-    
-    # Construct form data
-    fdata = JSON.stringify(json)
-    
-    # POST URL
-    xmlHttp.open("POST", url, true);
-    xmlHttp.setRequestHeader("Content-type", "application/json");
-    xmlHttp.send(fdata);
-    
-    # Check for response
-    xmlHttp.onreadystatechange = (state) ->
-            # Internal Server Error: call snap!
-            if xmlHttp.readyState == 4 and xmlHttp.status == 500
-                if snap
-                    snap(xstate)
-                    
-            # 200 Okay, parse response and pass to callback
-            if xmlHttp.readyState == 4 and xmlHttp.status == 200
-                if callback
-                    # Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass
-                    try
-                        response = JSON.parse(xmlHttp.responseText)
-                        callback(response, xstate);
-                    # Fall back to plain text if parse failed
-                    catch e
-                        callback(xmlHttp.responseText, xstate)
-    return
+                        @callback(@requestobj.responseText, @state)
+        
+    # Standard form data joiner for POST data
+    formdata = (kv) ->
+        ar = []
+        # For each key/value pair
+        for k,v of kv
+            # Only append if the value is non-empty
+            if v and v != ""
+                # URI-Encode value and add to an array
+                ar.push(k + "=" + encodeURIComponent(v))
+        # Join the array with ampersands, so we get "foo=bar&foo2=baz"
+        return ar.join("&")
