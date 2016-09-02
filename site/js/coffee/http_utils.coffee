@@ -41,7 +41,7 @@ pendingURLStatus = () ->
                     class: "spinner"
                     },
                     [
-                        new HTML('img', {src: "images/spinner.gif"}),
+                        new HTML('div', {class: "spinwheel"}),
                         new HTML('br'),
                         "Loading, please wait..."
                     ]
