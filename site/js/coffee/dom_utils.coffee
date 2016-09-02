@@ -69,7 +69,7 @@ class HTML
                             @element.inject(txt(child))
                         else
                             ### Plain element, add normally ###
-                            @element.inject(k)
+                            @element.inject(child)
                 else
                     ### Just a single element, add it ###
                     @element.inject(children)
