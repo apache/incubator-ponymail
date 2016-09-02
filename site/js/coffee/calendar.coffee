@@ -107,4 +107,12 @@ toggleYear = (div) ->
             
 toggleMonth = (div) ->
     #### TODO later... ###
+    m = div.getAttribute("data")
+    [year, month] = m.split("-")
+    
+    ### Update the list view using the new month ###
+    listView({
+        month: m
+    })
+    
     
