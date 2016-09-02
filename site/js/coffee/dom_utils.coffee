@@ -34,14 +34,14 @@ mk = (type, params, children) ->
     ### If params have been passed, set them ###
     if params
         for k, v of params
-            # Standard string value?
+            ### Standard string value? ###
             if typeof v is "string"
                 r.setAttribute(k, v)
-            # Are we passing a list of data to set? concatenate then
             else if isArray(v)
+                ### Are we passing a list of data to set? concatenate then ###
                 r.setAttribute(k, v.join(" "))
-            # Are we trying to set multiple sub elements, like a style?
             else if typeof(v) is "object"
+                ### Are we trying to set multiple sub elements, like a style? ###
                 for x,y of v
                     r[k][x] = y
     
@@ -57,11 +57,11 @@ mk = (type, params, children) ->
                     ### String? Convert via txt() then ###
                     if typeof k is "string"
                         app(r, txt(k))
-                    ### Plain element, add normally ###
                     else
+                        ### Plain element, add normally ###
                         app(r, k)
-            ### Just a single element, add it ###
             else
+                ### Just a single element, add it ###
                 app(r, children)
     return r
 
@@ -78,10 +78,10 @@ app = (a,b) ->
             ### String? Convert to textNode first then ###
             if typeof item is "string"
                 item = txt(item)
-            ### Otherwise just add it ###
+            ### In any case, add it now ###
             a.appendChild(item)
-    ### Otherwise, just add ###
     else
+        ### Otherwise, just add ###
         ###  String? Convert first ###
         if typeof b is "string"
             a.appendChild(txt(b))

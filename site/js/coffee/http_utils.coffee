@@ -83,7 +83,7 @@ class HTTPRequest
                 ### by adding an ampersand first ###
                 if @url.match(/\?/)
                     @url += "&" + tmp
-                ### No form data yet, add a ? and then the data ###
+                #### No form data yet, add a ? and then the data ###
                 else
                     @url += "?" + tmp
                 
@@ -118,7 +118,7 @@ class HTTPRequest
                             return
                         ### Otherwise, call the callback function ###
                         @callback(@response, @state);
-                    ### JSON parse failed? Pass on the response as plain text then ###
+                    #### JSON parse failed? Pass on the response as plain text then ###
                     catch e
                         @callback(@request.responseText, @state)
         

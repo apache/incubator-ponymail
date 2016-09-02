@@ -37,8 +37,8 @@ dbWrite = (key, value) ->
     ### Can we use localStorage? ###
     if pm_storage_available
         return window.localStorage.setItem(key, value)
-    ### Guess not, fall back to (ineffective) global var ###
     else
+        ### Guess not, fall back to (ineffective) global var ###
         pm_storage_globvar[key] = value
         return true
     
@@ -47,7 +47,7 @@ dbRead = (key) ->
     ### Do we have localStorage? ###
     if pm_storage_available
         return window.localStorage.getItem(key)
-    ### Nope, try global var ###
     else
+        ### Nope, try global var ###
         return pm_storage_globvar[key]
     
