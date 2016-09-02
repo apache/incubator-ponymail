@@ -52,13 +52,10 @@ class Calendar
             ### Construct the placeholder for months ###
             ### Hide unless active year ###
             monthsDiv = new HTML('div', {
-                style:{
-                    display: if (jumpTo and jumpTo == year) or
+                class: if (jumpTo and jumpTo == year) or
                         (not jumpTo and year == parseInt(eYear))
-                    then "block"
-                    else "none",
-                }
-                class: "calendar_months"
+                        then "calendar_months"
+                        else "calendar_months_hidden"
                 id: "calendar_months_#{uid}_" + year
             })
             
@@ -101,9 +98,9 @@ toggleYear = (div) ->
     ### For each year, hide if not this year, else show ###
     for y in [parseInt(sYear)..parseInt(eYear)]
         if y == year
-            get("calendar_months_#{uid}_#{y}").show(true)
+            get("calendar_months_#{uid}_#{y}").setAttribute("class", "calendar_months")
         else
-            get("calendar_months_#{uid}_#{y}").show(false)
+            get("calendar_months_#{uid}_#{y}").setAttribute("class", "calendar_months calendar_months_hidden")
             
 toggleMonth = (div) ->
     #### TODO later... ###

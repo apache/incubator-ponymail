@@ -83,7 +83,7 @@ body, html {
 
 .calendar_year {
     background: #78BF3B;
-    border-radius: 4px;
+    border-radius: 3px;
     color: #FFF;
     width: 110px;
     text-align: center;
@@ -96,10 +96,22 @@ body, html {
     cursor: pointer;
 }
 
+.calendar_months {
+    transition: all 0.25s ease-in-out;
+    transform: scale(1.0,1.0);
+    
+}
+
+.calendar_months_hidden {
+    transform: scale(1,0);
+    height: 0px;
+    transition: none;
+}
+
 
 .calendar_month {
     background: #648BAD;
-    border-radius: 4px;
+    border-radius: 3px;
     color: #FFF;
     margin-left: 5px;
     width: 100px;
