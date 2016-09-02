@@ -42,10 +42,16 @@ Number.prototype.pad = (n) ->
 
 
 ### isArray: function to detect if an object is an array ###
-isArray = ( value ) ->
+isArray = (value) ->
     value and
         typeof value is 'object' and
         value instanceof Array and
         typeof value.length is 'number' and
         typeof value.splice is 'function' and
         not ( value.propertyIsEnumerable 'length' )
+
+### isHash: function to detect if an object is a hash ###
+isHash = (value) ->
+    value and
+        typeof value is 'object' and
+        not isArray(value)
