@@ -44,7 +44,7 @@
 #   })
 
 class HTTPRequest
-    constructor = (@url, @args) ->
+    constructor: (@url, @args) ->
         # Set internal class data, determine request type
         @state = @args.state
         @method = if @args.data then 'POST' else 'GET'
@@ -95,9 +95,10 @@ class HTTPRequest
         @request.onreadystatechange = @onchange
         
         # all done!
+        return this
         
     # HTTPRequest state change calback
-    onchange = () ->
+    onchange: () ->
             # Internal Server Error: Try to call snap
             if @request.readyState == 4 and @request.status == 500
                 if @snap
@@ -120,7 +121,7 @@ class HTTPRequest
                         @callback(@request.responseText, @state)
         
     # Standard form data joiner for POST data
-    formdata = (kv) ->
+    formdata: (kv) ->
         ar = []
         # For each key/value pair
         for k,v of kv
