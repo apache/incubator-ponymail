@@ -61,7 +61,7 @@ class Calendar
                 if (year > sYear or month >= sMonth) and (year < eYear or month <= eMonth)
                     monthDiv = new HTML('div', {
                         class: "calendar_month"
-                        id: "calendar_month_{#year}-{#month}"
+                        id: "calendar_month_#{year}-#{month}"
                         data: "#{year}-#{month}"
                         onclick: "toggleMonth(this)"
                     }, calendar_months[month-1])
