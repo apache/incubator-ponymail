@@ -60,8 +60,19 @@ listviewScaffolding = () ->
     
     ### TEST: Insert fake calendar ###
     cal = new Calendar(2010)
+    calHolder.inject(new HTML('h3', {}, "Archive:"))
     calHolder.inject(cal)
     
     ### Finally, make the list view placeholder ###
     listDiv = new HTML('div', { id: "listview", class: "sbox"})
     mainDiv.inject(listDiv)
+    
+    ### And of course, afooter ###
+    footer = new HTML('div', { id: "footer"})
+    document.body.inject(footer)
+    footer.inject([
+        "Powered by ",
+        new HTML('a', { href: 'https://ponymail.incubator.apache.org/'}, "Apache Pony Mail (Incubating) v/#{ponymail_version}"),
+        ". Copyright 2016, the Apache Software Foundation."
+    ])
+    
