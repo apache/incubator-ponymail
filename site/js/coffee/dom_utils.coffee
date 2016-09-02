@@ -32,7 +32,7 @@ mk = (type, params, children) ->
     r = document.createElement(type)
     
     ### If params have been passed, set them ###
-    if params
+    if isHash(params)
         for k, v of params
             ### Standard string value? ###
             if typeof v is "string"
@@ -40,7 +40,7 @@ mk = (type, params, children) ->
             else if isArray(v)
                 ### Are we passing a list of data to set? concatenate then ###
                 r.setAttribute(k, v.join(" "))
-            else if typeof(v) is "object"
+            else if isHash(v)
                 ### Are we trying to set multiple sub elements, like a style? ###
                 for x,y of v
                     r[k][x] = y
