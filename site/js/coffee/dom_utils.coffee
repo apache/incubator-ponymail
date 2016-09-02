@@ -66,30 +66,6 @@ class HTML
                     @element.inject(children)
         return @element
 
-###*
-# App: Shortcut for document.appendChild with modifications
-# - a: the element to add things to
-# - b: one or more elements to add.
-# Example: app(get('mydiv'), "Add some text to mydiv")
-###
-app = (a,b) ->
-    ### If it's a list of elems, iterate ###
-    if isArray b
-        for item in b
-            ### String? Convert to textNode first then ###
-            if typeof item is "string"
-                item = txt(item)
-            ### In any case, add it now ###
-            a.appendChild(item)
-    else
-        ### Otherwise, just add ###
-        ###  String? Convert first ###
-        if typeof b is "string"
-            a.appendChild(txt(b))
-        ### Not a string, add normally ###
-        return a.appendChild(b)
-
-
 ### Set: shortcut for a.setAttribute(b,c) ###
 set = (a, b, c) ->
     return a.setAttribute(b,c)
