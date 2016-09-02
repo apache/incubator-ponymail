@@ -114,7 +114,7 @@ HTMLElement.prototype.show = (bool) ->
     d = 'block'
     # If no bool is provided, toggle show/hide based on current state
     if typeof bool is 'undefined'
-        d = if this.style.display == 'none' then 'block' else 'none'
+        d = if this.style and this.style.display == 'none' then 'block' else 'none'
     else if bool == false
         # bool set to false, hide stuff
         d = 'none'

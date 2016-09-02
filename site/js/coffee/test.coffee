@@ -40,9 +40,13 @@ testCoffee = () ->
     p.inject([". Here's a textNode added afterwards", new HTML('br')])
     
     # Make an object we can hide when clicked on, using the show() prototype
-    hider = new HTML('b', { onclick: 'testToggle(this);'}, "Click here to hide this text!")
+    hider = new HTML('b', { onclick: 'testToggle(this);'}, "Click here to hide this text for a second!")
     p.inject(hider)
     
     
 testToggle = (div) ->
     div.show()
+    window.setTimeout(
+        () ->
+            div.show()
+        ,1000)

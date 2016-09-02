@@ -275,7 +275,7 @@ HTMLElement.prototype.show = function(bool) {
   var b, d;
   d = 'block';
   if (typeof bool === 'undefined') {
-    d = this.style.display === 'none' ? 'block' : 'none';
+    d = this.style && this.style.display === 'none' ? 'block' : 'none';
   } else if (bool === false) {
     d = 'none';
   } else if (bool === true) {
@@ -667,10 +667,13 @@ testCoffee = function() {
   p.inject([". Here's a textNode added afterwards", new HTML('br')]);
   hider = new HTML('b', {
     onclick: 'testToggle(this);'
-  }, "Click here to hide this text!");
+  }, "Click here to hide this text for a second!");
   return p.inject(hider);
 };
 
 testToggle = function(div) {
-  return div.show();
+  div.show();
+  return window.setTimeout(function() {
+    return div.show();
+  }, 1000);
 };
