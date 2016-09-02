@@ -19,6 +19,7 @@
 # This is http_utils.coffee: HTTP Request library  #
 ####################################################
 
+###*
 # HTTPRequest: Fire off a HTTP request.
 # Args:
 # - url: The URL to request (may be relative or absolute)
@@ -42,6 +43,7 @@
 #            list: "foo.bar"
 #        }
 #   })
+###
 
 class HTTPRequest
     constructor: (@url, @args) ->
