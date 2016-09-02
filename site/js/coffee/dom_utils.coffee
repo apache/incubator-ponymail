@@ -104,16 +104,20 @@ get = (a) ->
 
 ### Cog: Loading panel for when waiting for a response ###
 cog = (div, size = 200) ->
-        idiv = mk('div', { class: "icon", style: {
-            texAlign: 'center',
-            verticalAlign: 'middle',
-            height: '500px'
+        idiv = mk('div', {
+            class: "icon",
+            style: {
+                texAlign: 'center',
+                verticalAlign: 'middle',
+                height: '500px'
             }
         })
         
-        i = mk('i', { class: 'fa fa-spin fa-cog', style: {
-            fontSize: size+'pt !important',
-            color: '#AAB'
+        i = mk('i', {
+            class: 'fa fa-spin fa-cog',
+            style: {
+                fontSize: size + 'pt !important',
+                color: '#AAB'
             }
         })
         app(idiv, [i, mk('br'), "Loading data, please wait..."])
