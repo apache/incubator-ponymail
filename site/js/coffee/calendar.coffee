@@ -86,9 +86,9 @@ toggleYear = (div) ->
     
     ### Get the year we clicked on ###
     year = parseInt(div.getAttribute("data"))
-        
+
     ### For each year, hide if not this year, else show ###
-    for y in [sYear..eYear]
+    for y in [parseInt(sYear)..parseInt(eYear)]
         if y == year
             get('calendar_months_' + y).show(true)
         else

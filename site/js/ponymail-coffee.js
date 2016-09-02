@@ -53,7 +53,7 @@ Calendar = (function() {
         if ((year > sYear || month >= sMonth) && (year < eYear || month <= eMonth)) {
           monthDiv = new HTML('div', {
             "class": "calendar_month",
-            id: "calendar_month_{#year}-{#month}",
+            id: "calendar_month_" + year + "-" + month,
             data: year + "-" + month,
             onclick: "toggleMonth(this)"
           }, calendar_months[month - 1]);
@@ -89,7 +89,8 @@ toggleYear = function(div) {
 
   /* For each year, hide if not this year, else show */
   results = [];
-  for (y = j = ref1 = sYear, ref2 = eYear; ref1 <= ref2 ? j <= ref2 : j >= ref2; y = ref1 <= ref2 ? ++j : --j) {
+  for (y = j = ref1 = parseInt(sYear), ref2 = parseInt(eYear); ref1 <= ref2 ? j <= ref2 : j >= ref2; y = ref1 <= ref2 ? ++j : --j) {
+    alert(y);
     if (y === year) {
       results.push(get('calendar_months_' + y).show(true));
     } else {
