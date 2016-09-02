@@ -101,6 +101,36 @@ txt = (a) ->
 get = (a) ->
     return document.getElementById(a)
 
+###*
+# prototype injector for HTML elements:
+# Example: mydiv.inject(otherdiv)
+###
+HTMLElement.prototype.inject = (child) ->
+    if isArray(child)
+        for item in child
+            this.appendChild(item)
+    else
+        this.appendChild(child)
+    return child
+
+###*
+# prototype show/hide function for HTML elements:
+# If called with a bool, show if True, hide if False.
+# If no bool, toggle show/hide based on current state.
+###
+HTMLElement.prototype.show = (bool) ->
+    d = 'block'
+    # If no bool is provided, toggle show/hide based on current state
+    if typeof bool is 'undefined'
+        d = if this.style.display == 'none' then 'block' else 'none'
+    else if bool == false
+        # bool set to false, hide stuff
+        d = 'none'
+    else if bool == true
+        # bool set to true, show stuff
+        b = 'block'
+    this.style.display = d
+    return d
 
 ### Cog: Loading panel for when waiting for a response ###
 cog = (div, size = 200) ->
@@ -120,6 +150,6 @@ cog = (div, size = 200) ->
                 color: '#AAB'
             }
         })
-        app(idiv, [i, mk('br'), "Loading data, please wait..."])
+        idiv.inject([i, mk('br'), "Loading data, please wait..."])
         div.innerHTML = ""
         div.appendChild(idiv)
