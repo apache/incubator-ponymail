@@ -37,6 +37,7 @@ pendingURLStatus = () ->
             div = get('loading')
             if not div
                 div = new HTML('div', {
+                    id: 'loading'
                     class: "spinner"
                     },
                     [
@@ -136,40 +137,37 @@ class HTTPRequest
         ### Send data ###
         @request.send(@rdata)
         
+        
         ### Set onChange behavior ###
-        @request.onreadystatechange = @onchange
+        r = this
+        @request.onreadystatechange = () -> r.onchange()
         
-        ### all done! ###
-        return this
-        
-    ### HTTPRequest state change calback ###
     onchange: () ->
-        
-            ### Mark operation as done ###
-            if @request.readyState == 4
-                delete pending_url_operations[@uid]
+        ### Mark operation as done ###
+        if @request.readyState == 4
+            delete pending_url_operations[@uid]
+            
+        ### Internal Server Error: Try to call snap ###
+        if @request.readyState == 4 and @request.status == 500
+            if @snap
+                @snap(@state)
                 
-            ### Internal Server Error: Try to call snap ###
-            if @request.readyState == 4 and @request.status == 500
-                if @snap
-                    @snap(@state)
-                    
-            ### 200 OK, everything is okay, try to parse JSON response ###
-            if @request.readyState == 4 and @request.status == 200
-                if @callback
-                    ### Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass ###
-                    try
-                        ### Parse JSON response ###
-                        @response = JSON.parse(@request.responseText)
-                        ### If loginRequired (rare!), redirect to oauth page ###
-                        if @response && @response.loginRequired
-                            location.href = "/oauth.html"
-                            return
-                        ### Otherwise, call the callback function ###
-                        @callback(@response, @state);
-                    #### JSON parse failed? Pass on the response as plain text then ###
-                    catch e
-                        @callback(@request.responseText, @state)
+        ### 200 OK, everything is okay, try to parse JSON response ###
+        if @request.readyState == 4 and @request.status == 200
+            if @callback
+                ### Try to parse as JSON and deal with cache objects, fall back to old style parse-and-pass ###
+                try
+                    ### Parse JSON response ###
+                    @response = JSON.parse(@request.responseText)
+                    ### If loginRequired (rare!), redirect to oauth page ###
+                    if @response && @response.loginRequired
+                        location.href = "/oauth.html"
+                        return
+                    ### Otherwise, call the callback function ###
+                    @callback(@response, @state);
+                #### JSON parse failed? Pass on the response as plain text then ###
+                catch e
+                    @callback(@request.responseText, @state)
         
     ### Standard form data joiner for POST data ###
     formdata: (kv) ->
@@ -183,3 +181,5 @@ class HTTPRequest
                     ar.push(k + "=" + encodeURIComponent(v))
         ### Join the array with ampersands, so we get "foo=bar&foo2=baz" ###
         return ar.join("&")
+
+pm_snap = null
