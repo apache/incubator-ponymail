@@ -108,8 +108,14 @@ get = (a) ->
 HTMLElement.prototype.inject = (child) ->
     if isArray(child)
         for item in child
+            # Convert to textNode if string
+            if typeof item is 'string'
+                item = txt(item)
             this.appendChild(item)
     else
+        # Convert to textNode if string
+        if typeof child is 'string'
+            child = txt(child)
         this.appendChild(child)
     return child
 
