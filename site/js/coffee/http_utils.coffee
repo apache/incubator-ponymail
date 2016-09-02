@@ -76,7 +76,7 @@ class HTTPRequest
                 @rdata = @formdata(@data)
                 
         ### If tasked with appending data to the URL, do so ###
-        if @getdata
+        if isHash(@getdata)
             tmp = @formdata(@getdata)
             if tmp.length > 0
                 ### Do we have form data here aleady? if so, append the new ###
@@ -125,11 +125,12 @@ class HTTPRequest
     ### Standard form data joiner for POST data ###
     formdata: (kv) ->
         ar = []
-        ### For each key/value pair ###
-        for k,v of kv
-            ### Only append if the value is non-empty ###
-            if v and v != ""
-                ###  URI-Encode value and add to an array ###
-                ar.push(k + "=" + encodeURIComponent(v))
+        ### For each key/value pair (assuming this is a hash) ###
+        if isHash(kv)
+            for k,v of kv
+                ### Only append if the value is non-empty ###
+                if v and v != ""
+                    ###  URI-Encode value and add to an array ###
+                    ar.push(k + "=" + encodeURIComponent(v))
         ### Join the array with ampersands, so we get "foo=bar&foo2=baz" ###
         return ar.join("&")
