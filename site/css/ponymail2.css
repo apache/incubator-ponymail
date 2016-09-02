@@ -1,0 +1,78 @@
+#topMenu {
+    background: #0099FF;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 5px;
+    margin: 20px auto;
+    box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.2);
+    height: 40px;
+    min-width: 300px;
+    max-width: 90%;
+    color: #FFF;
+}
+
+#topMenu li {
+  list-style: none;
+  float: left;
+}
+
+
+#topMenu li:not(.logo) {
+  font-family: sans-serif;
+  font-size: 10pt;
+  font-weight: 500;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  height: 100%;
+  border-left: 1px solid #3A7CA8;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+#topMenu li:not(.logo):last-child {
+  border-right: 1px solid #3A7CA8;
+}
+
+#topMenu a {
+    color: #FFF;
+    text-decoration: none;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    margin-top: -16px;
+    margin-bottom: -16px;
+}
+
+#topMenu a:hover {
+  
+}
+#topMenu li:not(.logo) a:hover:before {
+  content: " ";
+  position: absolute;
+  left: calc(50% - 10px);
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  bottom: 0px;
+  margin-left: 5px;
+  border-bottom: 5px solid #1968FC;
+}
+
+body, html {
+    background: #D2D2D2;
+    margin: 0;
+}
+
+.sbox {
+    box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.1);
+    border: 1px solid #666;
+    background: #EEE;
+    color: #222;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 2px;
+    font-family: sans-serif;
+    font-size:  9pt;
+}
