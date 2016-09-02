@@ -30,11 +30,19 @@ testCoffee = () ->
         ul.inject(li)
     menu.inject(ul)
     
+    # Make a div
+    div = new HTML('div', { class: "sbox"})
+    parent.inject(div)
+    
+    # Make a calendar test
+    cal = new Calendar('2010-5', '2016-9')
+    div.inject(cal)
+    
     # Make a paragraph with some text in it
-    p = new HTML('p', { class: "sbox", style: { textAlign: 'center'}}, "Text goes here")
+    p = new HTML('p', { class: "foo", style: { textAlign: 'center'}}, "Text goes here")
     
     # Inject paragraph into div
-    parent.inject(p)
+    div.inject(p)
     
     # Add some plain text and a break
     p.inject([". Here's a textNode added afterwards", new HTML('br')])
