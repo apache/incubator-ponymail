@@ -13,6 +13,12 @@ calendar_months = [
     'December'
     ]
 
+###*
+# Calendar: Make a HTML calendar with years and months
+# that expands/contracts. For the left side view.
+# Usage: cal = new Calendar('2001-2', '2016-9', 2010)
+# Would make a calendar going from 2001 to 2016 with 2010 expanded.
+###
 class Calendar
     constructor: (start, end, jumpTo) ->
         now = new Date()
