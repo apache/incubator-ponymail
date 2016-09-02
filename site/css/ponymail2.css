@@ -113,3 +113,20 @@ body, html {
 }
 
 
+
+
+#header {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 15pt;
+}
+
+#calendar {
+    width: 140px;
+    float: left;
+}
+
+#listview {
+    width: calc(95% - 160px);
+    float: left;
+}
