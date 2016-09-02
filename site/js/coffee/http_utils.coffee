@@ -19,6 +19,44 @@
 # This is http_utils.coffee: HTTP Request library  #
 ####################################################
 
+
+###*
+# Pending URLs watcher:
+# Wathes which URLs have been pending a result for a while
+# and shows the spinner if things are taking too long.
+###
+pending_url_operations = {}
+
+pendingURLStatus = () ->
+    pending = 0
+    now = new Date().getTime()
+    for url, time of pending_url_operations
+        ### Is something taking too long?? ###
+        if (now - time) > 1500
+            pending++
+            div = get('loading')
+            if not div
+                div = new HTML('div', {
+                    class: "spinner"
+                    },
+                    [
+                        new HTML('img', {src: "images/spinner.gif"}),
+                        new HTML('br'),
+                        "Loading, please wait..."
+                    ]
+                )
+                document.body.inject(div)
+            div.style.display = "block"
+    
+    ### If no pending operations, hide the spnner ###
+    if pending == 0
+        div = get('loading')
+        if div
+            div.style.display = "none"
+            
+window.setInterval(pendingURLStatus, 500)
+
+
 ###*
 # HTTPRequest: Fire off a HTTP request.
 # Args:
@@ -45,6 +83,7 @@
 #   })
 ###
 
+
 class HTTPRequest
     constructor: (@url, @args) ->
         ### Set internal class data, determine request type ###
@@ -56,6 +95,7 @@ class HTTPRequest
         @callback = @args.callback
         @snap = @args.snap || pm_snap
         @nocreds = @args.nocreds || false
+        @uid = parseInt(Math.random()*10000000).toString(16)
         
         ### Construct request object ###
         if window.XMLHttpRequest
@@ -87,6 +127,9 @@ class HTTPRequest
                 else
                     @url += "?" + tmp
                 
+        ### Mark operation as pending result ###
+        pending_url_operations[@uid] = new Date().getTime()
+        
         ### Use @method on URL ###
         @request.open(@method, @url, true)
         
@@ -101,10 +144,16 @@ class HTTPRequest
         
     ### HTTPRequest state change calback ###
     onchange: () ->
+        
+            ### Mark operation as done ###
+            if @request.readyState == 4
+                delete pending_url_operations[@uid]
+                
             ### Internal Server Error: Try to call snap ###
             if @request.readyState == 4 and @request.status == 500
                 if @snap
                     @snap(@state)
+                    
             ### 200 OK, everything is okay, try to parse JSON response ###
             if @request.readyState == 4 and @request.status == 200
                 if @callback
