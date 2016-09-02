@@ -31,6 +31,12 @@ class Calendar
         ### If end year+month given, use it ###
         if end
             [eYear, eMonth] = end.split("-")
+            
+        ### Make sure months are there, otherwise set them ###
+        if not sMonth
+            sMonth = 1
+        if not eMonth
+            eMonth = 12
         
         ### For each year, construct the year div to hold months ###
         years = []
