@@ -152,7 +152,7 @@ class HTTPRequest
         @request.open(@method, @url, true)
         
         ### Send data ###
-        #@request.send(@rdata)
+        @request.send(@rdata)
         
         
         ### Set onChange behavior ###
