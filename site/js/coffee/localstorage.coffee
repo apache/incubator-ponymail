@@ -51,3 +51,13 @@ dbRead = (key) ->
         ### Nope, try global var ###
         return pm_storage_globvar[key]
     
+
+hasRead = (mid) ->
+    if dbRead("ponymail_read_" + mid)
+        return true
+    else
+        return false
+
+markRead = (mid) ->
+    dbWrite("ponymail_read_" + mid, new Date().getTime())
+    return true

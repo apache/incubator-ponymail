@@ -57,13 +57,30 @@ class BasicListView
                 noeml = @countEmail(item)
                 
                 ### Render the email in the LV ###
+                
+                ### First set some data points for later ###
+                uid = parseInt(Math.random() * 999999999999).toString(16)
+                
+                
+                ### Gravatar ###
                 avatar = new HTML('img', { src: "https://secure.gravatar.com/avatar/#{original.gravatar}.png?s=24&r=g&d=mm"})
-                sender = new HTML('div', {}, original.from.replace(/\s*<.+>/, ""))
+                
+                ### Sender, without the <foo@bar> part - just the name ###
+                sender = new HTML('div', {style: {fontWeight: "bold"}}, original.from.replace(/\s*<.+>/, "").replace(/"/g, ''))
+                
+                ### readStyle: bold if new email, normal if read before ###
+                readStyle = "bold"
+                if hasRead(item.tid)
+                    readStyle = "normal"
+                    
+                ### Subject, PLUS a bit of the body with a break before ###
                 subject = new HTML('div', {}, [
-                    original.subject,
+                    new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{item.tid}", onclick: "readEmail(this.parentNode.parentNode); return false;"}, original.subject),
                     new HTML('br'),
                     new HTML('span', { style: { color: "#999", fontSize: "0.7rem"}}, item.body)
                 ])
+                
+                ### replies and authors ###
                 stats = new HTML('div', {class:"listview_right"}, " #{people} people, #{noeml} replies")
                 
                 ### Add date; yellow if <= 1day, grey otherwise ###
@@ -72,12 +89,13 @@ class BasicListView
                     date_style = "listview_yellow"
                 date = new HTML('div', {class:"listview_right #{date_style}"}, new Date(item.epoch*1000).ISOBare())
                 
-                item = new HTML('div', {class: "listview_item"}, [avatar, sender, subject, date, stats])
+                item = new HTML('div', {id: uid, data: item.tid, class: "listview_item"}, [avatar, sender, subject, date, stats])
+                
                 @lv.inject(item)
         
         now = new Date().getTime()
         diff = now - @lastScroll
-        @lv.inject("Rendered in " + parseInt(diff) + "ms.")
+        @lv.inject("Fetched in " + parseInt(@json.took/1000) + "ms, rendered in " + parseInt(diff) + "ms.")
     ### findEmail: find an email given an ID ###
     findEmail: (id) ->
         for email in @json.emails
