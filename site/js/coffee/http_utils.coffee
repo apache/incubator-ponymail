@@ -28,22 +28,24 @@
 pending_url_operations = {}
 pending_spinner_at = 0
 
-spinCheck = (div) ->
-    now = new Date().getTime()
-    if (now - pending_spinner_at) >= 4000
-        pending_spinner_at = now
-        ndiv = div.cloneNode(true)
-        ndiv.addEventListener('animationend', (e) -> spinCheck(ndiv))
-        div.parentNode.replaceChild(ndiv, div)
-    
+spinCheck = (div, reset) ->
+    if div.style.display == "block"
+        spnow = new Date().getTime()
+        if reset or (spnow - pending_spinner_at) >= 4000
+            pending_spinner_at = spnow
+            ndiv = div.cloneNode(true)
+            #ndiv.addEventListener('animationend', (e) -> spinCheck(ndiv))
+            div.parentNode.replaceChild(ndiv, div)
+    else
+        pending_spinner_at = 0
     
 pendingURLStatus = () ->
     pending = 0
-    now = new Date().getTime()
+    spnow = new Date().getTime()
     div = get('loading')
     for url, time of pending_url_operations
         ### Is something taking too long?? ###
-        if (now - time) > 1500
+        if (spnow - time) > 1500
             pending++
             if not div
                 div = new HTML('div', {
@@ -59,7 +61,7 @@ pendingURLStatus = () ->
                     ]
                 )
                 document.body.inject(div)
-                pending_spinner_at = now
+                pending_spinner_at = spnow
                 div.addEventListener('animationend', (e) -> spinCheck(div))
                 
     
@@ -70,6 +72,9 @@ pendingURLStatus = () ->
             div.style.display = "none"
     else if div and div.style.display == "none"
         div.style.display = "block"
+        if pending_spinner_at == 0
+            pending_spinner_at = spnow
+            spinCheck(div, true)
         
 
 window.setInterval(pendingURLStatus, 500)
@@ -184,7 +189,8 @@ class HTTPRequest
                     @callback(@response, @state);
                 #### JSON parse failed? Pass on the response as plain text then ###
                 catch e
-                    @callback(@request.responseText, @state)
+                    console.log("Callback failed: " + e)
+                    @callback(JSON.parse(@request.responseText), @state)
         
     ### Standard form data joiner for POST data ###
     formdata: (kv) ->
