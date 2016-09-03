@@ -765,9 +765,16 @@ BasicListView = (function() {
 
   /* json: from stats.lua, rpp = results per page, pos = starting position (from 0) */
   function BasicListView(json1, rpp1, pos1) {
+    var hd;
     this.json = json1;
     this.rpp = rpp1 != null ? rpp1 : 15;
     this.pos = pos1 != null ? pos1 : 0;
+
+    /* Set the header first */
+    hd = get('header');
+    if (this.json.list) {
+      hd.empty().inject(this.json.list + ", past 30 days:");
+    }
 
     /* Get and clear the list view */
     this.lv = get('listview');
@@ -775,6 +782,7 @@ BasicListView = (function() {
 
     /* If we got results, use scroll() to display from result 0 on */
     if (isArray(this.json.thread_struct) && this.json.thread_struct.length > 0) {
+      this.json.thread_struct.reverse();
       this.scroll(this.rpp, this.pos);
     } else {
 
@@ -787,14 +795,15 @@ BasicListView = (function() {
   /* scroll: scroll to a position and show N emails/threads */
 
   BasicListView.prototype.scroll = function(rpp, pos) {
+    var avatar, date, date_style, diff, item, j, len, noeml, now, original, people, ref, sender, stats, subject;
+    this.lastScroll = new Date().getTime();
+    now = new Date().getTime() / 1000;
 
     /* Clear the list view */
-    var item, j, len, noeml, original, people, ref, results;
     this.lv = this.lv.empty();
 
     /* For each email result,... */
-    ref = this.json.thread_struct;
-    results = [];
+    ref = this.json.thread_struct.slice(pos, pos + rpp);
     for (j = 0, len = ref.length; j < len; j++) {
       item = ref[j];
       original = this.findEmail(item.tid);
@@ -805,15 +814,39 @@ BasicListView = (function() {
         noeml = this.countEmail(item);
 
         /* Render the email in the LV */
+        avatar = new HTML('img', {
+          src: "https://secure.gravatar.com/avatar/" + original.gravatar + ".png?s=24&r=g&d=mm"
+        });
+        sender = new HTML('div', {}, original.from.replace(/\s*<.+>/, ""));
+        subject = new HTML('div', {}, [
+          original.subject, new HTML('br'), new HTML('span', {
+            style: {
+              color: "#999",
+              fontSize: "0.7rem"
+            }
+          }, item.body)
+        ]);
+        stats = new HTML('div', {
+          "class": "listview_right"
+        }, " " + people + " people, " + noeml + " replies");
+
+        /* Add date; yellow if <= 1day, grey otherwise */
+        date_style = "listview_grey";
+        if ((now - 86400 * 4) < item.epoch) {
+          date_style = "listview_yellow";
+        }
+        date = new HTML('div', {
+          "class": "listview_right " + date_style
+        }, new Date(item.epoch * 1000).ISOBare());
         item = new HTML('div', {
           "class": "listview_item"
-        }, original.subject + " - " + people + " and " + noeml + " replies.");
-        results.push(this.lv.inject(item));
-      } else {
-        results.push(void 0);
+        }, [avatar, sender, subject, date, stats]);
+        this.lv.inject(item);
       }
     }
-    return results;
+    now = new Date().getTime();
+    diff = now - this.lastScroll;
+    return this.lv.inject("Rendered in " + parseInt(diff) + "ms.");
   };
 
 
@@ -1141,6 +1174,17 @@ Number.prototype.pad = function(n) {
     str = "0".repeat(n - str.length) + str;
   }
   return str;
+};
+
+
+/* Func for converting a date to YYYY-MM-DD */
+
+Date.prototype.ISOBare = function() {
+  var d, m, y;
+  y = this.getFullYear();
+  m = this.getMonth() + 1;
+  d = this.getDate();
+  return y + "-" + m.pad(2) + "-" + d.pad(2);
 };
 
 
