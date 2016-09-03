@@ -22,12 +22,18 @@ class BasicListView
     ### json: from stats.lua, rpp = results per page, pos = starting position (from 0) ###
     constructor: (@json, @rpp = 15, @pos = 0) ->
         
+        ### Set the header first ###
+        hd = get('header')
+        if @json.list
+            hd.empty().inject("#{@json.list}, past 30 days:")
+            
         ### Get and clear the list view ###
         @lv = get('listview')
         @lv = @lv.empty()
         
         ### If we got results, use scroll() to display from result 0 on ###
         if isArray(@json.thread_struct) and @json.thread_struct.length > 0
+            @json.thread_struct.reverse()
             @scroll(@rpp, @pos)
         else
             ### No results, just say...that ###
@@ -36,11 +42,13 @@ class BasicListView
             
     ### scroll: scroll to a position and show N emails/threads ###
     scroll: (rpp, pos) ->
+        @lastScroll = new Date().getTime()
+        now = new Date().getTime()/1000
         ### Clear the list view ###
         @lv = @lv.empty()
         
         ### For each email result,...###
-        for item in @json.thread_struct
+        for item in @json.thread_struct[pos...(pos+rpp)]
             original = @findEmail(item.tid)
             
             ### Be sure we actually have an email here ###
@@ -49,9 +57,27 @@ class BasicListView
                 noeml = @countEmail(item)
                 
                 ### Render the email in the LV ###
-                item = new HTML('div', {class: "listview_item"}, "#{original.subject} - #{people} and #{noeml} replies.")
+                avatar = new HTML('img', { src: "https://secure.gravatar.com/avatar/#{original.gravatar}.png?s=24&r=g&d=mm"})
+                sender = new HTML('div', {}, original.from.replace(/\s*<.+>/, ""))
+                subject = new HTML('div', {}, [
+                    original.subject,
+                    new HTML('br'),
+                    new HTML('span', { style: { color: "#999", fontSize: "0.7rem"}}, item.body)
+                ])
+                stats = new HTML('div', {class:"listview_right"}, " #{people} people, #{noeml} replies")
+                
+                ### Add date; yellow if <= 1day, grey otherwise ###
+                date_style = "listview_grey"
+                if (now-86400*4) < item.epoch
+                    date_style = "listview_yellow"
+                date = new HTML('div', {class:"listview_right #{date_style}"}, new Date(item.epoch*1000).ISOBare())
+                
+                item = new HTML('div', {class: "listview_item"}, [avatar, sender, subject, date, stats])
                 @lv.inject(item)
-    
+        
+        now = new Date().getTime()
+        diff = now - @lastScroll
+        @lv.inject("Rendered in " + parseInt(diff) + "ms.")
     ### findEmail: find an email given an ID ###
     findEmail: (id) ->
         for email in @json.emails
