@@ -26,8 +26,9 @@ window.onpopstate = (event) ->
 parseURL = () ->
     [list, month, query] = window.location.search.substr(1).split(":", 3)
     ponymail_list = list
-    ponymail_month = month
-    ponymail_query = query
+    ponymail_month = month||""
+    ponymail_query = query||""
+    
     
 
 listView = (hash, reParse) ->
@@ -48,17 +49,20 @@ listView = (hash, reParse) ->
             ponymail_query = hash.query
     
     ### First, check that we have a list to view! ###
-    if not (ponymail_list and ponymail_list.match(/.+@.+/))
+    if not (ponymail_list and ponymail_list.match(/.+?@.+/))
         ### Do we at least have a domain part? ###
         if ponymail_list and ponymail_list.match(/.+?\..+/)
             ### Check if there's a $default list in this domain ###
-            d = ponymail_list
+            [l, d] = ponymail_list.split("@", 2)
+            if not d
+                d = l
+                
             ### Do we have this domain listed? If not, redirect to front page ###
-            if not ponymail_domains[d]
+            if not d or not ponymail_lists[d]
                 location.href = "./"
                 return
             
-            if ponymail_domains[d] and ponymail_domains[d][pm_config.default_list]
+            if ponymail_lists[d] not ponymail_lists[d][l] and ponymail_lists[d][pm_config.default_list]
                 ### Redirect to this list then ... ###
                 location.href = "#{htmlfile}?#{pm_config.default_list}@#{d}"
                 return
@@ -77,13 +81,28 @@ listView = (hash, reParse) ->
         args += ":" + ponymail_query
         
     ### Push a new history state using new args ###
-    window.history.pushState({}, "", "#{htmlfile}?#{args}")
+    newhref = "#{htmlfile}?#{args}"
+    if location.href != newhref
+        window.history.pushState({}, newhref)
     
+    [list, domain] = ponymail_list.split("@", 2)
     ### Request month view from API, send to list view callback ###
+    pargs = "d=30"
+    if ponymail_month and ponymail_month.length > 0
+        pargs = "s=#{ponymail_month}&e=#{ponymail_month}"
     r = new HTTPRequest(
-        "api/stats.lua?list=#{ponymail_list}&d=#{ponymail_month}",
+        "api/stats.lua?list=#{list}&domain=#{domain}&#{pargs}",
         {
             callback: renderListView
         }
         )
+    
+renderListView = (json, state) ->
+    
+    ### Start by adding the calendar ###
+    if json.firstYear and json.lastYear
+        cal = new Calendar(json.firstYear, json.lastYear)
+        get('calendar').empty().inject(cal)
+        
+    lv = new BasicListView(json)
     
