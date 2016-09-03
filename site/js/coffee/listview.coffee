@@ -83,7 +83,7 @@ listView = (hash, reParse) ->
     ### Push a new history state using new args ###
     newhref = "#{htmlfile}?#{args}"
     if location.href != newhref
-        window.history.pushState({}, newhref)
+        window.history.pushState({}, null, newhref)
     
     [list, domain] = ponymail_list.split("@", 2)
     ### Request month view from API, send to list view callback ###
