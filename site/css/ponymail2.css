@@ -85,7 +85,7 @@ body, html {
     background: #78BF3B;
     border-radius: 3px;
     color: #FFF;
-    width: 110px;
+    width: 90px;
     text-align: center;
     margin-bottom: 3px;
     padding: 1px;
@@ -113,13 +113,26 @@ body, html {
     background: #648BAD;
     border-radius: 3px;
     color: #FFF;
-    margin-left: 5px;
-    width: 100px;
+    margin-left: 10px;
+    width: 70px;
     text-align: center;
     margin-bottom: 2px;
     padding: 1px;
+    font-size: 90%;
 }
 
+
+.calendar_month_selected {
+    background: #4D9ADD;
+    border-radius: 3px;
+    color: #FFF;
+    margin-left: 10px;
+    width: 70px;
+    text-align: center;
+    margin-bottom: 2px;
+    padding: 1px;
+    font-size: 90%;
+}
 
 .calendar_month:hover {
     background: #99BCDB;
@@ -142,7 +155,7 @@ body, html {
     border: 1px solid #666;
     padding: 10px;
     background: #DDD;
-    width: 120px;
+    width: 100px;
     float: left;
     font-family: sans-serif;
     font-size: 9pt;

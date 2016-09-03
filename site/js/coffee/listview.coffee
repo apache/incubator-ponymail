@@ -101,7 +101,7 @@ renderListView = (json, state) ->
     
     ### Start by adding the calendar ###
     if json.firstYear and json.lastYear
-        cal = new Calendar(json.firstYear, json.lastYear)
+        cal = new Calendar(json.firstYear, json.lastYear, ponymail_month)
         get('calendar').empty().inject(cal)
         
     lv = new BasicListView(json)

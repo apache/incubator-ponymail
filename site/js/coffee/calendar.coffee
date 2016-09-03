@@ -29,6 +29,12 @@ class Calendar
         
         [eYear, eMonth] = [now.getFullYear(), now.getMonth()+1]
         
+        [jYear, jMonth] = [0,0]
+        if jumpTo
+            [jYear, jMonth] = String(jumpTo).split("-", 2)
+            jYear = parseInt(jYear)
+            jMonth = parseInt(jMonth)
+        
         ### If end year+month given, use it ###
         if end
             [eYear, eMonth] = String(end).split("-")
@@ -55,7 +61,7 @@ class Calendar
             ### Construct the placeholder for months ###
             ### Hide unless active year ###
             monthsDiv = new HTML('div', {
-                class: if (jumpTo and jumpTo == year) or
+                class: if (jumpTo and jYear == year) or
                         (not jumpTo and year == parseInt(eYear))
                         then "calendar_months"
                         else "calendar_months_hidden"
@@ -66,8 +72,11 @@ class Calendar
             for month in [12..1]
                 ### Make sure this is within the start<->end range ###
                 if (year > sYear or month >= sMonth) and (year < eYear or month <= eMonth)
+                    extra = ""
+                    if jumpTo and jYear == year and jMonth == month
+                        extra = "calendar_month_selected"
                     monthDiv = new HTML('div', {
-                        class: "calendar_month"
+                        class: "calendar_month #{extra}"
                         id: "calendar_month_#{uid}_#{year}-#{month}"
                         data: "#{year}-#{month}"
                         onclick: "toggleMonth(this)"
@@ -90,10 +99,12 @@ class Calendar
 toggleYear = (div) ->
     
     ### Get the start and end year from the parent div ###
-    [sYear, eYear] = div.parentNode.getAttribute('data').split("-")
+    [sYear, eYear] = div.getAttribute('data').split("-")
     
     ### Get the year we clicked on ###
-    year = parseInt(div.getAttribute("data"))
+    [year, month] = div.getAttribute("data").split("-")
+    year = parseInt(year)
+    month = parseInt(month)
     
     ## Get Calendar UID
     uid = div.parentNode.getAttribute("id")
@@ -107,6 +118,7 @@ toggleYear = (div) ->
             
 toggleMonth = (div) ->
     #### TODO later... ###
+    uid = div.parentNode.parentNode.getAttribute("id")
     m = div.getAttribute("data")
     [year, month] = m.split("-")
     
