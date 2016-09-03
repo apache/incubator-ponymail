@@ -32,6 +32,9 @@ class Calendar
         ### If end year+month given, use it ###
         if end
             [eYear, eMonth] = String(end).split("-")
+            ### If end year is this year, restrict months to those that have passed ###
+            if parseInt(eYear) == now.getFullYear()
+                eMonth = now.getMonth() + 1
             
         ### Make sure months are there, otherwise set them ###
         if not sMonth
