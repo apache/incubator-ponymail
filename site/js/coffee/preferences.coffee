@@ -16,4 +16,8 @@
 ###
 
 setupAccount = (json, state) ->
-    
+    if json and isArray(json.lists)
+        for domain, lists of json.lists
+            ponymail_lists[domain] = lists
+    if state.listview
+        listView(null, true)

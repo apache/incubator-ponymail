@@ -57,11 +57,7 @@ listviewScaffolding = () ->
     ### Then make the calendar placeholder ###
     calHolder = new HTML('div', { id: "calendar"})
     mainDiv.inject(calHolder)
-    
-    ### TEST: Insert fake calendar ###
-    cal = new Calendar(2010)
     calHolder.inject(new HTML('h3', {}, "Archive:"))
-    calHolder.inject(cal)
     
     ### Finally, make the list view placeholder ###
     listDiv = new HTML('div', { id: "listview", class: "sbox"})
@@ -75,4 +71,13 @@ listviewScaffolding = () ->
         new HTML('a', { href: 'https://ponymail.incubator.apache.org/'}, "Apache Pony Mail (Incubating) v/#{ponymail_version}"),
         ". Copyright 2016, the Apache Software Foundation."
     ])
+    
+    ### Make an API call to the preferences script, have it call back to listView once done ###
+    r = new HTTPRequest("api/preferences.lua", {
+        callback: setupAccount
+        state: {
+            listview: true
+        }
+    })
+    
     
