@@ -169,58 +169,95 @@ h3, h2, h1 {
 .spinner {
     z-index: 100;
     position: fixed;
-    top: calc(40% - 100px);
+    top: calc(40% - 90px);
     left: calc(50% - 150px);
     width: 300px;
     height: 200px;
     background: #3285BC;
     border-radius: 8px;
-    font-size: 12pt;
+    font-size: 9pt;
     color: #FFF;
     text-align: center;
     font-family: sans-serif;
 }
 .spinwheel {
-    margin: 5px auto;
-    font-size: 10px;
-    position: relative;
-    border-top: 1.1em solid rgba(220, 190, 30, 0.2);
-    border-right: 1.1em solid rgba(220, 190, 30, 0.2);
-    border-bottom: 1.1em solid rgba(220, 190, 30, 0.2);
-    border-left: 1.1em solid #E2BB1F;
-    -webkit-transform: translateZ(0);
-    -ms-transform: translateZ(0);
+    margin: 8px auto;
+    border-top: 10px solid rgba(30,190,200,0.95);
+    border-right: 10px solid rgba(220, 30, 120, 0.95);
+    border-bottom: 10px solid rgba(120, 200, 30, 0.95);
+    border-left: 10px solid rgba(220,190,30,0.95);
     transform: translateZ(0);
-    -webkit-animation: spinning 1.1s infinite linear;
-    animation: spinning 1.1s infinite linear;
+    animation: spin1 1s 0s ease-in-out forwards, spin2 1s 1s ease-in-out forwards, spin3 1s 2s ease-in-out forwards, spin4 1s 3s ease-in-out forwards;
 }
 
 .spinwheel, .spinwheel:after {
     border-radius: 50%;
-    width: 10em;
-    height: 10em;
+    width: 100px;
+    height: 100px;
 }
 
-@-webkit-keyframes spinning {
+.spinwheel_md {
+    margin: 10px 10px;
+    border-top: 10px solid rgba(30,190,200,0.95);
+    border-right: 10px solid rgba(220, 30, 120, 0.95);
+    border-bottom: 10px solid rgba(120, 200, 30, 0.95);
+    border-left: 10px solid rgba(220,190,30,0.95);
+}
+
+.spinwheel_md, .spinwheel_md:after {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+.spinwheel_sm {
+    margin: 10px 10px;
+    border-top: 20px solid rgba(30,190,200,0.95);
+    border-right: 20px solid rgba(220, 30, 120, 0.95);
+    border-bottom: 20px solid rgba(120, 200, 30, 0.95);
+    border-left: 20px solid rgba(220,190,30,0.95);
+}
+
+.spinwheel_sm, .spinwheel_sm:after {
+    border-radius: 50%;
+    width: 0px;
+    height: 0px;
+}
+
+@keyframes spin1 {
     0% {
-        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
 
     100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
+        transform: rotate(90deg);
     }
 }
 
-@keyframes spinning {
+@keyframes spin2 {
     0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+        transform: rotate(90deg);
     }
 
     100% {
-        -webkit-transform: rotate(360deg);
+        transform: rotate(180deg);
+    }
+}
+@keyframes spin3 {
+    0% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(270deg);
+    }
+}
+@keyframes spin4 {
+    0% {
+        transform: rotate(270deg);
+    }
+
+    100% {
         transform: rotate(360deg);
     }
 }

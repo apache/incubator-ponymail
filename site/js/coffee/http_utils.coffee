@@ -26,35 +26,52 @@
 # and shows the spinner if things are taking too long.
 ###
 pending_url_operations = {}
+pending_spinner_at = 0
 
+spinCheck = (div) ->
+    now = new Date().getTime()
+    if (now - pending_spinner_at) >= 4000
+        pending_spinner_at = now
+        ndiv = div.cloneNode(true)
+        ndiv.addEventListener('animationend', (e) -> spinCheck(ndiv))
+        div.parentNode.replaceChild(ndiv, div)
+    
+    
 pendingURLStatus = () ->
     pending = 0
     now = new Date().getTime()
+    div = get('loading')
     for url, time of pending_url_operations
         ### Is something taking too long?? ###
         if (now - time) > 1500
             pending++
-            div = get('loading')
             if not div
                 div = new HTML('div', {
                     id: 'loading'
                     class: "spinner"
                     },
                     [
-                        new HTML('div', {class: "spinwheel"}),
+                        new HTML('div', {class: "spinwheel"},
+                                 new HTML('div', {class:"spinwheel_md"},
+                                          new HTML('div', {class:"spinwheel_sm"}))),
                         new HTML('br'),
                         "Loading, please wait..."
                     ]
                 )
                 document.body.inject(div)
-            div.style.display = "block"
+                pending_spinner_at = now
+                div.addEventListener('animationend', (e) -> spinCheck(div))
+                
     
     ### If no pending operations, hide the spnner ###
     if pending == 0
         div = get('loading')
         if div
             div.style.display = "none"
-            
+    else if div and div.style.display == "none"
+        div.style.display = "block"
+        
+
 window.setInterval(pendingURLStatus, 500)
 
 
@@ -135,7 +152,7 @@ class HTTPRequest
         @request.open(@method, @url, true)
         
         ### Send data ###
-        @request.send(@rdata)
+        #@request.send(@rdata)
         
         
         ### Set onChange behavior ###
