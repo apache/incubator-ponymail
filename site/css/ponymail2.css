@@ -150,7 +150,7 @@ body, html {
 }
 
 #listview {
-    width: calc(95% - 160px);
+    width: calc(95% - 200px);
     float: left;
 }
 
@@ -269,4 +269,57 @@ h3, h2, h1 {
     100% {
         transform: rotate(720deg);
     }
+}
+
+/* listview styles */
+.listview_item {
+    border-radius: 3px;
+    border: 1px solid #666;
+    padding: 2px;
+    margin: 2px;
+    float: left;
+    width: calc(100% - 8px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.listview_item img {
+    vertical-align: middle;
+    margin-right: 8px;
+    float: left;
+}
+
+.listview_item div:not(.listview_right) {
+    margin-right: 10px;
+    padding-top: 4px;
+    width: 150px;
+    float: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.listview_item div:nth-child(3) {
+    width: calc(100% - 420px);
+}
+
+.listview_right {
+    float: right !important;
+    background: #1789D6;
+    border-radius: 3px;
+    border: 1px solid #668;
+    padding: 2px;
+    margin-top: 6px;
+    color: #FFF;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.listview_yellow {
+    background: #E29E0B;
+}
+
+.listview_grey {
+    background: #A5A5A5;
 }
