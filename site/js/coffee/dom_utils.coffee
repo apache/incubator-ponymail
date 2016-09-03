@@ -124,6 +124,14 @@ HTMLElement.prototype.show = (bool) ->
     this.style.display = d
     return d
 
+###*
+# prototype for emptying an html element
+###
+HTMLElement.prototype.empty = () ->
+    ndiv = this.cloneNode()
+    this.parentNode.replaceChild(ndiv, this)
+    return ndiv
+
 ### Cog: Loading panel for when waiting for a response ###
 cog = (div, size = 200) ->
         idiv = mk('div', {
