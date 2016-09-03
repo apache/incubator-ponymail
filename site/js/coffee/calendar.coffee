@@ -112,7 +112,7 @@ toggleMonth = (div) ->
     
     ### Update the list view using the new month ###
     listView({
-        month: m
+        month: year+"-"+parseInt(month).pad(2)
     })
     
     
