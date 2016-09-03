@@ -17,3 +17,8 @@
 
 ### Pony Mail defaults ###
 ponymail_version = "0.10-coffee-and-cake"
+
+ponymail_lists = {}
+ponymail_list = ""
+ponymail_month = ""
+ponymail_query = ""
