@@ -13,17 +13,23 @@ calendar_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July
 
 Calendar = (function() {
   function Calendar(start, end, jumpTo) {
-    var div, eMonth, eYear, j, month, monthDiv, monthsDiv, now, o, ref, ref1, ref2, ref3, ref4, sMonth, sYear, uid, yDiv, year, years;
+    var div, eMonth, eYear, extra, j, jMonth, jYear, month, monthDiv, monthsDiv, now, o, ref, ref1, ref2, ref3, ref4, ref5, ref6, sMonth, sYear, uid, yDiv, year, years;
     now = new Date();
     uid = parseInt(Math.random() * 100000000).toString(16);
 
     /* Split start and end into years and months */
     ref = String(start).split("-"), sYear = ref[0], sMonth = ref[1];
     ref1 = [now.getFullYear(), now.getMonth() + 1], eYear = ref1[0], eMonth = ref1[1];
+    ref2 = [0, 0], jYear = ref2[0], jMonth = ref2[1];
+    if (jumpTo) {
+      ref3 = String(jumpTo).split("-", 2), jYear = ref3[0], jMonth = ref3[1];
+      jYear = parseInt(jYear);
+      jMonth = parseInt(jMonth);
+    }
 
     /* If end year+month given, use it */
     if (end) {
-      ref2 = String(end).split("-"), eYear = ref2[0], eMonth = ref2[1];
+      ref4 = String(end).split("-"), eYear = ref4[0], eMonth = ref4[1];
 
       /* If end year is this year, restrict months to those that have passed */
       if (parseInt(eYear) === now.getFullYear()) {
@@ -41,7 +47,7 @@ Calendar = (function() {
 
     /* For each year, construct the year div to hold months */
     years = [];
-    for (year = j = ref3 = parseInt(sYear), ref4 = parseInt(eYear); ref3 <= ref4 ? j <= ref4 : j >= ref4; year = ref3 <= ref4 ? ++j : --j) {
+    for (year = j = ref5 = parseInt(sYear), ref6 = parseInt(eYear); ref5 <= ref6 ? j <= ref6 : j >= ref6; year = ref5 <= ref6 ? ++j : --j) {
       yDiv = new HTML('div', {
         id: ("calendar_year_" + uid + "_") + year,
         data: String(year),
@@ -53,7 +59,7 @@ Calendar = (function() {
 
       /* Hide unless active year */
       monthsDiv = new HTML('div', {
-        "class": (jumpTo && jumpTo === year) || (!jumpTo && year === parseInt(eYear)) ? "calendar_months" : "calendar_months_hidden",
+        "class": (jumpTo && jYear === year) || (!jumpTo && year === parseInt(eYear)) ? "calendar_months" : "calendar_months_hidden",
         id: ("calendar_months_" + uid + "_") + year
       });
 
@@ -62,8 +68,12 @@ Calendar = (function() {
 
         /* Make sure this is within the start<->end range */
         if ((year > sYear || month >= sMonth) && (year < eYear || month <= eMonth)) {
+          extra = "";
+          if (jumpTo && jYear === year && jMonth === month) {
+            extra = "calendar_month_selected";
+          }
           monthDiv = new HTML('div', {
-            "class": "calendar_month",
+            "class": "calendar_month " + extra,
             id: "calendar_month_" + uid + "_" + year + "-" + month,
             data: year + "-" + month,
             onclick: "toggleMonth(this)"
@@ -93,16 +103,18 @@ Calendar = (function() {
 toggleYear = function(div) {
 
   /* Get the start and end year from the parent div */
-  var eYear, j, ref, ref1, ref2, results, sYear, uid, y, year;
-  ref = div.parentNode.getAttribute('data').split("-"), sYear = ref[0], eYear = ref[1];
+  var eYear, j, month, ref, ref1, ref2, ref3, results, sYear, uid, y, year;
+  ref = div.getAttribute('data').split("-"), sYear = ref[0], eYear = ref[1];
 
   /* Get the year we clicked on */
-  year = parseInt(div.getAttribute("data"));
+  ref1 = div.getAttribute("data").split("-"), year = ref1[0], month = ref1[1];
+  year = parseInt(year);
+  month = parseInt(month);
   uid = div.parentNode.getAttribute("id");
 
   /* For each year, hide if not this year, else show */
   results = [];
-  for (y = j = ref1 = parseInt(sYear), ref2 = parseInt(eYear); ref1 <= ref2 ? j <= ref2 : j >= ref2; y = ref1 <= ref2 ? ++j : --j) {
+  for (y = j = ref2 = parseInt(sYear), ref3 = parseInt(eYear); ref2 <= ref3 ? j <= ref3 : j >= ref3; y = ref2 <= ref3 ? ++j : --j) {
     if (y === year) {
       results.push(get("calendar_months_" + uid + "_" + y).setAttribute("class", "calendar_months"));
     } else {
@@ -113,7 +125,8 @@ toggleYear = function(div) {
 };
 
 toggleMonth = function(div) {
-  var m, month, ref, year;
+  var m, month, ref, uid, year;
+  uid = div.parentNode.parentNode.getAttribute("id");
   m = div.getAttribute("data");
   ref = m.split("-"), year = ref[0], month = ref[1];
 
@@ -508,16 +521,17 @@ pending_url_operations = {};
 
 pending_spinner_at = 0;
 
-spinCheck = function(div) {
+spinCheck = function(div, reset) {
   var ndiv, spnow;
-  spnow = new Date().getTime();
-  if ((spnow - pending_spinner_at) >= 4000) {
-    pending_spinner_at = spnow;
-    ndiv = div.cloneNode(true);
-    ndiv.addEventListener('animationend', function(e) {
-      return spinCheck(ndiv);
-    });
-    return div.parentNode.replaceChild(ndiv, div);
+  if (div.style.display === "block") {
+    spnow = new Date().getTime();
+    if (reset || (spnow - pending_spinner_at) >= 4000) {
+      pending_spinner_at = spnow;
+      ndiv = div.cloneNode(true);
+      return div.parentNode.replaceChild(ndiv, div);
+    }
+  } else {
+    return pending_spinner_at = 0;
   }
 };
 
@@ -561,7 +575,11 @@ pendingURLStatus = function() {
       return div.style.display = "none";
     }
   } else if (div && div.style.display === "none") {
-    return div.style.display = "block";
+    div.style.display = "block";
+    if (pending_spinner_at === 0) {
+      pending_spinner_at = spnow;
+      return spinCheck(div, true);
+    }
   }
 };
 
@@ -1079,7 +1097,7 @@ renderListView = function(json, state) {
   /* Start by adding the calendar */
   var cal, lv;
   if (json.firstYear && json.lastYear) {
-    cal = new Calendar(json.firstYear, json.lastYear);
+    cal = new Calendar(json.firstYear, json.lastYear, ponymail_month);
     get('calendar').empty().inject(cal);
   }
   return lv = new BasicListView(json);
