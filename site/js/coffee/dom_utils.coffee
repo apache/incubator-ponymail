@@ -38,8 +38,11 @@
 
 class HTML
     constructor: (type, params, children) ->
-        ### create the raw element ###
-        @element = document.createElement(type)
+        ### create the raw element, or clone if passed an existing element ###
+        if typeof type is 'object'
+            @element = type.cloneNode()
+        else
+            @element = document.createElement(type)
         
         ### If params have been passed, set them ###
         if isHash(params)
