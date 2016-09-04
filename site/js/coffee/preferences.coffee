@@ -45,7 +45,7 @@ setupAccount = (json, state) ->
             sortedList.sort((a,b) => if myDomain[a] < myDomain[b] then 1 else -1)
             for list in sortedList[0..maxLists-1]
                 li = new HTML('li', {},
-                              new HTML('a', { href: "?#{list}@#{ponymail_domain}", onclick: "listView({list: '#{list}@#{ponymail_domain}'}); return false;"}, list+'@')
+                              new HTML('a', { href: "?#{list}@#{ponymail_domain}", onclick: "listView({month: '', list: '#{list}@#{ponymail_domain}'}); return false;"}, list+'@')
                               )
                 lmenu.inject(li)
                 
