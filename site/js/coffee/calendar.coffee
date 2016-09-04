@@ -99,7 +99,7 @@ class Calendar
 toggleYear = (div) ->
     
     ### Get the start and end year from the parent div ###
-    [sYear, eYear] = div.getAttribute('data').split("-")
+    [sYear, eYear] = div.parentNode.getAttribute('data').split("-")
     
     ### Get the year we clicked on ###
     [year, month] = div.getAttribute("data").split("-")
@@ -108,10 +108,11 @@ toggleYear = (div) ->
     
     ## Get Calendar UID
     uid = div.parentNode.getAttribute("id")
-
+    
     ### For each year, hide if not this year, else show ###
     for y in [parseInt(sYear)..parseInt(eYear)]
         if y == year
+            
             get("calendar_months_#{uid}_#{y}").setAttribute("class", "calendar_months")
         else
             get("calendar_months_#{uid}_#{y}").setAttribute("class", "calendar_months calendar_months_hidden")
