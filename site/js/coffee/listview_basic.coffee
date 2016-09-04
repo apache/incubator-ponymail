@@ -25,7 +25,18 @@ class BasicListView
         ### Set the header first ###
         hd = get('header')
         if @json.list
-            hd.empty().inject("#{@json.list}, past 30 days:")
+            if ponymail_month.length > 0
+                [y, m] = ponymail_month.split("-", 2)
+                date = calendar_months[parseInt(m)-1] + ", #{y}"
+                hd.empty().inject([
+                    "#{@json.list} (#{date}):",
+                    new HTML('a', { href: "api/mbox.lua?list=#{ponymail_list}&date=#{ponymail_month}", title: "Download as mbox archive"},
+                        new HTML('img', { src: 'images/floppy.svg', style: {marginLeft: "10px", width:"20px", height: "20px", verticalAlign: 'middle'}} )
+                    )
+                    ])
+                
+            else    
+                hd.empty().inject("#{@json.list}, past 30 days:")
             
         ### Get and clear the list view ###
         @lv = get('listview')
