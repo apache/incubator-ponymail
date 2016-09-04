@@ -59,7 +59,7 @@ listviewScaffolding = () ->
     listDiv = new HTML('div', { id: "listview", class: "sbox"})
     mainDiv.inject(listDiv)
     
-    ### And of course, afooter ###
+    ### And of course, a footer ###
     footer = new HTML('div', { id: "footer"})
     document.body.inject(footer)
     footer.inject([

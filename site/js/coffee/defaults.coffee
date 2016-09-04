@@ -16,7 +16,7 @@
 ###
 
 ### Pony Mail defaults ###
-ponymail_version = "0.10-coffee-and-cake"
+ponymail_version = "0.10 (Coffee and Cake)"
 
 ponymail_lists = {}
 ponymail_list = ""
