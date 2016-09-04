@@ -40,12 +40,14 @@ Number.prototype.pad = (n) ->
         str = "0".repeat(n-str.length) + str
     return str
 
-### Func for converting a date to YYYY-MM-DD ###
+### Func for converting a date to YYYY-MM-DD HH:MM ###
 Date.prototype.ISOBare = () ->
     y = this.getFullYear()
-    m = this.getMonth() + 1
-    d = this.getDate()
-    return y + "-" + m.pad(2) + "-" + d.pad(2)
+    m = (this.getMonth() + 1).pad(2)
+    d = this.getDate().pad(2)
+    h = this.getHours().pad(2)
+    M = this.getMinutes().pad(2)
+    return "#{y}-#{m}-#{d} #{h}:#{M}"
 
 ### isArray: function to detect if an object is an array ###
 isArray = (value) ->
