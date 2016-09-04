@@ -61,7 +61,7 @@
 }
 
 body, html {
-    background: #BBB;
+    background: #DDD;
     margin: 0;
 }
 
@@ -345,6 +345,26 @@ h3, h2, h1 {
 
 .listview_grey {
     background: #777;
+}
+
+.listview_item_body {
+    color: #999;
+    font-size: 90%;
+}
+
+.listview_button_green {
+    border-radius: 3px;
+    background: #449D44;
+    color: #FFF;
+    font-size: 90%;
+    border: none;
+    padding: 5px;
+    margin-bottom: 4px;
+}
+.listview_button_green:hover {
+    cursor: pointer;
+    background: #50BF50;
+    user-select: none;
 }
 
 a {
