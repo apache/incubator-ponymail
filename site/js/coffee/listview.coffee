@@ -118,7 +118,7 @@ listView = (hash, reParse) ->
 renderListView = (json, state) ->
     
     ### If this is a cache check callback, and nothing has changed, use the old JSON ###
-    if state and state.href and json.changed is false
+    if state and state.href and json.changed and json.changed is false
         json = ponymail_list_json[state.href]
         json.cached = true
     else if state and state.href
