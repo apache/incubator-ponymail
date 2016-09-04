@@ -238,7 +238,11 @@ class BasicListView
         
     ### swipe: go to next or previous page of emails, depending on mouse wheel direction ###
     swipe: (e) ->
-        direction = if ((e.wheelDelta || -e.detail) < 0) then 'down' else 'up'
+        direction = ""
+        if typeof e is 'string'
+            direction = e
+        else
+            direction = if ((e.wheelDelta || -e.detail) < 0) then 'down' else 'up'
         style = document.body.currentStyle || window.getComputedStyle(document.body, "")
         
         ### Use the footer to determine whether scrollbar is present or not ###

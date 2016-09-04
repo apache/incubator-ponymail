@@ -55,7 +55,7 @@ dealWithKeyboard = (e) ->
                     
                     
     ### Make sure the below shortcuts don't interfere with normal operations ###
-    if splash.style.display != 'block' and document.activeElement.nodeName != 'INPUT' and not e.ctrlKey
+    if splash and splash.style.display != 'block' and document.activeElement.nodeName != 'INPUT' and not e.ctrlKey
         ### H key: show help ###
         if (e.keyCode == 72)
             popup("Keyboard shortcuts",
@@ -82,6 +82,13 @@ dealWithKeyboard = (e) ->
             if get('q')
                 get('q').focus()
 
-
+    ### Page Up - scroll list view if possible ###
+    if e.keyCode == 33 and ponymail_current_listview
+        ponymail_current_listview.swipe('up')
+    
+    ### Page Down - scroll list view if possible ###
+    if e.keyCode == 34 and ponymail_current_listview
+        ponymail_current_listview.swipe('down')
+    
 ### Add listener for keys (mostly for escape key for hiding stuff) ###
 window.addEventListener("keyup", dealWithKeyboard, false);
