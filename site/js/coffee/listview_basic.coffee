@@ -33,7 +33,10 @@ class BasicListView
         
         ### If we got results, use scroll() to display from result 0 on ###
         if isArray(@json.thread_struct) and @json.thread_struct.length > 0
-            @json.thread_struct.reverse()
+            ### Reverse thread struct, but only if we're not using an
+            # already reversed cache ###
+            if not @json.cached
+                @json.thread_struct.reverse()
             @scroll(@rpp, @pos)
         else
             ### No results, just say...that ###
@@ -46,6 +49,10 @@ class BasicListView
         now = new Date().getTime()/1000
         ### Clear the list view ###
         @lv = @lv.empty()
+        
+        ### Make some pre-defined html object templates ###
+        peopleimg = new HTML('img', {src: 'images/avatar.png', style: { verticalAlign: 'middle', width: "12px", height: "12px"}})
+        envelopeimg = new HTML('img', {src: 'images/envelope.png', style: { verticalAlign: 'middle', width: "16px", height: "12px"}})
         
         ### For each email result,...###
         for item in @json.thread_struct[pos...(pos+rpp)]
@@ -63,7 +70,7 @@ class BasicListView
                 
                 
                 ### Gravatar ###
-                avatar = new HTML('img', { src: "https://secure.gravatar.com/avatar/#{original.gravatar}.png?s=24&r=g&d=mm"})
+                avatar = new HTML('img', { class: "gravatar", src: "https://secure.gravatar.com/avatar/#{original.gravatar}.png?s=24&r=g&d=mm"})
                 
                 ### Sender, without the <foo@bar> part - just the name ###
                 sender = new HTML('div', {style: {fontWeight: "bold"}}, original.from.replace(/\s*<.+>/, "").replace(/"/g, ''))
@@ -80,8 +87,13 @@ class BasicListView
                     new HTML('span', { style: { color: "#999", fontSize: "0.7rem"}}, item.body)
                 ])
                 
-                ### replies and authors ###
-                stats = new HTML('div', {class:"listview_right"}, " #{people} people, #{noeml} replies")
+                ### show number of replies and participants ###
+                stats = new HTML('div', {class:"listview_right"}, [
+                    peopleimg.cloneNode(),
+                    " #{people}  ",
+                    envelopeimg.cloneNode(),
+                    " #{noeml}"
+                    ])
                 
                 ### Add date; yellow if <= 1day, grey otherwise ###
                 date_style = "listview_grey"
@@ -89,13 +101,17 @@ class BasicListView
                     date_style = "listview_yellow"
                 date = new HTML('div', {class:"listview_right #{date_style}"}, new Date(item.epoch*1000).ISOBare())
                 
-                item = new HTML('div', {id: uid, data: item.tid, class: "listview_item"}, [avatar, sender, subject, date, stats])
                 
+                ### Finally, pull it all together in a div and add that to the listview ###
+                item = new HTML('div', {id: uid, data: item.tid, class: "listview_item"}, [avatar, sender, subject, date, stats])
                 @lv.inject(item)
         
         now = new Date().getTime()
         diff = now - @lastScroll
-        @lv.inject("Fetched in " + parseInt(@json.took/1000) + "ms, rendered in " + parseInt(diff) + "ms.")
+        if @json.cached
+            @lv.inject("Fetched from cache (no updates detected), rendered in " + parseInt(diff) + "ms.")
+        else
+            @lv.inject("Fetched in " + parseInt(@json.took/1000) + "ms, rendered in " + parseInt(diff) + "ms.")
     ### findEmail: find an email given an ID ###
     findEmail: (id) ->
         for email in @json.emails
