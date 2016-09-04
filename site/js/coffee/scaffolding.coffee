@@ -23,7 +23,7 @@ listviewScaffolding = () ->
     document.body.inject(menu)
     
     # Add menu points
-    ul = new HTML('ul')
+    ul = new HTML('ul', { id: 'listmenu'})
     
     # Add logo first
     logo = new HTML('li', {
@@ -39,12 +39,8 @@ listviewScaffolding = () ->
         }
     })))
     ul.inject(logo)
-    
-    # Menu points
-    for item in ['Home', 'Lists', 'Third item']
-        li = new HTML('li', {}, item)
-        ul.inject(li)
     menu.inject(ul)
+    
     
     ### Now, make the base div ###
     mainDiv = new HTML('div', { id: "contents"})
