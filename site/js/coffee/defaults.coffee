@@ -22,3 +22,7 @@ ponymail_lists = {}
 ponymail_list = ""
 ponymail_month = ""
 ponymail_query = ""
+
+ponymail_listname = ""
+ponymail_domain = ""
+ponymail_list_json = {}
