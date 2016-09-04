@@ -26,3 +26,6 @@ ponymail_query = ""
 ponymail_listname = ""
 ponymail_domain = ""
 ponymail_list_json = {}
+
+ponymail_current_listview = null # Current listview class
+ponymail_email_open = false # Is the user viewing an email right now? (disable scrolling then)
