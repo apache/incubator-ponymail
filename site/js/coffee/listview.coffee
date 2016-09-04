@@ -28,6 +28,7 @@ parseURL = () ->
     ponymail_list = list
     ponymail_month = month||""
     ponymail_query = query||""
+    [ponymail_listname, ponymail_domain] = list.split("@")
     
     
 
@@ -90,15 +91,40 @@ listView = (hash, reParse) ->
     pargs = "d=30"
     if ponymail_month and ponymail_month.length > 0
         pargs = "s=#{ponymail_month}&e=#{ponymail_month}"
-    r = new HTTPRequest(
-        "api/stats.lua?list=#{list}&domain=#{domain}&#{pargs}",
-        {
-            callback: renderListView
-        }
-        )
+    
+    ### If we already fetched this URL once, only do an update check ###
+    if ponymail_list_json[newhref] and ponymail_list_json[newhref].unixtime > 0
+        since = ponymail_list_json[newhref].unixtime
+        r = new HTTPRequest(
+            "api/stats.lua?list=#{list}&domain=#{domain}&#{pargs}&since=#{since}",
+            {
+                callback: renderListView
+                state: {
+                    href: newhref
+                }
+            }
+            )
+    else
+        r = new HTTPRequest(
+            "api/stats.lua?list=#{list}&domain=#{domain}&#{pargs}",
+            {
+                callback: renderListView
+                state: {
+                    href: newhref
+                }
+            }
+            )
     
 renderListView = (json, state) ->
     
+    ### If this is a cache check callback, and nothing has changed, use the old JSON ###
+    if state and state.href and json.changed is false
+        json = ponymail_list_json[state.href]
+        json.cached = true
+    else if state and state.href
+        ### Save JSON in cache if new ###
+        ponymail_list_json[state.href] = json
+        
     ### Start by adding the calendar ###
     if json.firstYear and json.lastYear
         cal = new Calendar(json.firstYear, json.lastYear, ponymail_month)
