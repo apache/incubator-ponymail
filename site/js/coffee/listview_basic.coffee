@@ -42,8 +42,15 @@ class BasicListView
         @lv = get('listview')
         @lv = @lv.empty()
         
+        ### Set some internal vars ###
+        @listsize = 0
+        
         ### If we got results, use scroll() to display from result 0 on ###
         if isArray(@json.thread_struct) and @json.thread_struct.length > 0
+            
+            ### Set some internal vars ###
+            @listsize = @json.thread_struct.length
+        
             ### Reverse thread struct, but only if we're not using an
             # already reversed cache ###
             if not @json.cached
@@ -53,8 +60,6 @@ class BasicListView
             ### No results, just say...that ###
             @lv.inject("No emails found matching this criterion.")
         
-        ### Set some internal vars ###
-        @listsize = @json.thread_struct.length
         
         # set current list view to this class
         ponymail_current_listview = this
@@ -69,6 +74,12 @@ class BasicListView
         
         @rpp = rpp
         @pos = pos
+        
+        ### Show how many threads out of how many we are showing ###
+        f = pos+1
+        l = Math.min(@listsize - pos, pos+rpp)
+        dStat = new HTML('div', { style: {float: "left", width: "100%", fontSize: "80%", textAlign: "center"}}, "Showing threads #{f} through #{l} out of #{@listsize}")
+        @lv.inject(dStat)
         
         ### First, build the prev/next buttons if needed ###
         if pos > 0 or (pos+rpp) < @json.thread_struct.length
@@ -100,6 +111,7 @@ class BasicListView
             @lv.inject(topButtons)
             
         ### For each email result,...###
+        lvitems = new HTML('div', { class: "listview_table" })
         for item in @json.thread_struct[pos...(pos+rpp)]
             original = @findEmail(item.tid)
             ### Be sure we actually have an email here ###
@@ -108,7 +120,8 @@ class BasicListView
                 item = @listViewItem(original, item)
                 
                 ### Inject new item into the list view ###
-                @lv.inject(item)
+                lvitems.inject(item)
+        @lv.inject(lvitems)
         
         ### If we made buttons, clone them at the bottom ###
         if topButtons

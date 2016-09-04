@@ -288,16 +288,14 @@ h3, h2, h1 {
 
 /* listview styles */
 .listview_item {
-    border-radius: 2px;
-    border: 1px solid rgba(0,0,0,0.3);
     padding: 2px;
-    margin: 1px;
+    margin: 0px;
     float: left;
     width: calc(100% - 8px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    background: #FAFAFA;
+    background: #FFF;
 }
 
 .listview_item img.gravatar {
@@ -323,7 +321,7 @@ h3, h2, h1 {
 }
 
 .listview_item div:nth-child(3) {
-    width: calc(100% - 450px);
+    width: calc(100% - 380px);
 }
 
 .listview_right {
@@ -365,6 +363,30 @@ h3, h2, h1 {
     cursor: pointer;
     background: #50BF50;
     user-select: none;
+}
+
+.listview_table {
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.15);
+    float: left;
+    width: 100%;
+}
+.listview_table .listview_item:hover {
+    background: #F0F0F0;
+}
+
+.listview_table .listview_item {
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background: #FFF;
+    
+}
+
+.listview_table .listview_item:last-child {
+    border-bottom: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 a {
