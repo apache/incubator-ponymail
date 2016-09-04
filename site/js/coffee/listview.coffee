@@ -72,6 +72,9 @@ listView = (hash, reParse) ->
             location.href = "./"
             return
     
+    ### Set window title ###
+    document.title = "#{ponymail_list} - Pony Mail!"
+    
     ### Construct arg list for URL ###
     args = ""
     if ponymail_list and ponymail_list.length > 0
