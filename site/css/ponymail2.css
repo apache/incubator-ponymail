@@ -289,7 +289,7 @@ h3, h2, h1 {
 /* listview styles */
 .listview_item {
     border-radius: 2px;
-    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,0.3);
     padding: 2px;
     margin: 1px;
     float: left;
@@ -316,6 +316,10 @@ h3, h2, h1 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.listview_item div:nth-child(2) {
+    padding-top: 10px;
 }
 
 .listview_item div:nth-child(3) {
