@@ -275,7 +275,7 @@ genColors = function(numColors, saturation, lightness, hex) {
 
 /* Pony Mail defaults */
 
-ponymail_version = "0.10-coffee-and-cake";
+ponymail_version = "0.10 (Coffee and Cake)";
 
 ponymail_lists = {};
 
@@ -836,28 +836,38 @@ dealWithKeyboard = function(e) {
   }
 
   /* Make sure the below shortcuts don't interfere with normal operations */
-  if (splash.style.display !== 'block' && document.activeElement.nodeName !== 'INPUT' && !e.ctrlKey) {
+  if (splash && splash.style.display !== 'block' && document.activeElement.nodeName !== 'INPUT' && !e.ctrlKey) {
 
     /* H key: show help */
     if (e.keyCode === 72) {
-      return popup("Keyboard shortcuts", "<pre><b>H:</b>Show this help menu<br/><b>C:</b>Compose a new email to the current list<br/><b>R:</b>Reply to the last opened email<br/><b>S:</b>Go to the quick search bar<br/><b>Esc:</b>Hide/collapse current email or thread<br/></pre>You can also, in some cases, use the mouse wheel to scroll up/down the list view", 10);
+      popup("Keyboard shortcuts", "<pre><b>H:</b>Show this help menu<br/><b>C:</b>Compose a new email to the current list<br/><b>R:</b>Reply to the last opened email<br/><b>S:</b>Go to the quick search bar<br/><b>Esc:</b>Hide/collapse current email or thread<br/></pre>You can also, in some cases, use the mouse wheel to scroll up/down the list view", 10);
     } else if (e.keyCode === 67) {
 
       /* C key: compose */
-      return compose(null, ponymail_list, 'new');
+      compose(null, ponymail_list, 'new');
     } else if (e.keyCode === 82) {
 
       /* R key: reply */
       if (openEmail() && last_opened_email) {
-        return compose(last_opened_email, null, 'reply');
+        compose(last_opened_email, null, 'reply');
       }
     } else if (e.keyCode === 83) {
 
       /* S key: quick search */
       if (get('q')) {
-        return get('q').focus();
+        get('q').focus();
       }
     }
+  }
+
+  /* Page Up - scroll list view if possible */
+  if (e.keyCode === 33 && ponymail_current_listview) {
+    ponymail_current_listview.swipe('up');
+  }
+
+  /* Page Down - scroll list view if possible */
+  if (e.keyCode === 34 && ponymail_current_listview) {
+    return ponymail_current_listview.swipe('down');
   }
 };
 
@@ -1225,7 +1235,12 @@ BasicListView = (function() {
 
   BasicListView.prototype.swipe = function(e) {
     var direction, obj, scrollBar, style;
-    direction = (e.wheelDelta || -e.detail) < 0 ? 'down' : 'up';
+    direction = "";
+    if (typeof e === 'string') {
+      direction = e;
+    } else {
+      direction = (e.wheelDelta || -e.detail) < 0 ? 'down' : 'up';
+    }
     style = document.body.currentStyle || window.getComputedStyle(document.body, "");
 
     /* Use the footer to determine whether scrollbar is present or not */
@@ -1348,6 +1363,9 @@ listView = function(hash, reParse) {
       return;
     }
   }
+
+  /* Set window title */
+  document.title = ponymail_list + " - Pony Mail!";
 
   /* Construct arg list for URL */
   args = "";
@@ -1763,7 +1781,7 @@ listviewScaffolding = function() {
   });
   mainDiv.inject(listDiv);
 
-  /* And of course, afooter */
+  /* And of course, a footer */
   footer = new HTML('div', {
     id: "footer"
   });
