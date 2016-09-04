@@ -42,11 +42,11 @@ listView = (hash, reParse) ->
         
     ### Any new settings passed along? ###
     if isHash(hash)
-        if hash.month
+        if typeof hash.month != 'undefined'
             ponymail_month = hash.month
-        if hash.list
+        if typeof hash.list != 'undefined'
             ponymail_list = hash.list
-        if hash.query
+        if typeof hash.query != 'undefined'
             ponymail_query = hash.query
     
     ### First, check that we have a list to view! ###
@@ -118,7 +118,7 @@ listView = (hash, reParse) ->
 renderListView = (json, state) ->
     
     ### If this is a cache check callback, and nothing has changed, use the old JSON ###
-    if state and state.href and typeof json.changed != undefined and json.changed is false
+    if state and state.href and typeof json.changed != 'undefined' and json.changed is false
         json = ponymail_list_json[state.href]
         json.cached = true
     else if state and state.href
