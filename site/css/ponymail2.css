@@ -437,6 +437,7 @@ a {
     border: 1px dashed #666;
     background: #FFE;
     float: left;
+    width: 100%;
 }
 
 .email_boxed {
