@@ -162,7 +162,7 @@ class BasicEmailDisplay
                 t = splicer.substr(0, i)
                 quote = quote.replace(/(>*\s*\r?\n)+$/g, "")
                 qdiv = new HTML('div', {class: "email_quote_parent" }, [
-                    new HTML('img', { src: 'images/quote.png', title: "Toggle quote", onclick:"toggleQuote(this)"}),
+                    new HTML('img', { src: 'images/quote.png', width: "24", height: "26", title: "Toggle quote", onclick:"toggleQuote(this)"}),
                     new HTML('br')
                     new HTML('blockquote', {class: "email_quote", style: { display: if hideQuotes then 'none' else 'block'}}, @URLify(quote))
                     ])
