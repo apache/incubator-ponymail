@@ -1398,7 +1398,7 @@ BasicListView = (function() {
         fontSize: "80%",
         textAlign: "center"
       }
-    }, "Showing items " + f + " through " + l + " out of " + this.listsize);
+    }, "Showing items " + f + " through " + l + " out of " + this.listsize + " results.");
     this.lv.inject(dStat);
 
     /* First, build the prev/next buttons if needed */
@@ -1519,16 +1519,15 @@ BasicListView = (function() {
   /* countEmail: func for counting how many emails are in a thread */
 
   BasicListView.prototype.countEmail = function(thread) {
-    var item, j, len, nc, nnc, ref;
+    var item, j, len, nc, ref;
     nc = 0;
-    if (thread.children && isArray(thread.children)) {
+    if (isArray(thread.children)) {
       ref = thread.children;
       for (j = 0, len = ref.length; j < len; j++) {
         item = ref[j];
         nc++;
         if (item.children && isArray(item.children) && item.children.length > 0) {
-          nnc = this.countEmail(item);
-          nc += nnc;
+          nc += this.countEmail(item);
         }
       }
     }
