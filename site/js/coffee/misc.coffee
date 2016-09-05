@@ -63,3 +63,12 @@ isHash = (value) ->
     value and
         typeof value is 'object' and
         not isArray(value)
+
+### Remove an array element by value ###
+Array.prototype.remove = (val) ->
+    for item, i in this
+        if item == val
+            this.splice(i, 1)
+            return this
+    return this;
+
