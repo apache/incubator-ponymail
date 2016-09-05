@@ -421,4 +421,10 @@ a {
 
 .email_body {
     float: left;
+    width: 100%;
+}
+
+.email_quote {
+    border: 1px dashed #666;
+    background: #FFE;
 }

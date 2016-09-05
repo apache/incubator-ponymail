@@ -89,3 +89,7 @@ ponymail_url_regex = new RegExp(
     ")\\.?"
   , "mi"
 )
+
+ponymail_quote_regex = new RegExp(
+    "((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi"
+)

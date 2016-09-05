@@ -116,15 +116,62 @@ class BasicEmailDisplay
         
         @placeholder.inject(headers)
         
-        ### Convert links to HTML ###
-        @htmlbody = @parseBody(json.body)
+        
+        ### parse body, convert quotes ###
+        @htmlbody = @quotify(json.body)
         
         ### Now inject the body ###
         b = new HTML('pre', {class: "email_body"}, @htmlbody)
         @placeholder.inject(b)
     
-    ### parseBody: find links and HTML'ify them ###
-    parseBody: (splicer) ->
+    ### quotify: put quotes inside quote blocks ###
+    quotify: (splicer) ->
+        hideQuotes = true
+        if ponymail_preferences['hideQuotes'] and ponymail_preferences['hideQuotes'] == false
+            hideQuotes = false
+            
+        ### Array holding text and quotes ###
+        textbits = []
+        
+        ### Find the first quote, if any ###
+        i = splicer.search(ponymail_quote_regex)
+        quotes = 0
+        
+        ### While we have more links, ... ###
+        while i != -1
+            quotes++
+            ### Only parse the first 50 quotes... srsly ###
+            if quotes > 50
+                break
+            ### Text preceding the quote? add it to textbits first ###
+            if i > 0
+                t = splicer.substr(0, i)
+                textbits.push(@URLify(t))
+                splicer = splicer.substr(i)
+                
+            ### Find the quote and cut it out as a div ###
+            m = splicer.match(ponymail_quote_regex)
+            if m
+                quote = m[1]
+                i = quote.length
+                t = splicer.substr(0, i)
+                qdiv = new HTML('div', {}, [
+                    new HTML('img', { src: 'images/quote.png', title: "Toggle quote", onclick:"toggleQuote(this)"}),
+                    new HTML('br')
+                    new HTML('blockquote', {class: "email_quote", style: { display: if hideQuotes then 'none' else 'block'}}, @URLify(quote))
+                    ])
+                textbits.push(qdiv)
+                splicer = splicer.substr(i)
+            ### Find the next link ###
+            i = splicer.search(ponymail_quote_regex)
+        
+        ### push the remaining text into textbits ###
+        textbits.push(@URLify(splicer))
+        
+        return textbits
+    
+    ### URLify: find links and HTML'ify them ###
+    URLify: (splicer) ->
         ### Array holding text and links ###
         textbits = []
         
@@ -165,3 +212,6 @@ class BasicEmailDisplay
         ponymail_email_open.remove(this)
         ponymail_current_email = null
         
+### toggleQuote: show/hide a quote ###
+toggleQuote = (div) ->
+    div.parentNode.childNodes[2].show()
