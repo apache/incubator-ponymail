@@ -42,8 +42,10 @@ readEmail = (obj) ->
             break
             
     if not closedOne
+        ### Get thread index value if set, for threads ###
+        index = parent.getAttribute("data-index")
         ### We have an(other) email open now ###
-        ponymail_current_email = new BasicEmailDisplay(parent, mid)
+        ponymail_current_email = new ThreadedEmailDisplay(parent, mid, index)
         ponymail_email_open.push(ponymail_current_email)
 
 ### Basic email display class ###
@@ -77,11 +79,13 @@ class BasicEmailDisplay
     render: (json, state) ->
         
         ### Store email in cache if not there already ###
-        if not ponymail_stored_email[@mid]
-            ponymail_stored_email[@mid] = json
+        if not ponymail_stored_email[json.mid]
+            ponymail_stored_email[json.mid] = json
+            
+        placeholder = get('placeholder_' + @mid + "_" + json.mid) || get('placeholder_' + json.mid)
             
         ### Display email headers ###
-        headers = new HTML('div')
+        headers = new HTML('div', {class: "email_header"})
         
         from_line = new HTML('div', {},
             [
@@ -115,15 +119,15 @@ class BasicEmailDisplay
             ])
         headers.inject(list_line)
         
-        @placeholder.inject(headers)
+        placeholder.inject(headers)
         
         
         ### parse body, convert quotes ###
-        @htmlbody = @quotify(json.body)
+        htmlbody = @quotify(json.body)
         
         ### Now inject the body ###
-        b = new HTML('pre', {class: "email_body"}, @htmlbody)
-        @placeholder.inject(b)
+        b = new HTML('pre', {class: "email_body"}, htmlbody)
+        placeholder.inject(b)
     
     ### quotify: put quotes inside quote blocks ###
     quotify: (splicer) ->
