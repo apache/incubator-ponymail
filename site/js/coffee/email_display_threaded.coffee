@@ -43,8 +43,14 @@ class ThreadedEmailDisplay extends BasicEmailDisplay
         bodyplace = new HTML('div', {id: "placeholder_#{@mid}_#{thread.tid}", class:"email_boxed"})
         
         ### Assign a random color to the left ###
+        @prevColor = @prevColor || ""
         bcolors = ['#C93F20', '#20C94A', '#2063C9', '#C9AA20', '#AD20C9', '#99C920', '#20C9C3']
         bcolor = bcolors[Math.round(Math.random()*bcolors.length)]
+        ### ensure we don't get the same color twice in a row ###
+        while bcolor == @prevColor
+            bcolor = bcolors[Math.round(Math.random()*bcolors.length)]
+        @prevColor = bcolor
+        
         bodyplace.style.borderLeft = "4px solid " + bcolor
         
         replyplace = new HTML('div', {

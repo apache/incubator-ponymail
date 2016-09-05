@@ -883,8 +883,15 @@ ThreadedEmailDisplay = (function(superClass) {
     });
 
     /* Assign a random color to the left */
+    this.prevColor = this.prevColor || "";
     bcolors = ['#C93F20', '#20C94A', '#2063C9', '#C9AA20', '#AD20C9', '#99C920', '#20C9C3'];
     bcolor = bcolors[Math.round(Math.random() * bcolors.length)];
+
+    /* ensure we don't get the same color twice in a row */
+    while (bcolor === this.prevColor) {
+      bcolor = bcolors[Math.round(Math.random() * bcolors.length)];
+    }
+    this.prevColor = bcolor;
     bodyplace.style.borderLeft = "4px solid " + bcolor;
     replyplace = new HTML('div', {
       id: "thread_replies_" + this.mid + "_" + thread.tid,
