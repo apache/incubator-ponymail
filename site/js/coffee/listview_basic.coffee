@@ -78,7 +78,7 @@ class BasicListView
         ### Show how many threads out of how many we are showing ###
         f = pos+1
         l = Math.min(@listsize, pos+rpp)
-        dStat = new HTML('div', { style: {float: "left", width: "100%", fontSize: "80%", textAlign: "center"}}, "Showing items #{f} through #{l} out of #{@listsize}")
+        dStat = new HTML('div', { style: {float: "left", width: "100%", fontSize: "80%", textAlign: "center"}}, "Showing items #{f} through #{l} out of #{@listsize} results.")
         @lv.inject(dStat)
         
         ### First, build the prev/next buttons if needed ###
@@ -165,12 +165,11 @@ class BasicListView
     ### countEmail: func for counting how many emails are in a thread ###
     countEmail: (thread) ->
         nc = 0
-        if thread.children and isArray(thread.children)
+        if isArray(thread.children)
             for item in thread.children
                 nc++
                 if item.children and isArray(item.children) and item.children.length > 0
-                    nnc = @countEmail(item)
-                    nc += nnc
+                    nc += @countEmail(item)
         return nc
     
     ### countPeople: func for counting how many people are in a thread ###
