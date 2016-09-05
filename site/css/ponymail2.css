@@ -462,3 +462,46 @@ a {
     clear: both;
     width: calc(100% - 36px);
 }
+
+/* Miscellaneous labels */
+
+.label_green {
+    border-radius: 3px;
+    background: #449D44;
+    color: #FFF;
+    font-size: 90%;
+    border: none;
+    padding: 1px;
+    margin-bottom: 2px;
+}
+
+.label_yellow {
+    border-radius: 3px;
+    background: #E5B020;
+    color: #FFF;
+    font-size: 90%;
+    border: none;
+    padding: 1px;
+    margin-bottom: 2px;
+}
+
+
+.label_red {
+    border-radius: 3px;
+    background: #CC3824;
+    color: #FFF;
+    font-size: 90%;
+    border: none;
+    padding: 1px;
+    margin-bottom: 2px;
+}
+
+.label_blue {
+    border-radius: 3px;
+    background: #2472CC;
+    color: #FFF;
+    font-size: 90%;
+    border: none;
+    padding: 1px;
+    margin-bottom: 2px;
+}
