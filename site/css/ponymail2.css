@@ -434,10 +434,18 @@ a {
 }
 
 .email_quote {
-    border: 1px dashed #666;
+    border: 1px dashed rgba(0,0,0,0.3);
     background: #FFE;
     float: left;
+    width: calc(100% - 50px);
+    margin-left: 15px;
+}
+
+.email_quote_parent {
+    border-left: 3px solid #333;
+    float: left;
     width: 100%;
+    padding-left: 5px;
 }
 
 .email_boxed {

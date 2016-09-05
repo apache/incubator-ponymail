@@ -160,7 +160,7 @@ class BasicEmailDisplay
                 quote = m[1]
                 i = quote.length
                 t = splicer.substr(0, i)
-                qdiv = new HTML('div', {}, [
+                qdiv = new HTML('div', {class: "email_quote_parent" }, [
                     new HTML('img', { src: 'images/quote.png', title: "Toggle quote", onclick:"toggleQuote(this)"}),
                     new HTML('br')
                     new HTML('blockquote', {class: "email_quote", style: { display: if hideQuotes then 'none' else 'block'}}, @URLify(quote))
