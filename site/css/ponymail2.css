@@ -418,6 +418,11 @@ a {
     border-top-right-radius: 4px;
 }
 
+.email_header_buttons {
+    position: relative;
+    right: 60px;
+    top: 10px;
+}
 .header_key {
     padding-top: 0px;
     width: 80px;
@@ -472,7 +477,12 @@ a {
     font-size: 90%;
     border: none;
     padding: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-weight: bold;
     margin-bottom: 2px;
+    text-decoration: none;
+    
 }
 
 .label_yellow {
@@ -482,7 +492,11 @@ a {
     font-size: 90%;
     border: none;
     padding: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-weight: bold;
     margin-bottom: 2px;
+    text-decoration: none;
 }
 
 
@@ -493,7 +507,11 @@ a {
     font-size: 90%;
     border: none;
     padding: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-weight: bold;
     margin-bottom: 2px;
+    text-decoration: none;
 }
 
 .label_blue {
@@ -503,5 +521,9 @@ a {
     font-size: 90%;
     border: none;
     padding: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-weight: bold;
     margin-bottom: 2px;
+    text-decoration: none;
 }
