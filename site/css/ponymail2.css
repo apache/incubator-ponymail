@@ -298,7 +298,7 @@ h3, h2, h1 {
     background: #FFF;
 }
 
-.listview_item img.gravatar {
+.listview_item div img.gravatar {
     vertical-align: middle;
     margin-right: 8px;
     float: left;
@@ -306,7 +306,7 @@ h3, h2, h1 {
     margin-bottom: 4px;
 }
 
-.listview_item div:not(.listview_right) {
+.listview_item .listview_summary div:not(.listview_right) {
     margin-right: 10px;
     padding-top: 4px;
     width: 150px;
@@ -316,12 +316,12 @@ h3, h2, h1 {
     text-overflow: ellipsis;
 }
 
-.listview_item div:nth-child(2) {
+.listview_item .listview_summary div:nth-child(2) {
     padding-top: 10px;
 }
 
-.listview_item div:nth-child(3) {
-    width: calc(100% - 380px);
+.listview_item  .listview_summary div:nth-child(3) {
+    width: calc(100% - 390px);
 }
 
 .listview_right {
@@ -391,4 +391,30 @@ h3, h2, h1 {
 
 a {
     color: #248;
+}
+
+.listview_item .email_placeholder {
+    width: 100% !important;
+    float: left;
+}
+
+/* Email placeholder */
+.email_placeholder {
+    border: 1px inset #333;
+    padding: 10px;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.header_key {
+    padding-top: 0px;
+    width: 80px;
+    float: left;
+    font-weight: bold;
+}
+.header_value {
+    padding-top: 0px;
+    width: calc(100% - 90px);
+    float: left;
 }
