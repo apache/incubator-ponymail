@@ -622,7 +622,7 @@ BasicEmailDisplay = (function() {
   BasicEmailDisplay.prototype.render = function(json, state) {
 
     /* Store email in cache if not there already */
-    var b, date_line, from_line, headers, htmlbody, list_line, placeholder, subject_line;
+    var b, buttons, date_line, from_line, headers, htmlbody, list_line, pbutton, placeholder, rbutton, sbutton, subject_line;
     if (!ponymail_stored_email[json.mid]) {
       ponymail_stored_email[json.mid] = json;
     }
@@ -673,6 +673,30 @@ BasicEmailDisplay = (function() {
       }, this.list))
     ]);
     headers.inject(list_line);
+
+    /* Action buttons */
+
+    /* Permalink */
+    pbutton = new HTML('a', {
+      "class": "label_yellow",
+      href: "thread.html/" + json.mid
+    }, "Permalink");
+
+    /* Source */
+    sbutton = new HTML('a', {
+      "class": "label_red",
+      href: "api/source.lua/" + json.mid
+    }, "View source");
+
+    /* Reply */
+    rbutton = new HTML('a', {
+      "class": "label_green",
+      href: "javascript:void(0);"
+    }, "Reply");
+    buttons = new HTML('div', {
+      "class": "email_header_buttons"
+    }, [pbutton, sbutton, rbutton]);
+    headers.inject(buttons);
     placeholder.inject(headers);
 
     /* parse body, convert quotes */
