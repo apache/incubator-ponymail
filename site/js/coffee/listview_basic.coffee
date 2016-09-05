@@ -268,7 +268,7 @@ class BasicListView
         me = this
         @scrollTimer = window.setTimeout( () ->
             me.swipeDirection()
-        , 50)
+        , 150)
         
     swipeDirection: () ->
         if @direction == 'down'

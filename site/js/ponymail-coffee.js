@@ -1560,7 +1560,7 @@ BasicListView = (function() {
     me = this;
     return this.scrollTimer = window.setTimeout(function() {
       return me.swipeDirection();
-    }, 50);
+    }, 150);
   };
 
   BasicListView.prototype.swipeDirection = function() {
