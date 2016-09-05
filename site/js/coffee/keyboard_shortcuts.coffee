@@ -39,8 +39,8 @@ dealWithKeyboard = (e) ->
                     ponymail_current_email.hide()
                 else
                     ### Close all email ? ###
-                    for email in ponymail_email_open
-                        email.hide()
+                    while ponymail_email_open.length > 0
+                        ponymail_email_open[0].hide()
 
                     
                     

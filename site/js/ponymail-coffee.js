@@ -959,7 +959,7 @@ pm_snap = null;
 /* dealWithKeyboard: Handles what happens when you hit the escape key */
 
 dealWithKeyboard = function(e) {
-  var dp, email, j, len, splash;
+  var dp, splash;
   splash = get('splash');
 
   /* escape key: hide composer/settings/thread */
@@ -982,9 +982,8 @@ dealWithKeyboard = function(e) {
         } else {
 
           /* Close all email ? */
-          for (j = 0, len = ponymail_email_open.length; j < len; j++) {
-            email = ponymail_email_open[j];
-            email.hide();
+          while (ponymail_email_open.length > 0) {
+            ponymail_email_open[0].hide();
           }
         }
       }
