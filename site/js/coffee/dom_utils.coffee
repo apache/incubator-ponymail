@@ -48,7 +48,7 @@ class HTML
         if isHash(params)
             for key, val of params
                 ### Standard string value? ###
-                if typeof val is "string"
+                if typeof val is "string" or typeof val is 'number'
                     @element.setAttribute(key, val)
                 else if isArray(val)
                     ### Are we passing a list of data to set? concatenate then ###
@@ -56,6 +56,8 @@ class HTML
                 else if isHash(val)
                     ### Are we trying to set multiple sub elements, like a style? ###
                     for subkey,subval of val
+                        if not @element[key]
+                            throw "No such attribute, #{key}!"
                         @element[key][subkey] = subval
         
         ### If any children have been passed, add them to the element  ###
