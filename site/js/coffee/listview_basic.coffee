@@ -82,7 +82,7 @@ class BasicListView
         @lv.inject(dStat)
         
         ### First, build the prev/next buttons if needed ###
-        if pos > 0 or (pos+rpp) < @json.thread_struct.length
+        if pos > 0 or (pos+rpp) < @listsize
             topButtons = new HTML('div', { style: {float: "left", width: "100%"}})
             ## Prev button
             if pos > 0
@@ -97,8 +97,8 @@ class BasicListView
                     })
                 topButtons.inject(pbutton)
             ### Next button ###
-            if (pos+rpp) < @json.thread_struct.length
-                nno = Math.min(rpp, @json.thread_struct.length - pos - rpp)
+            if (pos+rpp) < @listsize
+                nno = Math.min(rpp, @listsize - pos - rpp)
                 np = pos+rpp
                 nbutton = new HTML('input', {
                     type: 'button'
@@ -110,18 +110,7 @@ class BasicListView
                 topButtons.inject(nbutton)
             @lv.inject(topButtons)
             
-        ### For each email result,...###
-        lvitems = new HTML('div', { class: "listview_table" })
-        for item in @json.thread_struct[pos...(pos+rpp)]
-            original = @findEmail(item.tid)
-            ### Be sure we actually have an email here ###
-            if original
-                ### Call listViewItem to compile a list view HTML element ###
-                item = @listViewItem(original, item)
-                
-                ### Inject new item into the list view ###
-                lvitems.inject(item)
-        @lv.inject(lvitems)
+        @renderItems()
         
         ### If we made buttons, clone them at the bottom ###
         if topButtons
@@ -142,6 +131,21 @@ class BasicListView
         @lv.addEventListener("DOMMouseScroll", (e) ->
             tmpthis.swipe(e)
         , false);
+        
+    ### renderItems: render the list view emails/theads ###
+    renderItems: () ->
+        ### For each email result,...###
+        lvitems = new HTML('div', { class: "listview_table" })
+        for item in @json.thread_struct[@pos...(@pos+@rpp)]
+            original = @findEmail(item.tid)
+            ### Be sure we actually have an email here ###
+            if original
+                ### Call listViewItem to compile a list view HTML element ###
+                item = @listViewItem(original, item)
+                
+                ### Inject new item into the list view ###
+                lvitems.inject(item)
+        @lv.inject(lvitems)
         
     ### findEmail: find an email given an ID ###
     findEmail: (id) ->
