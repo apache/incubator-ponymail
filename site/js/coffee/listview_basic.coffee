@@ -244,6 +244,7 @@ class BasicListView
         
     ### swipe: go to next or previous page of emails, depending on mouse wheel direction ###
     swipe: (e) ->
+        @lastSwipe = @lastSwipe || 0
         direction = ""
         if typeof e is 'string'
             direction = e
@@ -259,6 +260,11 @@ class BasicListView
         if ponymail_email_open.length > 0 or scrollBar
             return
         
+        ### Make sure we don't swipe too fast! ###
+        now = new Date().getTime()
+        if (now - @lastSwipe) < 100
+            return
+        
         if direction == 'down'
             ### Next page? ###
             if @listsize > (@pos+@rpp+1)
@@ -267,4 +273,4 @@ class BasicListView
             ### Previous page? ###
             if @pos > 0
                 @scroll(@rpp, Math.max(0,@pos-@rpp))
-                
+        @lastSwipe = now
