@@ -119,6 +119,21 @@ class BasicEmailDisplay
             ])
         headers.inject(list_line)
         
+        ### Action buttons ###
+        
+        ### Permalink ###
+        pbutton = new HTML('a', { class: "label_yellow", href: "thread.html/#{json.mid}"}, "Permalink")
+        
+        ### Source ###
+        sbutton = new HTML('a', { class: "label_red", href: "api/source.lua/#{json.mid}"}, "View source")
+        
+        ### Reply ###
+        rbutton = new HTML('a', { class: "label_green", href: "javascript:void(0);"}, "Reply")
+        
+        buttons = new HTML('div', {class: "email_header_buttons"}, [pbutton, sbutton, rbutton])
+        
+        headers.inject(buttons)
+        
         placeholder.inject(headers)
         
         
