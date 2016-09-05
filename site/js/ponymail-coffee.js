@@ -730,6 +730,8 @@ BasicEmailDisplay = (function() {
         }, [
           new HTML('img', {
             src: 'images/quote.png',
+            width: "24",
+            height: "26",
             title: "Toggle quote",
             onclick: "toggleQuote(this)"
           }), new HTML('br'), new HTML('blockquote', {
