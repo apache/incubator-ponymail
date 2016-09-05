@@ -435,7 +435,7 @@ a {
 
 .email_quote {
     border: 1px dashed rgba(0,0,0,0.3);
-    background: #FFE;
+    background: #FFFFF0;
     float: left;
     width: calc(100% - 50px);
     margin-left: 15px;
