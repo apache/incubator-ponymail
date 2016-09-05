@@ -1533,13 +1533,13 @@ BasicListView = (function() {
   /* swipe: go to next or previous page of emails, depending on mouse wheel direction */
 
   BasicListView.prototype.swipe = function(e) {
-    var direction, now, obj, scrollBar, style;
+    var me, obj, scrollBar, style;
     this.lastSwipe = this.lastSwipe || 0;
-    direction = "";
+    this.direction = "";
     if (typeof e === 'string') {
-      direction = e;
+      this.direction = e;
     } else {
-      direction = (e.wheelDelta || -e.detail) < 0 ? 'down' : 'up';
+      this.direction = (e.wheelDelta || -e.detail) < 0 ? 'down' : 'up';
     }
     style = document.body.currentStyle || window.getComputedStyle(document.body, "");
 
@@ -1552,25 +1552,31 @@ BasicListView = (function() {
       return;
     }
 
-    /* Make sure we don't swipe too fast! */
-    now = new Date().getTime();
-    if ((now - this.lastSwipe) < 100) {
-      return;
+    /* set scroll to happen 50ms from now */
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer);
+      this.scrollTimer = null;
     }
-    if (direction === 'down') {
+    me = this;
+    return this.scrollTimer = window.setTimeout(function() {
+      return me.swipeDirection();
+    }, 50);
+  };
+
+  BasicListView.prototype.swipeDirection = function() {
+    if (this.direction === 'down') {
 
       /* Next page? */
       if (this.listsize > (this.pos + this.rpp + 1)) {
-        this.scroll(this.rpp, this.pos + this.rpp);
+        return this.scroll(this.rpp, this.pos + this.rpp);
       }
-    } else if (direction === 'up') {
+    } else if (this.direction === 'up') {
 
       /* Previous page? */
       if (this.pos > 0) {
-        this.scroll(this.rpp, Math.max(0, this.pos - this.rpp));
+        return this.scroll(this.rpp, Math.max(0, this.pos - this.rpp));
       }
     }
-    return this.lastSwipe = now;
   };
 
   return BasicListView;
