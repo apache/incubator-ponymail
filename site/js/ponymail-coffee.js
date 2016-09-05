@@ -1320,7 +1320,7 @@ BasicListView = (function() {
     lastitem = this.renderItems();
     if (lastitem) {
       bj = lastitem.getBoundingClientRect();
-      this.lvitems.style.minHeight = (this.rpp * bj.height) + "px";
+      this.lvitems.style.minHeight = (this.rpp * (bj.height + 1)) + "px";
     }
 
     /* If we made buttons, clone them at the bottom */
