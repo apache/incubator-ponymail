@@ -20,8 +20,13 @@
 ###
 class BasicListView
     ### json: from stats.lua, rpp = results per page, pos = starting position (from 0) ###
-    constructor: (@json, @rpp = 15, @pos = 0) ->
+    constructor: (@json, @rpp = 0, @pos = 0) ->
         
+        ### @rpp == 0 == auto-compute num of items ###
+        if @rpp == 0
+            @rpp= Math.max( parseInt((window.innerHeight - 300) / 40), 5)
+            @rpp = @rpp - (@rpp % 5)
+            
         ### Set the header first ###
         hd = get('header')
         if @json.list

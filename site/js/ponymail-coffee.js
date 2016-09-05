@@ -1318,8 +1318,14 @@ BasicListView = (function() {
   function BasicListView(json1, rpp1, pos1) {
     var date, hd, m, ref, y;
     this.json = json1;
-    this.rpp = rpp1 != null ? rpp1 : 15;
+    this.rpp = rpp1 != null ? rpp1 : 0;
     this.pos = pos1 != null ? pos1 : 0;
+
+    /* @rpp == 0 == auto-compute num of items */
+    if (this.rpp === 0) {
+      this.rpp = Math.max(parseInt((window.innerHeight - 300) / 40), 5);
+      this.rpp = this.rpp - (this.rpp % 5);
+    }
 
     /* Set the header first */
     hd = get('header');
