@@ -25,33 +25,23 @@ dealWithKeyboard = (e) ->
         if (splash and splash.style.display == 'block')
             splash.style.display = "none"
             #saveDraft()
-        else if (location.href.search(/list\.html/) != -1)
+        else if (location.href.search(/list\d?\.html/) != -1)
             ### should only work for the list view ###
             
             ### If datepicker popup is shown, hide it on escape ###
-            tid = (current_thread||"").toString().replace(/@<.+>/, "")
-            thread = get('thread_' + tid) || get('thread_treeview_' + tid)
-
-            ### minimize datepicker if shown ###
             dp = get('datepicker_popup')
             if dp and dp.style.display == "block"
                 dp.show(false)
             
-            else if thread
-                ### Otherwise, collapse a thread ?? ###
-                if (thread.style.display == 'block')
-                    if (prefs.displayMode == 'treeview')
-                        toggleEmails_threaded(current_thread, true)
-                        toggleEmails_treeview(current_thread, true)
-                    else
-                        toggleEmails_threaded(current_thread, true)
-                    
+            else if ponymail_email_open.length > 0
+                ### Close the currently open email? ###
+                if ponymail_current_email
+                    ponymail_current_email.hide()
                 else
-                    ### Close all threads? ###
-                    kiddos = []
-                    traverseThread(document.body, '(thread|helper)_', 'DIV')
-                    for i in kiddos
-                        kiddos[i].style.display = 'none';
+                    ### Close all email ? ###
+                    for email in ponymail_email_open
+                        email.hide()
+
                     
                     
     ### Make sure the below shortcuts don't interfere with normal operations ###
@@ -75,7 +65,7 @@ dealWithKeyboard = (e) ->
             compose(null, ponymail_list, 'new')
         else if e.keyCode == 82
             ### R key: reply ###
-            if (openEmail() && last_opened_email)
+            if (ponymail_current_email && ponymail_email_open.length > 0)
                 compose(last_opened_email, null, 'reply')
         else if e.keyCode == 83
             ### S key: quick search ###

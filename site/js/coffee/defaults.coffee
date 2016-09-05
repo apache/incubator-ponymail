@@ -28,4 +28,6 @@ ponymail_domain = ""
 ponymail_list_json = {}
 
 ponymail_current_listview = null # Current listview class
-ponymail_email_open = false # Is the user viewing an email right now? (disable scrolling then)
+ponymail_email_open = [] # Is the user viewing an email right now? (disable scrolling then)
+ponymail_current_email = null # if more than one email is open, this points to the last one opened
+ponymail_stored_email = {} # Hash containing stored JSON objects of email already fetched
