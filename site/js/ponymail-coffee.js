@@ -724,7 +724,9 @@ BasicEmailDisplay = (function() {
         quote = m[1];
         i = quote.length;
         t = splicer.substr(0, i);
-        qdiv = new HTML('div', {}, [
+        qdiv = new HTML('div', {
+          "class": "email_quote_parent"
+        }, [
           new HTML('img', {
             src: 'images/quote.png',
             title: "Toggle quote",
