@@ -67,16 +67,18 @@ class SingleListView extends BasicListView
     
     renderItems: () ->
         ### For each email result,...###
-        lvitems = new HTML('div', { class: "listview_table" })
+        @lvitems = new HTML('div', { class: "listview_table" })
+        lastitem = null
         for original in @json.emails[@pos...(@pos+@rpp)]
             ### Be sure we actually have an email here ###
             if original
                 ### Call listViewItem to compile a list view HTML element ###
                 item = @listViewItem(original, null)
-                
+                lastitem = item
                 ### Inject new item into the list view ###
-                lvitems.inject(item)
-        @lv.inject(lvitems)
+                @lvitems.inject(item)
+        @lv.inject(@lvitems)
+        return lastitem
         
     listViewItem: (original, thread) ->
         ### Be sure we actually have an email here ###

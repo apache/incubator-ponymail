@@ -1255,7 +1255,7 @@ BasicListView = (function() {
   /* scroll: scroll to a position and show N emails/threads */
 
   BasicListView.prototype.scroll = function(rpp, pos) {
-    var dStat, diff, f, l, nbutton, nno, now, np, pbutton, pno, pp, tmpthis, topButtons;
+    var bj, dStat, diff, f, l, lastitem, nbutton, nno, now, np, pbutton, pno, pp, tmpthis, topButtons;
     this.lastScroll = new Date().getTime();
 
     /* Clear the list view */
@@ -1266,7 +1266,7 @@ BasicListView = (function() {
 
     /* Show how many threads out of how many we are showing */
     f = pos + 1;
-    l = Math.min(this.listsize - pos, pos + rpp);
+    l = Math.min(this.listsize, pos + rpp);
     dStat = new HTML('div', {
       style: {
         float: "left",
@@ -1317,7 +1317,11 @@ BasicListView = (function() {
       }
       this.lv.inject(topButtons);
     }
-    this.renderItems();
+    lastitem = this.renderItems();
+    if (lastitem) {
+      bj = lastitem.getBoundingClientRect();
+      this.lvitems.style.minHeight = (this.rpp * bj.height) + "px";
+    }
 
     /* If we made buttons, clone them at the bottom */
     if (topButtons) {
@@ -1347,10 +1351,11 @@ BasicListView = (function() {
   BasicListView.prototype.renderItems = function() {
 
     /* For each email result,... */
-    var item, j, len, lvitems, original, ref;
-    lvitems = new HTML('div', {
+    var item, j, lastitem, len, lvitem, original, ref;
+    this.lvitems = new HTML('div', {
       "class": "listview_table"
     });
+    lastitem = null;
     ref = this.json.thread_struct.slice(this.pos, this.pos + this.rpp);
     for (j = 0, len = ref.length; j < len; j++) {
       item = ref[j];
@@ -1360,13 +1365,15 @@ BasicListView = (function() {
       if (original) {
 
         /* Call listViewItem to compile a list view HTML element */
-        item = this.listViewItem(original, item);
+        lvitem = this.listViewItem(original, item);
+        lastitem = lvitem;
 
         /* Inject new item into the list view */
-        lvitems.inject(item);
+        this.lvitems.inject(lvitem);
       }
     }
-    return this.lv.inject(lvitems);
+    this.lv.inject(this.lvitems);
+    return lastitem;
   };
 
 
@@ -1831,10 +1838,11 @@ SingleListView = (function(superClass) {
   SingleListView.prototype.renderItems = function() {
 
     /* For each email result,... */
-    var item, j, len, lvitems, original, ref;
-    lvitems = new HTML('div', {
+    var item, j, lastitem, len, original, ref;
+    this.lvitems = new HTML('div', {
       "class": "listview_table"
     });
+    lastitem = null;
     ref = this.json.emails.slice(this.pos, this.pos + this.rpp);
     for (j = 0, len = ref.length; j < len; j++) {
       original = ref[j];
@@ -1844,12 +1852,14 @@ SingleListView = (function(superClass) {
 
         /* Call listViewItem to compile a list view HTML element */
         item = this.listViewItem(original, null);
+        lastitem = item;
 
         /* Inject new item into the list view */
-        lvitems.inject(item);
+        this.lvitems.inject(item);
       }
     }
-    return this.lv.inject(lvitems);
+    this.lv.inject(this.lvitems);
+    return lastitem;
   };
 
   SingleListView.prototype.listViewItem = function(original, thread) {

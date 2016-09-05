@@ -77,7 +77,7 @@ class BasicListView
         
         ### Show how many threads out of how many we are showing ###
         f = pos+1
-        l = Math.min(@listsize - pos, pos+rpp)
+        l = Math.min(@listsize, pos+rpp)
         dStat = new HTML('div', { style: {float: "left", width: "100%", fontSize: "80%", textAlign: "center"}}, "Showing items #{f} through #{l} out of #{@listsize}")
         @lv.inject(dStat)
         
@@ -110,7 +110,12 @@ class BasicListView
                 topButtons.inject(nbutton)
             @lv.inject(topButtons)
             
-        @renderItems()
+        lastitem = @renderItems()
+        
+        if lastitem
+            bj = lastitem.getBoundingClientRect()
+            @lvitems.style.minHeight = (@rpp*bj.height) + "px"
+            
         
         ### If we made buttons, clone them at the bottom ###
         if topButtons
@@ -135,17 +140,20 @@ class BasicListView
     ### renderItems: render the list view emails/theads ###
     renderItems: () ->
         ### For each email result,...###
-        lvitems = new HTML('div', { class: "listview_table" })
+        @lvitems = new HTML('div', { class: "listview_table" })
+        lastitem = null
         for item in @json.thread_struct[@pos...(@pos+@rpp)]
             original = @findEmail(item.tid)
             ### Be sure we actually have an email here ###
             if original
                 ### Call listViewItem to compile a list view HTML element ###
-                item = @listViewItem(original, item)
+                lvitem = @listViewItem(original, item)
+                lastitem = lvitem
                 
                 ### Inject new item into the list view ###
-                lvitems.inject(item)
-        @lv.inject(lvitems)
+                @lvitems.inject(lvitem)
+        @lv.inject(@lvitems)
+        return lastitem
         
     ### findEmail: find an email given an ID ###
     findEmail: (id) ->
