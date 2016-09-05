@@ -78,7 +78,7 @@ class BasicListView
         ### Show how many threads out of how many we are showing ###
         f = pos+1
         l = Math.min(@listsize - pos, pos+rpp)
-        dStat = new HTML('div', { style: {float: "left", width: "100%", fontSize: "80%", textAlign: "center"}}, "Showing threads #{f} through #{l} out of #{@listsize}")
+        dStat = new HTML('div', { style: {float: "left", width: "100%", fontSize: "80%", textAlign: "center"}}, "Showing items #{f} through #{l} out of #{@listsize}")
         @lv.inject(dStat)
         
         ### First, build the prev/next buttons if needed ###
