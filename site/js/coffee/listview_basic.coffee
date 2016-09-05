@@ -245,11 +245,11 @@ class BasicListView
     ### swipe: go to next or previous page of emails, depending on mouse wheel direction ###
     swipe: (e) ->
         @lastSwipe = @lastSwipe || 0
-        @direction = ""
+        direction = ""
         if typeof e is 'string'
-            @direction = e
+            direction = e
         else
-            @direction = if ((e.wheelDelta || -e.detail) < 0) then 'down' else 'up'
+            direction = if ((e.wheelDelta || -e.detail) < 0) then 'down' else 'up'
         style = document.body.currentStyle || window.getComputedStyle(document.body, "")
         
         ### Use the footer to determine whether scrollbar is present or not ###
@@ -260,22 +260,17 @@ class BasicListView
         if ponymail_email_open.length > 0 or scrollBar
             return
         
-        ### set scroll to happen 50ms from now ###
-        if @scrollTimer
-            clearTimeout(@scrollTimer)
-            @scrollTimer = null
-        
-        me = this
-        @scrollTimer = window.setTimeout( () ->
-            me.swipeDirection()
-        , 150)
-        
-    swipeDirection: () ->
-        if @direction == 'down'
+        ### Make sure we don't swipe too fast! ###
+        now = new Date().getTime()
+        if now - @lastSwipe < 300
+            return
+        @lastSwipe = now
+        if direction == 'down'
             ### Next page? ###
             if @listsize > (@pos+@rpp+1)
                 @scroll(@rpp, @pos+@rpp)
-        else if @direction == 'up'
+        else if direction == 'up'
             ### Previous page? ###
             if @pos > 0
                 @scroll(@rpp, Math.max(0,@pos-@rpp))
+                

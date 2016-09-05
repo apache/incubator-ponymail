@@ -1533,13 +1533,13 @@ BasicListView = (function() {
   /* swipe: go to next or previous page of emails, depending on mouse wheel direction */
 
   BasicListView.prototype.swipe = function(e) {
-    var me, obj, scrollBar, style;
+    var direction, now, obj, scrollBar, style;
     this.lastSwipe = this.lastSwipe || 0;
-    this.direction = "";
+    direction = "";
     if (typeof e === 'string') {
-      this.direction = e;
+      direction = e;
     } else {
-      this.direction = (e.wheelDelta || -e.detail) < 0 ? 'down' : 'up';
+      direction = (e.wheelDelta || -e.detail) < 0 ? 'down' : 'up';
     }
     style = document.body.currentStyle || window.getComputedStyle(document.body, "");
 
@@ -1552,25 +1552,19 @@ BasicListView = (function() {
       return;
     }
 
-    /* set scroll to happen 50ms from now */
-    if (this.scrollTimer) {
-      clearTimeout(this.scrollTimer);
-      this.scrollTimer = null;
+    /* Make sure we don't swipe too fast! */
+    now = new Date().getTime();
+    if (now - this.lastSwipe < 300) {
+      return;
     }
-    me = this;
-    return this.scrollTimer = window.setTimeout(function() {
-      return me.swipeDirection();
-    }, 150);
-  };
-
-  BasicListView.prototype.swipeDirection = function() {
-    if (this.direction === 'down') {
+    this.lastSwipe = now;
+    if (direction === 'down') {
 
       /* Next page? */
       if (this.listsize > (this.pos + this.rpp + 1)) {
         return this.scroll(this.rpp, this.pos + this.rpp);
       }
-    } else if (this.direction === 'up') {
+    } else if (direction === 'up') {
 
       /* Previous page? */
       if (this.pos > 0) {
