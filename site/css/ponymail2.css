@@ -370,6 +370,7 @@ h3, h2, h1 {
     border: 1px solid rgba(0,0,0,0.15);
     float: left;
     width: 100%;
+    background: #EEE;
 }
 .listview_table .listview_item:hover {
     background: #F0F0F0;
