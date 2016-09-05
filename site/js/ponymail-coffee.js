@@ -1274,7 +1274,7 @@ BasicListView = (function() {
         fontSize: "80%",
         textAlign: "center"
       }
-    }, "Showing threads " + f + " through " + l + " out of " + this.listsize);
+    }, "Showing items " + f + " through " + l + " out of " + this.listsize);
     this.lv.inject(dStat);
 
     /* First, build the prev/next buttons if needed */
@@ -1533,7 +1533,8 @@ BasicListView = (function() {
   /* swipe: go to next or previous page of emails, depending on mouse wheel direction */
 
   BasicListView.prototype.swipe = function(e) {
-    var direction, obj, scrollBar, style;
+    var direction, now, obj, scrollBar, style;
+    this.lastSwipe = this.lastSwipe || 0;
     direction = "";
     if (typeof e === 'string') {
       direction = e;
@@ -1550,19 +1551,26 @@ BasicListView = (function() {
     if (ponymail_email_open.length > 0 || scrollBar) {
       return;
     }
+
+    /* Make sure we don't swipe too fast! */
+    now = new Date().getTime();
+    if ((now - this.lastSwipe) < 100) {
+      return;
+    }
     if (direction === 'down') {
 
       /* Next page? */
       if (this.listsize > (this.pos + this.rpp + 1)) {
-        return this.scroll(this.rpp, this.pos + this.rpp);
+        this.scroll(this.rpp, this.pos + this.rpp);
       }
     } else if (direction === 'up') {
 
       /* Previous page? */
       if (this.pos > 0) {
-        return this.scroll(this.rpp, Math.max(0, this.pos - this.rpp));
+        this.scroll(this.rpp, Math.max(0, this.pos - this.rpp));
       }
     }
+    return this.lastSwipe = now;
   };
 
   return BasicListView;
