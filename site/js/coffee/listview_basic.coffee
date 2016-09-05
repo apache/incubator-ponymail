@@ -210,7 +210,7 @@ class BasicListView
                 
             ### Subject, PLUS a bit of the body with a break before ###
             subject = new HTML('div', {}, [
-                new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{thread.tid}", onclick: "readEmail(this.parentNode.parentNode); return false;"}, original.subject),
+                new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{thread.tid}", onclick: "readEmail(this.parentNode.parentNode.parentNode); return false;"}, original.subject),
                 new HTML('br'),
                 new HTML('span', {class: "listview_item_body"}, thread.body)
             ])
@@ -233,7 +233,9 @@ class BasicListView
             
             
             ### Finally, pull it all together in a div and add that to the listview ###
-            item = new HTML('div', {id: uid, data: thread.tid, class: "listview_item"}, [avatar, sender, subject, date, stats])
+            item = new HTML('div', {id: uid, data: thread.tid, class: "listview_item"},
+                            new HTML('div', {class:"listview_summary"}, [avatar, sender, subject, date, stats])
+                            )
             return item
         
     ### swipe: go to next or previous page of emails, depending on mouse wheel direction ###
