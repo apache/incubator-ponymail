@@ -415,6 +415,7 @@ a {
     width: 100%;
     margin-left: -5px;
     padding-left: 5px;
+    border-top-right-radius: 4px;
 }
 
 .header_key {
