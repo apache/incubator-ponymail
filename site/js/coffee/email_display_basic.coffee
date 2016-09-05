@@ -45,7 +45,7 @@ readEmail = (obj) ->
         ponymail_current_email = new BasicEmailDisplay(parent, mid)
         ponymail_email_open.push(ponymail_current_email)
 
-    
+### Basic email display class ###
 class BasicEmailDisplay
     constructor: (@parent, @mid) ->
         @placeholder = get("placeholder_" + @mid) || new HTML('div', { class: "email_placeholder", id: "placeholder_" + @mid})
@@ -116,10 +116,49 @@ class BasicEmailDisplay
         
         @placeholder.inject(headers)
         
-        ### Now inject the body ###
-        b = new HTML('pre', {}, json.body)
-        @placeholder.inject(b)
+        ### Convert links to HTML ###
+        @htmlbody = @parseBody(json.body)
         
+        ### Now inject the body ###
+        b = new HTML('pre', {class: "email_body"}, @htmlbody)
+        @placeholder.inject(b)
+    
+    ### parseBody: find links and HTML'ify them ###
+    parseBody: (splicer) ->
+        ### Array holding text and links ###
+        textbits = []
+        
+        ### Find the first link, if any ###
+        i = splicer.search(ponymail_url_regex)
+        urls = 0
+        
+        ### While we have more links, ... ###
+        while i != -1
+            urls++
+            ### Only parse the first 50 URLs... srsly ###
+            if urls > 50
+                break
+            ### Text preceding the link? add it to textbits frst ###
+            if i > 0
+                t = splicer.substr(0, i)
+                textbits.push(t)
+                splicer = splicer.substr(i)
+                
+            ### Find the URL and cut it out as a link ###
+            m = splicer.match(ponymail_url_regex)
+            if m
+                url = m[1]
+                i = url.length
+                t = splicer.substr(0, i)
+                textbits.push(new HTML('a', {href: url}, url))
+                splicer = splicer.substr(i)
+            ### Find the next link ###
+            i = splicer.search(ponymail_url_regex)
+        
+        ### push the remaining text into textbits ###
+        textbits.push(splicer)
+        
+        return textbits
         
     hide: () ->
         @placeholder.show(false)

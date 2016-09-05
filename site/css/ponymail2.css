@@ -418,3 +418,7 @@ a {
     width: calc(100% - 90px);
     float: left;
 }
+
+.email_body {
+    float: left;
+}
