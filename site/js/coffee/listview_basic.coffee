@@ -142,12 +142,12 @@ class BasicListView
         ### For each email result,...###
         @lvitems = new HTML('div', { class: "listview_table" })
         lastitem = null
-        for item in @json.thread_struct[@pos...(@pos+@rpp)]
+        for item, i in @json.thread_struct[@pos...(@pos+@rpp)]
             original = @findEmail(item.tid)
             ### Be sure we actually have an email here ###
             if original
                 ### Call listViewItem to compile a list view HTML element ###
-                lvitem = @listViewItem(original, item)
+                lvitem = @listViewItem(original, item, i+@pos)
                 lastitem = lvitem
                 
                 ### Inject new item into the list view ###
@@ -164,13 +164,14 @@ class BasicListView
     
     ### countEmail: func for counting how many emails are in a thread ###
     countEmail: (thread) ->
-        n = 0
-        if thread.children
-            for item in (if isArray(thread.children) then thread.children else [])
-                n++
-                if isArray(item.children) and item.children.length > 0
-                    n += @countEmail(item.children)
-        return n
+        nc = 0
+        if thread.children and isArray(thread.children)
+            for item in thread.children
+                nc++
+                if item.children and isArray(item.children) and item.children.length > 0
+                    nnc = @countEmail(item)
+                    nc += nnc
+        return nc
     
     ### countPeople: func for counting how many people are in a thread ###
     countPeople: (thread, p) ->
@@ -194,7 +195,7 @@ class BasicListView
                 n++
             return n
         
-    listViewItem: (original, thread) ->
+    listViewItem: (original, thread, index) ->
         ### Be sure we actually have an email here ###
         if original and thread
             now = new Date().getTime()/1000
@@ -245,7 +246,12 @@ class BasicListView
             
             
             ### Finally, pull it all together in a div and add that to the listview ###
-            item = new HTML('div', {id: uid, data: thread.tid, class: "listview_item"},
+            item = new HTML('div', {
+                id: uid,
+                data: thread.tid,
+                'data-index': index,
+                class: "listview_item"
+                },
                             new HTML('div', {class:"listview_summary"}, [avatar, sender, subject, date, stats])
                             )
             return item
