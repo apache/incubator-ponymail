@@ -39,6 +39,7 @@ readEmail = (obj) ->
         if mid == email.mid
             email.hide()
             closedOne = true
+            break
             
     if not closedOne
         ### We have an(other) email open now ###

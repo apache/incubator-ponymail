@@ -562,6 +562,7 @@ readEmail = function(obj) {
     if (mid === email.mid) {
       email.hide();
       closedOne = true;
+      break;
     }
   }
   if (!closedOne) {
