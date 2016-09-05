@@ -252,7 +252,7 @@ class BasicListView
         scrollBar = window.innerHeight < obj.bottom
         
         ### Abort swiping if an email is open or scrollbar is present ###
-        if ponymail_email_open or scrollBar
+        if ponymail_email_open.length > 0 or scrollBar
             return
         
         if direction == 'down'
