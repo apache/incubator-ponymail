@@ -1406,7 +1406,7 @@ BasicListView = (function() {
     scrollBar = window.innerHeight < obj.bottom;
 
     /* Abort swiping if an email is open or scrollbar is present */
-    if (ponymail_email_open || scrollBar) {
+    if (ponymail_email_open.length > 0 || scrollBar) {
       return;
     }
     if (direction === 'down') {
