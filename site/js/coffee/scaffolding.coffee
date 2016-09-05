@@ -17,7 +17,7 @@
 
 ### This is the basic scaffolding for all pages ###
 
-listviewScaffolding = () ->
+headerScaffolding = () ->
     ### Start off by making the top menu ###
     menu = new HTML('div', { id: "topMenu"})
     document.body.inject(menu)
@@ -41,6 +41,22 @@ listviewScaffolding = () ->
     ul.inject(logo)
     menu.inject(ul)
     
+footerScaffolding = () ->
+    ### Add a footer ###
+    footer = new HTML('div', { id: "footer"})
+    document.body.inject(footer)
+    footer.inject([
+        "Powered by ",
+        new HTML('a', { href: 'https://ponymail.incubator.apache.org/'}, "Apache Pony Mail (Incubating) v/#{ponymail_version}"),
+        ". Copyright 2016, the Apache Software Foundation."
+    ])
+    
+    
+    
+listviewScaffolding = () ->
+    
+    ### Header scaffolding ###
+    headerScaffolding()
     
     ### Now, make the base div ###
     mainDiv = new HTML('div', { id: "contents"})
@@ -55,18 +71,14 @@ listviewScaffolding = () ->
     mainDiv.inject(calHolder)
     calHolder.inject(new HTML('h3', {}, "Archive:"))
     
+    
+    
     ### Finally, make the list view placeholder ###
     listDiv = new HTML('div', { id: "listview", class: "sbox"})
     mainDiv.inject(listDiv)
     
-    ### And of course, a footer ###
-    footer = new HTML('div', { id: "footer"})
-    document.body.inject(footer)
-    footer.inject([
-        "Powered by ",
-        new HTML('a', { href: 'https://ponymail.incubator.apache.org/'}, "Apache Pony Mail (Incubating) v/#{ponymail_version}"),
-        ". Copyright 2016, the Apache Software Foundation."
-    ])
+    ### Footer ###
+    footerScaffolding()
     
     ### Make an API call to the preferences script, have it call back to listView once done ###
     r = new HTTPRequest("api/preferences.lua", {
@@ -76,4 +88,31 @@ listviewScaffolding = () ->
         }
     })
     
+    
+    
+### Permalink view callback ###
+scaffoldingEmailCallback = (json, state) ->
+    e = new ThreadedEmailDisplay(null, null, null, json.thread)
+    return
+    
+    
+### Permalink view ###
+threadScaffolding = () ->
+    
+    ### Header scaffolding ###
+    headerScaffolding()
+    
+    ### Now, make the base div ###
+    mainDiv = new HTML('div', { id: "email_placeholder", style: { width: "90%"}})
+    document.body.inject(mainDiv)
+    
+    ### Footer ###
+    footerScaffolding()
+    
+    ### Make an API call to the preferences script, have it call back to listView once done ###
+    mid = location.href.match(/thread\.html\/(.+)/)[1]
+    r = new HTTPRequest("api/thread.lua?id=" + mid, {
+        callback: scaffoldingEmailCallback
+        
+    })
     
