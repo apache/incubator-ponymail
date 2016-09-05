@@ -724,6 +724,7 @@ BasicEmailDisplay = (function() {
         quote = m[1];
         i = quote.length;
         t = splicer.substr(0, i);
+        quote = quote.replace(/(>*\s*\r?\n)+$/g, "");
         qdiv = new HTML('div', {
           "class": "email_quote_parent"
         }, [
