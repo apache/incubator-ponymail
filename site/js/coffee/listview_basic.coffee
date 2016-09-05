@@ -114,7 +114,7 @@ class BasicListView
         
         if lastitem
             bj = lastitem.getBoundingClientRect()
-            @lvitems.style.minHeight = (@rpp*bj.height) + "px"
+            @lvitems.style.minHeight = (@rpp*(bj.height+1)) + "px"
             
         
         ### If we made buttons, clone them at the bottom ###
