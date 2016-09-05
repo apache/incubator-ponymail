@@ -103,4 +103,4 @@ class DateEmailDisplay extends BasicEmailDisplay
                     me.render(json, state)
             })
         
-        
+ponymail_register_display('date', "Stacked view", DateEmailDisplay)

@@ -17,8 +17,20 @@
 
 ### threaded email display class - extends BasicEmail Display ###
 class ThreadedEmailDisplay extends BasicEmailDisplay
-    constructor: (@parent, @mid, index) ->
+    constructor: (@parent, @mid, index, tjson = null) ->
         @placeholder = get("placeholder_" + @mid) || new HTML('div', { class: "email_placeholder", id: "placeholder_" + @mid})
+        
+        
+        me = this
+        
+        ### Find the thread or fake one ###
+        thread = {tid: @mid}
+        if tjson
+            thread = tjson
+            @mid = tjson.mid
+            @parent = get('email_placeholder')
+        else if index and ponymail_current_listview and ponymail_current_listview.json.thread_struct[index]
+            thread = ponymail_current_listview.json.thread_struct[index]
         
         
         ### Inject into listview or body ###
@@ -28,12 +40,6 @@ class ThreadedEmailDisplay extends BasicEmailDisplay
         @placeholder = @placeholder.empty()
         @placeholder.show(true)
         
-        me = this
-        
-        ### Find the thread or fake one ###
-        thread = {tid: @mid}
-        if index and ponymail_current_listview and ponymail_current_listview.json.thread_struct[index]
-            thread = ponymail_current_listview.json.thread_struct[index]
         
         @threadedFetch(@placeholder, thread, 1)
         return this
@@ -97,4 +103,4 @@ class ThreadedEmailDisplay extends BasicEmailDisplay
                 @threadedFetch(replyplace, item, Math.min(nestedness+1, 5))
         return this
     
-        
+ponymail_register_display('threaded', "Threaded view", ThreadedEmailDisplay)

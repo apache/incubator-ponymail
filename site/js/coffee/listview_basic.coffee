@@ -292,3 +292,4 @@ class BasicListView
             if @pos > 0
                 @scroll(@rpp, Math.max(0,@pos-@rpp))
                 
+ponymail_register_listview('default', 'Compact (threaded) theme', BasicListView)

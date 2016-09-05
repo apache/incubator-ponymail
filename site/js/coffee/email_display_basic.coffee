@@ -232,7 +232,9 @@ class BasicEmailDisplay
         @placeholder.show(false)
         ponymail_email_open.remove(this)
         ponymail_current_email = null
-        
+
+ponymail_register_display('default', "Single email view", BasicEmailDisplay)
+
 ### toggleQuote: show/hide a quote ###
 toggleQuote = (div) ->
     div.parentNode.childNodes[2].show()

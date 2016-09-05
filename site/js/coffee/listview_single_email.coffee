@@ -121,4 +121,4 @@ class SingleListView extends BasicListView
                             )
             return item
         
-                
+ponymail_register_listview('single', 'Single email theme', SingleListView)
