@@ -538,3 +538,60 @@ a {
     margin-right: 5px;
     margin-left: 5px;
 }
+
+
+/* Quick Search */
+
+.quicksearch {
+    height: 24px;
+    margin: 0px auto;
+    width: 360px;
+    margin-left: calc(50% - 180px);
+}
+
+.qs_button {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/qs.png);
+    color: rgba(0,0,0,0);
+    border: none;
+    background-size: contain;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.qs_input {
+    border: 1px solid rgba(0,0,0, 0.35);
+    border-right: 0px;
+    height: 20px;
+    width: 160px;
+}
+
+.qs_options {
+    width: 150px;
+    background: rgba(0,0,0,0.45);
+    height: 22px;
+    float: left;
+    border-right: none;
+    border: 1px solid rgba(0,0,0, 0.35);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    font-size: 10px;
+    line-height: 11px;
+    color: #FFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.qs_options a {
+    color: #FFF;
+    font-family: sans-serif;
+    margin-left: 3px;
+}
+
+.qs_options a::before {    
+    content: "›";
+    margin-right: 2px;
+    display: inline-block;
+}
