@@ -119,6 +119,26 @@ class BasicEmailDisplay
             ])
         headers.inject(list_line)
         
+        ### Attachments, if any ###
+        if isArray(json.attachments) and json.attachments.length > 0
+            at = []
+            for file in json.attachments
+                fsize = file.size
+                if fsize > (1024*1024)
+                    fsize = (fsize/(1024*1024)).toFixed(2) + "MB"
+                else if fsize > 1024
+                    fsize = (fsize/(1024)).toFixed(2) + "KB"
+                else
+                    fsize = fsize + " bytes"
+                link = new HTML('a', { href: "api/email.lua?attachment=true&file=#{file.hash}&id=#{json.mid}", style: { marginRight: "8px"}}, "#{file.filename} (#{fsize})")
+                at.push(link)
+            att_line = new HTML('div', {},
+            [
+                new HTML('div', {class:"header_key"}, "Attachments: ")
+                new HTML('div', {class:"header_value"}, at)
+            ])
+            headers.inject(att_line)
+        
         ### Action buttons ###
         
         ### Permalink ###

@@ -426,13 +426,13 @@ a {
 }
 .header_key {
     padding-top: 0px;
-    width: 80px;
+    width: 100px;
     float: left;
     font-weight: bold;
 }
 .header_value {
     padding-top: 0px;
-    width: calc(100% - 90px);
+    width: calc(100% - 110px);
     float: left;
 }
 
