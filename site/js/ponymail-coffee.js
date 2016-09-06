@@ -2696,15 +2696,15 @@ listviewScaffolding = function() {
   });
   document.body.inject(mainDiv);
 
+  /* Quick Search Bar */
+  qs = quickSearchBar();
+  mainDiv.inject(qs);
+
   /* Make the title */
   header = new HTML('h2', {
     id: "header"
   }, "Loading list data...");
   mainDiv.inject(header);
-
-  /* Quick Search Bar */
-  qs = quickSearchBar();
-  mainDiv.inject(qs);
 
   /* Then make the calendar placeholder */
   calHolder = new HTML('div', {

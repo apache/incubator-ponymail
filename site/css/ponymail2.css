@@ -547,6 +547,8 @@ a {
     margin: 0px auto;
     width: 360px;
     margin-left: calc(50% - 180px);
+    margin-top: -10px;
+    margin-bottom: 10px;
 }
 
 .qs_button {
