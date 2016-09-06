@@ -124,14 +124,18 @@ class BasicEmailDisplay
             at = []
             for file in json.attachments
                 fsize = file.size
+                
+                ### Compact size to MB, KB or bytes ###
                 if fsize > (1024*1024)
                     fsize = (fsize/(1024*1024)).toFixed(2) + "MB"
                 else if fsize > 1024
                     fsize = (fsize/(1024)).toFixed(2) + "KB"
                 else
                     fsize = fsize + " bytes"
+                ### Make a link with the filename and size ###
                 link = new HTML('a', { href: "api/email.lua?attachment=true&file=#{file.hash}&id=#{json.mid}", style: { marginRight: "8px"}}, "#{file.filename} (#{fsize})")
                 at.push(link)
+                
             att_line = new HTML('div', {},
             [
                 new HTML('div', {class:"header_key"}, "Attachments: ")
