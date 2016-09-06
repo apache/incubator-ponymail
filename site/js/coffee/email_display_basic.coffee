@@ -82,6 +82,9 @@ class BasicEmailDisplay
         if not ponymail_stored_email[json.mid]
             ponymail_stored_email[json.mid] = json
             
+        ### Mark as read ###
+        markRead(json.mid)
+        
         placeholder = get('placeholder_' + @mid + "_" + json.mid) || get('placeholder_' + json.mid)
             
         ### Display email headers ###
