@@ -36,7 +36,12 @@ catch e
 dbWrite = (key, value) ->
     ### Can we use localStorage? ###
     if pm_storage_available
-        return window.localStorage.setItem(key, value)
+        try
+            rv = window.localStorage.setItem(key, value)
+            return rv
+        catch e
+            console.log("Could not save data to DB: " + e)
+            return null
     else
         ### Guess not, fall back to (ineffective) global var ###
         pm_storage_globvar[key] = value
