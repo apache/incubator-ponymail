@@ -20,6 +20,7 @@ class ThreadedEmailDisplay extends BasicEmailDisplay
     constructor: (@parent, @mid, index, tjson = null) ->
         @placeholder = get("placeholder_" + @mid) || new HTML('div', { class: "email_placeholder", id: "placeholder_" + @mid})
         
+        @shown = {}
         
         me = this
         
@@ -45,6 +46,11 @@ class ThreadedEmailDisplay extends BasicEmailDisplay
         return this
         
     threadedFetch: (parent, thread, nestedness) ->
+        ### First off, we don't want duplicates due to whatever bug, so bug out if we've already rendered this email ###
+        if @shown[thread.tid]
+            return
+        @shown[thread.tid] = true
+        
         ### Make the thread item placeholder ###
         bodyplace = new HTML('div', {id: "placeholder_#{@mid}_#{thread.tid}", class:"email_boxed"})
         
