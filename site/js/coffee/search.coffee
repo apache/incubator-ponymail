@@ -15,6 +15,8 @@
  limitations under the License.
 ###
 
+
+### Quick Search bar creation ###
 quickSearchBar = () ->
     qs = new HTML('form', { class: "quicksearch", onsubmit: 'quickSearch(); return false;'})
     
@@ -35,9 +37,13 @@ quickSearchBar = () ->
     
     options.inject([span, new HTML('br'), list])
     
-    
+    ### Input field for text search ###
     input = new HTML('input', { type: "text", id: 'qs_input', class: "qs_input", placeholder: "Type search terms..."})
+    
+    ### The blue search button ###
     button = new HTML('input', { type: 'submit', class: 'qs_button'})
+    
+    ### Add it all to the form ###
     qs.inject(options)
     qs.inject(input)
     qs.inject(button)
