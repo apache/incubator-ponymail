@@ -227,7 +227,7 @@ class BasicListView
                 
             ### Subject, PLUS a bit of the body with a break before ###
             subject = new HTML('div', {}, [
-                new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{thread.tid}", onclick: "readEmail(this.parentNode.parentNode.parentNode); return false;"}, original.subject),
+                new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{thread.tid}", onclick: "readEmail(this.parentNode.parentNode.parentNode); this.style.fontWeight = 'normal'; return false;"}, original.subject),
                 new HTML('br'),
                 new HTML('span', {class: "listview_item_body"}, thread.body)
             ])
