@@ -1873,6 +1873,14 @@ BasicListView = (function() {
         src: "https://secure.gravatar.com/avatar/" + original.gravatar + ".png?s=24&r=g&d=mm"
       });
 
+      /* Make sure subject and author is...something */
+      if (original.subject.length === 0) {
+        original.subject = "(No subject)";
+      }
+      if (original.from.length === 0) {
+        original.from = "(No author?)";
+      }
+
       /* Sender, without the <foo@bar> part - just the name */
       sender = new HTML('div', {
         style: {
@@ -2785,6 +2793,9 @@ threadScaffolding = function() {
  limitations under the License.
  */
 
+
+/* Quick Search bar creation */
+
 quickSearchBar = function() {
   var button, datedata, input, list, listdata, listname, options, qs, span;
   qs = new HTML('form', {
@@ -2818,16 +2829,22 @@ quickSearchBar = function() {
     data: listdata
   }, listname);
   options.inject([span, new HTML('br'), list]);
+
+  /* Input field for text search */
   input = new HTML('input', {
     type: "text",
     id: 'qs_input',
     "class": "qs_input",
     placeholder: "Type search terms..."
   });
+
+  /* The blue search button */
   button = new HTML('input', {
     type: 'submit',
     "class": 'qs_button'
   });
+
+  /* Add it all to the form */
   qs.inject(options);
   qs.inject(input);
   qs.inject(button);

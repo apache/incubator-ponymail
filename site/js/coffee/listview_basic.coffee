@@ -217,6 +217,13 @@ class BasicListView
             ### Gravatar ###
             avatar = new HTML('img', { class: "gravatar", src: "https://secure.gravatar.com/avatar/#{original.gravatar}.png?s=24&r=g&d=mm"})
             
+            
+            ### Make sure subject and author is...something ###
+            if original.subject.length == 0
+                original.subject = "(No subject)"
+            if original.from.length == 0
+                original.from = "(No author?)"
+            
             ### Sender, without the <foo@bar> part - just the name ###
             sender = new HTML('div', {style: {fontWeight: "bold"}}, original.from.replace(/\s*<.+>/, "").replace(/"/g, ''))
             
@@ -225,6 +232,7 @@ class BasicListView
             if hasRead(thread.tid)
                 readStyle = "normal"
                 
+            
             ### Subject, PLUS a bit of the body with a break before ###
             subject = new HTML('div', {}, [
                 new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{thread.tid}", onclick: "readEmail(this.parentNode.parentNode.parentNode); this.style.fontWeight = 'normal'; return false;"}, original.subject),
