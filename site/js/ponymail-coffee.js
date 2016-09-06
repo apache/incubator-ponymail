@@ -720,6 +720,8 @@ BasicEmailDisplay = (function() {
       for (j = 0, len = ref.length; j < len; j++) {
         file = ref[j];
         fsize = file.size;
+
+        /* Compact size to MB, KB or bytes */
         if (fsize > (1024 * 1024)) {
           fsize = (fsize / (1024 * 1024)).toFixed(2) + "MB";
         } else if (fsize > 1024) {
@@ -727,6 +729,8 @@ BasicEmailDisplay = (function() {
         } else {
           fsize = fsize + " bytes";
         }
+
+        /* Make a link with the filename and size */
         link = new HTML('a', {
           href: "api/email.lua?attachment=true&file=" + file.hash + "&id=" + json.mid,
           style: {
@@ -1096,6 +1100,7 @@ ThreadedEmailDisplay = (function(superClass) {
       "class": "email_placeholder",
       id: "placeholder_" + this.mid
     });
+    this.shown = {};
     me = this;
 
     /* Find the thread or fake one */
@@ -1122,8 +1127,14 @@ ThreadedEmailDisplay = (function(superClass) {
 
   ThreadedEmailDisplay.prototype.threadedFetch = function(parent, thread, nestedness) {
 
-    /* Make the thread item placeholder */
+    /* First off, we don't want duplicates due to whatever bug, so bug out if we've already rendered this email */
     var bcolor, bcolors, bodyplace, item, j, len, me, place, r, ref, replyplace;
+    if (this.shown[thread.tid]) {
+      return;
+    }
+    this.shown[thread.tid] = true;
+
+    /* Make the thread item placeholder */
     bodyplace = new HTML('div', {
       id: "placeholder_" + this.mid + "_" + thread.tid,
       "class": "email_boxed"
