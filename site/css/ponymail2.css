@@ -416,6 +416,8 @@ a {
     margin-left: -5px;
     padding-left: 5px;
     border-top-right-radius: 4px;
+    font-family: sans-serif;
+    font-size: 95%;
 }
 
 .email_header_buttons {
