@@ -661,7 +661,7 @@ BasicEmailDisplay = (function() {
   BasicEmailDisplay.prototype.render = function(json, state) {
 
     /* Store email in cache if not there already */
-    var b, buttons, date_line, from_line, headers, htmlbody, list_line, pbutton, placeholder, rbutton, sbutton, subject_line;
+    var at, att_line, b, buttons, date_line, file, from_line, fsize, headers, htmlbody, j, len, link, list_line, pbutton, placeholder, rbutton, ref, sbutton, subject_line;
     if (!ponymail_stored_email[json.mid]) {
       ponymail_stored_email[json.mid] = json;
     }
@@ -712,6 +712,38 @@ BasicEmailDisplay = (function() {
       }, this.list))
     ]);
     headers.inject(list_line);
+
+    /* Attachments, if any */
+    if (isArray(json.attachments) && json.attachments.length > 0) {
+      at = [];
+      ref = json.attachments;
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
+        fsize = file.size;
+        if (fsize > (1024 * 1024)) {
+          fsize = (fsize / (1024 * 1024)).toFixed(2) + "MB";
+        } else if (fsize > 1024) {
+          fsize = (fsize / 1024.).toFixed(2) + "KB";
+        } else {
+          fsize = fsize + " bytes";
+        }
+        link = new HTML('a', {
+          href: "api/email.lua?attachment=true&file=" + file.hash + "&id=" + json.mid,
+          style: {
+            marginRight: "8px"
+          }
+        }, file.filename + " (" + fsize + ")");
+        at.push(link);
+      }
+      att_line = new HTML('div', {}, [
+        new HTML('div', {
+          "class": "header_key"
+        }, "Attachments: "), new HTML('div', {
+          "class": "header_value"
+        }, at)
+      ]);
+      headers.inject(att_line);
+    }
 
     /* Action buttons */
 
