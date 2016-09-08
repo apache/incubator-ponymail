@@ -2542,7 +2542,7 @@ shortBits = 3;
 shortenURL = function(mid) {
   var a, arr, i, j, num, out, ref, res;
   arr = mid.split("@");
-  if (arr.length === 2 && (pm_config && pm_config.shortenLinks)) {
+  if (arr.length === 2 && (pm_config && pm_config.shortLinks)) {
     out = "";
     for (i = j = 0, ref = shortBits - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       a = arr[0].substr(i * 8, 8);
