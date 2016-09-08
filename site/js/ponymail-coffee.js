@@ -1902,7 +1902,7 @@ BasicListView = (function() {
           style: {
             fontWeight: readStyle
           },
-          href: "thread.html/#sid}",
+          href: "thread.html/" + sid,
           onclick: "readEmail(this.parentNode.parentNode.parentNode); this.style.fontWeight = 'normal'; return false;"
         }, original.subject), new HTML('br'), new HTML('span', {
           "class": "listview_item_body"
