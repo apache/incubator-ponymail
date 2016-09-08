@@ -102,9 +102,11 @@ class SingleListView extends BasicListView
             if hasRead(original.id)
                 readStyle = "normal"
                 
+                
             ### Subject, PLUS a bit of the body with a break before ###
+            sid = shortenURL(original.id)
             subject = new HTML('div', {}, [
-                new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{original.id}", onclick: "readEmail(this.parentNode.parentNode.parentNode); this.style.fontWeight = 'normal'; return false;"}, original.subject),
+                new HTML('a', { style: {fontWeight: readStyle}, href: "thread.html/#{sid}", onclick: "readEmail(this.parentNode.parentNode.parentNode); this.style.fontWeight = 'normal'; return false;"}, original.subject),
             ])
             
             

@@ -149,7 +149,8 @@ class BasicEmailDisplay
         ### Action buttons ###
         
         ### Permalink ###
-        pbutton = new HTML('a', { class: "label_yellow", href: "thread.html/#{json.mid}"}, "Permalink")
+        shortID = shortenURL(json.mid)
+        pbutton = new HTML('a', { class: "label_yellow", href: "thread.html/#{shortID}"}, "Permalink")
         
         ### Source ###
         sbutton = new HTML('a', { class: "label_red", href: "api/source.lua/#{json.mid}"}, "View source")

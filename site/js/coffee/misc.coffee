@@ -93,3 +93,34 @@ ponymail_url_regex = new RegExp(
 ponymail_quote_regex = new RegExp(
     "((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi"
 )
+
+shortBits = 3
+
+shortenURL = (mid) ->
+    arr = mid.split("@")
+    if arr.length == 2 and (pm_config and pm_config.shortenLinks)
+        out = ""
+        for i in [0..shortBits-1]
+            a = arr[0].substr(i*8,8)
+            num = parseInt(a, 16)
+            res = num.toString(36)
+            while res.length < 7
+                res = '0' + res
+            out += res
+        return "PZ" + out
+    
+    return mid
+
+unshortenURL = (mid) ->
+    if mid.substr(0,2) == 'PZ'
+        out = ""
+        for i in [0..shortBits-1]
+            num = parseInt(mid.substr(2+(i*7), 7), 36)
+            res = num.toString(16)
+            while res.length < 8
+                res = '0' + res
+            out += res
+        return out
+    else
+        return mid
+    

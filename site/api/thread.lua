@@ -126,6 +126,12 @@ function handle(r)
         if #docs == 1 then
             doc = docs[1]
         end
+        -- New shortening for medium/full generators
+        if #docs == 0 and #eid == 24 then
+            docs = elastic.find("mid:" .. r:escape(eid) .. "*", 1, "mbox")
+            
+        end
+        -- old shortening format, bleh
         if #docs == 0 and #eid == 18 then
             docs = elastic.find("mid:" .. r:escape(eid) .. "*", 1, "mbox")
         end

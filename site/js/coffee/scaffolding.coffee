@@ -118,7 +118,7 @@ threadScaffolding = () ->
     
     ### Make an API call to the preferences script, have it call back to listView once done ###
     mid = location.href.match(/thread\.html\/(.+)/)[1]
-    r = new HTTPRequest("api/thread.lua?id=" + mid, {
+    r = new HTTPRequest("api/thread.lua?id=" + unshortenURL(mid), {
         callback: scaffoldingEmailCallback
         
     })
