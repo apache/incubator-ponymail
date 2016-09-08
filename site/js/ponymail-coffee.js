@@ -2857,7 +2857,14 @@ quickSearchBar = function() {
   advanced = new HTML('a', {
     href: 'javascript:void(advancedSearch());',
     "class": "qs_link"
-  }, "Advanced...");
+  }, new HTML('img', {
+    src: 'images/advanced.png',
+    style: {
+      verticalAlign: 'middle',
+      height: "24px",
+      marginTop: "-1px"
+    }
+  }));
 
   /* Add it all to the form */
   qs.inject(cog);
