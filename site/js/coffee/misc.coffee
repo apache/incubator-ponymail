@@ -105,7 +105,7 @@ shortenURL = (mid) ->
             num = parseInt(a, 16)
             res = num.toString(36)
             while res.length < 7
-                res = '0' + res
+                res = '-' + res
             out += res
         return "PZ" + out
     
@@ -115,7 +115,7 @@ unshortenURL = (mid) ->
     if mid.substr(0,2) == 'PZ'
         out = ""
         for i in [0..shortBits-1]
-            num = parseInt(mid.substr(2+(i*7), 7), 36)
+            num = parseInt(mid.substr(2+(i*7), 7).replace('-', ''), 36)
             res = num.toString(16)
             while res.length < 8
                 res = '0' + res
