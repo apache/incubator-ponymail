@@ -48,7 +48,9 @@ quickSearchBar = () ->
     button = new HTML('input', { type: 'submit', class: 'qs_button'})
     
     ### Link to advanced search ###
-    advanced = new HTML('a', {href: 'javascript:void(advancedSearch());', class: "qs_link"}, "Advanced...")
+    advanced = new HTML('a', {href: 'javascript:void(advancedSearch());', class: "qs_link"},
+                        new HTML('img', { src: 'images/advanced.png', style: { verticalAlign: 'middle', height: "24px"}})
+                       )
     
     ### Add it all to the form ###
     qs.inject(cog)
