@@ -20,6 +20,10 @@
 quickSearchBar = () ->
     qs = new HTML('form', { class: "quicksearch", onsubmit: 'quickSearch(); return false;'})
     
+    ### Cog ###
+    ### The blue search button ###
+    cog = new HTML('input', { type: 'submit', class: 'qs_cog', title: "Search settings"})
+    
     ### Options area ###
     options = new HTML('div', { class: 'qs_options'})
     
@@ -28,25 +32,30 @@ quickSearchBar = () ->
     span = new HTML('a', { id: 'qs_span', data: datedata, href: 'javascript:void(0);'}, "Less than 1 month ago")
     
     ### Lists(s) to search ###
-    listname = 'This list'
+    listname = 'this list'
     listdata = ponymail_listname
     if ponymail_listname.length == 0
-        listname = 'All lists'
+        listname = 'all lists'
         listdata = "*@*"
     list = new HTML('a', { id: 'qs_list', href: 'javascript:void(0);', data: listdata}, listname)
     
     options.inject([span, new HTML('br'), list])
     
     ### Input field for text search ###
-    input = new HTML('input', { type: "text", id: 'qs_input', class: "qs_input", placeholder: "Type search terms..."})
+    input = new HTML('input', { type: "text", id: 'qs_input', class: "qs_input", placeholder: "Search #{listname}..."})
     
     ### The blue search button ###
     button = new HTML('input', { type: 'submit', class: 'qs_button'})
     
+    ### Link to advanced search ###
+    advanced = new HTML('a', {href: 'javascript:void(advancedSearch());', class: "qs_link"}, "Advanced...")
+    
     ### Add it all to the form ###
-    qs.inject(options)
+    qs.inject(cog)
+    #qs.inject(options)
     qs.inject(input)
     qs.inject(button)
+    qs.inject(advanced)
     
     return qs
 

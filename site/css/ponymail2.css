@@ -560,13 +560,34 @@ a {
     background-size: contain;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+    cursor: pointer;
+}
+
+.qs_cog {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/cog.png);
+    color: rgba(0,0,0,0);
+    border: none;
+    background-size: contain;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    cursor: pointer;
 }
 
 .qs_input {
     border: 1px solid rgba(0,0,0, 0.35);
-    border-right: 0px;
+    border-right: none;
+    border-left: none;
     height: 20px;
-    width: 160px;
+    width: 200px;
+    text-indent: 5px;
+}
+
+.qs_link {
+    margin-left: 8px;
+    font-size: 75%;
+    font-family: sans-serif;
 }
 
 .qs_options {
