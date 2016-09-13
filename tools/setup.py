@@ -273,6 +273,9 @@ dbname:                 %s
 port:                   %u
 ssl:                    false
 
+## Archiver settings
+[archiver]
+generator:              medium
 ###############################################################
             """ % (hostname, dbname, port))
     f.close()
