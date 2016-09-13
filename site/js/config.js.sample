@@ -77,7 +77,7 @@ var pm_config = {
                             // phonebook_short: Same as above, but sort/list by list name (dev@a.org, dev@.org, user@a.org...)
                             // table: A more detailed view meant for smaller list sites (<=20-30 lists or such)
     shortLists: true,       // whether to display foo@bar.org or just foo@ in flat view
-    shortLinks: true,       // Whether to shorten links using base32
+    shortLinks: true,       // Whether to shorten links using base36
     URLBase: '',            // Rewrite base for URLs. If you serve from http://foo.tld/ponymail/, set this to '/ponymail'
 }
 
