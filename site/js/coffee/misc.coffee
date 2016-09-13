@@ -133,8 +133,8 @@ unshortenURL = (mid) ->
                 res = '0' + res
             out += res
         return out
-    ### Old format from 0.9 and before ###
     else if mid[0] == 'Z' or mid[0] == 'B'
+        ### Old format from 0.9 and before ###
         out = ""
         ### For each 7-char bit, convert from base36 to base16, remove padding ###
         for i in [0..1]
