@@ -94,16 +94,25 @@ ponymail_quote_regex = new RegExp(
     "((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi"
 )
 
+###*
+# How many bits (of 7 chars each) do we want in our shortLink?
+# The more bits, the more precise, the fewer bits, the shorter the link.
+###
 shortBits = 3
 
+### Shortener: cut MID into pieces, convert to base36 to save 3-4 bytes ###
 shortenURL = (mid) ->
     arr = mid.split("@")
+    ### IF arr is 2 bits, it's fine to shorten it (meduim/long generator). if 3, then potentially not (short generator) ###
     if arr.length == 2 and (pm_config and pm_config.shortLinks)
         out = ""
+        ### For each bit in $howlongdowewantthis ... ###
         for i in [0..shortBits-1]
+            ### Cut off 8 chars, convert from base16 to base36 ###
             a = arr[0].substr(i*8,8)
             num = parseInt(a, 16)
             res = num.toString(36)
+            ### Padding for small numbers ###
             while res.length < 7
                 res = '-' + res
             out += res
@@ -112,12 +121,27 @@ shortenURL = (mid) ->
     return mid
 
 unshortenURL = (mid) ->
+    ### If new format ... ###
     if mid.substr(0,2) == 'PZ'
         out = ""
+        ### For each 7-char bit, convert from base36 to base16, remove padding ###
         for i in [0..shortBits-1]
             num = parseInt(mid.substr(2+(i*7), 7).replace('-', ''), 36)
             res = num.toString(16)
+            ### 0-padding for smaller numbers (<8 chars)###
             while res.length < 8
+                res = '0' + res
+            out += res
+        return out
+    ### Old format from 0.9 and before ###
+    else if mid[0] == 'Z' or mid[0] == 'B'
+        out = ""
+        ### For each 7-char bit, convert from base36 to base16, remove padding ###
+        for i in [0..1]
+            num = parseInt(mid.substr(1+(i*7), 7).replace('-', ''), 36)
+            res = num.toString(16)
+            ### 0-padding for smaller numbers (<9 chars) ###
+            while res.length < 9
                 res = '0' + res
             out += res
         return out
