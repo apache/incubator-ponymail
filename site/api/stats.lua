@@ -572,7 +572,7 @@ function handle(r)
         dhh = doc.hits.hits
     end
 
-    local h = #dhh
+    local h = 0
     
     -- Debug time point 7
     table.insert(t, r:clock() - tnow)
@@ -606,6 +606,8 @@ function handle(r)
             end
         end
         if canUse then
+
+            h = h + 1
             
             if not config.slow_count then
                 local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or nil
