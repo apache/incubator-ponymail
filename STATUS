@@ -1,13 +1,21 @@
 Pony Mail STATUS:
-Last modified at [16 Sept 2016]
+Last modified at [19 Sept 2016]
 
 The current version of this file can be found at:
 
   * https://git-wip-us.apache.org/repos/asf?p=incubator-ponymail.git;a=blob_plain;f=STATUS
 
-PATCHES/ISSUES THAT ARE BEING WORKED
+The purpose of this file is to track proposed changes to master. Each
+proposed change requires a +1 from two people, one of which may be from
+the original author, provided the author is a committer on the pony mail
+project. Once sufficient +1s have been reached, either party may merge
+the changes to master.
+
+PATCHES/ISSUES THAT ARE PROPOSED FOR MASTER:
 
   * Only count hits if user can access email
     commit: bd27ae9a5099b1591d3d2c27a2c2c631350553ca
     shortlog: https://git-wip-us.apache.org/repos/asf?p=incubator-ponymail.git;a=shortlog;h=refs/heads/count-if-allowed
-    +1:
+    +1: Humbedooh
+
+
