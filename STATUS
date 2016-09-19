@@ -13,9 +13,12 @@ the changes to master.
 
 PATCHES/ISSUES THAT ARE PROPOSED FOR MASTER:
 
-  * Only count hits if user can access email
+
+--------
+   Example: 
+  * Fix all the Ponies
     commit: bd27ae9a5099b1591d3d2c27a2c2c631350553ca
-    shortlog: https://git-wip-us.apache.org/repos/asf?p=incubator-ponymail.git;a=shortlog;h=refs/heads/count-if-allowed
-    +1: Humbedooh
+    shortlog: https://git-wip-us.apache.org/repos/asf?p=incubator-ponymail.git;a=shortlog;h=refs/heads/fix-ponies
+    +1: Humbedooh, ucb
 
 
