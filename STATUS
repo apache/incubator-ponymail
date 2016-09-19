@@ -16,7 +16,7 @@ PATCHES/ISSUES THAT ARE PROPOSED FOR MASTER:
   * Make sure we don't archive emails with NULL-bodies.
     commit: 81bd75a42ce8fa3387c3bc371785de96f2ee047b
     shortlog: https://git-wip-us.apache.org/repos/asf?p=incubator-ponymail.git;a=shortlog;h=refs/heads/null-bodies
-    +1: Humbedooh
+    +1: Humbedooh, ucb
 
 --------
    Example: 
