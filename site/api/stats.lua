@@ -693,6 +693,8 @@ function handle(r)
                     table.insert(threads, emails[mid])
                 end
                 if not statsOnly then
+                    -- Make sure email.body is not NULL, as can happen with the current archiver
+                    email.body = (email.body and email.body ~= JSON.null) and email.body or ""
                     threads[#threads].body = #email.body < 300 and email.body or email.body:sub(1,300) .. "..."
                 end
             end
