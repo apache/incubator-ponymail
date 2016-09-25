@@ -57,6 +57,7 @@ function handle(r)
         local y, m = month:match("(%d+)%-(%d+)")
         m = tonumber(m)
         y = tonumber(y)
+        local d
         if m == 2 and leapYear(y) then
             d = 29
         else

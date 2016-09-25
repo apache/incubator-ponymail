@@ -89,6 +89,11 @@ function handle(r)
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
         dd = tonumber(get.d)
     end
+    local x
+    local nx
+    local y
+    local z
+    local ec
     if get.q and #get.q > 0 then
         x = {}
         nx = {}

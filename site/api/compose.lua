@@ -37,7 +37,7 @@ function handle(r)
         -- check that recipient, subject and body exists
         if post.to and post.subject and post.body then
             -- validate recipient
-            to = ("<%s>"):format(post.to)
+            local to = ("<%s>"):format(post.to)
             local fp, lp = post.to:match("([^@]+)@([^@]+)")
             local domainIsOkay = false
             
