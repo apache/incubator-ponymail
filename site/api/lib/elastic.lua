@@ -30,7 +30,6 @@ function checkReturn(code)
         else
             error("Backend Database returned code " .. code .. "!")
         end
-        return nil
     end
 end
 
@@ -42,7 +41,6 @@ function getHits(query, size, doc, sitem)
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?q="..query.."&sort=" .. sitem .. ":desc&size=" .. size
     local result, hc = http.request(url)
-    local out = {}
     checkReturn(hc)
     local json = JSON.decode(result)
     local out = {}
@@ -59,7 +57,6 @@ end
 function getDoc (ty, id)
     local url = config.es_url  .. ty .. "/" .. id
     local result, hc = http.request(url)
-    local out = {}
     checkReturn(hc)
     local json = JSON.decode(result)
     if json and json._source then
@@ -76,7 +73,6 @@ function getHeaders(query, size, doc)
     query = query:gsub(" ", "+")
     local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
     local result, hc = http.request(url)
-    local out = {}
     checkReturn(hc)
     local json = JSON.decode(result)
     local out = {}
@@ -96,10 +92,9 @@ function getHeadersReverse(query, size, doc)
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=epoch:desc&size=" .. size
     local result, hc = http.request(url)
-    local out = {}
+    checkReturn(hc)
     local json = JSON.decode(result)
     local out = {}
-    checkReturn(hc)
     if json and json.hits and json.hits.hits then
         for k, v in pairs(json.hits.hits) do
             v._source.request_id = v._id
@@ -115,7 +110,6 @@ function raw(query, doctype)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search"
     local result, hc = http.request(url, js)
-    local out = {}
     checkReturn(hc)
     local json = JSON.decode(result)
     return json or {}, url
@@ -128,7 +122,6 @@ function scan(query, doctype)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
     local result, hc = http.request(url, js)
-    local out = {}
     checkReturn(hc)
     local json = JSON.decode(result)
     if json and json._scroll_id then
@@ -138,7 +131,6 @@ function scan(query, doctype)
 end
 
 function scroll(sid)
-    doctype = doctype or default_doc
     -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
     -- But in case we're being proxied, let's just cut off the last part of the URL
     local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
@@ -160,14 +152,12 @@ function update(doctype, id, query, consistency)
         url = url .. "?write_consistency=" .. consistency
     end
     local result, hc = http.request(url, js)
-    local out = {}
     local json = JSON.decode(result)
     return json or {}, url
 end
 
 -- Put a new document somewhere
 function index(r, id, ty, body, consistency)
-    local js = JSON.encode(query)
     if not id then
         id = r:sha1(ty .. (math.random(1,99999999)*os.time()) .. ':' .. r:clock())
     end
@@ -176,7 +166,6 @@ function index(r, id, ty, body, consistency)
         url = url .. "?write_consistency=" .. consistency
     end
     local result, hc = http.request(url, body)
-    local out = {}
     local json = JSON.decode(result)
     return json or {}
 end
