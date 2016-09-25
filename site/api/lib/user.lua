@@ -20,7 +20,7 @@ local elastic = require 'lib/elastic'
 -- Get user data from DB
 function getUser(r, override)
     local ocookie = r:getcookie("ponymail")
-    local usr = {}
+    local login = {}
     if override or (ocookie and #ocookie > 43) then
         local cookie, cid = r:unescape(ocookie or ""):match("([a-f0-9]+)==(.+)")
         if override or (cookie and #cookie >= 40 and cid) then
