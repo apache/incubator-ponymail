@@ -257,6 +257,7 @@ Pony Mail - Email for Ponies and People.
     end
     if config.hidePrivate then
         local cache = r:ivm_get("pm_lists_cache_private_" ..r.hostname .."-" .. nowish)
+        local pdoc
         if cache then
             pdoc = JSON.decode(cache)
         else
