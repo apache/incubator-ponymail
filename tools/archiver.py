@@ -37,8 +37,6 @@ sub someone to the list(s) and add this to their .forward file:
 
 """
 
-# Change this index name to whatever you picked!!
-indexname = "ponymail_alpha"
 logger = None
 
 from elasticsearch import Elasticsearch
