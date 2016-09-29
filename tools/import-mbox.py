@@ -84,8 +84,8 @@ if config.has_option('elasticsearch', 'user'):
 
 
 dbname = config.get("elasticsearch", "dbname")
-ssl = config.get("elasticsearch", "ssl", fallback=None).lower() == 'true'
-    
+ssl = config.get("elasticsearch", "ssl", fallback='').lower() == 'true'
+
 cropout = None
 if config.get("debug", "cropout", fallback='') != "":
     cropout = config.get("debug", "cropout")
