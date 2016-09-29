@@ -45,10 +45,6 @@ except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
     
-# change working directory to location of this script
-
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 y = 0
 baddies = 0
 block = Lock()
@@ -78,8 +74,9 @@ dedup = False
 dedupped = 0
 
 # Fetch config
+path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
+config.read("%s/ponymail.cfg" % path)
 auth = None
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
