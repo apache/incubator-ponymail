@@ -17,10 +17,7 @@
 
 -- This is mbox.lua - a script for generating mbox archives
 
-local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
-local aaa = require 'lib/aaa'
-local user = require 'lib/user'
 local cross = require 'lib/cross'
 
 local days = {
@@ -48,6 +45,7 @@ function handle(r)
         local flid = get.list:gsub("[.@]", "_")
         local month = get.date:match("(%d+%-%d+)")
         if not month then
+            r.content_type = "text/plain"
             r:puts("Wrong date format given!\n")
             return cross.OK
         end
@@ -55,6 +53,7 @@ function handle(r)
             r.headers_out['Content-Disposition'] = "attachment; filename=" .. flid .. "_" .. month .. ".mbox"
         end
         local y, m = month:match("(%d+)%-(%d+)")
+        local d
         m = tonumber(m)
         y = tonumber(y)
         if m == 2 and leapYear(y) then
@@ -63,9 +62,9 @@ function handle(r)
             d = days[m]
         end
         
-        -- fetch all results from the list (up to 20k results), make sure to get the 'private' element
+        -- fetch all results from the list (up to 10k results), make sure to get the 'private' element
         local docs = elastic.raw {
-            _source = {'mid','private'},
+            _source = {'mid'},
             query = {
                 
                 bool = {
@@ -85,7 +84,14 @@ function handle(r)
                         }
                     }
                         
-                }}
+                    },
+                    -- we use negative assertion in case private term is missing
+                    must_not = {
+                        term = {
+                            private = true
+                        }
+                    }
+                }
                 
             },
             sort = {
@@ -102,15 +108,16 @@ function handle(r)
         -- for each email, get the actual source of it to plop into the mbox file
         for k, v in pairs(docs.hits.hits) do
             v = v._source
-            if not v.private then
-                local doc = elastic.get('mbox_source', v.mid)
-                if doc and doc.source then
-                    r:puts("From \n")
-                    r:puts(doc.source)
-                    r:puts("\n")
-                end
+            local doc = elastic.get('mbox_source', v.mid)
+            if doc and doc.source then
+                r:puts("From \n")
+                r:puts(doc.source)
+                r:puts("\n")
             end
         end
+    else
+        r.content_type = "text/plain"
+        r:puts("Both list and date are required!\n")
     end
     return cross.OK
 end
