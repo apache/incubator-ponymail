@@ -239,6 +239,19 @@ if not args.noi:
               "type" : "binary"
             }
           }
+        },
+        "mailinglists" : {
+          "properties" : {
+            "list" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "description" : {
+              "type" : "string"
+            }
+          }
         }
       }
     
