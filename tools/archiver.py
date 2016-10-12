@@ -490,18 +490,12 @@ class Archiver(object):
         return lid, ojson['mid']
             
     def list_url(self, mlist):
-        """ Gots
-            to
-            be
-            here
+        """ Required by MM3 plugin API
         """
         return None
 
     def permalink(self, mlist, msg):
-        """ Gots
-            to
-            be
-            here
+        """ Required by MM3 plugin API
         """
         return None
     
