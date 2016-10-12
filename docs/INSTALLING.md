@@ -18,6 +18,7 @@ You will need the following software installed on your machine:
 - Python 3.x for the archiver plugin (setup.py will handle dependencies) and importer
 - Apache HTTP Server 2.4.x with mod_lua (see http://modlua.org/gs/installing if you need to build mod_lua manually)
 - Lua >=5.1 with the following modules: cjson, luasec, luasocket
+  (Note: Lua 5.3 is not currently supported by httpd mod_lua or luasocket)
 
 
 ## Download and Install ##
@@ -27,7 +28,7 @@ You will need the following software installed on your machine:
 - Run setup.py in the `tools` dir:
 ```
       $cd tools
-      $python3 setup.py
+      $python3 setup.py [--defaults]
       ...[follow instructions in the setup script]
 ```
 - Edit `site/js/config.js` to suit your needs (usually very little editing is needed)
