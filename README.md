@@ -12,7 +12,7 @@ using Mozilla Persona or OAuth2 (Google, GitHub, Facebook etc) for authenticatio
 
 ![Trends](https://github.com/apache/incubator-ponymail/blob/master/site/images/demo_trends.png)
 
-See [https://lists.apache.org.org](https://lists.apache.org) for a demo.
+See [https://lists.apache.org](https://lists.apache.org) for a demo.
 
 Pony Mail works in both public, private and mixed-mode, allowing you 
 to have one unified place for all your communication, both public and 
