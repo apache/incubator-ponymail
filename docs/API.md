@@ -3,10 +3,11 @@
 ### Fetching a specific email:
 
 Usage:
-`GET /api/email.lua?id=$mid`
+`GET /api/email.lua?id=$mid[&attachment=true&file=$hash]`
 
 Parameters: (cookie may be required)
   - $mid: The email ID or Message-ID: header
+  - $hash: the file attachment hash
 
 Response example:
 
@@ -80,6 +81,12 @@ Usage:
 
 Parameters: (cookie required)
   - logout: Whether to log out of the system (optional)
+  - associate=$email - associate the account with the $email address
+  - verify&hash=$hash - verify an association request $hash
+  - removealt=$email - remove an alternate $email address
+  - save - save preferences
+  - addfav=$list - add a favourite $list
+  - remfav=$list - remove a favourite $list
 
 
 Response example:

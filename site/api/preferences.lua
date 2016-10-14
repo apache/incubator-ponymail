@@ -25,6 +25,18 @@ local smtp = require 'socket.smtp'
 local config = require 'lib/config'
 local aaa = require 'lib/aaa'
 
+--[[
+Get login details (if logged in), mail list counts and descriptions
+
+Parameters: (cookie required)
+  - logout: Whether to log out of the system (optional)
+  - associate=$email - associate the account with the $email address
+  - verify&hash=$hash - verify an association request $hash
+  - removealt=$email - remove an alternate $email address
+  - save - save preferences
+  - addfav=$list - add a favourite $list
+  - remfav=$list - remove a favourite $list
+]]--
 function handle(r)
     local now = r:clock()
     r.content_type = "application/json"
