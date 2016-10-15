@@ -57,10 +57,30 @@ Response example:
 {
     "took": 437179,
     "firstYear": 2015,
-    "emails": {...},
+    "emails": {
+        {
+            "list_raw": "<dev.ponymail.apache.org>",
+            "gravatar": "66cf545ca7a1b8f595282bb9d8a59657",
+            "id": "b1d6446f5cc8f4846454cbabc48ddb08afbb601a77169f8e32e34102@<dev.ponymail.apache.org>",
+            "epoch": 1474883100,
+            "subject": "Re: Missing tag for 0.9 release",
+            "message-id": "<7f249f5e-e422-68a5-d57f-bfce585e638e@apache.org>",
+            "private": false,
+            "irt": "<CAOGo0VYrCOR=820LSDZA=czc==SOwCaRKasaEvVuxtUEXp9SDQ@mail.gmail.com>",
+            "from": "Daniel Gruno <h...@apache.org>",
+            "attachments": 0
+        },...
+    },
     "no_threads": 10,
     "domain": "ponymail.info",
-    "participants": {...},
+    "participants": {
+        {
+            "count": 3,
+            "name": "Daniel Gruno",
+            "gravatar": "66cf545ca7a1b8f595282bb9d8a59657",
+            "email": "hu...@apache.org"
+        }, ...
+    },
     "lastYear": 2015,
     "name": "dev",
     "cloud": {...},
@@ -77,7 +97,7 @@ Response example:
 
 ### Fetching preferences and quick list overview
 Usage:
-`GET /api/preferences.lua[?logout=true]`
+`GET /api/preferences.lua[?logout][?associate=$email][?verify&hash=$hash][?removealt=$email][?save][?addfav=$list][?remfav=$list]`
 
 Parameters: (cookie required)
   - logout: Whether to log out of the system (optional)
