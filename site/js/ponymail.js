@@ -1105,6 +1105,7 @@ function showCalendarPicker(parent, seedDate) {
     drawCalendarPicker(div, seedDate)    
 }
 
+
 /******************************************
  Fetched from dev/ponymail_dom_helpers.js
 ******************************************/
@@ -1353,6 +1354,7 @@ function openEmail() {
     }
     return false
 }
+
 
 /******************************************
  Fetched from dev/ponymail_email_displays.js
@@ -2153,6 +2155,7 @@ function favorite(sub, list) {
     }
     
 }
+
 
 /******************************************
  Fetched from dev/ponymail_helperfuncs.js
@@ -3616,6 +3619,7 @@ function loadNgrams() {
     
 }
 
+
 /******************************************
  Fetched from dev/ponymail_pagebuilder.js
 ******************************************/
@@ -4157,6 +4161,7 @@ function setQuickSearchDateRange() {
 
 window.setInterval(setQuickSearchDateRange, 250)
 
+
 /******************************************
  Fetched from dev/ponymail_phonebook.js
 ******************************************/
@@ -4638,6 +4643,7 @@ function showStats(json) {
     obj.innerHTML += ts
 }
 
+
 /******************************************
  Fetched from dev/ponymail_timetravel.js
 ******************************************/
@@ -4723,6 +4729,7 @@ function timeTravelList(id, jump) {
     var mid = current_thread_json[id].tid
     GetAsync("/api/thread.lua?timetravel=true&id=" + mid, {id: id, jump: jump}, timeTravelListRedirect)
 }
+
 
 /******************************************
  Fetched from dev/ponymail_trends.js
@@ -5037,6 +5044,7 @@ function gatherTrends() {
     GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? escape(query) : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
     document.title = "Stats for " + list + " - Pony Mail!"
 }
+
 
 /******************************************
  Fetched from dev/ponymail_user_preferences.js
