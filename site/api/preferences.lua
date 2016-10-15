@@ -56,7 +56,7 @@ function handle(r)
     -- while we're here, are you logging out?
     if get.logout and account then
         user.logout(r, account)
-        r:puts[[{"logut": true}]]
+        r:puts[[{"logout": true}]]
         return cross.OK
     end
     
