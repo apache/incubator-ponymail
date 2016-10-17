@@ -19,6 +19,6 @@ echo '/*
 ' > ../ponymail.js
 for f in `ls *.js`; do
     printf "\n\n/******************************************\n Fetched from dev/${f}\n******************************************/\n\n" >> ../ponymail.js
-    sed -s -e '/^\/\*/,/\*\//d' ${f} >> ../ponymail.js
+    sed -e '/^\/\*/,/\*\//d' ${f} >> ../ponymail.js
 done
 echo "Done!"
