@@ -141,7 +141,7 @@ function seedDomains(json) {
     dshow.setAttribute("id", "active_domlist")
     obj.appendChild(dshow)
     if (doms.length == 0) {
-        obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
+        obj.innerHTML = "There don't seem to be any domains or mailing lists here yet..."
     } else {
         showDomains(fl)
     }
@@ -193,7 +193,7 @@ function seedTable(json) {
     
     // Got any lists?
     if (lists.length == 0) {
-        obj.innerHTML = "There doesn't seem to be any domains or mailing lists here yet..."
+        obj.innerHTML = "There don't seem to be any domains or mailing lists here yet..."
     } else {
         var title = document.createElement('h4')
         title.appendChild(document.createTextNode('Available lists:'))
