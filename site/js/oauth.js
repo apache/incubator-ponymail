@@ -120,6 +120,7 @@ function oauthOptions() {
 // onLoad function for oauth. If args (query string or bookmark) are supplied,
 // we pass that on to the backend, otherwise show which oauth options are
 // enabled.
+// invoked by onload in oauth.html
 function oauthWelcome(args) {
     // google auth sometimes uses bookmarks instead of passing the code as a
     // query string arg.

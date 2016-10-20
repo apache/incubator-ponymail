@@ -277,6 +277,7 @@ function showTop(json, state) {
 }
 
 // onload func that figures out what we want and then asks the API for stats
+// invoked by onload in trends.html
 function gatherTrends() {
     
     // get list, timespan and query from the html page

@@ -185,6 +185,7 @@ function addNgramBox(hmm) {
 }
 
 // onload func that figures out what we want and then asks the API for stats
+// invoked by onload in ngrams.html
 function loadNgrams() {
     
     // get list, timespan and query from the html page

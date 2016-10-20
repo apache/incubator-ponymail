@@ -116,6 +116,7 @@ function renderNotifications(json) {
 }
 
 // onLoad function, fetches the needed JSON and renders the notif list
+// invoked by onload in notifications.html
 function listNotifications() {
     GetAsync("/api/notifications.lua", null, renderNotifications)
     GetAsync("/api/preferences.lua", null, setupUserFromLua)

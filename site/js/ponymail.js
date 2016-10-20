@@ -2040,12 +2040,14 @@ function permaLink(id, type) {
 
 
 // getSingleEmail: fetch an email from ES and go to callback
+// invoked by onload in permalink.html
 function getSingleEmail(id, object) {
     GetAsync("/api/email.lua?id=" + id, {object: object} , displaySingleEmail)
 }
 
 
 // seedGetSingleThread: pre-caller for the above.
+// invoked by onload in thread.html
 function seedGetSingleThread(id) {
     GetAsync("/api/preferences.lua", {docall:["/api/thread.lua?id=" + id, displaySingleThread]}, seedPrefs)
 }
@@ -3501,6 +3503,7 @@ function addNgramBox(hmm) {
 }
 
 // onload func that figures out what we want and then asks the API for stats
+// invoked by onload in ngrams.html
 function loadNgrams() {
     
     // get list, timespan and query from the html page
@@ -4372,6 +4375,7 @@ function seedTable(json) {
 
 
 // listDomains: fetch prefs and ML stats
+// invoked by onload in index.html
 function listDomains() {
     
     // phonebook modes?
@@ -4597,6 +4601,7 @@ function seedPrefs(json, state) {
     }
 }
 // preGetListInfo: Callback that fetches preferences and sets up list data
+// invoked by onload in list.html and search.html
 function preGetListInfo(list, xdomain, nopush) {
     GetAsync("/api/preferences.lua", {
         l: list,
@@ -4998,6 +5003,7 @@ function showTop(json, state) {
 }
 
 // onload func that figures out what we want and then asks the API for stats
+// invoked by onload in trends.html
 function gatherTrends() {
     
     // get list, timespan and query from the html page

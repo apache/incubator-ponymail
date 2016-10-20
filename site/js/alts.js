@@ -47,6 +47,7 @@ function renderAlts(json) {
 }
 
 // onLoad function, fetches the needed JSON and renders the notif list
+// invoked by onload in merge.html
 function listAlts() {
     GetAsync("/api/preferences.lua", null, setupUserAlts)
 }

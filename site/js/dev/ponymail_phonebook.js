@@ -220,6 +220,7 @@ function seedTable(json) {
 
 
 // listDomains: fetch prefs and ML stats
+// invoked by onload in index.html
 function listDomains() {
     
     // phonebook modes?
