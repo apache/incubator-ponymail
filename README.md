@@ -109,4 +109,3 @@ This is a list of what we would love to get done:
 * Rework JS, turn those ugly innerHTML hacks into proper DOM handling
 * Set up notification system (depends on reply system) (works, but still *WIP!*)
 * Have it work with ES with auth mode or via HTTPS
-
