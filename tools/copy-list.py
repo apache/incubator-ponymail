@@ -15,6 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+""" Copy lists
+
+This utility can be used to:
+- copy a list within a database
+- copy a list to a new database
+
+"""
+
 import sys
 import random, time
 import os
