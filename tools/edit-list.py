@@ -15,6 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+""" Modify lists and messages
+
+This utility can be used to:
+- rename a list
+- make a list private
+- make a list public
+- update the description for a list
+- delete mails from a list (does not delete mbox_source entries)
+- obfuscate some fields in a message body
+
+"""
+
 import sys
 import random, time
 import os
