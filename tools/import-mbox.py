@@ -67,7 +67,7 @@ project = ""
 filebased = False
 fileToLID = {}
 interactive = False
-extension = "*.mbox"
+extension = ".mbox"
 piperWeirdness = False
 parseHTML = False
 iBody = None
@@ -372,7 +372,7 @@ parser.add_argument('--lid', dest='listid', type=str, nargs=1,
 parser.add_argument('--project', dest='project', type=str, nargs=1,
                    help='Optional project to look for ($project-* will be imported as well)')
 parser.add_argument('--ext', dest='ext', type=str, nargs=1,
-                   help='Optional file extension (or call it with no args to not care)')
+                   help='Optional file extension e.g. ".gz" (or call it with an empty string to not care)')
 parser.add_argument('--domain', dest='domain', type=str, nargs=1,
                    help='Optional domain extension for MIDs and List ID reconstruction)')
 parser.add_argument('--private', dest='private', action='store_true',
