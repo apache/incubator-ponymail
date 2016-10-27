@@ -72,6 +72,10 @@ function loadList_flat(mjson, limit, start, deep) {
         }
         // fetch an email
         var eml = json[i]
+        // allow for empty subject
+        if (eml.subject.length == 0) {
+            eml.subject = '(no subject)'
+        }
         
         // truncate subject if too long (do we really still need this?)
         if (eml.subject.length > 90) {
