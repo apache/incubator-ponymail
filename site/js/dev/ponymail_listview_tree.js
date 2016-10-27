@@ -66,6 +66,10 @@ function loadList_treeview(mjson, limit, start, deep) {
             break
         }
         var eml = findEml(json[i].tid)
+        // allow for empty subject
+        if (eml && eml.subject.length == 0) {
+            eml.subject = '(no subject)'
+        }
         if (eml && eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }

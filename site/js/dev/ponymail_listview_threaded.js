@@ -83,6 +83,10 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
         // Get the email
         var eml = findEml(json[i].tid)
+        // allow for empty subject
+        if (eml && eml.subject.length == 0) {
+            eml.subject = '(no subject)'
+        }
         
         // truncate subject (do we need this?)
         if (eml && eml.subject.length > 90) {
