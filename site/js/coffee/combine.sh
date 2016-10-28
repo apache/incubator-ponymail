@@ -1,3 +1,3 @@
 #!/bin/bash
-coffee -b --join ../ponymail-coffee.js -c *.coffee
+cat *.coffee | coffee --bare --compile --stdio > ../ponymail-coffee.js
 
