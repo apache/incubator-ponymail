@@ -2535,7 +2535,7 @@ Array.prototype.remove = function(val) {
 
 ponymail_url_regex = new RegExp("(" + "(?:(?:[a-z]+)://)" + "(?:\\S+(?::\\S*)?@)?" + "(?:" + "([01][0-9][0-9]|2[0-4][0-9]|25[0-5])" + "|" + "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" + "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" + "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" + "\\.?" + ")" + "(?::\\d{2,5})?" + "(?:[/?#]([^,<>()\\[\\] \\t\\r\\n]|(<[^:\\s]*?>|\\([^:\\s]*?\\)|\\[[^:\\s]*?\\]))*)?" + ")\\.?", "mi");
 
-ponymail_quote_regex = new RegExp("((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]*[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi");
+ponymail_quote_regex = new RegExp("((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]+[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi");
 
 
 /**
@@ -2998,7 +2998,7 @@ testCoffee = function() {
     "class": "sbox"
   });
   parent.inject(div);
-  cal = new Calendar(2010, '2016-9');
+  cal = new Calendar('2010-5', '2016-9');
   div.inject(cal);
   p = new HTML('p', {
     "class": "foo",
