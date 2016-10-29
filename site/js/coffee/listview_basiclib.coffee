@@ -63,9 +63,24 @@ listView = (hash, reParse) ->
                 location.href = "./"
                 return
             
-            if ponymail_lists[d] not ponymail_lists[d][l] and ponymail_lists[d][pm_config.default_list]
-                ### Redirect to this list then ... ###
-                location.href = "#{htmlfile}?#{pm_config.default_list}@#{d}"
+            if ponymail_lists[d] and not ponymail_lists[d][l]
+                ### we don't have a matching list, check for the default (or pick busiest) ###
+                l = pm_config.default_list
+                ### does the default exist ? ###
+                if not ponymail_lists[d][l]
+                    ### If not, pick busiest ###
+                    max = -1
+                    for k,v of ponymail_lists[d]
+                        if v > max
+                            max = v
+                            l = k
+
+                ### Redirect to the list ###
+                location.href = "#{htmlfile}?#{l}@#{d}"
+                return
+            else
+                ### No list specified, redirect to front page ###
+                location.href = "./"
                 return
         else
             ### No domain specified, redirect to front page ###

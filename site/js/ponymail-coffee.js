@@ -2044,7 +2044,7 @@ parseURL = function() {
 listView = function(hash, reParse) {
 
   /* Get the HTML filename */
-  var args, d, domain, etc, htmlfile, l, list, newhref, pargs, r, ref, ref1, ref2, since;
+  var args, d, domain, etc, htmlfile, k, l, list, max, newhref, pargs, r, ref, ref1, ref2, ref3, since, v;
   ref = location.href.split("?"), htmlfile = ref[0], etc = ref[1];
 
   /* Do we need to call the URL parser here? */
@@ -2082,10 +2082,33 @@ listView = function(hash, reParse) {
         location.href = "./";
         return;
       }
-      if (ponymail_lists[d](!ponymail_lists[d][l] && ponymail_lists[d][pm_config.default_list])) {
+      if (ponymail_lists[d] && !ponymail_lists[d][l]) {
 
-        /* Redirect to this list then ... */
-        location.href = htmlfile + "?" + pm_config.default_list + "@" + d;
+        /* we don't have a matching list, check for the default (or pick busiest) */
+        l = pm_config.default_list;
+
+        /* does the default exist ? */
+        if (!ponymail_lists[d][l]) {
+
+          /* If not, pick busiest */
+          max = -1;
+          ref2 = ponymail_lists[d];
+          for (k in ref2) {
+            v = ref2[k];
+            if (v > max) {
+              max = v;
+              l = k;
+            }
+          }
+        }
+
+        /* Redirect to the list */
+        location.href = htmlfile + "?" + l + "@" + d;
+        return;
+      } else {
+
+        /* No list specified, redirect to front page */
+        location.href = "./";
         return;
       }
     } else {
@@ -2116,7 +2139,7 @@ listView = function(hash, reParse) {
   if (location.href !== newhref) {
     window.history.pushState({}, null, newhref);
   }
-  ref2 = ponymail_list.split("@", 2), list = ref2[0], domain = ref2[1];
+  ref3 = ponymail_list.split("@", 2), list = ref3[0], domain = ref3[1];
 
   /* Request month view from API, send to list view callback */
   pargs = "d=30";
