@@ -125,7 +125,10 @@ while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
     
 while port < 1:
-    port = int(input("What port is ElasticSearch listening on? (normally 9200): "))
+    try:
+        port = int(input("What port is ElasticSearch listening on? (normally 9200): "))
+    except ValueError:
+        pass
 
 while dbname == "":
     dbname = input("What would you like to call the mail index (e.g. ponymail): ")
