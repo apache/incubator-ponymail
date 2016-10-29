@@ -609,7 +609,10 @@ else:
     if maildir:
         lists.append([source, fileToLID.get(source) if fileToLID.get(source) else list_override])
     else:
-        globDir(source)
+        if os.path.isfile(source):
+            lists.append([source, fileToLID.get(source) if fileToLID.get(source) else list_override])
+        else:
+            globDir(source)
 
 
 threads = []
