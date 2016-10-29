@@ -234,9 +234,22 @@ if not args.noi:
               "type" : "binary"
             }
           }
+        },
+        "mailinglists" : {
+          "properties" : {
+            "description" : {
+              "type" : "string"
+            },
+            "list" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            }
+          }
         }
       }
-    
+
     # Check if index already exists
     if es.indices.exists(dbname):
         if args.soe:
