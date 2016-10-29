@@ -22,7 +22,7 @@
 
 ###*
 # Pending URLs watcher:
-# Wathes which URLs have been pending a result for a while
+# Watches which URLs have been pending a result for a while
 # and shows the spinner if things are taking too long.
 ###
 pending_url_operations = {}
