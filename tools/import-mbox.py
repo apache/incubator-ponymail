@@ -356,7 +356,7 @@ tlpname = "foo"
 
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
-                   help='Source to scan (either http(s):// or file path)')
+                   help='Source to scan (http(s)://, imap(s):// or file path)')
 parser.add_argument('--dir', dest='dir', action='store_true',
                    help='Input is in Maildir format')
 parser.add_argument('--interactive', dest='interactive', action='store_true',
@@ -456,18 +456,8 @@ def globDir(d):
         globDir(join(d,nd))
  
 
-# File based import??
-if source[0] == "/" or source[0] == ".":
-    print("Doing file based import")
-    filebased = True
-    if maildir:
-        lists.append([source, fileToLID.get(source) if fileToLID.get(source) else list_override])
-    else:
-        globDir(source)
-    
-
 # HTTP(S) based import?
-elif source[0] == "h":
+if re.match(r"https?://", source):
     data = urlopen(source).read().decode('utf-8')
     print("Fetched %u bytes of main data, parsing month lists" % len(data))
     
@@ -518,7 +508,7 @@ elif source[0] == "h":
                 break
                     
 # IMAP(S) based import?
-elif source[0] == "i":
+elif re.match(r"imaps?://", source):
     imap = True
     import urllib, getpass, imaplib
     url = urllib.parse.urlparse(source)
@@ -612,6 +602,15 @@ elif source[0] == "i":
         if not mid in db:
             uids.append(uid)
     lists.append([uids, listname, imap4])
+else:
+    # File based import??
+    print("Doing file based import")
+    filebased = True
+    if maildir:
+        lists.append([source, fileToLID.get(source) if fileToLID.get(source) else list_override])
+    else:
+        globDir(source)
+
 
 threads = []
 # Don't start more threads than there are lists
