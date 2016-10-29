@@ -30,5 +30,10 @@ done
 echo "Created $OUTFILE; compiling..."
 
 coffee --bare --output .. --compile $OUTFILE || exit
-rm $OUTFILE
+if [ "$1" == "--nodelete" ]
+then
+    echo "Keeping $OUTFILE"
+else
+    rm $OUTFILE
+fi
 echo "All done!"
