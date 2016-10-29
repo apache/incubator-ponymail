@@ -614,7 +614,8 @@ elif source[0] == "i":
     lists.append([uids, listname, imap4])
 
 threads = []
-cc = int( multiprocessing.cpu_count() / 2) + 1
+# Don't start more threads than there are lists
+cc = min(len(lists), int( multiprocessing.cpu_count() / 2) + 1)
 print("Starting up to %u threads to fetch the %u %s lists" % (cc, len(lists), project))
 for i in range(1,cc+1):
     t = SlurpThread()
