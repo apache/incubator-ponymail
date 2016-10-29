@@ -218,14 +218,6 @@ if not args.noi:
             }
           }
         },
-        "mbox_source" : {
-          "properties" : {
-            "source" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            }
-          }
-        },
         "attachment" : {
           "properties" : {
             "source" : {
