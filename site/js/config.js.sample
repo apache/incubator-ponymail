@@ -79,6 +79,7 @@ var pm_config = {
     shortLists: true,       // whether to display foo@bar.org or just foo@ in flat view
     shortLinks: true,       // Whether to shorten links using base36
     URLBase: '',            // Rewrite base for URLs. If you serve from http://foo.tld/ponymail/, set this to '/ponymail'
+    default_list: "dev",    // Default list name for a domain
 }
 
 
