@@ -41,6 +41,8 @@ Where the Message-Id and List Server Id both exist, they can be combined to gene
 Where one or other id does not exist, then alternative means need to be used to generate the MID.
 The data used to do so must be present it all supported message sources.
 
+Algorithms for the generator remain TBA
+
 ### Permalink requirements
 The application provides Permalinks which can later be used to refer to any document in the database.
 Once published, it is important that such links must continue to work.
