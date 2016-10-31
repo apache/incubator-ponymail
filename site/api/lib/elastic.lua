@@ -26,9 +26,10 @@ local default_doc = "mbox"
 function checkReturn(code)
     if not code or code ~= 200 then
         if not code or code == "closed" then
-            error("Could not contact database backend!")
+            -- code is called by top-level functions only, so level 3 is the external caller
+            error("Could not contact database backend!", 3)
         else
-            error("Backend Database returned code " .. code .. "!")
+            error("Backend Database returned code " .. code .. "!", 3)
         end
     end
 end
