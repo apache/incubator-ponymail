@@ -109,7 +109,6 @@ class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
     if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
         implementer(IArchiver)
-    name = "ponymail"
 
     # This is a list of the headers we're interested in publishing.
     keys = [
