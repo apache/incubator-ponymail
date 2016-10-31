@@ -45,10 +45,6 @@ except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
     
-# change working directory to location of this script
-
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 y = 0
 baddies = 0
 block = Lock()
@@ -78,26 +74,23 @@ dedup = False
 dedupped = 0
 
 # Fetch config
+path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
+config.read("%s/ponymail.cfg" % path)
 auth = None
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
 
 
-ssl = False
 dbname = config.get("elasticsearch", "dbname")
-if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
-    ssl = True
-    
+ssl = config.get("elasticsearch", "ssl", fallback='').lower() == 'true'
+
 cropout = None
-if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
+if config.get("debug", "cropout", fallback='') != "":
     cropout = config.get("debug", "cropout")
     
-uri = ""
-if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
-    uri = config.get("elasticsearch", "uri")
+uri = config.get("elasticsearch", "uri", fallback='')
 es = Elasticsearch([
     {
         'host': config.get("elasticsearch", "hostname"),
@@ -122,9 +115,8 @@ class BulkThread(Thread):
     def insert(self):
         global config
         sys.stderr.flush()
-        iname = config.get("elasticsearch", "dbname")
-        if not self.xes.indices.exists(iname):
-            self.xes.indices.create(index = iname)
+        if not self.xes.indices.exists(dbname):
+            self.xes.indices.create(index = dbname)
 
         js_arr = []
         i = 0
@@ -135,7 +127,7 @@ class BulkThread(Thread):
             js_arr.append({
                 '_op_type': 'index',
                 '_consistency': self.wc,
-                '_index': iname,
+                '_index': dbname,
                 '_type': self.dtype,
                 '_id': js['mid'],
                 'doc': js,
@@ -177,7 +169,6 @@ class SlurpThread(Thread):
                 block.release()
                 return
             block.release()
-            y += 1
             EY = 1980
             EM = 1
             stime = time.time()
@@ -185,7 +176,6 @@ class SlurpThread(Thread):
             if maildir:
                 messages = mailbox.Maildir(tmpname)
             elif imap:
-                y -= 1 # TODO don't understand the increment above
                 imap4 = mla[2]
                 def mailgen(list):
                     for uid in list:
@@ -267,9 +257,8 @@ class SlurpThread(Thread):
                 
                 # If --dedup is active, try to filter out any messages that already exist
                 if json and dedup and message.get('message-id', None):
-                    iname = config.get("elasticsearch", "dbname")
                     res = es.search(
-                        index=iname,
+                        index=dbname,
                         doc_type="mbox",
                         size = 1,
                         body = {
@@ -302,11 +291,10 @@ class SlurpThread(Thread):
                     ja.append(json)
                     jas.append(json_source)
                     if contents:
-                        iname = config.get("elasticsearch", "dbname")
                         if not args.dry:
                             for key in contents:
                                 es.index(
-                                    index=iname,
+                                    index=dbname,
                                     doc_type="attachment",
                                     id=key,
                                     body = {
