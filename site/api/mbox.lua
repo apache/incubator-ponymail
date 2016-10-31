@@ -99,7 +99,6 @@ function handle(r)
         size = 10000
         }
         
-        local mfile = ""
         -- for each email, get the actual source of it to plop into the mbox file
         for k, v in pairs(docs.hits.hits) do
             v = v._source
