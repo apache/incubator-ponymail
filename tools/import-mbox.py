@@ -122,9 +122,8 @@ class BulkThread(Thread):
     def insert(self):
         global config
         sys.stderr.flush()
-        iname = config.get("elasticsearch", "dbname")
-        if not self.xes.indices.exists(iname):
-            self.xes.indices.create(index = iname)
+        if not self.xes.indices.exists(dbname):
+            self.xes.indices.create(index = dbname)
 
         js_arr = []
         i = 0
@@ -135,7 +134,7 @@ class BulkThread(Thread):
             js_arr.append({
                 '_op_type': 'index',
                 '_consistency': self.wc,
-                '_index': iname,
+                '_index': dbname,
                 '_type': self.dtype,
                 '_id': js['mid'],
                 'doc': js,
@@ -265,9 +264,8 @@ class SlurpThread(Thread):
                 
                 # If --dedup is active, try to filter out any messages that already exist
                 if json and dedup and message.get('message-id', None):
-                    iname = config.get("elasticsearch", "dbname")
                     res = es.search(
-                        index=iname,
+                        index=dbname,
                         doc_type="mbox",
                         size = 1,
                         body = {
@@ -300,11 +298,10 @@ class SlurpThread(Thread):
                     ja.append(json)
                     jas.append(json_source)
                     if contents:
-                        iname = config.get("elasticsearch", "dbname")
                         if not args.dry:
                             for key in contents:
                                 es.index(
-                                    index=iname,
+                                    index=dbname,
                                     doc_type="attachment",
                                     id=key,
                                     body = {
