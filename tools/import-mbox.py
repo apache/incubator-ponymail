@@ -177,7 +177,6 @@ class SlurpThread(Thread):
                 block.release()
                 return
             block.release()
-            y += 1
             EY = 1980
             EM = 1
             stime = time.time()
@@ -185,7 +184,6 @@ class SlurpThread(Thread):
             if maildir:
                 messages = mailbox.Maildir(tmpname)
             elif imap:
-                y -= 1 # TODO don't understand the increment above
                 imap4 = mla[2]
                 def mailgen(list):
                     for uid in list:
