@@ -132,7 +132,6 @@ class Archiver(object):
     def __init__(self, parseHTML=False):
         """ Just initialize ES. """
         global config, auth
-        ssl = False
         self.cropout = None
         self.html = parseHTML
         if parseHTML:
@@ -140,15 +139,12 @@ class Archiver(object):
            self.html2text = html2text.html2text
         self.dbname = config.get("elasticsearch", "dbname")
         self.consistency = 'quorum'
-        if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
-            ssl = True
-        if config.has_option("elasticsearch", "write") and config.get("elasticsearch", "write") != "":
+        ssl = config.get("elasticsearch", "ssl", fallback="").lower() == 'true'
+        if config.get("elasticsearch", "write", fallback="") != "":
             self.consistency = config.get('elasticsearch', 'write')
-        if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
+        if config.get("debug", "cropout", fallback="") != "":
             self.cropout = config.get("debug", "cropout")
-        uri = ""
-        if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
-            uri = config.get("elasticsearch", "uri")
+        uri = config.get("elasticsearch", "uri", fallback="")
         dbs = [
             {
                 'host': config.get("elasticsearch", "hostname"),
@@ -158,8 +154,7 @@ class Archiver(object):
                 'http_auth': auth
             }]
         # Backup ES?
-        if config.has_option("elasticsearch", "backup") and config.get("elasticsearch", "backup") != "":
-            backup = config.get("elasticsearch", "backup")
+        if config.get("elasticsearch", "backup", fallback="") != "":
             dbs.append(
                 {
                 'host': config.get("elasticsearch", "backup"),
