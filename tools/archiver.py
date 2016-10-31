@@ -73,6 +73,8 @@ elif __name__ == '__main__':
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
+archiver_generator = config.get("archiver", "generator", fallback="")
+
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
     if cd:
@@ -296,9 +298,9 @@ class Archiver(object):
             pmid = mid
             try:
                 # Use full message as bytes for mid?
-                if config.has_section('archiver') and config.has_option("archiver", "generator") and config.get("archiver", "generator") == "full":
+                if archiver_generator == "full":
                     mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
-                elif config.has_section('archiver') and config.has_option("archiver", "generator") and config.get("archiver", "generator") == "medium":
+                elif archiver_generator == "medium":
                     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
                     xbody += bytes(lid, encoding='ascii')
                     xbody += bytes(mdatestring, encoding='ascii')
