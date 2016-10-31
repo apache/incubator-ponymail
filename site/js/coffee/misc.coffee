@@ -103,7 +103,7 @@ shortBits = 3
 ### Shortener: cut MID into pieces, convert to base36 to save 3-4 bytes ###
 shortenURL = (mid) ->
     arr = mid.split("@")
-    ### IF arr is 2 bits, it's fine to shorten it (meduim/long generator). if 3, then potentially not (short generator) ###
+    ### IF arr is 2 bits, it's fine to shorten it (medium/long generator). if 3, then potentially not (short generator) ###
     if arr.length == 2 and (pm_config and pm_config.shortLinks)
         out = ""
         ### For each bit in $howlongdowewantthis ... ###
