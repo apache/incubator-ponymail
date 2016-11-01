@@ -86,14 +86,10 @@ if config.has_option('elasticsearch', 'user'):
 
 
 
-ssl = False
 dbname = config.get("elasticsearch", "dbname")
-if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
-    ssl = True
+ssl = config.get("elasticsearch", "ssl", fallback = "False").lower() == 'true'
     
-uri = ""
-if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
-    uri = config.get("elasticsearch", "uri")
+uri = config.get("elasticsearch", "uri", fallback = "")
 es = Elasticsearch([
     {
         'host': config.get("elasticsearch", "hostname"),
