@@ -91,7 +91,11 @@ ponymail_url_regex = new RegExp(
 )
 
 ponymail_quote_regex = new RegExp(
-    "((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]+[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi"
+    "((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+([ \t][^\r\n]*|[ \t]*)\r?\n)+)+)+", "mi"
+    #                                                      ^                    ^
+    # This section matches at least one space plus any text, or optional whitespace only
+    # Quotes shold always have at least one space before any text, but don't need spaces
+    # if there is no text 
 )
 
 ###*

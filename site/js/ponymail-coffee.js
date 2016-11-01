@@ -2429,7 +2429,7 @@ Array.prototype.remove = function(val) {
 
 ponymail_url_regex = new RegExp("(" + "(?:(?:[a-z]+)://)" + "(?:\\S+(?::\\S*)?@)?" + "(?:" + "([01][0-9][0-9]|2[0-4][0-9]|25[0-5])" + "|" + "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" + "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" + "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" + "\\.?" + ")" + "(?::\\d{2,5})?" + "(?:[/?#]([^,<>()\\[\\] \\t\\r\\n]|(<[^:\\s]*?>|\\([^:\\s]*?\\)|\\[[^:\\s]*?\\]))*)?" + ")\\.?", "mi");
 
-ponymail_quote_regex = new RegExp("((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+[ \t]+[^\r\n]*\r?\n[^\n]*\n*)+)+)+", "mi");
+ponymail_quote_regex = new RegExp("((?:\r?\n)((on .+ wrote:[\r\n]+)|(sent from my .+)|(>+([ \t][^\r\n]*|[ \t]*)\r?\n)+)+)+", "mi");
 
 
 /**
@@ -2446,7 +2446,7 @@ shortenURL = function(mid) {
   var a, arr, i, j, num, out, ref, res;
   arr = mid.split("@");
 
-  /* IF arr is 2 bits, it's fine to shorten it (meduim/long generator). if 3, then potentially not (short generator) */
+  /* IF arr is 2 bits, it's fine to shorten it (medium/long generator). if 3, then potentially not (short generator) */
   if (arr.length === 2 && (pm_config && pm_config.shortLinks)) {
     out = "";
 
