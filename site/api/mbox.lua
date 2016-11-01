@@ -66,10 +66,8 @@ function handle(r)
         local docs = elastic.raw {
             _source = {'mid','private'},
             query = {
-                
                 bool = {
                     must = {
-                        
                         {
                             range = {
                                 date = {
@@ -79,22 +77,21 @@ function handle(r)
                             }
                         },
                         {
-                        term = {
-                            list_raw = lid
+                            term = {
+                                list_raw = lid
+                            }
                         }
                     }
-                        
-                }}
-                
+                }
             },
             sort = {
-            {
-                epoch = {
-                    order = "asc"
-                }
-            }  
-        },
-        size = 10000
+                {
+                    epoch = {
+                        order = "asc"
+                    }
+                }  
+            },
+            size = 10000
         }
         
         -- for each email, get the actual source of it to plop into the mbox file
