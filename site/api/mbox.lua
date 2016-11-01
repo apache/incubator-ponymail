@@ -45,6 +45,7 @@ function handle(r)
         local flid = get.list:gsub("[.@]", "_")
         local month = get.date:match("(%d+%-%d+)")
         if not month then
+            r.content_type = "text/plain"
             r:puts("Wrong date format given!\n")
             return cross.OK
         end
@@ -108,6 +109,9 @@ function handle(r)
                 end
             end
         end
+    else
+        r.content_type = "text/plain"
+        r:puts("Both list and date are required!\n")
     end
     return cross.OK
 end
