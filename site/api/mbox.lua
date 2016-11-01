@@ -17,10 +17,7 @@
 
 -- This is mbox.lua - a script for generating mbox archives
 
-local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
-local aaa = require 'lib/aaa'
-local user = require 'lib/user'
 local cross = require 'lib/cross'
 
 local days = {
@@ -64,7 +61,7 @@ function handle(r)
             d = days[m]
         end
         
-        -- fetch all results from the list (up to 20k results), make sure to get the 'private' element
+        -- fetch all results from the list (up to 10k results), make sure to get the 'private' element
         local docs = elastic.raw {
             _source = {'mid','private'},
             query = {
