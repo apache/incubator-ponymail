@@ -91,10 +91,6 @@ dbname = config.get("elasticsearch", "dbname")
 if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
     ssl = True
     
-cropout = None
-if config.has_option("debug", "cropout") and config.get("debug", "cropout") != "":
-    cropout = config.get("debug", "cropout")
-    
 uri = ""
 if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
     uri = config.get("elasticsearch", "uri")
