@@ -42,8 +42,7 @@ logger = None
 from elasticsearch import Elasticsearch
 import hashlib
 import email.utils
-import datetime, time
-import json
+import time
 from collections import namedtuple
 import re
 import codecs
