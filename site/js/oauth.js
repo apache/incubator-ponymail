@@ -104,7 +104,7 @@ function oauthOptions() {
     }
     
     // Mozilla Persona
-    if (pm_config.persona.enabled) {
+    if (pm_config.persona && pm_config.persona.enabled) {
         var img = document.createElement('img')
         img.setAttribute("src", "images/persona.png")
         img.setAttribute("title", "Log on with persona")
