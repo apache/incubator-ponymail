@@ -247,7 +247,6 @@ function handle(r)
                         list = "*." .. get.domain
                     }
                 }
-        maxresults = config.maxResults or 5000
     end
     if get.domain == "*" then
         wc = true
@@ -256,7 +255,6 @@ function handle(r)
                         list = "*"
                     }
                 }
-        maxresults = config.maxResults or 5000
     end
     
     local top10 = {}
