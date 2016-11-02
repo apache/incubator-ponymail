@@ -148,7 +148,7 @@ class SlurpThread(Thread):
         filename = ""
         xlist_override = None
 
-        foo = archiver.Archiver(parseHTML = parseHTML)
+        archie = archiver.Archiver(parseHTML = parseHTML)
     
         while len(lists) > 0:
             print("%u elements left to slurp" % len(lists))
@@ -248,7 +248,7 @@ class SlurpThread(Thread):
                     print("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
                     break
 
-                json, contents = foo.compute_updates(list_override, private, message)
+                json, contents = archie.compute_updates(list_override, private, message)
                 
                 # If --dedup is active, try to filter out any messages that already exist
                 if json and dedup and message.get('message-id', None):
