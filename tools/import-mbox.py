@@ -336,8 +336,6 @@ class SlurpThread(Thread):
             jas = []
         print("Done, %u elements left to slurp" % len(lists))
         
-tlpname = "foo"
-
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source to scan (http(s)://, imap(s):// or file path)')
