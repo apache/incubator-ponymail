@@ -316,6 +316,9 @@ local config = {
                      -- add 'www.googleapis.com' to the list for google oauth to decide, for instance.
     oauth_fields = {}, -- used for specifying individual oauth handling parameters.
     antispam = true  -- Whether or not to add anti-spam measures aimed at anonymous users.
+    -- no_association = {} -- domains that are not allowed for email association
+    -- hidePrivate = true -- whether to hide names of lists that contain any private mails
+    -- listsDisplay = 'regex' -- if defined, hide list names that don't match the regex
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
