@@ -17,7 +17,8 @@
 # limitations under the License.
 
 import sys
-import random, time
+import random
+import time
 import hashlib
 import os
 from threading import Thread, Lock
@@ -25,14 +26,11 @@ import mailbox
 import email.errors, email.utils, email.header
 from urllib.request import urlopen
 import re
-import chardet
-import datetime
 import configparser
 import argparse
 from os import listdir
 from os.path import isfile, join, isdir
 import glob
-import codecs
 import multiprocessing
 import tempfile
 import gzip
