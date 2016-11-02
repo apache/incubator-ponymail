@@ -66,7 +66,6 @@ interactive = False
 extension = ".mbox"
 piperWeirdness = False
 parseHTML = False
-iBody = None
 resendTo = None
 timeout = 600
 fromFilter = None
