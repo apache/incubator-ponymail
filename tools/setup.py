@@ -281,6 +281,21 @@ dbname:                 %s
 port:                   %u
 ssl:                    false
 
+#uri:                   url_prefix
+
+#user:                  username
+#password:              password
+
+#write:                 consistency level (default quorum)
+
+#backup:                database name
+
+[archiver]
+#generator:             medium|full|other
+
+[debug]
+#cropout:               string to crop from list-id
+
 ###############################################################
             """ % (hostname, dbname, port))
     f.close()
