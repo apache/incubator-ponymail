@@ -21,7 +21,6 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local aaa = require 'lib/aaa'
-local config = require 'lib/config'
 local cross = require 'lib/cross'
 
 local emls_thrd
