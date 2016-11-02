@@ -305,7 +305,7 @@ function handle(r)
                 changed = false,
                 took = r:clock() - tnow
             })
-            return apache2.OK
+            return cross.OK
         end
     end
     
