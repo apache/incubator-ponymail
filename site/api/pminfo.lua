@@ -229,7 +229,6 @@ function handle(r)
     -- Get threads
     local threads = {}
     local emails = {}
-    local emails_full = {}
     local emls = {}
     local sid = elastic.scan {
         _source = {'message-id','in-reply-to','subject','epoch','references'},
