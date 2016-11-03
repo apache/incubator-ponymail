@@ -32,14 +32,15 @@ function handle(r)
     if #domain < 2 then
         domain = "*"
     end
-    local dd = 14
-    local maxresults = 10000
+    local DD = 14
+    local MAXRESULTS = 10000
     local listdata = {}
 
     
-    local nowish = math.floor(os.time() / 1800)
+    local NOWISH = math.floor(os.time() / 1800)
+    local PMINFO_CACHE_KEY = "pminfo_cache_" .. r.hostname .. "-" .. NOWISH
     
-    local cache = r:ivm_get("pminfo_cache_" ..r.hostname .."-" .. nowish)
+    local cache = r:ivm_get(PMINFO_CACHE_KEY)
     if cache then
         r:puts(cache)
         return cross.OK
@@ -49,7 +50,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    local daterange = {gt = "now-"..dd.."d", lt = "now+1d" }
+    local daterange = {gt = "now-"..DD.."d", lt = "now+1d" }
     
     local sterm = {
             wildcard = {
@@ -254,7 +255,7 @@ function handle(r)
                 }
             }  
         },
-        size = maxresults
+        size = MAXRESULTS
     }
     local h = 0
     local maxScrolls = 5
@@ -344,7 +345,7 @@ function handle(r)
     tnow = r:clock()
     
     JSON.encode_max_depth(500)
-    listdata.max = maxresults
+    listdata.max = MAXRESULTS
     listdata.no_threads = #threads
     listdata.hits = h
     listdata.participants = no_senders
@@ -360,7 +361,7 @@ function handle(r)
     
     listdata.debug = t
     local output = JSON.encode(listdata)
-    r:ivm_set("pminfo_cache_" ..r.hostname .."-" .. nowish, output)
+    r:ivm_set(PMINFO_CACHE_KEY, output)
     r:puts(output)
     
     return cross.OK
