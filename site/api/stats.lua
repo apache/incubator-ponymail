@@ -239,14 +239,14 @@ function handle(r)
                     term = {
                         list_raw = listraw
                     }
-                }
+                  }
     if get.list == "*" then
         wc = true
         sterm = {
                     wildcard = {
                         list = "*." .. get.domain
                     }
-                }
+                 }
     end
     if get.domain == "*" then
         wc = true
@@ -287,7 +287,7 @@ function handle(r)
                                 query = qs
                             }
                         }
-                },
+                    },
                     must_not = {
                         {
                             query_string = {
@@ -295,7 +295,8 @@ function handle(r)
                                 query = nqs
                             }
                         }
-                }}
+                    }
+                }
             },
             size = 1
         }
@@ -323,12 +324,9 @@ function handle(r)
                     }
                 }
             },
-            
             query = {
-                
                 bool = {
                     must = {
-                        
                         {
                             range = {
                                 date = daterange
@@ -341,8 +339,7 @@ function handle(r)
                             }
                         },
                         sterm
-                        
-                },
+                    },
                     must_not = {
                         {
                             query_string = {
@@ -350,8 +347,8 @@ function handle(r)
                                 query = nqs
                             }
                         }
-                }}
-                
+                    }
+                }
             }
         }
         
@@ -403,10 +400,8 @@ function handle(r)
                         }
                     }
                 }
-            
-        }, 
+            }, 
             query = {
-                
                 bool = {
                     must = {
                         {
@@ -425,9 +420,8 @@ function handle(r)
                                 private = false
                             }
                         }
-                        
-                }}
-                
+                    }
+                }
             }
         }
         
@@ -448,15 +442,16 @@ function handle(r)
                 bool = {
                     must = {
                         {
-                        range = {
-                            date = {
-                                gt = "1970/01/01 00:00:00",
+                            range = {
+                                date = {
+                                    gt = "1970/01/01 00:00:00",
+                                }
                             }
-                        }
-                    },sterm
-                }}
+                        },
+                        sterm
+                    }
+                }
             },
-            
             sort = {
                 {
                     date = {
@@ -474,18 +469,19 @@ function handle(r)
     local lastYear = r:ivm_get("lastYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
     if (not lastYear or lastYear == "")  and not statsOnly then
         local doc = elastic.raw {
-    
             query = {
                 bool = {
                     must = {
                         {
-                        range = {
-                            date = {
-                                gt = "1970/01/01 00:00:00",
+                            range = {
+                                date = {
+                                    gt = "1970/01/01 00:00:00",
+                                }
                             }
-                        }
-                    },sterm
-                }}
+                        },
+                        sterm
+                    }
+                }
             },
             
             sort = {
@@ -541,9 +537,9 @@ function handle(r)
                                 query = nqs
                             }
                         }
-                }}
+                    }
+                }
             },
-            
             sort = {
                 {
                     epoch = {
