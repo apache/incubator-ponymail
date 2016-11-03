@@ -67,17 +67,16 @@ function oauthPortal(key) {
 // Callback for oauth response from backend. if okay, send user back to front
 // page.
 function parseOauthResponse(json) {
+    var wloc = "./"
+    // always clear up the storage
+    if (window.sessionStorage.getItem("ponymail_redirect_oauth")) {
+        wloc = window.sessionStorage.getItem("ponymail_redirect_oauth")
+        window.sessionStorage.removeItem("ponymail_redirect_oauth")
+    }
     if (json.okay) {
-        if (window.sessionStorage.getItem("ponymail_redirect_oauth")) {
-            var wloc = window.sessionStorage.getItem("ponymail_redirect_oauth")
-            window.sessionStorage.removeItem("ponymail_redirect_oauth")
-            location.href = wloc
-        }
-        else {
-            location.href = "./"
-        }
+        location.href = wloc
     } else {
-        popup("Oauth failed", "Authentication failed: " + json.msg)
+        popup("Oauth failed", "Authentication failed: " + json.msg, null, 10, wloc)
     }
 }
 
