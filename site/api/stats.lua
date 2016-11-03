@@ -141,7 +141,6 @@ function handle(r)
             qs = "*"
         end
         nqs = table.concat(nx, " OR ")
-        r:err(qs)
     end
     
     local listraw = "<" .. get.list .. "." .. get.domain .. ">"

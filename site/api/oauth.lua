@@ -49,8 +49,6 @@ function handle(r)
     if get.mode and get.mode == "persona" then
         oauth_domain = "verifier.login.persona.org"
         local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=%s://%s:%u/"):format(post.assertion, scheme, r.hostname, r.port))
-        r:err(("assertion=%s&audience=%s://ponymail:443/"):format(post.assertion, scheme))
-        r:err(result)
         valid, json = pcall(function() return JSON.decode(result) end)
         
     -- Google Auth callback
