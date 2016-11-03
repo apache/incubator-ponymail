@@ -1321,7 +1321,7 @@ function setPopup(pid, close) {
 
 
 // Pop-up message display thingy. Used for saying "email sent...I think!"
-function popup(title, body, timeout, pid) {
+function popup(title, body, timeout, pid, wloc) {
     var obj = document.getElementById('popupper')
     if (pid) {
         if (typeof(window.localStorage) !== "undefined") {
@@ -1334,14 +1334,22 @@ function popup(title, body, timeout, pid) {
     if (obj) {
         obj.innerHTML = ""
         obj.style.display = 'block'
-        obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='toggleView(\"popupper\")'>Got it!</a></p>"
+        obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='popup_close(\""+wloc?wloc:''+"\")'>Got it!</a></p>"
         if (pid) {
             obj.innerHTML += "<br/><input type='checkbox' onclick='setPopup(\""+pid+"\", this.checked);' id='popre'><label for='popre'>Don't show this again</label>"
         }
         // hide popupper after N seconds, giving people enough time to read it.
         window.setTimeout(function() {
-            document.getElementById('popupper').style.display = 'none'
+            popup_close(wloc)
             }, (timeout ? timeout : 5) * 1000)
+    }
+}
+
+// close the popup and open new page if required
+function popup_close(wloc){
+    document.getElementById('popupper').style.display = 'none'
+    if (wloc) {
+        location.href = wloc
     }
 }
 
