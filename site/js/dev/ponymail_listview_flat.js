@@ -145,7 +145,7 @@ function loadList_flat(mjson, limit, start, deep) {
                     "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
                     d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; loadEmails_flat(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
-                    "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; 	text-overflow: ellipsis; overflow: hidden;'>" + sbody +
+                    "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         // Other themes: Just show the subject..
         } else {
