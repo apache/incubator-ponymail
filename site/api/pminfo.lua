@@ -82,7 +82,7 @@ function handle(r)
             from = {
                 terms = {
                     field = "list_raw",
-                    size = 10000
+                    size = MAXRESULTS
                 }
             }
         }
