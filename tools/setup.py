@@ -173,6 +173,9 @@ if not args.noi:
             "body" : {
               "type" : "string"
             },
+            "cc": {
+              "type": "string"
+            },
             "date" : {
               "type" : "date",
               "store" : True,
@@ -248,7 +251,7 @@ if not args.noi:
             }
           }
         }
-      }
+    }
 
     # Check if index already exists
     if es.indices.exists(dbname):
