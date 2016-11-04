@@ -46,6 +46,7 @@ import time
 from collections import namedtuple
 import re
 import codecs
+import chardet
 import configparser
 import os
 import fnmatch
@@ -332,6 +333,7 @@ class Archiver(object):
 
         self.msg_metadata = msg_metadata
         self.irt = irt
+        self.mdate = mdate
 
         return  ojson, contents
             
@@ -361,6 +363,7 @@ class Archiver(object):
 
         msg_metadata = self.msg_metadata
         irt = self.irt
+        mdate = self.mdate
 
         if contents:
             for key in contents:
@@ -469,7 +472,7 @@ class Archiver(object):
                                 'to': msg_metadata['to'],
                                 'subject': msg_metadata['subject'],
                                 'message-id': msg_metadata['message-id'],
-                                'in-reply-to': mirt,
+                                'in-reply-to': irt,
                                 'epoch': email.utils.mktime_tz(mdate),
                                 'mid': mid,
                                 'seen': 0
