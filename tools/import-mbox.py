@@ -34,14 +34,16 @@ import glob
 import multiprocessing
 import tempfile
 import gzip
-import archiver
 
 try:
     from elasticsearch import Elasticsearch, helpers
-    from formatflowed import convertToWrapped
+    from formatflowed import convertToWrapped # only needed by archiver
 except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
+
+# must be done after import check above
+import archiver
     
 y = 0
 baddies = 0
