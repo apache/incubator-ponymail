@@ -569,11 +569,11 @@ elif re.match(r"imaps?://", source):
             print("deleting: " + mid)
 
     while len(queue1) > 0:
-        eshelper.bulk(es, queue1[0:1024])
+        helpers.bulk(es, queue1[0:1024])
         del queue1[0:1024]
 
     while len(queue2) > 0:
-        eshelper.bulk(es, queue2[0:1024])
+        helpers.bulk(es, queue2[0:1024])
         del queue2[0:1024]
 
     # add new items to elasticsearch from imap
