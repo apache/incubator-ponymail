@@ -423,6 +423,7 @@ class Archiver(object):
                     doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
                     if doc:
                         oldrefs.append(cid)
+                        # N.B. no index is supplied, so ES will generate one
                         self.es.index(
                             index=self.dbname,
                             doc_type="notifications",
@@ -457,6 +458,7 @@ class Archiver(object):
                     # does the user want to be notified of indirect replies?
                     if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
                         oldrefs.append(cid)
+                        # N.B. no index is supplied, so ES will generate one
                         self.es.index(
                             index=self.dbname,
                             consistency = self.consistency,
