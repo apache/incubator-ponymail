@@ -153,6 +153,7 @@ function update(doctype, id, query, consistency)
         url = url .. "?write_consistency=" .. consistency
     end
     local result, hc = http.request(url, js)
+    checkReturn(hc)
     local json = JSON.decode(result)
     return json or {}, url
 end
@@ -167,6 +168,7 @@ function index(r, id, ty, body, consistency)
         url = url .. "?write_consistency=" .. consistency
     end
     local result, hc = http.request(url, body)
+    checkReturn(hc)
     local json = JSON.decode(result)
     return json or {}
 end
