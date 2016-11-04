@@ -1334,7 +1334,7 @@ function popup(title, body, timeout, pid, wloc) {
     if (obj) {
         obj.innerHTML = ""
         obj.style.display = 'block'
-        obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='popup_close(\""+wloc?wloc:''+"\")'>Got it!</a></p>"
+        obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='popup_close(\""+(wloc?wloc:'')+"\")'>Got it!</a></p>"
         if (pid) {
             obj.innerHTML += "<br/><input type='checkbox' onclick='setPopup(\""+pid+"\", this.checked);' id='popre'><label for='popre'>Don't show this again</label>"
         }
