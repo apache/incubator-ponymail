@@ -40,6 +40,7 @@ sub someone to the list(s) and add this to their .forward file:
 logger = None
 
 from elasticsearch import Elasticsearch
+from formatflowed import convertToWrapped
 import hashlib
 import email.utils
 import time
