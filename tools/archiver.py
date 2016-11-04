@@ -334,7 +334,6 @@ class Archiver(object):
 
         self.msg_metadata = msg_metadata
         self.irt = irt
-        self.mdate = mdate
 
         return  ojson, contents
             
@@ -364,7 +363,6 @@ class Archiver(object):
 
         msg_metadata = self.msg_metadata
         irt = self.irt
-        mdate = self.mdate
 
         if contents:
             for key in contents:
@@ -440,7 +438,7 @@ class Archiver(object):
                                 'subject': msg_metadata['subject'],
                                 'message-id': msg_metadata['message-id'],
                                 'in-reply-to': irt,
-                                'epoch': email.utils.mktime_tz(mdate),
+                                'epoch': ojson['epoch'],
                                 'mid': mid,
                                 'seen': 0
                             }
@@ -474,7 +472,7 @@ class Archiver(object):
                                 'subject': msg_metadata['subject'],
                                 'message-id': msg_metadata['message-id'],
                                 'in-reply-to': irt,
-                                'epoch': email.utils.mktime_tz(mdate),
+                                'epoch': ojson['epoch'],
                                 'mid': mid,
                                 'seen': 0
                             }
