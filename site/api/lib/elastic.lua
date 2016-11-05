@@ -23,8 +23,9 @@ local config = require 'lib/config'
 local default_doc = "mbox"
 
 -- http code return check
+-- index returns 201 when an entry is created
 function checkReturn(code)
-    if not code or code ~= 200 then
+    if not code or (code ~= 200 and code ~= 201) then
         if not code or code == "closed" then
             -- code is called by top-level functions only, so level 3 is the external caller
             error("Could not contact database backend!", 3)
