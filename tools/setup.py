@@ -147,8 +147,7 @@ while wc == "":
 
 print("Okay, I got all I need, setting up Pony Mail...")
 
-if not args.noi:
-
+def createIndex():
     es = Elasticsearch([
         {
             'host': hostname,
@@ -382,6 +381,13 @@ if not args.noi:
     
     print("Index created!")
     
+if not args.noi:
+    try:
+        createIndex()
+    except Exception as e:
+        print("Index creation failed: %s" % e)
+        sys.exit(1)
+
 print("Writing importer config (ponymail.cfg)")
 
 with open("ponymail.cfg", "w") as f:
