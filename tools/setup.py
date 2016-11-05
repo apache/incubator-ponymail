@@ -170,6 +170,22 @@ if not args.noi:
             "@version" : {
               "type" : "long"
             },
+            "attachments" : {
+              "properties" : {
+                "content_type" : {
+                  "type" : "string"
+                },
+                "filename" : {
+                  "type" : "string"
+                },
+                "hash" : {
+                  "type" : "string"
+                },
+                "size" : {
+                  "type" : "long"
+                }
+              }
+            },
             "body" : {
               "type" : "string"
             },
@@ -235,6 +251,16 @@ if not args.noi:
           "properties" : {
             "source" : {
               "type" : "binary"
+            },
+            "@version" : {
+              "type" : "long"
+            },
+            "message-id" : {
+              "type" : "string",
+              "index" : "not_analyzed"
+            },
+            "mid" : {
+              "type" : "string"
             }
           }
         },
