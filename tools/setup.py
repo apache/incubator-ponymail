@@ -276,6 +276,91 @@ if not args.noi:
               "type" : "string"
             }
           }
+        },
+        "account" : {
+          "properties" : {
+            "cid" : {
+              "type" : "string"
+            },
+            "credentials" : {
+              "properties" : {
+                "altemail" : {
+                  "type" : "object"
+                },
+                "email" : {
+                  "type" : "string"
+                },
+                "fullname" : {
+                  "type" : "string"
+                },
+                "uid" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "internal" : {
+              "properties" : {
+                "cookie" : {
+                  "type" : "string"
+                },
+                "ip" : {
+                  "type" : "string"
+                },
+                "oauth_used" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "request_id" : {
+              "type" : "string"
+            }
+          }
+        },
+        "notifications" : {
+          "properties" : {
+            "date" : {
+              "type" : "date",
+              "store" : True,
+              "format" : "yyyy/MM/dd HH:mm:ss"
+            },
+            "epoch" : {
+              "type" : "double"
+            },
+            "from" : {
+              "type" : "string"
+            },
+            "in-reply-to" : {
+              "type" : "string"
+            },
+            "list" : {
+              "type" : "string"
+            },
+            "message-id" : {
+              "type" : "string",
+              "index" : "not_analyzed"
+            },
+            "mid" : {
+              "type" : "string"
+            },
+            "private" : {
+              "type" : "boolean"
+            },
+            "recipient" : {
+              "type" : "string"
+            },
+            "seen" : {
+              "type" : "long"
+            },
+            "subject" : {
+              "type" : "string"
+            },
+            "to" : {
+              "type" : "string"
+            },
+            "type" : {
+              "type" : "string"
+            }
+          }
         }
     }
 
