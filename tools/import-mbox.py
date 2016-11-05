@@ -489,7 +489,7 @@ if re.match(r"https?://", source):
             qn += 1
             if quickmode and qn >= 2:
                 break
-    die               
+
 # IMAP(S) based import?
 elif re.match(r"imaps?://", source):
     imap = True
