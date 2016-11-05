@@ -110,8 +110,13 @@ class BulkThread(Thread):
     def insert(self):
         global config
         sys.stderr.flush()
-        if not self.xes.indices.exists(dbname):
-            self.xes.indices.create(index = dbname)
+        # thread code writes exceptions to stderr so capture and log a summary ourselves
+        try:
+            if not self.xes.indices.exists(dbname):
+                self.xes.indices.create(index = dbname)
+        except Exception as err:
+            print("Warning: Could not create the index %s: %s" % (dbname,err))
+            return
 
         js_arr = []
         i = 0
