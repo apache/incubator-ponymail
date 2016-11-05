@@ -42,6 +42,8 @@ function GetAsync(theUrl, xstate, callback) {
         }
         if (xmlHttp.readyState == 4 && xmlHttp.status == 404) {
             alert("404'ed: " + theUrl)
+        } else if (xmlHttp.readyState >= 4 && xmlHttp.status >= 400) {
+            popup("Internal Server Error", "Sorry, the request failed. The server responded with: <pre>" + xmlHttp.responseText + "</pre>", 20)
         }
     }
 }
