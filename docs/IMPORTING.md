@@ -3,7 +3,7 @@ Pony Mail supports many ways of importing your old mail archives via the
 `import-mbox.py` script. For command line argument tips, run `python3
 import-mbox.py --help`.
 
-Imports are digested equally every time, so you can
+Imports are digested equally every time (*), so you can
 import from the same source multiple times without creating duplicate emails in
 the archive. Both the archiver and the importer use the same digest method, so
 they can overlap. Usually, you'll want to set up the archiver first, and when
@@ -34,7 +34,7 @@ To import an entire site, use the same command as above, but omit the `--project
 ### Setting the domain or list id properly in case of variance
 If your old archive varies in terms of list IDs across time, you can force harmonization by using the `--lid` or `--domain` flags:
 
-`python3 import-mbox.py --source https://your.tld/mod_mbox/ --mod-mbox --project listid-yourdomain --lid "<listid.youdomain.tld>"`
+`python3 import-mbox.py --source https://your.tld/mod_mbox/ --mod-mbox --project listid-yourdomain --lid "<listid.yourdomain.tld>"`
 
 This should only be done one list at a time.
 
@@ -62,3 +62,6 @@ If you have a mix of mbox and non-mbox files in the specific dir, you may wish t
 ## Test archives
 We have a few test archives for those that wish to test large imports.
 They can be found in gzip format at [http://ponymail.info/mboxes/](http://ponymail.info/mboxes/)
+
+(*) The digest depends on the [archiver] generator setting in ponymail.cfg
+If that varies between imports, then duplicates will occur
