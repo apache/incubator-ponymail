@@ -521,6 +521,11 @@ if __name__ == '__main__':
     if args.verbose:
         import logging
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    else:
+        # elasticsearch logs lots of warnings on retries/connection failure
+        import logging
+        logging.getLogger("elasticsearch").setLevel(logging.ERROR)
+
         
     foo = Archiver(parseHTML = parseHTML)
     input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
