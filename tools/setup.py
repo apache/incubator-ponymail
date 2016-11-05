@@ -148,8 +148,7 @@ while wc == "":
 print("Okay, I got all I need, setting up Pony Mail...")
 
 if not args.noi:
-    print("Creating index " + dbname)
-    
+
     es = Elasticsearch([
         {
             'host': hostname,
@@ -160,6 +159,18 @@ if not args.noi:
         max_retries=5,
         retry_on_timeout=True
         )
+
+    # Check if index already exists
+    if es.indices.exists(dbname):
+        if args.soe:
+            print("ElasticSearch index '%s' already exists and SOE set, exiting quietly" % dbname)
+            sys.exit(0)
+        else:
+            print("Error: ElasticSearch index '%s' already exists!" % dbname)
+            sys.exit(-1)
+            
+    print("Creating index " + dbname)
+    
     mappings = {
         "mbox" : {
           "properties" : {
@@ -363,17 +374,7 @@ if not args.noi:
           }
         }
     }
-
-    # Check if index already exists
-    if es.indices.exists(dbname):
-        if args.soe:
-            print("Index already exists and SOE set, exiting quietly")
-            sys.exit(0)
-        else:
-            print("Error: ElasticSearch index %s already exists!" % dbname)
-            sys.exit(-1)
-            
-        
+ 
     res = es.indices.create(index = dbname, body = {
                 "mappings" : mappings
             }
