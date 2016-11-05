@@ -168,9 +168,9 @@ if not args.noi:
         else:
             print("Error: ElasticSearch index '%s' already exists!" % dbname)
             sys.exit(-1)
-            
+
     print("Creating index " + dbname)
-    
+
     mappings = {
         "mbox" : {
           "properties" : {
@@ -429,7 +429,15 @@ local config = {
     maxResults = 5000, -- max emails to return in one go. Might need to be bumped for large lists
     admin_oauth = {}, -- list of domains that may do administrative oauth (private list access)
                      -- add 'www.googleapis.com' to the list for google oauth to decide, for instance.
-    oauth_fields = {}, -- used for specifying individual oauth handling parameters.
+    oauth_fields = { -- used for specifying individual oauth handling parameters.
+-- for example:
+--        internal = {
+--            email = 'CAS-EMAIL',
+--            name = 'CAS-NAME',
+--            uid = 'REMOTE-USER',
+--            env = 'subprocess' -- use environment vars instead of request headers
+--        }
+    },
     antispam = true  -- Whether or not to add anti-spam measures aimed at anonymous users.
     -- no_association = {} -- domains that are not allowed for email association
     -- hidePrivate = true -- whether to hide names of lists that contain any private mails
