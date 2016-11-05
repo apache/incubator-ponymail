@@ -9,9 +9,6 @@ the archive. Both the archiver and the importer use the same digest method, so
 they can overlap. Usually, you'll want to set up the archiver first, and when
 emails start flowing through it, you'll use the importer to import older emails.
 
-## Importing attachments
-If you wish to import attached files, add the `--attachments` flag to your import command, otherwise, attachments will be stripped.
-
 ## Importing from mod_mbox
 
 ### Importing a single domain
@@ -20,7 +17,7 @@ https://your.tld/mod_mbox/$list-yourdomain/, you can import all lists from that 
 
 `python3 import-mbox.py --source https://your.tld/mod_mbox/ --mod-mbox --project yourdomain`
 
-For a quick update, which only imports the last 2 months of mail, append then `--quick` flag.
+For a quick update, which only imports the last 2 months of mail, append the `--quick` flag.
 
 You can also import just a single list by specifying that list ID:
 
@@ -53,11 +50,27 @@ While the `project` flag is not needed here, you may wish to specify the list ID
 ## Importing from locally stored mbox files
 To import from one or more local mbox files, specify a filesystem path as the source:
 
-`python3 import-mbox.py --source /tmp/mylists/ --attachments`
+`python3 import-mbox.py --source /tmp/mylists/`
 
-If you have a mix of mbox and non-mbox files in the specific dir, you may wish to let Pony Mail know which files to scan:
+This will recursively import all files with the extension '.mbox'.
 
-`python3 import-mbox.py --source /tmp/mylists/ --ext .mbox --attachments`
+You can change the extension as follows:
+
+`python3 import-mbox.py --source /tmp/mylists/ --ext .mbx`
+
+To match all files with any non-empty extension:
+
+`python3 import-mbox.py --source /tmp/mylists/ --ext '.*'`
+
+To match files regardless of extension:
+
+`python3 import-mbox.py --source /tmp/mylists/ --ext ''`
+
+Or you can import a single file:
+
+`python3 import-mbox.py --source 2016-11.mbox`
+
+(This is supported in versions after 0.9)
 
 ## Test archives
 We have a few test archives for those that wish to test large imports.
