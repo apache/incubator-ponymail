@@ -442,7 +442,9 @@ if re.match(r"https?://", source):
     data = urlopen(source).read().decode('utf-8')
     print("Fetched %u bytes of main data, parsing month lists" % len(data))
     
-    ns = r"<a href='(%s[-a-z0-9]+)/'" % project
+    # ensure there is a '-' between project and list name otherwise we match too much
+    # Note: It looks like mod_mbox always uses single quoted hrefs
+    ns = r"<a href='(%s-[-a-z0-9]+)/'" % project
     if project.find("-") != -1:
         ns = r"<a href='(%s)/'" % project
     
@@ -487,7 +489,7 @@ if re.match(r"https?://", source):
             qn += 1
             if quickmode and qn >= 2:
                 break
-                    
+    die               
 # IMAP(S) based import?
 elif re.match(r"imaps?://", source):
     imap = True
