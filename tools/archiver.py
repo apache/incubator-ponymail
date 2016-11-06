@@ -108,6 +108,15 @@ def pm_charsets(msg):
             charsets.update([c])
     return charsets
 
+def normalize_lid(lid):
+    """ Ensure that a lid is in standard form, i.e. <a.b.c.d> """
+    # first drop any leading or trailing chars
+    m = re.search(r"<(.+)>", lid)
+    if m:
+        lid = m.group(1)
+    # Belt-and-braces: remove possible extraneous chars
+    return "<%s>" % lid.strip(" <>").replace("@", ".")
+
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
     if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
@@ -344,12 +353,7 @@ class Archiver(object):
         :param msg: The message object.
         """
 
-        lid = None
-        m = re.search(r"(<.+>)", mlist.list_id.replace("@", "."))
-        if m:
-            lid = m.group(1)
-        else:
-            lid = "<%s>" % mlist.list_id.strip("<>").replace("@", ".")
+        lid = normalize_lid(mlist.list_id)
 
         private = False
         if hasattr(mlist, 'archive_public') and mlist.archive_public == True:

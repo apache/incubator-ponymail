@@ -393,7 +393,7 @@ if args.source:
 if args.dir:
     maildir = args.dir
 if args.listid:
-    list_override = '<%s>' % args.listid[0].strip('<>')
+    list_override = archiver.normalize_lid(args.listid[0])
 if args.project:
     project = args.project[0]
 if args.domain:
@@ -431,7 +431,7 @@ def globDir(d):
         print("Would you like to set a list-ID override for %s?:" % d)
         lo = sys.stdin.readline()
         if lo and len(lo) > 3:
-            fileToLID[d] = "<" + lo.strip("\r\n<>") + ">"
+            fileToLID[d] = archiver.normalize_lid(lo.strip("\r\n"))
             print("Righto, setting it to %s." % fileToLID[d])
         else:
             print("alright, I'll try to figure it out myself!")
