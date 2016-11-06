@@ -4512,7 +4512,10 @@ function search(q, d, nopush, all) {
     // TODO: improve this much like we have with trends.html
     var arr = datePickerDouble(d)
     var howlong = datePickerValue(d)
-    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
+    // howlong may begin with a month which should not be lower-cased.
+    // or it may be 'Less than 1 month ago'
+    // Avoid checking by starting a new sentence
+    document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search. " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
 }
