@@ -146,7 +146,7 @@ function searchAll(q, dspan, from, subject, where) {
     }, buildPage)
     var arr = datePickerDouble(dspan)
     var howlong = arr[3]
-    if (isNaN(howlong)) {
+    if (howlong == null || isNaN(howlong)) {
         howlong = "custom date range"
     } else {
         if (howlong >= 365) {
