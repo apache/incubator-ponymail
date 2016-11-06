@@ -109,8 +109,7 @@ function search(q, d, nopush, all) {
     // for the list title, prepare the date range
     // TODO: improve this much like we have with trends.html
     var arr = datePickerDouble(d)
-    howlong = datePickerValue(d)
-    howlong = howlong.replace(/^(.)/, function(a){return a.toLocaleLowerCase() })
+    var howlong = datePickerValue(d)
     document.getElementById('listtitle').innerHTML = listname + "@" + domain + " (Quick Search, " + howlong + ") <a class='btn btn-warning' href='javascript:void(0);' onclick='getListInfo(xlist)'>Clear filters</a>"
     xlist = olist + "@" + domain
     return false;
@@ -143,7 +142,7 @@ function searchAll(q, dspan, from, subject, where) {
         deep: true
     }, buildPage)
     var arr = datePickerDouble(dspan)
-    howlong = arr[3]
+    var howlong = arr[3]
     if (isNaN(howlong)) {
         howlong = "custom date range"
     } else {
