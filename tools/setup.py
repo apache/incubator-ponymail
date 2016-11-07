@@ -256,6 +256,9 @@ def createIndex():
           }
         },
         "mbox_source" : {
+          "_all": {
+            "enabled": false # this doc type is not searchable
+          },
           "properties" : {
             "source" : {
               "type" : "binary"
@@ -273,6 +276,9 @@ def createIndex():
           }
         },
         "mailinglists" : {
+          "_all": {
+            "enabled": false # this doc type is not searchable
+          },
           "properties" : {
             "description" : {
               "type" : "string",
@@ -289,6 +295,9 @@ def createIndex():
           }
         },
         "account" : {
+          "_all": {
+            "enabled": false # this doc type is not searchable
+          },
           "properties" : {
             "cid" : {
               "type" : "string",
@@ -336,6 +345,9 @@ def createIndex():
           }
         },
         "notifications" : {
+          "_all": {
+            "enabled": false # this doc type is not searchable
+          },
           "properties" : {
             "date" : {
               "type" : "date",
