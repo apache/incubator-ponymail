@@ -416,17 +416,17 @@ if args.timeout:
 baddies = 0
 
 # No point continuing if the index does not exist
-print("Checking that the database index %s exists ... " % dbname, end='')
+print("Checking that the database index %s exists ... " % dbname)
 
 # elasticsearch logs lots of warnings on retries/connection failure
 import logging
 logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 try:
     if not es.indices.exists(dbname):
-        print("\nError: the index '%s' does not exist!" % (dbname))
+        print("Error: the index '%s' does not exist!" % (dbname))
         sys.exit(1)
 except Exception as err:
-    print("\nError: unable to check if the index %s exists!: %s" % (dbname, err))
+    print("Error: unable to check if the index %s exists!: %s" % (dbname, err))
     sys.exit(1)
 
 print("Database exists OK")
