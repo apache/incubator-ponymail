@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys, os, json, re, time
+import sys, os
 import getpass
 import subprocess
-import readline
 import argparse
 import shutil
 
@@ -28,8 +27,6 @@ if sys.version_info <= (3, 3):
 dopip = False
 try:
     from elasticsearch import Elasticsearch
-    from formatflowed import convertToWrapped
-    from netaddr import IPNetwork
 except:
     dopip = True
     
@@ -45,8 +42,6 @@ elif dopip:
     try:
         subprocess.check_call(('pip3','install','elasticsearch','formatflowed', 'netaddr'))
         from elasticsearch import Elasticsearch
-        from formatflowed import convertToWrapped
-        from netaddr import IPNetwork
     except:
         print("Oh dear, looks like this failed :(")
         print("Please install elasticsearch and formatflowed before you try again:")
@@ -183,13 +178,16 @@ def createIndex():
             "attachments" : {
               "properties" : {
                 "content_type" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "filename" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "hash" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "size" : {
                   "type" : "long"
@@ -277,20 +275,24 @@ def createIndex():
         "mailinglists" : {
           "properties" : {
             "description" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             },
             "list" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "name" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             }
           }
         },
         "account" : {
           "properties" : {
             "cid" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             },
             "credentials" : {
               "properties" : {
@@ -298,31 +300,38 @@ def createIndex():
                   "type" : "object"
                 },
                 "email" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "fullname" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "uid" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 }
               }
             },
             "internal" : {
               "properties" : {
                 "cookie" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "ip" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 },
                 "oauth_used" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "index" : "not_analyzed"
                 }
               }
             },
             "request_id" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             }
           }
         },
@@ -337,38 +346,46 @@ def createIndex():
               "type" : "double"
             },
             "from" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "in-reply-to" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "list" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "message-id" : {
               "type" : "string",
               "index" : "not_analyzed"
             },
             "mid" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "private" : {
               "type" : "boolean"
             },
             "recipient" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             },
             "seen" : {
               "type" : "long"
             },
             "subject" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "to" : {
-              "type" : "string"
+              "type" : "string",
+#               "index" : "not_analyzed"
             },
             "type" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             }
           }
         }

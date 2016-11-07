@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys, os, json, re, time
+import sys
 import getpass
 import subprocess
-import readline
 import platform
 
 dname = platform.linux_distribution()[0].lower()

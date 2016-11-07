@@ -402,7 +402,7 @@ if args.dedup:
 if args.ext:
     extension = args.ext[0]
 if args.html2text:
-    import html2text
+    import html2text # needed by archiver
     parseHTML = True
 if args.ibody:
     archiver.iBody = args.ibody[0]

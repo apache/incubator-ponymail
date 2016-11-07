@@ -28,18 +28,13 @@ This utility can be used to:
 """
 
 import sys
-import random, time
-import os
-from threading import Thread, Lock
+import time
 import configparser
 import argparse
-from os import listdir
-from os.path import isfile, join, isdir
 import json
 
 try:
     from elasticsearch import Elasticsearch, helpers
-    from formatflowed import convertToWrapped
 except:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)

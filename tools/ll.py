@@ -16,14 +16,13 @@
 # limitations under the License.
 
 import sys
-import random, time
-import os
+import time
 import configparser
 import argparse
 import json
 
 try:
-    from elasticsearch import Elasticsearch, helpers
+    from elasticsearch import Elasticsearch
 except:
     print("Sorry, you need to install the elasticsearch module from pip first.")
     sys.exit(-1)
