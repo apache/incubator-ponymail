@@ -110,13 +110,6 @@ class BulkThread(Thread):
     def insert(self):
         global config
         sys.stderr.flush()
-        # thread code writes exceptions to stderr so capture and log a summary ourselves
-        try:
-            if not self.xes.indices.exists(dbname):
-                self.xes.indices.create(index = dbname)
-        except Exception as err:
-            print("Warning: Could not create the index %s: %s" % (dbname,err))
-            return
 
         js_arr = []
         i = 0
@@ -422,6 +415,21 @@ if args.timeout:
     timeout = args.timeout[0]
 baddies = 0
 
+# No point continuing if the index does not exist
+print("Checking that the database index %s exists ... " % dbname, end='')
+
+# elasticsearch logs lots of warnings on retries/connection failure
+import logging
+logging.getLogger("elasticsearch").setLevel(logging.ERROR)
+try:
+    if not es.indices.exists(dbname):
+        print("\nError: the index '%s' does not exist!" % (dbname))
+        sys.exit(1)
+except Exception as err:
+    print("\nError: unable to check if the index %s exists!: %s" % (dbname, err))
+    sys.exit(1)
+
+print("Database exists OK")
 
 def globDir(d):
     dirs = [ f for f in listdir(d) if isdir(join(d,f)) ]
