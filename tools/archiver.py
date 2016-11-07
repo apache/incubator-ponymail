@@ -144,8 +144,8 @@ class Archiver(object):
         global config, auth
         self.html = parseHTML
         if parseHTML:
-           import html2text
-           self.html2text = html2text.html2text
+            import html2text
+            self.html2text = html2text.html2text
         self.dbname = config.get("elasticsearch", "dbname")
         ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
         self.consistency = config.get('elasticsearch', 'write', fallback='quorum')

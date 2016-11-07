@@ -555,13 +555,13 @@ elif re.match(r"imaps?://", source):
                 if match:
                     uid = match.group(1)
                 else:
-                     match = mid_re.match(line)
-                     if match:
-                         try:
-                             mail[match.group(1).decode('utf-8')] = uid
-                             uid = None
-                         except ValueError:
-                             pass
+                    match = mid_re.match(line)
+                    if match:
+                        try:
+                            mail[match.group(1).decode('utf-8')] = uid
+                            uid = None
+                        except ValueError:
+                            pass
 
     # delete items from elasticsearch that are not present in imap
 
