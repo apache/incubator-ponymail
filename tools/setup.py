@@ -204,7 +204,7 @@ def createIndex():
               "index" : "not_analyzed"
             },
             "epoch" : { # number of seconds since the epoch
-              "type" : "double",
+              "type" : "long",
               "index" : "not_analyzed"
             },
             "from" : {
@@ -349,7 +349,7 @@ def createIndex():
               "format" : "yyyy/MM/dd HH:mm:ss"
             },
             "epoch" : {
-              "type" : "double"
+              "type" : "long"
             },
             "from" : {
               "type" : "string",
