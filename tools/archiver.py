@@ -244,8 +244,8 @@ class Archiver(object):
             else:
                 lid = lid.replace(self.cropout, "")
         
-        format = lambda value: value and str(value) or ""
-        msg_metadata = dict([(k, format(msg.get(k))) for k in self.keys])
+        defaultEmptyString = lambda value: value and str(value) or ""
+        msg_metadata = dict([(k, defaultEmptyString(msg.get(k))) for k in self.keys])
         mid = hashlib.sha224(str("%s-%s" % (lid, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (lid if lid else "none")
         for key in ['to','from','subject','message-id']:
             try:
