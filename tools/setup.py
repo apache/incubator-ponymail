@@ -172,9 +172,6 @@ def createIndex():
               "type" : "date",
               "format" : "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
             },
-            "@version" : {
-              "type" : "long"
-            },
             "attachments" : {
               "properties" : {
                 "content_type" : {
@@ -262,9 +259,6 @@ def createIndex():
           "properties" : {
             "source" : {
               "type" : "binary"
-            },
-            "@version" : {
-              "type" : "long"
             },
             "message-id" : {
               "type" : "string",
