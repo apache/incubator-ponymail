@@ -52,6 +52,7 @@ import configparser
 import os
 import fnmatch
 import io
+import logging
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -65,7 +66,6 @@ if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from zope.interface import implementer
     from mailman.interfaces.archiver import IArchiver
     from mailman.interfaces.archiver import ArchivePolicy
-    import logging
     logger = logging.getLogger("mailman.archiver")
 elif __name__ == '__main__':
     import sys
@@ -141,7 +141,6 @@ class Archiver(object):
 
     def __init__(self, parseHTML=False):
         """ Just initialize ES. """
-        global config, auth
         self.html = parseHTML
         if parseHTML:
             import html2text
@@ -189,7 +188,6 @@ class Archiver(object):
     
     
     def msgbody(self, msg):
-        global iBody
         body = None
         firstHTML = None
         if msg.is_multipart():
@@ -523,11 +521,9 @@ if __name__ == '__main__':
         parseHTML = True
 
     if args.verbose:
-        import logging
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     else:
         # elasticsearch logs lots of warnings on retries/connection failure
-        import logging
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
         
