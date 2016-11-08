@@ -254,7 +254,7 @@ def createIndex():
         },
         "mbox_source" : {
           "_all": {
-            "enabled": false # this doc type is not searchable
+            "enabled": False # this doc type is not searchable
           },
           "properties" : {
             "source" : {
@@ -271,7 +271,7 @@ def createIndex():
         },
         "mailinglists" : {
           "_all": {
-            "enabled": false # this doc type is not searchable
+            "enabled": False # this doc type is not searchable
           },
           "properties" : {
             "description" : {
@@ -290,7 +290,7 @@ def createIndex():
         },
         "account" : {
           "_all": {
-            "enabled": false # this doc type is not searchable
+            "enabled": False # this doc type is not searchable
           },
           "properties" : {
             "cid" : {
@@ -340,7 +340,7 @@ def createIndex():
         },
         "notifications" : {
           "_all": {
-            "enabled": false # this doc type is not searchable
+            "enabled": False # this doc type is not searchable
           },
           "properties" : {
             "date" : {
@@ -402,7 +402,7 @@ def createIndex():
             }
         )
     
-    print("Index created!")
+    print("Index created! %s " % res)
     
 if not args.noi:
     try:
