@@ -53,7 +53,7 @@ lists = [] # N.B. the entries in this list depend on the import type:
 # modMbox: [list-id, mbox]
 # piperMail: [filename, list-id]
 # imap(s): [uids, listname, imap4]
-# other: [filename, list-override[
+# other: [filename, list-override]
 start = time.time()
 quickmode = False
 private = False
@@ -147,7 +147,6 @@ class SlurpThread(Thread):
         ml = ""
         mboxfile = ""
         filename = ""
-        xlist_override = None
 
         archie = archiver.Archiver(parseHTML = parseHTML)
     
@@ -179,12 +178,10 @@ class SlurpThread(Thread):
                         msgbytes = imap4.uid('fetch', uid, '(RFC822)')[1][0][1]
                         yield email.message_from_bytes(msgbytes)
                 messages = mailgen(mla[0])
-                xlist_override = mla[1]
             elif filebased:
                 
                 tmpname = mla[0]
                 filename = mla[0]
-                xlist_override = mla[1]
                 if filename.find(".gz") != -1:
                     print("Decompressing %s..." % filename)
                     try:
@@ -208,7 +205,6 @@ class SlurpThread(Thread):
             else:
                 ml = mla[0]
                 mboxfile = mla[1]
-                xlist_override = list_override
                 print("Slurping %s/%s" % (ml, mboxfile))
                 m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
                 EY = 1997
