@@ -48,7 +48,12 @@ import archiver
 y = 0
 baddies = 0
 block = Lock()
-lists = []
+lists = [] # N.B. the entries in this list depend on the import type:
+# globDir: [filename, list-id]
+# modMbox: [list-id, mbox]
+# piperMail: [filename, list-id]
+# imap(s): [uids, listname, imap4]
+# other: [filename, list-override[
 start = time.time()
 quickmode = False
 private = False
@@ -454,12 +459,15 @@ if re.match(r"https?://", source):
     data = urlopen(source).read().decode('utf-8')
     print("Fetched %u bytes of main data, parsing month lists" % len(data))
     
-    # ensure there is a '-' between project and list name otherwise we match too much
-    # Note: It looks like mod_mbox always uses single quoted hrefs
-    ns = r"<a href='(%s-[-a-z0-9]+)/'" % project
-    if project.find("-") != -1:
-        ns = r"<a href='(%s)/'" % project
-    
+    if project:
+        # ensure there is a '-' between project and list name otherwise we match too much
+        # Note: It looks like mod_mbox always uses single quoted hrefs
+        ns = r"<a href='(%s-[-a-z0-9]+)/'" % project
+        if project.find("-") != -1:
+            ns = r"<a href='(%s)/'" % project
+    else: # match all possible project names
+        ns = r"<a href='([-a-z0-9]+)/'"
+
     if args.modmbox:
         for mlist in re.finditer(ns, data):
             ml = mlist.group(1)
