@@ -20,9 +20,7 @@ Then subscribe to lists by running: python3.4 feedwrapper sub localuser@thisdoma
 """
 
 import sys, re, os, email, smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from subprocess import *
+from subprocess import Popen, PIPE
 path = os.path.dirname(os.path.realpath(__file__))
 
 if __name__ == '__main__':
