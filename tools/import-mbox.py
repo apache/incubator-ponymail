@@ -148,18 +148,19 @@ class SlurpThread(Thread):
     
         while len(lists) > 0:
             print("%u elements left to slurp" % len(lists))
+
             block.acquire()
             try:
                 mla = lists.pop(0)
+                if not mla:
+                    print("Nothing more to do here")
+                    return
             except Exception as err:
                 print("Could not pop list: %s" % err)
-                block.release()
                 return
-            if not mla:
-                print("Nothing more to do here")
+            finally:
                 block.release()
-                return
-            block.release()
+
             EY = 1980
             EM = 1
             stime = time.time()
