@@ -23,13 +23,15 @@ local config = require 'lib/config'
 local default_doc = "mbox"
 
 -- http code return check
--- index returns 201 when an entry is created
+-- N.B. if the index is closed, ES returns 403, but that may perhaps be true for other conditions
+-- ES returns 404 if the index is missing.
 function checkReturn(code)
-    if not code or (code ~= 200 and code ~= 201) then
-        if not code or code == "closed" then
-            -- code is called by top-level functions only, so level 3 is the external caller
-            error("Could not contact database backend!", 3)
-        else
+    if not code or code == "closed" then
+        -- code is called by top-level functions only, so level 3 is the external caller
+        error("Could not contact database backend!", 3)
+    else -- we have a valid code
+        -- index returns 201 when an entry is created
+        if code ~= 200 and code ~= 201 then
             error("Backend Database returned code " .. code .. "!", 3)
         end
     end
