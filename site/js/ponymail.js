@@ -322,7 +322,7 @@ function compose(eid, lid, type) {
                     truncated = true
                     eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
                 }
-                var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
+                var xlink = 'mailto:' + listname + "?subject=" + encodeURIComponent(subject) + "&amp;In-Reply-To=" + encodeURIComponent(email['message-id']) + "&body=" + encodeURIComponent(eml_raw_short)
                 
                 // Make a button object
                 var btn = document.createElement('input')
@@ -356,7 +356,7 @@ function compose(eid, lid, type) {
                 eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
             }
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
-            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + escape(subject) + "&In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
+            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + encodeURIComponent(subject) + "&In-Reply-To=" + encodeURIComponent(email['message-id']) + "&body=" + encodeURIComponent(eml_raw_short)
             
             // Get compose pane, show it
             var obj = document.getElementById('splash')
@@ -3541,7 +3541,7 @@ function loadNgrams() {
     var plaw = false
     for (var n in queries) {
         var nquery = []
-        var q = escape(queries[n])
+        var q = encodeURIComponent(queries[n])
         if (q == 'avg') {
             avg = true
             continue
@@ -3569,7 +3569,7 @@ function loadNgrams() {
                 if (m) {
                     q = q.replace(m[0], "")
                     // append to the header_foo query
-                    nquery.push("header_" + stuff[k] + "=" + m[1].replace(/([\s&+=])/g, function(a) { return escape(a)}))
+                    nquery.push("header_" + stuff[k] + "=" + encodeURIComponent(m[1]))
                 }
             }
         }
@@ -4503,10 +4503,10 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     
     // As usual, push new history state
-    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
+    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + encodeURIComponent(q));
     
     // get the data from backend, push to page builder func
-    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + encodeURIComponent(q) + "&d=" + d, null, buildPage)
     
     // for the list title, prepare the date range
     // TODO: improve this much like we have with trends.html
@@ -4534,14 +4534,14 @@ function searchAll(q, dspan, from, subject, where) {
         wherel = a[0]
         whered = a[1]
     }
-    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + escape(dspan)
+    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + encodeURIComponent(q) + "&d=" + encodeURIComponent(dspan)
     if (from) {
-        url += "&header_from="  + "\""+ from.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
-        current_query += " FROM:"  + "\""+ from.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
+        url += "&header_from="  + "\""+ encodeURIComponent(from) + "\""
+        current_query += " FROM:"  + "\""+ encodeURIComponent(from) + "\""
     }
     if (subject) {
-        url += "&header_subject=\"" + subject.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
-        current_query += " SUBJECT:\"" + subject.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
+        url += "&header_subject=\"" + encodeURIComponent(subject) + "\""
+        current_query += " SUBJECT:\"" + encodeURIComponent(subject) + "\""
     }
     GetAsync(url, {
         deep: true
@@ -5048,7 +5048,7 @@ function gatherTrends() {
             if (m) {
                 query = query.replace(m[0], "")
                 // append to the header_foo query
-                nquery += "&header_" + stuff[k] + "=" + escape(m[1])
+                nquery += "&header_" + stuff[k] + "=" + encodeURIComponent(m[1])
             }
         }
     }
@@ -5070,7 +5070,7 @@ function gatherTrends() {
     var domain = arr[1]
     
     // Get us some data
-    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? escape(query) : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
+    GetAsync('/api/stats.lua?list='+listname+'&domain='+domain+'&d=' + xa[0] + "&q=" + ((query && query.length > 0) ? encodeURIComponent(query) : "") + nquery, { nquery: nquery, listname: listname, domain: domain, dbl: xa[0], dfrom: xa[1], dto: xa[2], tspan: xa[3], dspan: dspan, query: query }, showTrends)
     document.title = "Stats for " + list + " - Pony Mail!"
 }
 

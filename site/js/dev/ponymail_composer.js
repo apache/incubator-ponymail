@@ -235,7 +235,7 @@ function compose(eid, lid, type) {
                     truncated = true
                     eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
                 }
-                var xlink = 'mailto:' + listname + "?subject=" + escape(subject) + "&amp;In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
+                var xlink = 'mailto:' + listname + "?subject=" + encodeURIComponent(subject) + "&amp;In-Reply-To=" + encodeURIComponent(email['message-id']) + "&body=" + encodeURIComponent(eml_raw_short)
                 
                 // Make a button object
                 var btn = document.createElement('input')
@@ -269,7 +269,7 @@ function compose(eid, lid, type) {
                 eml_raw_short = eml_raw_short.substring(0, N) + "\n[message truncated...]"
             }
             var subject = "Re: " + email.subject.replace(/^Re:\s*/mg, "").replace(/</mg, "&lt;")
-            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + escape(subject) + "&In-Reply-To=" + escape(email['message-id']) + "&body=" + escape(eml_raw_short)
+            var link = 'mailto:' + email.list.replace(/[<>]/g, "").replace(/([^.]+)\./, "$1@") + "?subject=" + encodeURIComponent(subject) + "&In-Reply-To=" + encodeURIComponent(email['message-id']) + "&body=" + encodeURIComponent(eml_raw_short)
             
             // Get compose pane, show it
             var obj = document.getElementById('splash')

@@ -101,10 +101,10 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     
     // As usual, push new history state
-    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + escape(q));
+    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + encodeURIComponent(q));
     
     // get the data from backend, push to page builder func
-    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + d, null, buildPage)
+    GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + encodeURIComponent(q) + "&d=" + d, null, buildPage)
     
     // for the list title, prepare the date range
     // TODO: improve this much like we have with trends.html
@@ -132,14 +132,14 @@ function searchAll(q, dspan, from, subject, where) {
         wherel = a[0]
         whered = a[1]
     }
-    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + q.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "&d=" + escape(dspan)
+    var url = "/api/stats.lua?list="+wherel+"&domain="+whered+"&q=" + encodeURIComponent(q) + "&d=" + encodeURIComponent(dspan)
     if (from) {
-        url += "&header_from="  + "\""+ from.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
-        current_query += " FROM:"  + "\""+ from.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
+        url += "&header_from="  + "\""+ encodeURIComponent(from) + "\""
+        current_query += " FROM:"  + "\""+ encodeURIComponent(from) + "\""
     }
     if (subject) {
-        url += "&header_subject=\"" + subject.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
-        current_query += " SUBJECT:\"" + subject.replace(/([\s&+=%])/g, function(a) { return escape(a)}) + "\""
+        url += "&header_subject=\"" + encodeURIComponent(subject) + "\""
+        current_query += " SUBJECT:\"" + encodeURIComponent(subject) + "\""
     }
     GetAsync(url, {
         deep: true

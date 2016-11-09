@@ -203,7 +203,7 @@ function loadNgrams() {
     var plaw = false
     for (var n in queries) {
         var nquery = []
-        var q = escape(queries[n])
+        var q = encodeURIComponent(queries[n])
         if (q == 'avg') {
             avg = true
             continue
@@ -231,7 +231,7 @@ function loadNgrams() {
                 if (m) {
                     q = q.replace(m[0], "")
                     // append to the header_foo query
-                    nquery.push("header_" + stuff[k] + "=" + m[1].replace(/([\s&+=])/g, function(a) { return escape(a)}))
+                    nquery.push("header_" + stuff[k] + "=" + encodeURIComponent(m[1]))
                 }
             }
         }
