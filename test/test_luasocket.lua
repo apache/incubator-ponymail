@@ -58,14 +58,11 @@ function runRequest(url, query)
     end
 end
 
---runRequest("http://wrong.host.invalid/")
---
---runRequest("http://localhost:92000/ponymail/")
---
-runRequest("http://localhost:9200/_cat/indices") -- valid
-runRequest("http://localhost:9200/_dog/indices") -- invalid
-runRequest("http://localhost:92000/_cat/indices") -- port invalid
 
 if #arg >0 then
     runRequest(unpack(arg))
+else
+    runRequest("http://localhost:9200/_cat/indices") -- valid
+    runRequest("http://localhost:9200/_dog/indices") -- invalid
+    runRequest("http://localhost:92000/_cat/indices") -- port invalid
 end
