@@ -42,7 +42,7 @@ function handle(r)
     r.content_type = "application/json"
     local get = r:parseargs()
     local eid = (get.id or ""):gsub("\"", "")
-    local doc = elastic.get("mbox", eid or "hmm")
+    local _, doc = pcall(function() return elastic.get("mbox", eid or "hmm") end)
     
     -- Try searching by original source mid if not found, for backward compat
     if not doc or not doc.subject then
