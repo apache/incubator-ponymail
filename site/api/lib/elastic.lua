@@ -170,9 +170,9 @@ function update(doctype, id, query, consistency)
 end
 
 -- Put a new document somewhere
-function index(r, id, ty, body, consistency)
+function index(id, ty, body, consistency)
     if not id then
-        id = r:sha1(ty .. (math.random(1,99999999)*os.time()) .. ':' .. r:clock())
+        error("id parameter must be provided", 3)
     end
     local url = config.es_url .. ty .. "/" .. id
     if consistency then

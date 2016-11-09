@@ -62,7 +62,7 @@ function updateUser(r, cid, data)
         prefs = oaccount.preferences
         favs = oaccount.favorites
     end
-    elastic.index(r, r:sha1(cid), 'account', JSON.encode{
+    elastic.index(r:sha1(cid), 'account', JSON.encode{
         credentials = {
             uid = data.uid,
             email = data.email,
@@ -92,7 +92,7 @@ function logoutUser(r, usr)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.internal.cookie = 'nil'
-        elastic.index(r, r:sha1(usr.cid), 'account', JSON.encode(js))
+        elastic.index(r:sha1(usr.cid), 'account', JSON.encode(js))
     end
     r:setcookie{
         key = "ponymail",
@@ -110,7 +110,7 @@ function savePreferences(r, usr, alts)
         if alts then
             js.credentials.altemail = usr.credentials.altemail
         end
-        elastic.index(r, r:sha1(usr.cid), 'account', JSON.encode(js))
+        elastic.index(r:sha1(usr.cid), 'account', JSON.encode(js))
     end
 end
 
@@ -119,7 +119,7 @@ function saveFavorites(r, usr)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.favorites = usr.favorites
-        elastic.index(r, r:sha1(usr.cid), 'account', JSON.encode(js))
+        elastic.index(r:sha1(usr.cid), 'account', JSON.encode(js))
     end
 end
 
