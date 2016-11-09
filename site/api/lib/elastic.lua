@@ -26,14 +26,15 @@ local default_doc = "mbox"
 -- N.B. if the index is closed, ES returns 403, but that may perhaps be true for other conditions
 -- ES returns 404 if the index is missing.
 function checkReturn(code)
-    if not code or code == "closed" then
-        -- code is called by top-level functions only, so level 3 is the external caller
-        error("Could not contact database backend!", 3)
-    else -- we have a valid code
+    if type(code) == "number" then -- we have a valid HTTP status code
+        -- ignore expected return codes here
         -- index returns 201 when an entry is created
         if code ~= 200 and code ~= 201 then
+            -- code is called by top-level functions only, so level 3 is the external caller
             error("Backend Database returned code " .. code .. "!", 3)
         end
+    else
+        error("Could not contact database backend: " .. code .. "!", 3)
     end
 end
 
