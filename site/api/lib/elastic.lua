@@ -24,18 +24,44 @@ local default_doc = "mbox"
 
 -- http code return check
 -- N.B. if the index is closed, ES returns 403, but that may perhaps be true for other conditions
--- ES returns 404 if the index is missing.
-function checkReturn(code)
+-- ES returns 404 if the index is missing
+-- ES also returns 404 if a document is missing
+local function checkReturn(code)
     if type(code) == "number" then -- we have a valid HTTP status code
         -- ignore expected return codes here
         -- index returns 201 when an entry is created
         if code ~= 200 and code ~= 201 then
-            -- code is called by top-level functions only, so level 3 is the external caller
-            error("Backend Database returned code " .. code .. "!", 3)
+            -- code is called by 2nd-level functions only, so level 4 is the external caller
+            error("Backend Database returned code " .. code .. "!", 4)
         end
     else
-        error("Could not contact database backend: " .. code .. "!", 3)
+        error("Could not contact database backend: " .. code .. "!", 4)
     end
+end
+
+-- DO common request processing:
+-- Encode JSON (as necessary)
+-- Issue request
+-- Check return code
+-- Decode JSON response
+--
+-- Parameters:
+--  - url (required)
+--  - query (optional); if this is a table it is decoded into JSON
+-- returns decoded JSON result
+-- may throw an error if the request fails
+--
+local function performRequest(url, query) 
+    local js = query
+    if type(query) == "table" then
+        js = JSON.encode(query)
+    end
+    local result, hc = http.request(url, js)
+    checkReturn(hc)
+    local json = JSON.decode(result)
+    -- TODO should we return the http status code?
+    -- This might be necessary if codes such as 404 did not cause an error
+    return json
 end
 
 -- Standard ES query, returns $size results of any doc of type $doc, sorting by $sitem
@@ -45,9 +71,7 @@ function getHits(query, size, doc, sitem)
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?q="..query.."&sort=" .. sitem .. ":desc&size=" .. size
-    local result, hc = http.request(url)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url)
     local out = {}
     if json and json.hits and json.hits.hits then
         for k, v in pairs(json.hits.hits) do
@@ -61,9 +85,7 @@ end
 -- Get a single document
 function getDoc (ty, id)
     local url = config.es_url  .. ty .. "/" .. id
-    local result, hc = http.request(url)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url)
     if json and json._source then
         json._source.request_id = json._id
     end
@@ -77,9 +99,7 @@ function getHeaders(query, size, doc)
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
-    local result, hc = http.request(url)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url)
     local out = {}
     if json and json.hits and json.hits.hits then
         for k, v in pairs(json.hits.hits) do
@@ -96,9 +116,7 @@ function getHeadersReverse(query, size, doc)
     size = size or 10
     query = query:gsub(" ", "+")
     local url = config.es_url .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=epoch:desc&size=" .. size
-    local result, hc = http.request(url)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url)
     local out = {}
     if json and json.hits and json.hits.hits then
         for k, v in pairs(json.hits.hits) do
@@ -111,24 +129,18 @@ end
 
 -- Do a raw ES query with a JSON query
 function raw(query, doctype)
-    local js = JSON.encode(query)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search"
-    local result, hc = http.request(url, js)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url, query)
     return json or {}, url
 end
 
 
 -- Raw query with scroll/scan
 function scan(query, doctype)
-    local js = JSON.encode(query)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
-    local result, hc = http.request(url, js)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url, query)
     if json and json._scroll_id then
         return json._scroll_id
     end
@@ -139,9 +151,7 @@ function scroll(sid)
     -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
     -- But in case we're being proxied, let's just cut off the last part of the URL
     local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
-    local result, hc = http.request(url)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url)
     if json and json._scroll_id then
         return json, json._scroll_id
     end
@@ -150,15 +160,12 @@ end
 
 -- Update a document
 function update(doctype, id, query, consistency)
-    local js = JSON.encode({doc = query })
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/" .. id .. "/_update"
     if consistency then
         url = url .. "?write_consistency=" .. consistency
     end
-    local result, hc = http.request(url, js)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url, {doc = query })
     return json or {}, url
 end
 
@@ -171,9 +178,7 @@ function index(r, id, ty, body, consistency)
     if consistency then
         url = url .. "?write_consistency=" .. consistency
     end
-    local result, hc = http.request(url, body)
-    checkReturn(hc)
-    local json = JSON.decode(result)
+    local json = performRequest(url, body)
     return json or {}
 end
 
