@@ -408,6 +408,9 @@ def createIndex():
     
 if not args.noi:
     try:
+        import logging
+        # elasticsearch logs lots of warnings on retries/connection failure
+        logging.getLogger("elasticsearch").setLevel(logging.ERROR)
         createIndex()
     except Exception as e:
         print("Index creation failed: %s" % e)
