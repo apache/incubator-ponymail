@@ -56,7 +56,7 @@ parser.add_argument('--defaults', dest='defaults', action='store_true',
                    help='Use default settings')
 
 parser.add_argument('--clobber', dest='clobber', action='store_true',
-                   help='Allow overwrite of config.lua (default: create config.lua.tmp if config.lua exists)')
+                   help='Allow overwrite of ponymail.cfg & ../site/api/lib/config.lua (default: create *.tmp if either exists)')
 parser.add_argument('--dbhost', dest='dbhost', type=str, nargs=1,
                    help='ES backend hostname')
 parser.add_argument('--dbport', dest='dbport', type=str, nargs=1,
@@ -413,14 +413,14 @@ if not args.noi:
         print("Index creation failed: %s" % e)
         sys.exit(1)
 
-config_file = 'ponymail.cfg'
-if not args.clobber and os.path.exists(config_file):
-    print("%s exists and clobber is not set" % config_file)
-    config_file = 'ponymail.cfg.tmp'
+ponymail_cfg = 'ponymail.cfg'
+if not args.clobber and os.path.exists(ponymail_cfg):
+    print("%s exists and clobber is not set" % ponymail_cfg)
+    ponymail_cfg = 'ponymail.cfg.tmp'
 
-print("Writing importer config (%s)" % config_file)
+print("Writing importer config (%s)" % ponymail_cfg)
 
-with open(config_file, "w") as f:
+with open(ponymail_cfg, "w") as f:
     f.write("""
 ###############################################################
 # Pony Mail Configuration file                                             
@@ -450,9 +450,14 @@ ssl:                    false
 ###############################################################
             """ % (hostname, dbname, port))
     f.close()
-    
-print("mod_lua configuration (config.lua)")
-with open("../site/api/lib/config.lua", "w") as f:
+
+config_path = "../site/api/lib"
+config_file = "config.lua"
+if not args.clobber and os.path.exists(os.path.join(config_path,config_file)):
+    print("%s exists and clobber is not set" % config_file)
+    config_file = "config.lua.tmp"
+print("mod_lua configuration (%s)" % config_file)
+with open(os.path.join(config_path,config_file), "w") as f:
     f.write("""
 local config = {
     es_url = "http://%s:%u/%s/",
