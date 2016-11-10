@@ -76,6 +76,7 @@ function displayEmail(json, id, level) {
         
         // Escape email body, convert < to &lt;
         var ebody = json.body
+        if (ebody == null) {ebody = '(null body)'} // temporary hack to deal with broken bodies
         ebody = ebody.replace(/</mg, "&lt;")
         ebody = "\n" + ebody // add a newline at top
         var base = pm_config.URLBase ? pm_config.URLBase : ""
@@ -261,6 +262,7 @@ function displaySingleEmail(json, id) {
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
 
         var ebody = json.body
+        if (ebody == null) {ebody = '(null body)'} // temporary hack to deal with broken bodies
         ebody = ebody.replace(/</, "&lt;")
         ebody = "\n" + ebody
         var base = pm_config.URLBase ? pm_config.URLBase : ""
