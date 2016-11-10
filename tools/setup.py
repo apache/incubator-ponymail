@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys, os
+import sys, os, os.path
 import getpass
 import subprocess
 import argparse
@@ -55,6 +55,8 @@ parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--defaults', dest='defaults', action='store_true', 
                    help='Use default settings')
 
+parser.add_argument('--clobber', dest='clobber', action='store_true',
+                   help='Allow overwrite of config.lua (default: create config.lua.tmp if config.lua exists)')
 parser.add_argument('--dbhost', dest='dbhost', type=str, nargs=1,
                    help='ES backend hostname')
 parser.add_argument('--dbport', dest='dbport', type=str, nargs=1,
@@ -411,9 +413,14 @@ if not args.noi:
         print("Index creation failed: %s" % e)
         sys.exit(1)
 
-print("Writing importer config (ponymail.cfg)")
+config_file = 'ponymail.cfg'
+if not args.clobber and os.path.exists(config_file):
+    print("%s exists and clobber is not set" % config_file)
+    config_file = 'ponymail.cfg.tmp'
 
-with open("ponymail.cfg", "w") as f:
+print("Writing importer config (%s)" % config_file)
+
+with open(config_file, "w") as f:
     f.write("""
 ###############################################################
 # Pony Mail Configuration file                                             
