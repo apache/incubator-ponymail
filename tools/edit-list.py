@@ -174,6 +174,7 @@ if targetLID or makePrivate or makePublic or deleteEmails or mid or obfuscate:
         search_type = 'scan',
         size = 100,
         body = {
+            '_source': ['body', 'subject', 'from'] if  obfuscate else False,
             'query': {
                 'bool': {
                     'must': [
