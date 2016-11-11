@@ -75,8 +75,6 @@ es = Elasticsearch([
     retry_on_timeout=True
     )
 
-rootURL = ""
-
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source list to edit')
