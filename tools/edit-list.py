@@ -151,7 +151,7 @@ if desc:
             }
         )
 
-if targetLID or makePrivate or makePublic or deleteEmails or mid:
+if targetLID or makePrivate or makePublic or deleteEmails or mid or obfuscate:
     if dryrun:
         print("DRY RUN - NO CHANGES WILL BE MADE")
     print("Updating docs...")
