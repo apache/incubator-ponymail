@@ -134,19 +134,22 @@ if obfuscate:
 count = 0
 
 if desc:
-    LID = sourceLID
-    if targetLID:
-        LID = targetLID
-    es.index(
-        index=dbname,
-        doc_type="mailinglists",
-        id=LID,
-        body = {
-            'list': LID,
-            'name': LID,
-            'description': desc
-        }
-    )
+    if dryrun:
+        print("DRY RUN - NO CHANGES WILL BE MADE")
+    else:
+        LID = sourceLID
+        if targetLID:
+            LID = targetLID
+        es.index(
+            index=dbname,
+            doc_type="mailinglists",
+            id=LID,
+            body = {
+                'list': LID,
+                'name': LID,
+                'description': desc
+            }
+        )
 
 if targetLID or makePrivate or makePublic or deleteEmails or mid:
     if dryrun:
