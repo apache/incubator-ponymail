@@ -44,26 +44,10 @@ except:
 config = configparser.RawConfigParser()
 config.read('ponymail.cfg')
 
-makePublic = None
-makePrivate = None
-sourceLID = None
-targetLID = None
-deleteEmails = None
-wildcard = None
-debug = False
-notag = False
-desc = None
-mid = None
-dryrun = False
-obfuscate = None
-
-ssl = False
 dbname = config.get("elasticsearch", "dbname")
-if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
-    ssl = True
-uri = ""
-if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
-    uri = config.get("elasticsearch", "uri")
+ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
+uri = config.get("elasticsearch", "uri", fallback="")
+
 es = Elasticsearch([
     {
         'host': config.get("elasticsearch", "hostname"),
@@ -103,30 +87,18 @@ parser.add_argument('--test', dest='test', action='store_true',
 
 args = parser.parse_args()
 
-if args.source:
-    sourceLID = args.source[0]
-if args.target:
-    targetLID = args.target[0]
-if args.desc:
-    desc = args.desc[0]
-if args.private:
-    makePrivate = args.private
-if args.public:
-    makePublic = args.public
-if args.delete:
-    deleteEmails = args.delete
-if args.glob:
-    wildcard = args.glob
-if args.debug:
-    debug = args.debug
-if args.notag:
-    notag = args.notag
-if args.mid:
-    mid = args.mid[0]
-if args.obfuscate:
-    obfuscate = args.obfuscate[0]
-if args.test:
-    dryrun = args.test
+sourceLID = args.source and args.source[0]
+targetLID = args.target and args.target[0]
+desc = args.desc and args.desc[0]
+makePrivate = args.private
+makePublic = args.public
+deleteEmails = args.delete
+wildcard = args.glob
+debug = args.debug
+notag = args.notag
+mid = args.mid and args.mid[0]
+obfuscate = args.obfuscate and args.obfuscate[0]
+dryrun = args.test
     
     
 if not sourceLID and not mid:
