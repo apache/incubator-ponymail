@@ -23,25 +23,23 @@ sudo pip3 install elasticsearch formatflowed netaddr
 Install ElasticSearch:
 
 ~~~
-sudo apt-get default-jre-headless
 wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
-sudo apt-get update && sudo apt-get install elasticsearch
+sudo apt-get update && sudo apt-get install elasticsearch default-jre-headless
 ~~~
 
 Compile and install mod_lua if necessary (httpd < 2.4.17 on Ubuntu):
 ~~~
-apt-get install apache2-dev
+sudo apt-get install apache2-dev
 svn co https://svn.apache.org/repos/asf/httpd/httpd/branches/2.4.x/modules/lua/
 cd lua/
-apxs -I/usr/include/lua5.2 -cia mod_lua.c lua_*.c -lm -llua5.2
+sudo apxs -I/usr/include/lua5.2 -cia mod_lua.c lua_*.c -lm -llua5.2
 ~~~
 
 
 Check out a copy of Pony Mail:
 ~~~
-cd /var/www
-git clone https://github.com/apache/incubator-ponymail.git
+sudo git clone https://github.com/apache/incubator-ponymail.git /var/www/ponymail
 ~~~
 
 Configure Elasticsearch to automatically start during bootup. For Ubuntu <= 14.10:
@@ -60,7 +58,7 @@ sudo /bin/systemctl enable elasticsearch.service
 Start up ElasticSearch:
 
 ~~~
-service elasticsearch start
+sudo service elasticsearch start
 ~~~
 
 Set up Pony Mail:
@@ -71,9 +69,9 @@ sudo python3 setup.py
 ~~~
 
 
-Set up Apache httpd by adding, for example, the following virtual host configuration:
+Set up Apache httpd by adding, for example, the following virtual host configuration (e.g. in `/etc/apache2/sites-enabled/000-default.conf`):
 
-~~~
+```
 <VirtualHost *:80>
     ServerName mylists.foo.tld
     DocumentRoot /var/www/ponymail/site
@@ -82,9 +80,9 @@ Set up Apache httpd by adding, for example, the following virtual host configura
     LuaCodeCache    stat
     AcceptPathInfo  On
 </VirtualHost>
-~~~
+```
 
-Enable mod_lua and start apache:
+Enable mod_lua and start apache, if not already enabled:
 
 ~~~
 sudo a2enmod lua
