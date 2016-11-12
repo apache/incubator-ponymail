@@ -65,11 +65,12 @@ For a quick guide to installing Pony Mail, please see the guides for:
 
 1. Install Apache httpd + mod_lua and the lua libs (see http://modlua.org/gs/installing if need be)
 2. Install ElasticSearch
-3. go to tools/ and run python setup.py - follow the instructions and enter info
-4. Fiddle a bit with site/js/config.js for now
-5. Add Pony Mail as an archiver for your lists. [see this doc](docs/ARCHIVING.md).
-6. import mbox data with import-mbox.py if need be (see [this doc](docs/IMPORTING.md) for details)
-7. All done :) But please see the [detailed installation instructions](docs/INSTALLING.md) for more details
+3. Install Pony Mail (e.g. clone git or unpack release archive)
+4. Go to $HOME_PM/tools/ and run 'python setup.py' - follow the instructions and enter info or do 'python setup.py --defaults'
+5. Adjust site/js/config.js as necessary
+6. Add Pony Mail as an archiver for your lists. [see this doc](docs/ARCHIVING.md).
+7. import mbox data with import-mbox.py if need be (see [this doc](docs/IMPORTING.md) for details)
+8. All done :) But please see the [detailed installation instructions](docs/INSTALLING.md) for more details
 
 
 ### Contributing to Pony Mail ###
