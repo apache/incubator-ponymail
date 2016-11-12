@@ -23,7 +23,7 @@ This utility can be used to:
 - make a list public
 - update the description for a list
 - delete mails from a list (does not delete mbox_source entries)
-- obfuscate some fields in a message body
+- obfuscate some fields (from, subject, body) in an mbox entry (does not obfuscate the raw source document)
 
 """
 
@@ -60,9 +60,11 @@ es = Elasticsearch([
     )
 
 parser = argparse.ArgumentParser(description='Command line options.')
-parser.add_argument('--source', dest='source', type=str, nargs=1,
+# Cannot have both source and mid as input
+source_group = parser.add_mutually_exclusive_group()
+source_group.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source list to edit')
-parser.add_argument('--mid', dest='mid', type=str, nargs=1,
+source_group.add_argument('--mid', dest='mid', type=str, nargs=1,
                    help='Source Message-ID to edit')
 parser.add_argument('--rename', dest='target', type=str, nargs=1,
                    help='(optional) new list ID')
@@ -70,9 +72,11 @@ parser.add_argument('--desc', dest='desc', type=str, nargs=1,
                    help='(optional) new list description')
 parser.add_argument('--obfuscate', dest='obfuscate', type=str, nargs=1,
                    help='Things to obfuscate in body, if any')
-parser.add_argument('--private', dest='private', action='store_true',
+# private and public are mutually exclusive
+privacy_group = parser.add_mutually_exclusive_group()
+privacy_group.add_argument('--private', dest='private', action='store_true',
                    help='Make all emails in list private')
-parser.add_argument('--public', dest='public', action='store_true',
+privacy_group.add_argument('--public', dest='public', action='store_true',
                    help='Make all emails in list public')
 parser.add_argument('--delete', dest='delete', action='store_true',
                    help='Delete emails from this list')
@@ -99,20 +103,30 @@ notag = args.notag
 mid = args.mid and args.mid[0]
 obfuscate = args.obfuscate and args.obfuscate[0]
 dryrun = args.test
-    
+
+privacyChange = makePrivate or makePublic
+otherChange = targetLID or desc or obfuscate
+anyChange = privacyChange or otherChange
     
 if not sourceLID and not mid:
     print("No source list ID specified!")
     parser.print_help()
     sys.exit(-1)
-if not (targetLID or makePrivate or makePublic or deleteEmails or desc or obfuscate):
+if not (anyChange or deleteEmails):
     print("Nothing to do! No target list ID or action specified")
     parser.print_help()
     sys.exit(-1)
-if makePublic and makePrivate:
-    print("You can either make a list public or private, not both!")
+if desc and not sourceLID:
+    print("No source list ID specified for description!")
     parser.print_help()
     sys.exit(-1)
+if anyChange and deleteEmails:
+    print("Cannot both change and delete emails in the same run")
+    parser.print_help()
+    sys.exit(-1)
+
+# TODO does it make sense to allow --rename with --mid?
+# i.e. rename the list for a single mid?
 
 if sourceLID:
     sourceLID = ("%s" if notag else "<%s>")  % sourceLID.replace("@", ".").strip("<>")
