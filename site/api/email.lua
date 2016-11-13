@@ -45,7 +45,8 @@ function handle(r)
     local _, doc = pcall(function() return elastic.get("mbox", eid or "hmm") end)
     
     -- Try searching by original source mid if not found, for backward compat
-    if not doc or not doc.subject then
+    if not doc or not doc.mid then
+        doc = nil -- ensure subsequent check works if we don't find the email here either
         local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
         if #docs == 1 then
             doc = docs[1]
