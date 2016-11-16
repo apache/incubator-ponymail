@@ -307,6 +307,7 @@ class SlurpThread(Thread):
                             bulks.insert()
                         jas = []
                 else:
+                    print("Failed to parse: Return=%s Message-Id=%s" % (message.get('Return-Path'), message.get('Message-Id')))
                     baddies += 1
 
             if filebased:
