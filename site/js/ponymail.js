@@ -1321,6 +1321,7 @@ function setPopup(pid, close) {
 
 
 // Pop-up message display thingy. Used for saying "email sent...I think!"
+// if body is an array, then the strings are joined with <br/>
 function popup(title, body, timeout, pid, wloc) {
     var obj = document.getElementById('popupper')
     if (pid) {
@@ -1332,6 +1333,9 @@ function popup(title, body, timeout, pid, wloc) {
         }
     }
     if (obj) {
+        if (isArray(body)) {
+            body = body.join('<br/>')
+        }
         obj.innerHTML = ""
         obj.style.display = 'block'
         obj.innerHTML = "<h3>" + title + "</h3><p>" + body + "</p><p><a class='btn btn-success' href='javascript:void(0);' onclick='popup_close(\""+(wloc?wloc:'')+"\")'>Got it!</a></p>"
