@@ -38,6 +38,8 @@ action_group.add_argument('--setmissing', dest='missing', type=str, nargs=2, met
                    help='set missing fields')
 
 # Generic arguments
+parser.add_argument('--notag', dest='notag', action='store_true',
+                   help='List IDs do not have <> in them')
 parser.add_argument('--wildcard', dest='wildcard', action='store_true',
                    help='Allow wildcards in --source')
 parser.add_argument('--debug', dest='debug', action='store_true',
@@ -70,6 +72,7 @@ if args.missing:
     scroll = '30m'
     then = time.time()
     elastic = Elastic()
+    sourceLID = ("%s" if args.notag else "<%s>")  % args.source[0].replace("@", ".").strip("<>")
     page = elastic.scan(# defaults to mbox
             scroll = scroll,
             body = {
@@ -78,7 +81,7 @@ if args.missing:
                     "bool" : {
                         "must" : {
                             'wildcard' if args.wildcard else 'term': {
-                                'list_raw': args.source[0]
+                                'list_raw': sourceLID
                                 }
                             },
                         "filter": {
