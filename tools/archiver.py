@@ -527,7 +527,7 @@ if __name__ == '__main__':
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
         
-    foo = Archiver(parseHTML = parseHTML)
+    archie = Archiver(parseHTML = parseHTML)
     input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
     
     try:
@@ -603,7 +603,7 @@ if __name__ == '__main__':
             msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
             
             try:
-                lid, mid = foo.archive_message(msg_metadata, msg)
+                lid, mid = archie.archive_message(msg_metadata, msg)
                 print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
             except Exception as err:
                 if args.verbose:
