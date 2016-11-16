@@ -52,6 +52,12 @@ args = parser.parse_args()
 if args.wildcard and args.mid:
     parser.error("Cannot use --mid and --wildcard together")
 
+def getField(src,name):
+    try:
+        return src[name]
+    except KeyError:
+        return '(Uknown)'
+
 def update(elastic, js_arr):
     if args.debug:
         print(js_arr)
@@ -76,7 +82,7 @@ if args.missing:
     page = elastic.scan(# defaults to mbox
             scroll = scroll,
             body = {
-                "_source" : ['subject'],
+                "_source" : ['subject','message-id'],
                 "query" : {
                     "bool" : {
                         "must" : {
@@ -119,7 +125,8 @@ if args.missing:
                 'doc': body
             })
             count += 1
-            print("%s %s" %(doc,hit['_source']['subject']))
+            source = hit['_source']
+            print("Id: %s Msg-id: %s Subject: %s" %(doc, getField(source, 'message-id'), getField(source,'subject')))
             if (count % 500 == 0):
                 print("Processed %u emails..." % count)
                 if setField:
