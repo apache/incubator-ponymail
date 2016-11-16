@@ -1850,7 +1850,11 @@ function displaySingleThread(json) {
     // Sometimes emails are hidden for anonymous users, let's make 'em know...
     if (!current_thread_json[0]) {
         if (!login || !login.credentials) {
-            popup("Email not found!", "Sorry, it seems like we couldn't find this email for you. It may be private and hidden for non-authenticated users, in which case you could <a href='/oauth.html'>Log in</a> and see if that helps.", 60)
+            popup("Email not found!",
+                ["Sorry, it seems like we couldn't find this email for you.",
+                 "It may be private and hidden for non-authenticated users.",
+                 "In which case you could <a href='/oauth.html'>Log in</a> and see if that helps."],
+                60)
         }
     }
     var mid = current_thread_json[0].mid.replace(/[<>]/g, "")
