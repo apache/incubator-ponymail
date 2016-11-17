@@ -278,9 +278,9 @@ class SlurpThread(Thread):
                 if json:
                     if args.dups:
                         try:
-                            duplicates[json['mid']].append(json['message-id'])
+                            duplicates[json['mid']].append(json['message-id'] + " in " + filename)
                         except:
-                            duplicates[json['mid']]=[json['message-id']]
+                            duplicates[json['mid']]=[json['message-id'] + " in " + filename]
 
                     json_source = {
                         'mid': json['mid'],
