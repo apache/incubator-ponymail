@@ -36,7 +36,11 @@ class Elastic:
         config.read('ponymail.cfg')
         self.dbname = dbname or config.get("elasticsearch", "dbname")
         ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
-        uri = config.get("elasticsearch", "uri", fallback="")        
+        uri = config.get("elasticsearch", "uri", fallback="")
+        auth = None
+        if config.has_option('elasticsearch', 'user'):
+            auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
+
     
         # elasticsearch logs lots of warnings on retries/connection failure
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
@@ -53,7 +57,8 @@ class Elastic:
                 'host': config.get("elasticsearch", "hostname"),
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
-                'url_prefix': uri
+                'url_prefix': uri,
+                'auth': auth
             }],
             max_retries=5,
             retry_on_timeout=True
