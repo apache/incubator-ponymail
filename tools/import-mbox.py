@@ -425,12 +425,18 @@ logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 try:
     if not es.indices.exists(dbname):
         print("Error: the index '%s' does not exist!" % (dbname))
-        sys.exit(1)
+        if args.dry:
+            print("Dry-run; continuing to check input data")
+        else:
+            sys.exit(1)
+    print("Database exists OK")
 except Exception as err:
     print("Error: unable to check if the index %s exists!: %s" % (dbname, err))
-    sys.exit(1)
+    if args.dry:
+        print("Dry-run; continuing to check input data")
+    else:
+        sys.exit(1)
 
-print("Database exists OK")
 
 def globDir(d):
     dirs = [ f for f in listdir(d) if isdir(join(d,f)) ]
