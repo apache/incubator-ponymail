@@ -228,6 +228,8 @@ class Archiver(object):
 
         :param lid: The list id
         :param msg: The message object.
+
+        :return None if the message could not be parsed
         """
 
         ojson = None
@@ -349,6 +351,8 @@ class Archiver(object):
 
         :param mlist: The IMailingList object.
         :param msg: The message object.
+
+        :return (lid, mid)
         """
 
         lid = normalize_lid(mlist.list_id)
