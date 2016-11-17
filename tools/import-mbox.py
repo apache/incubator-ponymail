@@ -222,6 +222,7 @@ class SlurpThread(Thread):
                 messages = mailbox.mbox(tmpname)
 
             count = 0
+            bad = 0
             LEY = EY
             
             
@@ -308,19 +309,20 @@ class SlurpThread(Thread):
                         jas = []
                 else:
                     print("Failed to parse: Return=%s Message-Id=%s" % (message.get('Return-Path'), message.get('Message-Id')))
-                    baddies += 1
+                    bad += 1
 
             if filebased:
-                print("Parsed %u records from %s" % (count, filename))
+                print("Parsed %u records (failed: %u) from %s" % (count, bad, filename))
                 if dFile:
                     os.unlink(tmpname)
             elif imap:
-                print("Parsed %u records from imap" % count)
+                print("Parsed %u records (failed: %u) from imap" % (count, bad))
             else:
-                print("Parsed %s/%s: %u records from %s" % (ml, mboxfile, count, tmpname))
+                print("Parsed %s/%s: %u records (failed: %u) from %s" % (ml, mboxfile, count, bad, tmpname))
                 os.unlink(tmpname)
                 
             y += count
+            baddies += bad
             if not args.dry:
                 bulk = BulkThread()
                 bulk.assign(ja, es)
