@@ -71,9 +71,9 @@ if args.missing:
     if setField:
         value = args.missing[1]
     if setField:
-        print("Set missing/null field %s" % field)
+        print("Set missing/null field %s to '%s'" %(field, value))
     else:
-        print("List missing/null field %s to '%s'" %(field, value))
+        print("List missing/null field %s" % field)
     count = 0
     scroll = '30m'
     then = time.time()
