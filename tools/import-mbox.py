@@ -47,6 +47,7 @@ import archiver
     
 y = 0
 baddies = 0
+duplicates={} # detect if mid is re-used this run
 block = Lock()
 lists = [] # N.B. the entries in this list depend on the import type:
 # globDir: [filename, list-id]
@@ -275,6 +276,12 @@ class SlurpThread(Thread):
                         continue
 
                 if json:
+                    if args.dups:
+                        try:
+                            duplicates[json['mid']].append(json['message-id'])
+                        except:
+                            duplicates[json['mid']]=[json['message-id']]
+
                     json_source = {
                         'mid': json['mid'],
                         'message-id': json['message-id'],
@@ -361,6 +368,8 @@ parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
 parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
+parser.add_argument('--duplicates', dest='dups', action='store_true',
+                   help='Detect duplicate mids in this run')
 parser.add_argument('--html2text', dest='html2text', action='store_true',
                    help='If no text/plain is found, try to parse HTML using html2text')
 parser.add_argument('--requirelid', dest='requirelid', action='store_true',
@@ -639,3 +648,10 @@ for t in threads:
 print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (y, int(time.time() - start), baddies))
 if dedupped > 0:
     print("%u records were not inserted due to deduplication" % dedupped)
+if args.dups:
+    print("Showing duplicate ids:")
+    for mid in duplicates:
+        if len(duplicates[mid]) > 1:
+            print("The mid %s was used by:" % mid)
+            for msg in duplicates[mid]:
+                print(msg)
