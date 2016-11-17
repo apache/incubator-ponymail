@@ -362,6 +362,9 @@ class Archiver(object):
             private = True
 
         ojson, contents = self.compute_updates(lid, private, msg)
+        if not ojson:
+            id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
+            raise Exception("Could not parse message %s for %s" % (id,lid))
 
         msg_metadata = self.msg_metadata
         irt = self.irt
