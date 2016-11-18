@@ -1,6 +1,7 @@
 # IDE files
 .idea
 *.iml
+.buildpath
 .project
 .pydevproject
 .settings/**
