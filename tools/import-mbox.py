@@ -332,7 +332,7 @@ class SlurpThread(Thread):
             baddies += bad
             if not args.dry:
                 bulk = BulkThread()
-                bulk.assign(ja, es)
+                bulk.assign(ja, es, 'mbox')
                 bulk.insert()
             ja = []
             
