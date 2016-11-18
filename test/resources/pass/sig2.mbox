@@ -1,0 +1,122 @@
+From dev-return-87641-apmail-ofbiz-dev-archive=ofbiz.apache.org@ofbiz.apache.org  Tue May  5 08:08:19 2015
+Return-Path: <dev-return-87641-apmail-ofbiz-dev-archive=ofbiz.apache.org@ofbiz.apache.org>
+X-Original-To: apmail-ofbiz-dev-archive@www.apache.org
+Delivered-To: apmail-ofbiz-dev-archive@www.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id E3B4717FB8
+	for <apmail-ofbiz-dev-archive@www.apache.org>; Tue,  5 May 2015 08:08:19 +0000 (UTC)
+Received: (qmail 35616 invoked by uid 500); 5 May 2015 08:08:19 -0000
+Delivered-To: apmail-ofbiz-dev-archive@ofbiz.apache.org
+Received: (qmail 35587 invoked by uid 500); 5 May 2015 08:08:19 -0000
+Mailing-List: contact dev-help@ofbiz.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:dev-help@ofbiz.apache.org>
+List-Unsubscribe: <mailto:dev-unsubscribe@ofbiz.apache.org>
+List-Post: <mailto:dev@ofbiz.apache.org>
+List-Id: <dev.ofbiz.apache.org>
+Reply-To: dev@ofbiz.apache.org
+Delivered-To: mailing list dev@ofbiz.apache.org
+Received: (qmail 35575 invoked by uid 99); 5 May 2015 08:08:19 -0000
+Received: from athena.apache.org (HELO athena.apache.org) (140.211.11.136)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Tue, 05 May 2015 08:08:19 +0000
+X-ASF-Spam-Status: No, hits=-0.0 required=5.0
+	tests=SPF_PASS
+X-Spam-Check-By: apache.org
+Received-SPF: pass (athena.apache.org: message received from 54.191.145.13 which is an MX secondary for dev@ofbiz.apache.org)
+Received: from [54.191.145.13] (HELO mx1-us-west.apache.org) (54.191.145.13)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Tue, 05 May 2015 08:08:12 +0000
+Received: from mail.ecomify.de (mail.ecomify.de [178.77.98.9])
+	by mx1-us-west.apache.org (ASF Mail Server at mx1-us-west.apache.org) with ESMTPS id 6397024C07
+	for <dev@ofbiz.apache.org>; Tue,  5 May 2015 08:07:52 +0000 (UTC)
+Received: from localhost (mail.ecomify.de [127.0.0.1])
+	by mail.ecomify.de (Postfix) with ESMTP id DBF4F1F5
+	for <dev@ofbiz.apache.org>; Tue,  5 May 2015 10:07:50 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at ecomify.de
+Received: from mail.ecomify.de ([127.0.0.1])
+	by localhost (lvps178-77-98-9.dedicated.hosteurope.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id QO6yVXLf2Dym for <dev@ofbiz.apache.org>;
+	Tue,  5 May 2015 10:07:49 +0200 (CEST)
+Content-Type: application/pkcs7-mime; name=smime.p7m; smime-type=enveloped-data
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+Subject: Re: Vote: move to git.
+Content-Disposition: attachment; filename=smime.p7m
+From: Martin Becker <martin.becker@ecomify.de>
+In-Reply-To: <55484621.9040503@brainfood.com>
+Date: Tue, 5 May 2015 10:07:48 +0200
+Content-Transfer-Encoding: base64
+Message-Id: <26E553E8-7C7F-4CB3-A553-EE7487E2BC9C@ecomify.de>
+References: <553482C5.9080606@antwebsystems.com> <55483278.9060903@antwebsystems.com> <55484621.9040503@brainfood.com>
+To: dev@ofbiz.apache.org
+X-Virus-Checked: Checked by ClamAV on apache.org
+
+MIAGCSqGSIb3DQEHA6CAMIACAQAxggOJMIIBrQIBADCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNV
+BAoTDVN0YXJ0Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNp
+Z25pbmcxODA2BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xp
+ZW50IENBAgMMKmkwDQYJKoZIhvcNAQEBBQAEggEAQWwfANHDeHMr2jEM3AbweNXjDg7174ndN2fa
+qRngD85MtfzQuzPEIS++F1uW+sxTIAK+qq1b1mB+ZVO98V7LD/IDLddT/Jv152RERCPH7G8e+QXm
+Mw2TSldmFYqj2Lvehjfs4RnJuoIR8Uy1xzXNdq0fCJTThW83q5ghndEuLspF8W5Us8OSkNnbua/H
+c+kqZIprL6mDnJTfnCj94d1UR1EQA6jpjVMqMmZdxQCsGMXtw2ey3aoVjMlY15uf7mEjXToqcDZ+
+lhfdzbr7KJGbatUiu4L0vAJAwT60q9GGeYOKIAWadHvvg4/SS5kiUxd9+F8FmX5ATqqPVWS/JFxQ
+bDCCAdQCAQAwgbswga0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJERTETMBEGA1UEBwwKV2lsbWlu
+Z3RvbjEiMCAGA1UECgwZQXBhY2hlIFNvZnR3YXJlIEZ1bmRhdGlvbjEVMBMGA1UECwwMQXBhY2hl
+IE9GQml6MRwwGgYDVQQDDBNvZmJpei12bS5hcGFjaGUub3JnMSMwIQYJKoZIhvcNAQkBFhRkZXZA
+b2ZiaXouYXBhY2hlLm9yZwIJAKbveppTaOsnMA0GCSqGSIb3DQEBAQUABIIBAKVuEw8J5B/wdS0M
+IFwfJ8ZRsm/PxvwDGFHZ2XZKv+JgsYm1umGFi/9sZcvFhPDhYl1wqSerr2oX8csOlIDKwKVZArt3
+qH2sE0/0rFIi/wL761LTtdT2fY+XT4uzuzyCJtAP147bLhaxparknILym+YLhH72yMd4QVKpxGkC
+daxeLqx0dn05nGH6Nd3R2JxfKEBxEOM3t3aLPkxa4TSrOhfQV9vPvuLsUbzM2xd4CmxPNJ82KQUK
+LFZWK+1NQoIsbcaqgebCUuW85EkvnAQJA1aQMiEmgDxxtpsTemonpY1KQeCRcHCsbkFxzNlNkg0+
+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
+MgAAAAAAAAAAAAA=
+

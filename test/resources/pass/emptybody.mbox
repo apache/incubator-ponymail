@@ -1,0 +1,51 @@
+From issues-return-129-apmail-ponymail-issues-archive=ponymail.apache.org@ponymail.incubator.apache.org  Thu Nov 17 00:49:30 2016
+Return-Path: <issues-return-129-apmail-ponymail-issues-archive=ponymail.apache.org@ponymail.incubator.apache.org>
+X-Original-To: apmail-ponymail-issues-archive@minotaur.apache.org
+Delivered-To: apmail-ponymail-issues-archive@minotaur.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id A72D919611
+	for <apmail-ponymail-issues-archive@minotaur.apache.org>; Thu, 17 Nov 2016 00:49:30 +0000 (UTC)
+Received: (qmail 22868 invoked by uid 500); 17 Nov 2016 00:49:30 -0000
+Delivered-To: apmail-ponymail-issues-archive@ponymail.apache.org
+Received: (qmail 22841 invoked by uid 500); 17 Nov 2016 00:49:30 -0000
+Mailing-List: contact issues-help@ponymail.incubator.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:issues-help@ponymail.incubator.apache.org>
+List-Unsubscribe: <mailto:issues-unsubscribe@ponymail.incubator.apache.org>
+List-Post: <mailto:issues@ponymail.incubator.apache.org>
+List-Id: <issues.ponymail.incubator.apache.org>
+Reply-To: dev@ponymail.incubator.apache.org
+Delivered-To: mailing list issues@ponymail.incubator.apache.org
+Received: (qmail 22832 invoked by uid 99); 17 Nov 2016 00:49:30 -0000
+Received: from pnap-us-west-generic-nat.apache.org (HELO spamd2-us-west.apache.org) (209.188.14.142)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Thu, 17 Nov 2016 00:49:30 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by spamd2-us-west.apache.org (ASF Mail Server at spamd2-us-west.apache.org) with ESMTP id 2614B1A00A2
+	for <issues@ponymail.apache.org>; Thu, 17 Nov 2016 00:49:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at spamd2-us-west.apache.org
+X-Spam-Flag: NO
+X-Spam-Score: -7.019
+X-Spam-Level:
+X-Spam-Status: No, score=-7.019 tagged_above=-999 required=6.31
+	tests=[KAM_LAZY_DOMAIN_SECURITY=1, RCVD_IN_DNSWL_HI=-5,
+	RCVD_IN_MSPIKE_H3=-0.01, RCVD_IN_MSPIKE_WL=-0.01,
+	RP_MATCHES_RCVD=-2.999] autolearn=disabled
+Received: from mx1-lw-eu.apache.org ([10.40.0.8])
+	by localhost (spamd2-us-west.apache.org [10.40.0.9]) (amavisd-new, port 10024)
+	with ESMTP id XffM2rPGCqQk for <issues@ponymail.apache.org>;
+	Thu, 17 Nov 2016 00:49:29 +0000 (UTC)
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by mx1-lw-eu.apache.org (ASF Mail Server at mx1-lw-eu.apache.org) with SMTP id DD1285FCC9
+	for <issues@ponymail.incubator.apache.org>; Thu, 17 Nov 2016 00:49:28 +0000 (UTC)
+Received: (qmail 22820 invoked by uid 99); 17 Nov 2016 00:49:28 -0000
+Received: from minotaur.apache.org (HELO minotaur.apache.org) (140.211.11.9)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Thu, 17 Nov 2016 00:49:28 +0000
+Received: by minotaur.apache.org (Postfix, from userid 1721)
+	id D69A719610; Thu, 17 Nov 2016 00:49:27 +0000 (UTC)
+To: issues@ponymail.incubator.apache.org
+Subject: Test email with empty body
+Message-Id: <20161117004927.D69A719610@minotaur.apache.org>
+Date: Thu, 17 Nov 2016 00:49:27 +0000 (UTC)
+From: sebb@apache.org (Sebastian Bazley)
+
+

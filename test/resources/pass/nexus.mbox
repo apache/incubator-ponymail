@@ -1,0 +1,261 @@
+From commits-return-51426-apmail-commons-commits-archive=commons.apache.org@commons.apache.org  Tue May 24 07:57:27 2016
+Return-Path: <commits-return-51426-apmail-commons-commits-archive=commons.apache.org@commons.apache.org>
+X-Original-To: apmail-commons-commits-archive@minotaur.apache.org
+Delivered-To: apmail-commons-commits-archive@minotaur.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id CC1DB19730
+	for <apmail-commons-commits-archive@minotaur.apache.org>; Tue, 24 May 2016 07:57:27 +0000 (UTC)
+Received: (qmail 44374 invoked by uid 500); 24 May 2016 07:57:27 -0000
+Delivered-To: apmail-commons-commits-archive@commons.apache.org
+Received: (qmail 44302 invoked by uid 500); 24 May 2016 07:57:27 -0000
+Mailing-List: contact commits-help@commons.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:commits-help@commons.apache.org>
+List-Unsubscribe: <mailto:commits-unsubscribe@commons.apache.org>
+List-Post: <mailto:commits@commons.apache.org>
+List-Id: <commits.commons.apache.org>
+Reply-To: dev@commons.apache.org
+Delivered-To: mailing list commits@commons.apache.org
+Received: (qmail 44292 invoked by uid 99); 24 May 2016 07:57:27 -0000
+Received: from repository-vm.apache.org (HELO repository-vm) (140.211.11.57)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Tue, 24 May 2016 07:57:27 +0000
+Received: from repository-vm.apache.org (localhost [127.0.0.1])
+	by repository-vm (Postfix) with ESMTP id 243C65FDF9
+	for <commits@commons.apache.org>; Tue, 24 May 2016 07:57:27 +0000 (UTC)
+Date: Tue, 24 May 2016 07:57:27 +0000 (UTC)
+From: Nexus Repository Manager <nexus@repository.apache.org>
+To: commits@commons.apache.org
+Message-ID: <977019191.23.1464076647005.JavaMail.nexus@repository-vm.apache.org>
+Subject: Nexus: Staging Repository Dropped
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_21_175971109.1464076647003"
+X-EMailer-Mail-Sender: Nexus/2.11.1-01 (PRO-OSS; Linux; 3.2.0-74-generic; amd64; 1.7.0_45) 
+X-EMailer-Mail-Request-ID: NX1464076647002
+
+------=_Part_21_175971109.1464076647003
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Message from: <a href="https://repository.apache.org">https://repository.apache.org</a><br><br><b>Description:</b><br><br>Accidental publication.
+<br><br><br><br><b>Deployer properties:</b><br><ul><li>"userAgent" = "Apache-Maven/3.3.9 (Java 1.8.0_91; Linux 3.10.0-327.18.2.el7.x86_64)"</li><li>"userId" = "jochen"</li><li>"ip" = "213.61.172.194"</li></ul><br><b>Details:</b><br><br>The orgapachecommons-1174 staging repository has been dropped.<br>Action performed by Jochen Wiedmann (jochen)<br>
+------=_Part_21_175971109.1464076647003--
+
+From commits-return-51440-apmail-commons-commits-archive=commons.apache.org@commons.apache.org  Wed May 25 03:26:41 2016
+Return-Path: <commits-return-51440-apmail-commons-commits-archive=commons.apache.org@commons.apache.org>
+X-Original-To: apmail-commons-commits-archive@minotaur.apache.org
+Delivered-To: apmail-commons-commits-archive@minotaur.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id 0D89619085
+	for <apmail-commons-commits-archive@minotaur.apache.org>; Wed, 25 May 2016 03:26:41 +0000 (UTC)
+Received: (qmail 44297 invoked by uid 500); 25 May 2016 03:26:40 -0000
+Delivered-To: apmail-commons-commits-archive@commons.apache.org
+Received: (qmail 44224 invoked by uid 500); 25 May 2016 03:26:40 -0000
+Mailing-List: contact commits-help@commons.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:commits-help@commons.apache.org>
+List-Unsubscribe: <mailto:commits-unsubscribe@commons.apache.org>
+List-Post: <mailto:commits@commons.apache.org>
+List-Id: <commits.commons.apache.org>
+Reply-To: dev@commons.apache.org
+Delivered-To: mailing list commits@commons.apache.org
+Received: (qmail 44215 invoked by uid 99); 25 May 2016 03:26:40 -0000
+Received: from repository-vm.apache.org (HELO repository-vm) (140.211.11.57)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Wed, 25 May 2016 03:26:40 +0000
+Received: from repository-vm.apache.org (localhost [127.0.0.1])
+	by repository-vm (Postfix) with ESMTP id 135445FECB
+	for <commits@commons.apache.org>; Wed, 25 May 2016 03:26:40 +0000 (UTC)
+Date: Wed, 25 May 2016 03:26:39 +0000 (UTC)
+From: Nexus Repository Manager <nexus@repository.apache.org>
+To: commits@commons.apache.org
+Message-ID: <823318428.26.1464146799819.JavaMail.nexus@repository-vm.apache.org>
+Subject: Nexus: Staging Completed
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_24_1185850048.1464146799818"
+X-EMailer-Mail-Sender: Nexus/2.11.1-01 (PRO-OSS; Linux; 3.2.0-74-generic; amd64; 1.7.0_45) 
+X-EMailer-Mail-Request-ID: NX1464146799804
+
+------=_Part_24_1185850048.1464146799818
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Message from: <a href=3D"https://repository.apache.org">https://repository.=
+apache.org</a><br><br><b>Description:</b><br><br>Close Apache Commons CSV 1=
+.4-RC2.<br><br><br><br><b>Deployer properties:</b><br><ul><li>"userAgent" =
+=3D "Apache-Maven/3.0.5 (Java 1.8.0_91; Windows 7 6.1)"</li><li>"userId" =
+=3D "ggregory"</li><li>"ip" =3D "172.250.253.8"</li></ul><br><b>Details:</b=
+><br><br>The following artifacts have been staged<br><br><a href=3D"https:/=
+/repository.apache.org/content/repositories/orgapachecommons-1175/org/apach=
+e/commons/commons-csv/1.4/commons-csv-1.4-javadoc.jar">/org/apache/commons/=
+commons-csv/1.4/commons-csv-1.4-javadoc.jar</a><br>(SHA1: 4673391adc8a1f8a1=
+07a0a52bafed0618808a904)<br><a href=3D"https://repository.apache.org/conten=
+t/repositories/orgapachecommons-1175/org/apache/commons/commons-csv/1.4/com=
+mons-csv-1.4-src.tar.gz">/org/apache/commons/commons-csv/1.4/commons-csv-1.=
+4-src.tar.gz</a><br>(SHA1: fac74d68fadad3e54025ac23a50c9559013d1b89)<br><a =
+href=3D"https://repository.apache.org/content/repositories/orgapachecommons=
+-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4-bin.zip.asc">/org/=
+apache/commons/commons-csv/1.4/commons-csv-1.4-bin.zip.asc</a><br>(SHA1: cb=
+0cace871e5268f0eea0f54086be3e492d8b5ba)<br><a href=3D"https://repository.ap=
+ache.org/content/repositories/orgapachecommons-1175/org/apache/commons/comm=
+ons-csv/1.4/commons-csv-1.4-test-sources.jar.asc">/org/apache/commons/commo=
+ns-csv/1.4/commons-csv-1.4-test-sources.jar.asc</a><br>(SHA1: 3a48658cb6649=
+cce9c84bfc8ead51fb229235e9c)<br><a href=3D"https://repository.apache.org/co=
+ntent/repositories/orgapachecommons-1175/org/apache/commons/commons-csv/1.4=
+/commons-csv-1.4-bin.tar.gz.asc">/org/apache/commons/commons-csv/1.4/common=
+s-csv-1.4-bin.tar.gz.asc</a><br>(SHA1: 37507ae2b5b669319bd40fe7c93264967597=
+0d6a)<br><a href=3D"https://repository.apache.org/content/repositories/orga=
+pachecommons-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4.pom">/=
+org/apache/commons/commons-csv/1.4/commons-csv-1.4.pom</a><br>(SHA1: 28a977=
+8fb5758d19187aad7537181486aeb40ca9)<br><a href=3D"https://repository.apache=
+.org/content/repositories/orgapachecommons-1175/org/apache/commons/commons-=
+csv/1.4/commons-csv-1.4-tests.jar.asc">/org/apache/commons/commons-csv/1.4/=
+commons-csv-1.4-tests.jar.asc</a><br>(SHA1: 8d12cee28a91c9aa34d57ab1cafc9de=
+056fd634d)<br><a href=3D"https://repository.apache.org/content/repositories=
+/orgapachecommons-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4-s=
+rc.zip">/org/apache/commons/commons-csv/1.4/commons-csv-1.4-src.zip</a><br>=
+(SHA1: 047e0149af25c186969ea8ad2366e8ac6e2b2450)<br><a href=3D"https://repo=
+sitory.apache.org/content/repositories/orgapachecommons-1175/org/apache/com=
+mons/commons-csv/1.4/commons-csv-1.4-bin.tar.gz">/org/apache/commons/common=
+s-csv/1.4/commons-csv-1.4-bin.tar.gz</a><br>(SHA1: 620580a88953cbcf4528459e=
+485054e7c27c0889)<br><a href=3D"https://repository.apache.org/content/repos=
+itories/orgapachecommons-1175/org/apache/commons/commons-csv/1.4/commons-cs=
+v-1.4-sources.jar">/org/apache/commons/commons-csv/1.4/commons-csv-1.4-sour=
+ces.jar</a><br>(SHA1: fde86fe0c44998b90a2a22ac038bc363121c9861)<br><a href=
+=3D"https://repository.apache.org/content/repositories/orgapachecommons-117=
+5/org/apache/commons/commons-csv/1.4/commons-csv-1.4-tests.jar">/org/apache=
+/commons/commons-csv/1.4/commons-csv-1.4-tests.jar</a><br>(SHA1: 93124b682c=
+eb24ac62af06d08736d430cf13fcb6)<br><a href=3D"https://repository.apache.org=
+/content/repositories/orgapachecommons-1175/org/apache/commons/commons-csv/=
+1.4/commons-csv-1.4-javadoc.jar.asc">/org/apache/commons/commons-csv/1.4/co=
+mmons-csv-1.4-javadoc.jar.asc</a><br>(SHA1: 0eddce6faf9d388377aa2658ef93a08=
+32a03db8c)<br><a href=3D"https://repository.apache.org/content/repositories=
+/orgapachecommons-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4.j=
+ar">/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar</a><br>(SHA1: f=
+c2512d2109144df353501266ac4bbe179058afd)<br><a href=3D"https://repository.a=
+pache.org/content/repositories/orgapachecommons-1175/org/apache/commons/com=
+mons-csv/1.4/commons-csv-1.4-bin.zip">/org/apache/commons/commons-csv/1.4/c=
+ommons-csv-1.4-bin.zip</a><br>(SHA1: b0060ed8397bfec39b397807f63e778618f324=
+ce)<br><a href=3D"https://repository.apache.org/content/repositories/orgapa=
+checommons-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar.asc"=
+>/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar.asc</a><br>(SHA1: =
+8c3261be6b6ddd81969afa31eb692f458f24eaab)<br><a href=3D"https://repository.=
+apache.org/content/repositories/orgapachecommons-1175/org/apache/commons/co=
+mmons-csv/1.4/commons-csv-1.4-src.zip.asc">/org/apache/commons/commons-csv/=
+1.4/commons-csv-1.4-src.zip.asc</a><br>(SHA1: 2d4e39dd0a162c00956b2995cca5d=
+a533bfaabc8)<br><a href=3D"https://repository.apache.org/content/repositori=
+es/orgapachecommons-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4=
+-sources.jar.asc">/org/apache/commons/commons-csv/1.4/commons-csv-1.4-sourc=
+es.jar.asc</a><br>(SHA1: 90680f62ec73e218a52981b2923aac4dabd00f84)<br><a hr=
+ef=3D"https://repository.apache.org/content/repositories/orgapachecommons-1=
+175/org/apache/commons/commons-csv/1.4/commons-csv-1.4-test-sources.jar">/o=
+rg/apache/commons/commons-csv/1.4/commons-csv-1.4-test-sources.jar</a><br>(=
+SHA1: 494f6c95c3b00841436d158938249d81b1a7c200)<br><a href=3D"https://repos=
+itory.apache.org/content/repositories/orgapachecommons-1175/org/apache/comm=
+ons/commons-csv/1.4/commons-csv-1.4.pom.asc">/org/apache/commons/commons-cs=
+v/1.4/commons-csv-1.4.pom.asc</a><br>(SHA1: 1a00a01b0efb2745056f1ef5eccf7ff=
+c8e71a812)<br><a href=3D"https://repository.apache.org/content/repositories=
+/orgapachecommons-1175/org/apache/commons/commons-csv/1.4/commons-csv-1.4-s=
+rc.tar.gz.asc">/org/apache/commons/commons-csv/1.4/commons-csv-1.4-src.tar.=
+gz.asc</a><br>(SHA1: d2ef7cf442ddef392095eff99a1365a604b08dbb)<br><br>Actio=
+n performed by Gary D. Gregory (ggregory)<br>
+------=_Part_24_1185850048.1464146799818--
+
+From commits-return-51452-apmail-commons-commits-archive=commons.apache.org@commons.apache.org  Thu May 26 19:41:38 2016
+Return-Path: <commits-return-51452-apmail-commons-commits-archive=commons.apache.org@commons.apache.org>
+X-Original-To: apmail-commons-commits-archive@minotaur.apache.org
+Delivered-To: apmail-commons-commits-archive@minotaur.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id 252591977A
+	for <apmail-commons-commits-archive@minotaur.apache.org>; Thu, 26 May 2016 19:41:38 +0000 (UTC)
+Received: (qmail 64359 invoked by uid 500); 26 May 2016 19:41:37 -0000
+Delivered-To: apmail-commons-commits-archive@commons.apache.org
+Received: (qmail 64285 invoked by uid 500); 26 May 2016 19:41:37 -0000
+Mailing-List: contact commits-help@commons.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:commits-help@commons.apache.org>
+List-Unsubscribe: <mailto:commits-unsubscribe@commons.apache.org>
+List-Post: <mailto:commits@commons.apache.org>
+List-Id: <commits.commons.apache.org>
+Reply-To: dev@commons.apache.org
+Delivered-To: mailing list commits@commons.apache.org
+Received: (qmail 64276 invoked by uid 99); 26 May 2016 19:41:37 -0000
+Received: from repository-vm.apache.org (HELO repository-vm) (140.211.11.57)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Thu, 26 May 2016 19:41:37 +0000
+Received: from repository-vm.apache.org (localhost [127.0.0.1])
+	by repository-vm (Postfix) with ESMTP id 2E3925FECB
+	for <commits@commons.apache.org>; Thu, 26 May 2016 19:41:37 +0000 (UTC)
+Date: Thu, 26 May 2016 19:41:35 +0000 (UTC)
+From: Nexus Repository Manager <nexus@repository.apache.org>
+To: commits@commons.apache.org
+Message-ID: <1964144158.29.1464291695849.JavaMail.nexus@repository-vm.apache.org>
+Subject: Nexus: Promotion Completed
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_27_129371933.1464291695848"
+X-EMailer-Mail-Sender: Nexus/2.11.1-01 (PRO-OSS; Linux; 3.2.0-74-generic; amd64; 1.7.0_45) 
+X-EMailer-Mail-Request-ID: NX1464291695831
+
+------=_Part_27_129371933.1464291695848
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Message from: <a href=3D"https://repository.apache.org">https://repository.=
+apache.org</a><br><br><b>Description:</b><br><br>Release Apache Commons Fil=
+eUpload 1.3.2 based on RC1<br><br><br><br><b>Deployer properties:</b><br><u=
+l><li>"userAgent" =3D "Apache-Maven/3.2.5 (Java 1.8.0_65; Mac OS X 10.11.5)=
+, Apache-Maven/3.2.5 (Java 1.8.0_65; Mac OS X 10.11.5)"</li><li>"userId" =
+=3D "britter"</li><li>"ip" =3D "88.66.189.125"</li></ul><br><b>Details:</b>=
+<br><br>The following artifacts have been promoted to the <a href=3D"https:=
+//repository.apache.org/content/repositories/releases">"Releases" [id=3Drel=
+eases]</a> repository<br><br><a href=3D"https://repository.apache.org/conte=
+nt/repositories/releases/commons-fileupload/commons-fileupload/1.3.2/common=
+s-fileupload-1.3.2.pom">/commons-fileupload/commons-fileupload/1.3.2/common=
+s-fileupload-1.3.2.pom</a><br>(SHA1: a4c3e5d590c2e83bba42768c5b5fbef43219b5=
+c4)<br><a href=3D"https://repository.apache.org/content/repositories/releas=
+es/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2-sou=
+rces.jar">/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1=
+.3.2-sources.jar</a><br>(SHA1: 23996750d5a80dc74dad55633c2a0f3db91462cb)<br=
+><a href=3D"https://repository.apache.org/content/repositories/releases/com=
+mons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2-sources.j=
+ar.asc">/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3=
+.2-sources.jar.asc</a><br>(SHA1: 8d8a979e0f2a192c520dc5c81c37535a6cacbf61)<=
+br><a href=3D"https://repository.apache.org/content/repositories/releases/c=
+ommons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2-test-so=
+urces.jar.asc">/commons-fileupload/commons-fileupload/1.3.2/commons-fileupl=
+oad-1.3.2-test-sources.jar.asc</a><br>(SHA1: f52468440c8248609d88844df31b16=
+4f6ca8c7bc)<br><a href=3D"https://repository.apache.org/content/repositorie=
+s/releases/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1=
+.3.2-tests.jar">/commons-fileupload/commons-fileupload/1.3.2/commons-fileup=
+load-1.3.2-tests.jar</a><br>(SHA1: 310e3713308073a0392be30c129b55e872fe48f6=
+)<br><a href=3D"https://repository.apache.org/content/repositories/releases=
+/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2-test-=
+sources.jar">/commons-fileupload/commons-fileupload/1.3.2/commons-fileuploa=
+d-1.3.2-test-sources.jar</a><br>(SHA1: 2df285ad143910759a3763fcec0cd58e8525=
+d881)<br><a href=3D"https://repository.apache.org/content/repositories/rele=
+ases/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2.j=
+ar.asc">/commons-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3=
+.2.jar.asc</a><br>(SHA1: 9555051d32c13a38f144ebdb54d3c188eabeac30)<br><a hr=
+ef=3D"https://repository.apache.org/content/repositories/releases/commons-f=
+ileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2.pom.asc">/commo=
+ns-fileupload/commons-fileupload/1.3.2/commons-fileupload-1.3.2.pom.asc</a>=
+<br>(SHA1: 8d906d2112104684958dc15f89a06f3e14d6f0cf)<br><a href=3D"https://=
+repository.apache.org/content/repositories/releases/commons-fileupload/comm=
+ons-fileupload/1.3.2/commons-fileupload-1.3.2-tests.jar.asc">/commons-fileu=
+pload/commons-fileupload/1.3.2/commons-fileupload-1.3.2-tests.jar.asc</a><b=
+r>(SHA1: 085dd7943be4c0d610fc6e4f75bec24f085c624e)<br><a href=3D"https://re=
+pository.apache.org/content/repositories/releases/commons-fileupload/common=
+s-fileupload/1.3.2/commons-fileupload-1.3.2-javadoc.jar.asc">/commons-fileu=
+pload/commons-fileupload/1.3.2/commons-fileupload-1.3.2-javadoc.jar.asc</a>=
+<br>(SHA1: 54a24e4fe5a566ebb93df5bb623510b8a68f797c)<br><a href=3D"https://=
+repository.apache.org/content/repositories/releases/commons-fileupload/comm=
+ons-fileupload/1.3.2/commons-fileupload-1.3.2-javadoc.jar">/commons-fileupl=
+oad/commons-fileupload/1.3.2/commons-fileupload-1.3.2-javadoc.jar</a><br>(S=
+HA1: 12bbb300a1b61e038defb1dee85e8302d6f1bbaa)<br><a href=3D"https://reposi=
+tory.apache.org/content/repositories/releases/commons-fileupload/commons-fi=
+leupload/1.3.2/commons-fileupload-1.3.2.jar">/commons-fileupload/commons-fi=
+leupload/1.3.2/commons-fileupload-1.3.2.jar</a><br>(SHA1: 5d7491ed6ebd02b6a=
+8d2305f8e6b7fe5dbd95f72)<br><br>Action performed by Benedikt Ritter (britte=
+r)<br>
+------=_Part_27_129371933.1464291695848--
+
