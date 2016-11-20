@@ -285,7 +285,7 @@ class SlurpThread(Thread):
                     json_source = {
                         'mid': json['mid'],
                         'message-id': json['message-id'],
-                        'source': message.as_bytes().decode('utf-8', errors='replace')
+                        'source': message.as_string()
                     }
 
                     count += 1
