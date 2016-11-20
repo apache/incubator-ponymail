@@ -339,13 +339,13 @@ class SlurpThread(Thread):
                 
             y += count
             baddies += bad
-            if not args.dry:
+            if len(ja) > 0 and not args.dry:
                 bulk = BulkThread()
                 bulk.assign(self.id, ja, es, 'mbox')
                 bulk.insert()
             ja = []
             
-            if not args.dry:
+            if len(jas) > 0 and not args.dry:
                 bulks = BulkThread()
                 bulks.assign(self.id, jas, es, 'mbox_source')
                 bulks.insert()
