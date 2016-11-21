@@ -82,7 +82,8 @@ def parse_attachment(part):
         dispositions = cd.strip().split(";")
         if dispositions[0].lower() == "attachment":
             fd = part.get_payload(decode=True)
-            if not fd: return None, None
+            # Allow for empty string
+            if fd == None: return None, None
             attachment = {}
             attachment['content_type'] = part.get_content_type()
             attachment['size'] = len(fd)

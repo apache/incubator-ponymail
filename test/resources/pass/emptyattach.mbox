@@ -1,0 +1,72 @@
+From 
+Return-Path: <dev-return-626-archive-asf-public=cust-asf.ponee.io@ponymail.incubator.apache.org>
+X-Original-To: archive-asf-public-internal@cust-asf2.ponee.io
+Delivered-To: archive-asf-public-internal@cust-asf2.ponee.io
+Received: from cust-asf.ponee.io (cust-asf.ponee.io [163.172.22.183])
+	by cust-asf2.ponee.io (Postfix) with ESMTP id CDA67200BCA
+	for <archive-asf-public-internal@cust-asf2.ponee.io>; Mon, 21 Nov 2016 19:14:45 +0100 (CET)
+Received: by cust-asf.ponee.io (Postfix)
+	id CA777160AF9; Mon, 21 Nov 2016 18:14:45 +0000 (UTC)
+Delivered-To: archive-asf-public@cust-asf.ponee.io
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by cust-asf.ponee.io (Postfix) with SMTP id 44D48160AEF
+	for <archive-asf-public@cust-asf.ponee.io>; Mon, 21 Nov 2016 19:14:45 +0100 (CET)
+Received: (qmail 14810 invoked by uid 500); 21 Nov 2016 18:14:44 -0000
+Mailing-List: contact dev-help@ponymail.incubator.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:dev-help@ponymail.incubator.apache.org>
+List-Unsubscribe: <mailto:dev-unsubscribe@ponymail.incubator.apache.org>
+List-Post: <mailto:dev@ponymail.incubator.apache.org>
+List-Id: <dev.ponymail.incubator.apache.org>
+Reply-To: dev@ponymail.incubator.apache.org
+Delivered-To: mailing list dev@ponymail.incubator.apache.org
+Received: (qmail 14799 invoked by uid 99); 21 Nov 2016 18:14:44 -0000
+Received: from pnap-us-west-generic-nat.apache.org (HELO spamd2-us-west.apache.org) (209.188.14.142)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Mon, 21 Nov 2016 18:14:44 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by spamd2-us-west.apache.org (ASF Mail Server at spamd2-us-west.apache.org) with ESMTP id 188291A7BE9
+	for <dev@ponymail.apache.org>; Mon, 21 Nov 2016 18:14:44 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at spamd2-us-west.apache.org
+X-Spam-Flag: NO
+X-Spam-Score: -7.019
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.019 tagged_above=-999 required=6.31
+	tests=[KAM_LAZY_DOMAIN_SECURITY=1, RCVD_IN_DNSWL_HI=-5,
+	RCVD_IN_MSPIKE_H3=-0.01, RCVD_IN_MSPIKE_WL=-0.01,
+	RP_MATCHES_RCVD=-2.999] autolearn=disabled
+Received: from mx1-lw-us.apache.org ([10.40.0.8])
+	by localhost (spamd2-us-west.apache.org [10.40.0.9]) (amavisd-new, port 10024)
+	with ESMTP id Zz95hBPFcoFx for <dev@ponymail.apache.org>;
+	Mon, 21 Nov 2016 18:14:43 +0000 (UTC)
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by mx1-lw-us.apache.org (ASF Mail Server at mx1-lw-us.apache.org) with SMTP id 416235FDEF
+	for <dev@ponymail.incubator.apache.org>; Mon, 21 Nov 2016 18:14:43 +0000 (UTC)
+Received: (qmail 14783 invoked by uid 99); 21 Nov 2016 18:14:42 -0000
+Received: from minotaur.apache.org (HELO minotaur.apache.org) (140.211.11.9)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Mon, 21 Nov 2016 18:14:42 +0000
+Received: by minotaur.apache.org (Postfix, from userid 1721)
+	id 873061948D; Mon, 21 Nov 2016 18:14:42 +0000 (UTC)
+Date: Mon, 21 Nov 2016 18:14:42 +0000
+From: Sebb <sebb@apache.org>
+To: dev@ponymail.incubator.apache.org
+Subject: Test message with empty attachment 
+Message-ID: <20161121181442.GA47789@minotaur.apache.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+archived-at: Mon, 21 Nov 2016 18:14:46 -0000
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Mon 21 Nov 2016 18:14:42 GMT
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="empty.txt"
+
+
+--Dxnq1zWXvFF0Q93v--
+
