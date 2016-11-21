@@ -74,8 +74,12 @@ function getHits(query, size, doc, sitem)
     local json = performRequest(url)
     local out = {}
     if json and json.hits and json.hits.hits then
+        local hasBody = (doc == "mbox")
         for k, v in pairs(json.hits.hits) do
             v._source.request_id = v._id
+            if hasBody and v._source.body == JSON.null then
+                v._source.body = ''
+            end
             table.insert(out, v._source)
         end
     end
@@ -88,6 +92,9 @@ function getDoc (ty, id)
     local json = performRequest(url)
     if json and json._source then
         json._source.request_id = json._id
+        if ty == "mbox" and json._source.body == JSON.null then
+            json._source.body = ''
+        end
     end
     return (json and json._source) and json._source or {}
 end
@@ -127,14 +134,37 @@ function getHeadersReverse(query, size, doc)
     return out
 end
 
+local function contains(table,value)
+    if table then
+        for _,v in pairs(table) do
+            if v == value then return true end
+        end
+    end
+    return false
+end
+
 -- Do a raw ES query with a JSON query
 function raw(query, doctype)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search"
     local json = performRequest(url, query)
+    if doctype == "mbox" and json and json.hits and json.hits.hits then
+        -- Check if the query returns the body attribute
+        if contains(query._source, 'body') then
+            local dhh = json.hits.hits
+            for k = 1, #dhh do
+                local v = dhh[k]._source
+                if v.body == JSON.null then
+                    v.body = ''
+                end
+            end
+        end
+    end
     return json or {}, url
 end
 
+-- communicate between scan and scroll
+local scanHasBody = {}
 
 -- Raw query with scroll/scan
 function scan(query, doctype)
@@ -142,6 +172,13 @@ function scan(query, doctype)
     local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
     local json = performRequest(url, query)
     if json and json._scroll_id then
+        if doctype == "mbox" then
+            -- Check if the query returns the body attribute
+           if contains(query._source, 'body') then
+               -- save the flag for the scroll function (don't bother saving if false)
+               scanHasBody[json._scroll_id] = true
+           end
+        end
         return json._scroll_id
     end
     return nil
@@ -153,6 +190,15 @@ function scroll(sid)
     local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
     local json = performRequest(url)
     if json and json._scroll_id then
+        if scanHasBody[sid] then
+            local dhh = json.hits.hits
+            for k = 1, #dhh do
+                local v = dhh[k]._source
+                if v.body == JSON.null then
+                    v.body = ''
+                end
+            end
+        end
         return json, json._scroll_id
     end
     return nil
