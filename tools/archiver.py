@@ -84,21 +84,16 @@ def parse_attachment(part):
             fd = part.get_payload(decode=True)
             # Allow for empty string
             if fd == None: return None, None
-            attachment = {}
-            attachment['content_type'] = part.get_content_type()
-            attachment['size'] = len(fd)
-            attachment['filename'] = None
-            h = hashlib.sha256(fd).hexdigest()
-            b64 = codecs.encode(fd, "base64").decode('ascii', 'ignore')
-            attachment['hash'] = h
-            for param in dispositions[1:]:
-                if not '=' in param: continue
-                key,val = param.split("=", 1)
-                if key.lower().strip() == "filename":
-                    val = val.strip(' "')
-                    print("Found attachment: %s" % val)
-                    attachment['filename'] = val
-            if attachment['filename']:
+            filename = part.get_filename()
+            if filename:
+                print("Found attachment: %s" % filename)
+                attachment = {}
+                attachment['content_type'] = part.get_content_type()
+                attachment['size'] = len(fd)
+                attachment['filename'] = filename
+                h = hashlib.sha256(fd).hexdigest()
+                b64 = codecs.encode(fd, "base64").decode('ascii', 'ignore')
+                attachment['hash'] = h
                 return attachment, b64 # Return meta data and contents separately
     return None, None
 
