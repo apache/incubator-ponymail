@@ -141,15 +141,12 @@ class BulkThread(Thread):
 
 class SlurpThread(Thread):
 
-    def __init__(self, index):
-        self.id = index
-        super(SlurpThread, self).__init__()
-
-    def printid(self,message):
-        print("%d: %s" % (self.id, message))
+    def printid(self, message):
+        print("%s: %s" % (self.name, message))
 
     def run(self):
         global block, y, es, lists, baddies, config, resendTo, timeout, dedupped, dedup
+        self.name = Thread.getName(self)
         ja = []
         jas = []
         self.printid("Thread started")
@@ -646,7 +643,7 @@ threads = []
 cc = min(len(lists), int( multiprocessing.cpu_count() / 2) + 1)
 print("Starting up to %u threads to fetch the %u %s lists" % (cc, len(lists), project))
 for i in range(1,cc+1):
-    t = SlurpThread(i)
+    t = SlurpThread()
     threads.append(t)
     t.start()
     print("Started no. %u" % i)
