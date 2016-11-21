@@ -691,7 +691,6 @@ function handle(r)
                     table.insert(threads, emails[mid])
                 end
                 if not statsOnly then
-                    email.body = (email.body ~= JSON.null) and email.body or ""
                     threads[#threads].body = #email.body < 300 and email.body or email.body:sub(1,300) .. "..."
                 end
             end
