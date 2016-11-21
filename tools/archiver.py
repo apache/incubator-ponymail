@@ -174,12 +174,11 @@ class Archiver(object):
     def msgfiles(self, msg):
         attachments = []
         contents = {}
-        if msg.is_multipart():    
-            for part in msg.walk():
-                part_meta, part_file = parse_attachment(part)
-                if part_meta:
-                    attachments.append(part_meta)
-                    contents[part_meta['hash']] = part_file
+        for part in msg.walk():
+            part_meta, part_file = parse_attachment(part)
+            if part_meta:
+                attachments.append(part_meta)
+                contents[part_meta['hash']] = part_file
         return attachments, contents
     
     
