@@ -53,6 +53,8 @@ import os
 import fnmatch
 import io
 import logging
+import traceback
+import sys
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -616,9 +618,12 @@ if __name__ == '__main__':
         else:
             print("Nothing to import (no list-id found!)")
     except Exception as err:
+        # extract the len number without using variables (which may cause issues?)
+        #                           last traceback    1st entry, 2nd field
+        line = traceback.extract_tb(sys.exc_info()[2])[0][1]
         if args.quiet:
-            print("Could not parse email, but exiting quietly as --quiet is on: %s" % err)
+            print("Could not parse email, but exiting quietly as --quiet is on: %s (@ %s)" % (err, line))
         else:
-            print("Could not parse email: %s" % err)
+            print("Could not parse email: %s (@ %s)" % (err, line))
             sys.exit(-1)
             
