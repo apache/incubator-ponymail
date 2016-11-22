@@ -135,8 +135,8 @@ class BulkThread(Thread):
         try:
             helpers.bulk(self.xes, js_arr)
         except Exception as err:
-            print("%d: Warning: Could not bulk insert: %s into %s" % (self.id,err,self.dtype))
-#         print("%d: Inserted %u entries into %s" % (self.id, len(js_arr),self.dtype))
+            print("%s: Warning: Could not bulk insert: %s into %s" % (self.id,err,self.dtype))
+#         print("%s: Inserted %u entries into %s" % (self.id, len(js_arr),self.dtype))
 
 
 class SlurpThread(Thread):
@@ -311,13 +311,13 @@ class SlurpThread(Thread):
                     if len(ja) >= 40:
                         if not args.dry:
                             bulk = BulkThread()
-                            bulk.assign(self.id, ja, es, 'mbox')
+                            bulk.assign(self.name, ja, es, 'mbox')
                             bulk.insert()
                         ja = []
                         
                         if not args.dry:
                             bulks = BulkThread()
-                            bulks.assign(self.id, jas, es, 'mbox_source')
+                            bulks.assign(self.name, jas, es, 'mbox_source')
                             bulks.insert()
                         jas = []
                 else:
@@ -338,13 +338,13 @@ class SlurpThread(Thread):
             baddies += bad
             if len(ja) > 0 and not args.dry:
                 bulk = BulkThread()
-                bulk.assign(self.id, ja, es, 'mbox')
+                bulk.assign(self.name, ja, es, 'mbox')
                 bulk.insert()
             ja = []
             
             if len(jas) > 0 and not args.dry:
                 bulks = BulkThread()
-                bulks.assign(self.id, jas, es, 'mbox_source')
+                bulks.assign(self.name, jas, es, 'mbox_source')
                 bulks.insert()
             jas = []
         self.printid("Done, %u elements left to slurp" % len(lists))
