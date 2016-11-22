@@ -289,11 +289,16 @@ class SlurpThread(Thread):
                         except:
                             duplicates[json['mid']]=[json['message-id'] + " in " + filename]
 
-                    json_source = {
-                        'mid': json['mid'],
-                        'message-id': json['message-id'],
-                        'source': message.as_string()
-                    }
+                    try: # temporary hack to try and find an encoding issue
+                        # needs to be replaced by proper exception handling
+                        json_source = {
+                            'mid': json['mid'],
+                            'message-id': json['message-id'],
+                            'source': message.as_string()
+                        }
+                    except Exception as e:
+                        print("Error '%s' processing id %s msg %s " % (e, json['mid'], json['message-id']))
+                        continue
 
                     count += 1
                     ja.append(json)
