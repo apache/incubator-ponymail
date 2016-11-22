@@ -132,11 +132,12 @@ class BulkThread(Thread):
                 'doc': js,
                 '_source': js
             })
-        try:
-            helpers.bulk(self.xes, js_arr)
-        except Exception as err:
-            print("%s: Warning: Could not bulk insert: %s into %s" % (self.id,err,self.dtype))
-#         print("%s: Inserted %u entries into %s" % (self.id, len(js_arr),self.dtype))
+        if not args.dry:
+            try:
+                helpers.bulk(self.xes, js_arr)
+            except Exception as err:
+                print("%s: Warning: Could not bulk insert: %s into %s" % (self.id,err,self.dtype))
+#             print("%s: Inserted %u entries into %s" % (self.id, len(js_arr),self.dtype))
 
 
 class SlurpThread(Thread):
@@ -309,16 +310,14 @@ class SlurpThread(Thread):
                                     }
                                 )
                     if len(ja) >= 40:
-                        if not args.dry:
-                            bulk = BulkThread()
-                            bulk.assign(self.name, ja, es, 'mbox')
-                            bulk.insert()
+                        bulk = BulkThread()
+                        bulk.assign(self.name, ja, es, 'mbox')
+                        bulk.insert()
                         ja = []
                         
-                        if not args.dry:
-                            bulks = BulkThread()
-                            bulks.assign(self.name, jas, es, 'mbox_source')
-                            bulks.insert()
+                        bulks = BulkThread()
+                        bulks.assign(self.name, jas, es, 'mbox_source')
+                        bulks.insert()
                         jas = []
                 else:
                     self.printid("Failed to parse: Return=%s Message-Id=%s" % (message.get('Return-Path'), message.get('Message-Id')))
@@ -336,13 +335,13 @@ class SlurpThread(Thread):
                 
             y += count
             baddies += bad
-            if len(ja) > 0 and not args.dry:
+            if len(ja) > 0:
                 bulk = BulkThread()
                 bulk.assign(self.name, ja, es, 'mbox')
                 bulk.insert()
             ja = []
             
-            if len(jas) > 0 and not args.dry:
+            if len(jas) > 0:
                 bulks = BulkThread()
                 bulks.assign(self.name, jas, es, 'mbox_source')
                 bulks.insert()
