@@ -367,6 +367,10 @@ class Archiver(object):
             id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
             raise Exception("Could not parse message %s for %s" % (id,lid))
 
+        if args.dry:
+            print("**** Dry run, not saving message to database *****")
+            return lid, ojson['mid']
+
         msg_metadata = self.msg_metadata
         irt = self.irt
 
@@ -519,6 +523,8 @@ if __name__ == '__main__':
                        help='Output additional log messages')
     parser.add_argument('--html2text', dest='html2text', action='store_true', 
                        help='Try to convert HTML to text if no text/plain message is found')
+    parser.add_argument('--dry', dest='dry', action='store_true',
+                       help='Do not save emails to elasticsearch, only test parsing')
     args = parser.parse_args()
     
     if args.html2text:
