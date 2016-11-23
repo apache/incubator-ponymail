@@ -297,7 +297,7 @@ class SlurpThread(Thread):
                             'source': message.as_string()
                         }
                     except Exception as e:
-                        print("Error '%s' processing id %s msg %s " % (e, json['mid'], json['message-id']))
+                        self.printid("Error '%s' processing id %s msg %s " % (e, json['mid'], json['message-id']))
                         continue
 
                     count += 1
