@@ -400,7 +400,7 @@ class Archiver(object):
             consistency = self.consistency,
             body = {
                 "message-id": msg_metadata['message-id'],
-                "source": msg.as_string()
+                "source": self.mbox_source(msg)
             }
         )
         
@@ -492,7 +492,11 @@ class Archiver(object):
                         if logger:
                             logger.info("Notification sent to %s for %s" % (cid, mid))
         return lid, ojson['mid']
-            
+
+    def mbox_source(self, msg):
+        # Common method shared with import-mbox
+        return msg.as_string()
+
     def list_url(self, mlist):
         """ Required by MM3 plugin API
         """
