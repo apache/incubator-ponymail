@@ -659,9 +659,6 @@ for i in range(1,cc+1):
 for t in threads:
     t.join()
 
-print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (y, int(time.time() - start), baddies))
-if dedupped > 0:
-    print("%u records were not inserted due to deduplication" % dedupped)
 if args.dups:
     print("Showing duplicate ids:")
     for mid in duplicates:
@@ -669,3 +666,7 @@ if args.dups:
             print("The mid %s was used by:" % mid)
             for msg in duplicates[mid]:
                 print(msg)
+
+print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (y, int(time.time() - start), baddies))
+if dedupped > 0:
+    print("%u records were not inserted due to deduplication" % dedupped)
