@@ -123,12 +123,15 @@ class BulkThread(Thread):
         i = 0
         for entry in self.json:
             js = entry
+            mid = js['mid']
+            if self.dtype == 'mbox_source':
+                del js['mid']
             js_arr.append({
                 '_op_type': 'index',
                 '_consistency': self.wc,
                 '_index': dbname,
                 '_type': self.dtype,
-                '_id': js['mid'],
+                '_id': mid,
                 'doc': js,
                 '_source': js
             })
@@ -292,6 +295,7 @@ class SlurpThread(Thread):
                     try: # temporary hack to try and find an encoding issue
                         # needs to be replaced by proper exception handling
                         json_source = {
+                            'mid': json['mid'], # needed for bulk-insert only, not needed in database
                             'message-id': json['message-id'],
                             'source': message.as_string()
                         }
