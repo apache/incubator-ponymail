@@ -292,7 +292,6 @@ class SlurpThread(Thread):
                     try: # temporary hack to try and find an encoding issue
                         # needs to be replaced by proper exception handling
                         json_source = {
-                            'mid': json['mid'],
                             'message-id': json['message-id'],
                             'source': message.as_string()
                         }
