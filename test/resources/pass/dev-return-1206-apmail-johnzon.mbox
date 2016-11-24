@@ -1,0 +1,168 @@
+From dev-return-1206-apmail-johnzon-dev-archive=johnzon.apache.org@johnzon.apache.org  Wed Nov 23 22:37:31 2016
+Return-Path: <dev-return-1206-apmail-johnzon-dev-archive=johnzon.apache.org@johnzon.apache.org>
+X-Original-To: apmail-johnzon-dev-archive@www.apache.org
+Delivered-To: apmail-johnzon-dev-archive@www.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id 21A7E1918F
+	for <apmail-johnzon-dev-archive@www.apache.org>; Wed, 23 Nov 2016 22:37:31 +0000 (UTC)
+Received: (qmail 49708 invoked by uid 500); 23 Nov 2016 22:37:31 -0000
+Delivered-To: apmail-johnzon-dev-archive@johnzon.apache.org
+Received: (qmail 49674 invoked by uid 500); 23 Nov 2016 22:37:31 -0000
+Mailing-List: contact dev-help@johnzon.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:dev-help@johnzon.apache.org>
+List-Unsubscribe: <mailto:dev-unsubscribe@johnzon.apache.org>
+List-Post: <mailto:dev@johnzon.apache.org>
+List-Id: <dev.johnzon.apache.org>
+Reply-To: dev@johnzon.apache.org
+Delivered-To: mailing list dev@johnzon.apache.org
+Received: (qmail 49663 invoked by uid 99); 23 Nov 2016 22:37:31 -0000
+Received: from mail-relay.apache.org (HELO mail-relay.apache.org) (140.211.11.15)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Wed, 23 Nov 2016 22:37:31 +0000
+Received: from [192.168.1.55] (unknown [109.103.80.27])
+	by mail-relay.apache.org (ASF Mail Server at mail-relay.apache.org) with ESMTPSA id 50AE11A0112
+	for <dev@johnzon.apache.org>; Wed, 23 Nov 2016 22:37:29 +0000 (UTC)
+Message-ID: <1479940647.31291.1.camel@apache.org>
+Subject: Using johnzon-core in an OSGi container
+From: Robert Munteanu <rombert@apache.org>
+To: dev@johnzon.apache.org
+Date: Thu, 24 Nov 2016 00:37:27 +0200
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+I noticed that Johnzon has OSGi headers, which is nice :-)
+
+I am trying to setup Johnzon in a minimal OSGi container. I have a
+bundle which performs a very simple JSON rendering:
+
+        try ( JsonGenerator g =
+Json.createGenerator(resp.getOutputStream())) {
+            resp.setContentType("application/json");
+            g.writeStartObject()
+             .write("enabled", routerAdmin.isWlanEnabled() )
+             .writeEnd();
+        } catch (AuthException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+);
+        }
+
+I am deploying the following bundles to my container:
+
+- Johnzon :: Core (0.9.4)  - org.apache.johnzon:johnzon-core:0.9.4
+- Apache Geronimo JSon Spec 1.0 (1.0.0.alpha-1) -
+org.apache.geronimo.specs:geronimo-json_1.0_spec:1.0-alpha-1
+
+The code fails with 
+
+  javax.json.JsonException: org.apache.johnzon.core.JsonProviderImpl
+not found
+
+(full stack trace at the end ).
+
+My question is - is this a supported scenario? Looking at the bundle
+headers I don't see how the wiring could happen between these the JSON
+API and Johnzon Core bundles, as they know nothing about each other.
+
+(Please keep me in CC, I am not subscribed).
+
+Thanks,
+
+Robert
+
+javax.json.JsonException: org.apache.johnzon.core.JsonProviderImpl not
+found
+        at
+javax.json.spi.JsonProvider.doLoadProvider(JsonProvider.java:132)
+        at javax.json.spi.JsonProvider.provider(JsonProvider.java:64)
+        at javax.json.Json.createGenerator(Json.java:48)
+        at
+ro.lmn.routeradmin.web.impl.AdminServlet.doGet(AdminServlet.java:33)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:618)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:725)
+        at
+org.apache.felix.http.base.internal.handler.ServletHandler.handle(Servl
+etHandler.java:85)
+        at
+org.apache.felix.http.base.internal.dispatch.InvocationChain.doFilter(I
+nvocationChain.java:79)
+        at
+org.apache.felix.http.base.internal.dispatch.Dispatcher.dispatch(Dispat
+cher.java:124)
+        at
+org.apache.felix.http.base.internal.DispatcherServlet.service(Dispatche
+rServlet.java:61)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:725)
+        at
+org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:845)
+        at
+org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:5
+83)
+        at
+org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler
+.java:224)
+        at
+org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler
+.java:1174)
+        at
+org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:51
+1)
+        at
+org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.
+java:185)
+        at
+org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.
+java:1106)
+        at
+org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.jav
+a:141)
+        at
+org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(Contex
+tHandlerCollection.java:213)   
+        at
+org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.j
+ava:134)
+        at org.eclipse.jetty.server.Server.handle(Server.java:524)
+        at
+org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:319)
+        at
+org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:
+253)
+        at
+org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(Abstract
+Connection.java:273)
+        at
+org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+        at
+org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.
+java:93)
+        at
+org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.executePro
+duceConsume(ExecuteProduceConsume.java:303)
+        at
+org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceCon
+sume(ExecuteProduceConsume.java:148)
+        at
+org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(Execut
+eProduceConsume.java:136)
+        at
+org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.
+java:671)
+        at
+org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.j
+ava:589)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.ClassNotFoundException:
+org.apache.johnzon.core.JsonProviderImpl
+        at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+        at
+sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+        at
+javax.json.spi.JsonProvider.doLoadProvider(JsonProvider.java:129)
+        ... 32 more
+

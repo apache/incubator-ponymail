@@ -43,6 +43,7 @@ from elasticsearch import Elasticsearch
 from formatflowed import convertToWrapped
 import hashlib
 import email.utils
+from email import policy
 import time
 from collections import namedtuple
 import re
@@ -495,7 +496,8 @@ class Archiver(object):
 
     def mbox_source(self, msg):
         # Common method shared with import-mbox
-        return msg.as_string()
+        policy = msg.policy.clone(max_line_length=0) # don't wrap headers
+        return msg.as_bytes(policy=policy).decode('utf-8', errors='replace')
 
     def list_url(self, mlist):
         """ Required by MM3 plugin API
@@ -542,12 +544,13 @@ if __name__ == '__main__':
 
         
     archie = Archiver(parseHTML = parseHTML)
-    input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors="ignore")
+    # use binary input so parser can use appropriate charset
+    input_stream = sys.stdin.buffer
     
     try:
         msgstring = input_stream.read()
         try:
-            msg = email.message_from_string(msgstring)
+            msg = email.message_from_bytes(msgstring)
         except Exception as err:
             print("STDIN parser exception: %s" % err)
         
