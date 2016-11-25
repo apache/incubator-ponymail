@@ -260,6 +260,11 @@ class SlurpThread(Thread):
 
                 json, contents = archie.compute_updates(list_override, private, message)
                 
+                if json and not (json['list'] and json['list_raw']):
+                    self.printid("No list id found for %s " % json['message-id'])
+                    bad += 1
+                    continue
+
                 # If --dedup is active, try to filter out any messages that already exist
                 if json and dedup and message.get('message-id', None):
                     res = es.search(
