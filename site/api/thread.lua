@@ -27,6 +27,8 @@ local config = require 'lib/config'
 
 local emls_thrd
 
+require 'lib/utils'
+
 -- anonymizer func
 function anonymize(doc)
     if doc.from and doc.from ~= JSON.null and #doc.from > 0 then
@@ -94,25 +96,6 @@ function fetchChildren(r, pdoc, c, biglist, rights, account)
     return children
 end
 
--- find the original topic starter
-function findParent(r, doc)
-    local step = 0
-    -- max 50 steps up in the hierarchy
-    while step < 50 do
-        step = step + 1
-        if not doc['in-reply-to'] then
-            break
-        end
-        local docs = elastic.find('message-id:"' .. r:escape(doc['in-reply-to'])..'"', 1, "mbox")
-        if #docs == 0 then
-            break
-        end
-        doc = docs[1]
-    end
-    return doc
-end
-
-
 function handle(r)
     r.content_type = "application/json"
     local now = r:clock()
@@ -134,7 +117,7 @@ function handle(r)
         end
     end
     if get.timetravel then
-        doc = findParent(r, doc)
+        doc = findParent(r, doc, elastic)
     end
     local doclist = {}
     

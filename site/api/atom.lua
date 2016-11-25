@@ -23,6 +23,8 @@ local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local cross = require 'lib/cross'
 
+require 'lib/utils'
+
 local emls_thrd
 
 -- func for fetching all child emails of a parent topic
@@ -44,23 +46,6 @@ function fetchChildren(r, pdoc, c, biglist)
         end
     end
     return children
-end
-
--- func for finding the original email in a thread, if need be
-function findParent(r, doc)
-    local step = 0
-    while step < 50 do
-        step = step + 1
-        if not doc['in-reply-to'] then
-            break
-        end
-        local docs = elastic.find('message-id:"' .. r:escape(doc['in-reply-to'])..'"', 1, "mbox")
-        if #docs == 0 then
-            break
-        end
-        doc = docs[1]
-    end
-    return doc
 end
 
 function handle(r)
@@ -174,7 +159,7 @@ function handle(r)
         local doc = elastic.get("mbox", get.mid)
         if doc then
             -- make sure we have the real parent
-            local parent = findParent(r, doc)
+            local parent = findParent(r, doc, elastic)
             
             -- we got the original email, now let's find and process all kids
             if parent then
