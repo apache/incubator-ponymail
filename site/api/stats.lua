@@ -435,6 +435,7 @@ function handle(r)
     -- Get years active
     local nowish = math.floor(os.time()/600)
     local firstYear = r:ivm_get("firstYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
+    local firstMonth = r:ivm_get("firstMonth:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
     if (not firstYear or firstYear == "") and not statsOnly then
         local doc = elastic.raw {
             query = {
@@ -461,11 +462,14 @@ function handle(r)
             size = 1
         }
         firstYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+        firstMonth = tonumber(os.date("%m", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
         r:ivm_set("firstYear:" .. nowish .. ":" .. get.list .. "@" .. get.domain, firstYear)
+        r:ivm_set("firstMonth:" .. nowish .. ":" .. get.list .. "@" .. get.domain, firstMonth)
     end
     
     -- Get years active
     local lastYear = r:ivm_get("lastYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
+    local lastMonth = r:ivm_get("lastMonth:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
     if (not lastYear or lastYear == "")  and not statsOnly then
         local doc = elastic.raw {
             query = {
@@ -493,7 +497,9 @@ function handle(r)
             size = 1
         }
         lastYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+        lastMonth = tonumber(os.date("%m", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
         r:ivm_set("lastYear:"  .. nowish .. ":" ..get.list .. "@" .. get.domain, lastYear)
+        r:ivm_set("lastMonth:"  .. nowish .. ":" ..get.list .. "@" .. get.domain, lastMonth)
     end
     
     
@@ -768,6 +774,8 @@ function handle(r)
     end
     listdata.firstYear = firstYear
     listdata.lastYear = lastYear
+    listdata.firstMonth = firstMonth
+    listdata.lastMonth = lastMonth
     listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")
     listdata.emails = emls
     listdata.hits = h
