@@ -25,7 +25,7 @@ not intended for use in deployed code.
 
 Usage:
 
-import 'lib/trace'
+require 'lib/trace'
 
 ...
 
