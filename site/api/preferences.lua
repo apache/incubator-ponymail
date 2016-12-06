@@ -216,6 +216,7 @@ Pony Mail - Email for Ponies and People.
     if cache then
         lists = JSON.decode(cache)
     else
+        -- get all the list names
         local doc = elastic.raw {
             size = 0, -- we don't need the hits themselves
             aggs = {
@@ -227,7 +228,7 @@ Pony Mail - Email for Ponies and People.
                 }
             }
         }
-        
+        -- get list names with messages in the last 90 days
         local ndoc = elastic.raw {
             size = 0, -- we don't need the hits themselves
             aggs = {
@@ -245,7 +246,7 @@ Pony Mail - Email for Ponies and People.
             }
         }
         
-        
+        -- init the lists with the names (no counts)
         for x,y in pairs (doc.aggregations.from.buckets) do
             local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
             if domain and domain:match("^[-_a-z0-9.]+$") and #domain > 3 and list:match("^[-_a-z0-9.]+$") then
@@ -253,6 +254,7 @@ Pony Mail - Email for Ponies and People.
                 lists[domain][list] = 0
             end
         end
+        -- add the counts of recent mails
         for x,y in pairs (ndoc.aggregations.from.buckets) do
             local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
             if domain and domain:match("^[-_a-z0-9.]+$") and #domain > 3 and list:match("^[-_a-z0-9.]+$") then
@@ -275,6 +277,7 @@ Pony Mail - Email for Ponies and People.
         if cache then
             pdoc = JSON.decode(cache)
         else
+            -- get list names which have at least one private message in the last 20 years
             pdoc = elastic.raw {
                 size = 0, -- we don't need the hits themselves
                 aggs = {
@@ -309,6 +312,9 @@ Pony Mail - Email for Ponies and People.
         if account then
             rights = aaa.rights(r, account)
         end
+        -- remove any lists containing mails that the user is not allowed to access
+        -- N.B. this removes mixed lists
+        -- i.e. the user won't see the list name if it contains a single private mail they cannot access
         for x,y in pairs (pdoc.aggregations.from.buckets) do
             local canAccess = false
             local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
