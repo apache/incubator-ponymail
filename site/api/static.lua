@@ -215,6 +215,7 @@ function handle(r)
         local dd = 90
         local daterange = {gt = "now-"..dd.."d" }
         local doc = elastic.raw {
+            size = 0, -- we don't need the hits themselves
             aggs = {
                 from = {
                     terms = {
@@ -253,6 +254,7 @@ function handle(r)
         local dd = 90
         local daterange = {gt = "now-"..dd.."d" }
         local doc = elastic.raw {
+            size = 0, -- we don't need the hits themselves
             aggs = {
                 from = {
                     terms = {

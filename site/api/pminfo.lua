@@ -60,6 +60,7 @@ function handle(r)
     
     --[[ Get active lists ]]--
     local doc = elastic.raw {
+        size = 0, -- we don't need the hits themselves
         query = {
             
             bool = {
@@ -134,8 +135,9 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    --[[ Get historgram of emails ]]
+    --[[ Get histogram of emails ]]
     local doc = elastic.raw {
+        size = 0, -- we don't need the hits themselves
         aggs = {
             weekly = {
                 date_histogram = {
@@ -170,6 +172,7 @@ function handle(r)
     end
     
     local doc = elastic.raw {
+        size = 0, -- we don't need the hits themselves
         aggs = {
             from = {
                 terms = {

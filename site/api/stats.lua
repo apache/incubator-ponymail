@@ -315,6 +315,7 @@ function handle(r)
         tnow = r:clock()
         
         local doc = elastic.raw {
+            size = 0, -- we don't need the hits themselves
             aggs = {
                 from = {
                     terms = {

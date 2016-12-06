@@ -217,6 +217,7 @@ Pony Mail - Email for Ponies and People.
         lists = JSON.decode(cache)
     else
         local doc = elastic.raw {
+            size = 0, -- we don't need the hits themselves
             aggs = {
                 from = {
                     terms = {
@@ -228,6 +229,7 @@ Pony Mail - Email for Ponies and People.
         }
         
         local ndoc = elastic.raw {
+            size = 0, -- we don't need the hits themselves
             aggs = {
                 from = {
                     terms = {
@@ -274,6 +276,7 @@ Pony Mail - Email for Ponies and People.
             pdoc = JSON.decode(cache)
         else
             pdoc = elastic.raw {
+            size = 0, -- we don't need the hits themselves
             aggs = {
                 from = {
                     terms = {
