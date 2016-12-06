@@ -27,7 +27,6 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
-    local qs = "*"
     local domain = get.domain or ""
     if #domain < 2 then
         domain = "*"
