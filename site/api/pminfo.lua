@@ -53,16 +53,15 @@ function handle(r)
     local daterange = {gt = "now-"..DD.."d", lt = "now+1d" }
     
     local sterm = {
-            wildcard = {
-                list = "*." .. domain
-            }
-        }
+              wildcard = {
+                  list = "*." .. domain
+              }
+          }
     
     --[[ Get active lists ]]--
     local doc = elastic.raw {
         size = 0, -- we don't need the hits themselves
         query = {
-            
             bool = {
                 must = {
                     {
@@ -75,9 +74,8 @@ function handle(r)
                         }
                     },
                     sterm
-                    
-            }}
-            
+                }
+            }
         },
         aggs = {
             from = {
@@ -106,7 +104,6 @@ function handle(r)
     local doc = elastic.raw {
         size = 0,
         query = {
-            
             bool = {
                 must = {
                     {
@@ -118,9 +115,8 @@ function handle(r)
                             private = false
                         }
                     },sterm
-                    
-            }}
-            
+                }
+            }
         },
         aggs = {
             from = {
@@ -146,9 +142,7 @@ function handle(r)
                 }
             }
         },
-        
         query = {
-            
             bool = {
                 must = {
                     {
@@ -160,9 +154,8 @@ function handle(r)
                             private = false
                         }
                     },sterm
-                    
-            }}
-            
+                }
+            }
         }
     }
     local activity = {}
@@ -181,9 +174,7 @@ function handle(r)
                 }
             }
         },
-        
         query = {
-            
             bool = {
                 must = {
                     {
@@ -195,9 +186,8 @@ function handle(r)
                             private = false
                         }
                     },sterm
-                    
-            }}
-            
+                }
+            }
         }
     }
     local active_senders = {}
@@ -248,15 +238,15 @@ function handle(r)
                             private = false
                         }
                     },sterm
-            }}
+                }
+            }
         },
-        
         sort = {
             {
                 date = {
                     order = "desc"
                 }
-            }  
+            }
         },
         size = MAXRESULTS
     }

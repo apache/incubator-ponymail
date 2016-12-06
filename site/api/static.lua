@@ -109,19 +109,19 @@ function handle(r)
                             }
                         },
                         {
-                        term = {
-                            list_raw = ("<%s>"):format(listid)
+                            term = {
+                                list_raw = ("<%s>"):format(listid)
+                            }
                         }
                     }
-                }}
+                }
             },
-            
             sort = {
                 {
                     epoch = {
                         order = "desc"
                     }
-                }  
+                }
             },
             size = 1000
         }

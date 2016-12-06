@@ -235,25 +235,25 @@ function handle(r)
     end
     local wc = false
     local sterm = {
-                    term = {
-                        list_raw = listraw
-                    }
-                  }
+              term = {
+                  list_raw = listraw
+              }
+          }
     if get.list == "*" then
         wc = true
         sterm = {
-                    wildcard = {
-                        list = "*." .. get.domain
-                    }
-                 }
+            wildcard = {
+                list = "*." .. get.domain
+            }
+        }
     end
     if get.domain == "*" then
         wc = true
         sterm = {
-                    wildcard = {
-                        list = "*"
-                    }
-                }
+            wildcard = {
+                list = "*"
+            }
+        }
     end
     
     local top10 = {}

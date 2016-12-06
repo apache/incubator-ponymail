@@ -54,13 +54,13 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
-    
+
     -- make sure we have a list or a thread to display results from
     if not get.list and not get.mid then
         r:puts("<>")
         return cross.OK
     end
-    
+
     -- default to any subject/body, 30 day view
     -- but accept whatever the browser demands
     local qs = "*"
@@ -70,18 +70,17 @@ function handle(r)
     local rights = nil
     local listid = r:escape_html(get.list or "")
     local listraw = "<" .. listid:gsub("@", ".") .. ">"
-    
+
     -- search terms for ES
     local sterm = {
                     term = {
                         list_raw = listraw
                     }
                 }
-    
-    
+
     local emls = {}
     emls_thrd = {}
-    
+
     -- Get threads from list ID?
     if get.list then
         local threads = {}
@@ -106,20 +105,20 @@ function handle(r)
                                 }
                             }
                         }
-                }}
+                    }
+                }
             },
-            
             sort = {
                 {
                     epoch = {
                         order = "desc"
                     }
-                }  
+                }
             },
             size = maxresults
         }
         local h = #doc.hits.hits
-        
+
         -- for each email found, check if we can access it and then digest it if so
         for k = #doc.hits.hits, 1, -1 do
             local v = doc.hits.hits[k]
@@ -152,7 +151,7 @@ function handle(r)
                 table.insert(emls, 1, email)
             end
         end
-        
+
     -- Or get a thread?
     elseif get.mid then
         -- get the parent email
@@ -160,7 +159,7 @@ function handle(r)
         if doc then
             -- make sure we have the real parent
             local parent = findParent(r, doc, elastic)
-            
+
             -- we got the original email, now let's find and process all kids
             if parent then
                 table.insert(emls_thrd, parent)
@@ -190,7 +189,7 @@ function handle(r)
             end
         end
     end
-    
+
     -- Generate the XML
     local scheme = "https"
     if r.port == 80 then

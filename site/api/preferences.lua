@@ -276,32 +276,32 @@ Pony Mail - Email for Ponies and People.
             pdoc = JSON.decode(cache)
         else
             pdoc = elastic.raw {
-            size = 0, -- we don't need the hits themselves
-            aggs = {
-                from = {
-                    terms = {
-                        field = "list_raw",
-                        size = 500000
+                size = 0, -- we don't need the hits themselves
+                aggs = {
+                    from = {
+                        terms = {
+                            field = "list_raw",
+                            size = 500000
+                        }
                     }
-                }
-            },
-            query = {
-                bool = {
-                    must = {
-                        {
-                            range = {
-                                    date = { gte = "now-20y" }
-                                },
-                        },
-                        {
-                            term = {
-                                private = true
+                },
+                query = {
+                    bool = {
+                        must = {
+                            {
+                                range = {
+                                        date = { gte = "now-20y" }
+                                    },
+                            },
+                            {
+                                term = {
+                                    private = true
+                                }
                             }
                         }
                     }
                 }
             }
-        }
             r:ivm_set("pm_lists_cache_private_" ..r.hostname .."-" .. nowish, JSON.encode(pdoc))
         end
         
