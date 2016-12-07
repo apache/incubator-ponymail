@@ -425,7 +425,6 @@ function handle(r)
                 }
             }
         }
-        io.stderr:write(JSON.encode(doc))
         for x,y in pairs (doc.aggregations.subdoc.cloud.buckets) do
             cloud[y.key] = y.doc_count
         end
