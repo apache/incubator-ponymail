@@ -416,7 +416,8 @@ function handle(r)
                                 query = qs
                             }
                         },
-                        sterm, {
+                        sterm,
+                        {
                             term = {
                                 private = false
                             }
