@@ -434,8 +434,9 @@ function handle(r)
     tnow = r:clock()
     
     -- Get years active
-    local nowish = math.floor(os.time()/600)
-    local firstYear = r:ivm_get("firstYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
+    local NOWISH = math.floor(os.time()/600)
+    local FIRSTYEAR_KEY = "firstYear:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
+    local firstYear = r:ivm_get(FIRSTYEAR_KEY)
     if (not firstYear or firstYear == "") and not statsOnly then
         local doc = elastic.raw {
             query = {
@@ -462,11 +463,12 @@ function handle(r)
             size = 1
         }
         firstYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
-        r:ivm_set("firstYear:" .. nowish .. ":" .. get.list .. "@" .. get.domain, firstYear)
+        r:ivm_set(FIRSTYEAR_KEY, firstYear)
     end
     
     -- Get years active
-    local lastYear = r:ivm_get("lastYear:" .. nowish .. ":" ..get.list .. "@" .. get.domain)
+    local LASTYEAR_KEY = "lastYear:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
+    local lastYear = r:ivm_get(LASTYEAR_KEY)
     if (not lastYear or lastYear == "")  and not statsOnly then
         local doc = elastic.raw {
             query = {
@@ -494,7 +496,7 @@ function handle(r)
             size = 1
         }
         lastYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
-        r:ivm_set("lastYear:"  .. nowish .. ":" ..get.list .. "@" .. get.domain, lastYear)
+        r:ivm_set(LASTYEAR_KEY, lastYear)
     end
     
     

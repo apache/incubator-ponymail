@@ -211,8 +211,9 @@ Pony Mail - Email for Ponies and People.
     
     -- Get lists (cached if possible)
     local lists = {}
-    local nowish = math.floor(os.time() / 600)
-    local cache = r:ivm_get("pm_lists_cache_" ..r.hostname .."-" .. nowish)
+    local NOWISH = math.floor(os.time() / 600)
+    local PM_LISTS_KEY = "pm_lists_cache_" .. r.hostname .. "-" .. NOWISH
+    local cache = r:ivm_get(PM_LISTS_KEY)
     if cache then
         lists = JSON.decode(cache)
     else
@@ -264,7 +265,7 @@ Pony Mail - Email for Ponies and People.
         end
         
         -- save temporary list in cache
-        r:ivm_set("pm_lists_cache_" ..r.hostname .."-" .. nowish, JSON.encode(lists))
+        r:ivm_set(PM_LISTS_KEY, JSON.encode(lists))
         
         -- hide private lists?
         -- this invalidates any cache there is and forces a check for
@@ -272,7 +273,8 @@ Pony Mail - Email for Ponies and People.
         -- does not have access, the list is hidden
     end
     if config.hidePrivate then
-        local cache = r:ivm_get("pm_lists_cache_private_" ..r.hostname .."-" .. nowish)
+        local PM_LISTS_PRIVATE_KEY = "pm_lists_cache_private_" .. r.hostname .. "-" .. NOWISH
+        local cache = r:ivm_get(PM_LISTS_PRIVATE_KEY)
         local pdoc
         if cache then
             pdoc = JSON.decode(cache)
@@ -305,7 +307,7 @@ Pony Mail - Email for Ponies and People.
                     }
                 }
             }
-            r:ivm_set("pm_lists_cache_private_" ..r.hostname .."-" .. nowish, JSON.encode(pdoc))
+            r:ivm_set(PM_LISTS_PRIVATE_KEY, JSON.encode(pdoc))
         end
         
         local rights = {}

@@ -33,8 +33,9 @@ end
 function isMember(r, uid)
     
     -- First, check the 30 minute cache
-    local nowish = math.floor(os.time() / 1800)
-    local t = r:ivm_get("isMember_" .. nowish .. "_" .. uid)
+    local NOWISH = math.floor(os.time() / 1800)
+    local MEMBER_KEY = "isMember_" .. NOWISH .. "_" .. uid
+    local t = r:ivm_get(MEMBER_KEY)
     
     -- If cached, then just return the value
     if t then
@@ -48,14 +49,14 @@ function isMember(r, uid)
             -- Found it?
             if match == uid then
                 -- Set cache
-                r:ivm_set("isMember_" .. nowish .. "_" .. uid, "1")
+                r:ivm_set(MEMBER_KEY, "1")
                 return true
             end
         end
     end
     
     -- Set cache
-    r:ivm_set("isMember_" .. nowish .. "_" .. uid, "0")
+    r:ivm_set(MEMBER_KEY, "0")
     return false
 end
 
