@@ -191,6 +191,9 @@ function scroll(sid)
     local json = performRequest(url)
     if json and json._scroll_id then
         if scanHasBody[sid] then
+            -- propagate the setting for the next call
+            scanHasBody[json._scroll_id] = true
+            scanHasBody[sid] = nil -- no longer needed
             local dhh = json.hits.hits
             for k = 1, #dhh do
                 local v = dhh[k]._source
