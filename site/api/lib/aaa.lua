@@ -17,6 +17,8 @@
 
 -- This is aaa.lua - AAA filter for ASF.
 
+local config = require 'lib/config'
+
 -- Get a list of PMCs the user is a part of
 function getPMCs(r, uid)
     local groups = {}
@@ -62,14 +64,24 @@ end
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
 function getRights(r, usr)
-    local xuid = usr.uid or usr.email or "|||"
-    uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
+    if not usr.credentials then
+        return {}
+    end
+
+    local xuid = usr.credentials.uid or usr.credentials.email or "|||"
+    local uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
     local rights = {}
     -- bad char in uid?
     if not uid or xuid ~= uid then
         return rights
     end
-    
+
+    -- Check that we used oauth, bail if not
+    local oauth_domain = usr.internal and usr.internal.oauth_used or nil
+    if not oauth_domain then
+        return {}
+    end
+
     -- check if oauth was through an oauth portal that can give privacy rights
     local authority = false
     for k, v in pairs(config.admin_oauth or {}) do
@@ -84,7 +96,7 @@ function getRights(r, usr)
     end
     
     -- Check if uid has member (admin) rights
-    if usr.admin or isMember(r, uid) then
+    if usr.internal.admin or isMember(r, uid) then
         table.insert(rights, "*")
     -- otherwise, get PMC list and construct array
     else
