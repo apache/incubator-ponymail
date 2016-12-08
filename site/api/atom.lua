@@ -170,7 +170,7 @@ function handle(r)
                     if doc.private then
                         canUse = false
                         if account and not rights then
-                            rights = aaa.rights(r, account.credentials.uid or account.credentials.email)
+                            rights = aaa.rights(r, account)
                         end
                         if account then
                             local lid = doc.list_raw:match("<[^.]+%.(.-)>")
