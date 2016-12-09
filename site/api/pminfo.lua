@@ -210,9 +210,7 @@ function handle(r)
             count = y.doc_count
         })
     end
-    listdata.participants = active_senders
-    
-    
+
     
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
