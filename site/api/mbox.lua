@@ -19,6 +19,9 @@
 
 local elastic = require 'lib/elastic'
 local cross = require 'lib/cross'
+local user = require 'lib/user'
+local aaa = require 'lib/aaa'
+require 'lib/utils'
 
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
@@ -93,11 +96,24 @@ function handle(r)
             },
             size = 10000
         }
-        
+
+        local account = user.get(r)
+        local rights = nil
+        local listAccessible = nil -- not yet initialised
         -- for each email, get the actual source of it to plop into the mbox file
         for k, v in pairs(docs.hits.hits) do
             v = v._source
-            if not v.private then
+            -- aaa.rights() can be expensive, so only do it once per download
+            if v.private and listAccessible == nil then
+                -- we are dealing with a single list here so only need to check once
+                if account then
+                    local rights = aaa.rights(r, account)
+                    listAccessible = canAccessList(rights, lid)
+                else
+                    listAccessible = false
+                end
+            end
+            if listAccessible or not v.private then
                 local doc = elastic.get('mbox_source', v.mid)
                 if doc and doc.source then
                     r:puts("From \n")

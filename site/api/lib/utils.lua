@@ -48,3 +48,44 @@ function findParent(r, doc, elastic)
 end
 
 
+--[[ 
+  parse a listid
+  returns the full lid, listname and the domain from "<listname.domain>"
+   where listname cannot contain any "." chars
+]]--
+function parseLid(lid)
+    return lid:match("^<(([^.]+)%.(.-))>$")
+end
+
+
+-- does the user have the rights to access the mailing list?
+-- N.B. will fail if rights or list_raw are invalid
+function canAccessList(rights, lid)
+    -- we don't need the name
+    local flid, _ , domain = parseLid(lid)
+    for _, v in pairs(rights) do
+        if v == "*" or v == flid or v == domain then
+            return true
+        end
+    end
+    return false
+end
+
+-- does the user have the rights to access the document?
+-- N.B. will fail if doc is invalid; may fail if rights is invalid
+function canAccessDoc(rights, doc)
+    if doc.private then
+        return canAccessList(rights, doc.list_raw)
+    else
+        return true
+    end
+end
+
+--[[
+    TODO the canAccess functions perhaps belong in aaa.lua.
+    This would allow sites to have their own ways of matching lists to rights and individual docs
+    This should be dealt with if/when aaa.lua is split up into generic and local parts.
+
+    Also the functions do not check their parameters.
+    This is because they may be called frequently.
+]]--
