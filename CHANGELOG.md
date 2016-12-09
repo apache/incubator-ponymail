@@ -2,6 +2,7 @@
 - private messages are now included in downloads if the user has access to them (#169, #108)
 - mbox export now generates valid From_ line (#190)
 - mbox export now escapes 'From ' lines in body text (#188)
+- stats.lua ignores negated words when building the word cloud (#277)
 
 ## CHANGES in 0.9b:
 

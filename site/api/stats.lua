@@ -422,6 +422,14 @@ function handle(r)
                                 private = false
                             }
                         }
+                    },
+                    must_not = {
+                        {
+                            query_string = {
+                                default_field = "subject",
+                                query = nqs
+                            }
+                        }
                     }
                 }
             }
