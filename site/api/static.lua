@@ -37,19 +37,6 @@ function sortEmail(thread)
     end
 end
 
-function leapYear(year)
-    if (year % 4 == 0) then
-        if (year%100 == 0)then                
-            if (year %400 == 0) then                    
-                return true
-            end
-        else                
-            return true
-        end
-        return false
-    end
-end
-
 function showThreads(r, thread, emails)
     r:puts("<ul>\n")
     for k, v in pairs(thread.children) do
