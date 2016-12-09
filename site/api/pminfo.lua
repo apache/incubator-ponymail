@@ -33,7 +33,6 @@ function handle(r)
     end
     local DD = 14
     local MAXRESULTS = 10000
-    local listdata = {}
 
     
     local NOWISH = math.floor(os.time() / 1800)
@@ -335,6 +334,7 @@ function handle(r)
     tnow = r:clock()
     
     JSON.encode_max_depth(500)
+    local listdata = {}
     listdata.max = MAXRESULTS
     listdata.no_threads = #threads
     listdata.hits = h
