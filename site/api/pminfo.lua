@@ -55,11 +55,9 @@ function handle(r)
                   list = "*." .. domain
               }
           }
-    
-    --[[ Get active lists ]]--
-    local doc = elastic.raw {
-        size = 0, -- we don't need the hits themselves
-        query = {
+
+    -- common query
+    local QUERY = {
             bool = {
                 must = {
                     {
@@ -75,12 +73,34 @@ function handle(r)
                     sterm
                 }
             }
-        },
+    }
+
+    --[[ Get active lists ]]--
+    local doc = elastic.raw {
+        size = 0, -- we don't need the hits themselves
+        query = QUERY,
         aggs = {
-            from = {
+            lists = { -- active lists (needed?)
                 terms = {
                     field = "list_raw",
                     size = MAXRESULTS
+                }
+            },
+            cards = { -- total participants
+                cardinality = {
+                    field = "from_raw"
+                }
+            },
+            weekly = { -- histogram of emails
+                date_histogram = {
+                    field = "date",
+                    interval = "1d"
+                }
+            },
+            top100 = { -- top100 senders (needed?)
+                terms = {
+                    field = "from_raw",
+                    size = 100
                 }
             }
         }
@@ -88,7 +108,7 @@ function handle(r)
     local lists = {} -- TODO unused?
     local nal = 0 -- This *is* used
 
-    for x,y in pairs (doc.aggregations.from.buckets) do
+    for x,y in pairs (doc.aggregations.lists.buckets) do
         local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
         if not domain:match("%..-%..-%..-") and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
             lists[domain] = lists[domain] or {}
@@ -99,102 +119,17 @@ function handle(r)
     
     -- Debug time point 2
     
-    --[[ Get total number of participants ]]--
-    local doc = elastic.raw {
-        size = 0,
-        query = {
-            bool = {
-                must = {
-                    {
-                        range = {
-                            date = daterange
-                        }
-                    }, 
-                    {
-                        term = {
-                            private = false
-                        }
-                    },
-                    sterm
-                }
-            }
-        },
-        aggs = {
-            from = {
-                cardinality = {
-                    field = "from_raw"
-                }
-            }
-        }
-    }
-    local no_senders = doc.aggregations.from.value
+    local no_senders = doc.aggregations.cards.value
     
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    --[[ Get histogram of emails ]]
-    local doc = elastic.raw {
-        size = 0, -- we don't need the hits themselves
-        aggs = {
-            weekly = {
-                date_histogram = {
-                    field = "date",
-                    interval = "1d"
-                }
-            }
-        },
-        query = {
-            bool = {
-                must = {
-                    {
-                        range = {
-                            date = daterange
-                        }
-                    },
-                    {
-                        term = {
-                            private = false
-                        }
-                    },
-                    sterm
-                }
-            }
-        }
-    }
     local activity = {}
     
     for k, v in pairs (doc.aggregations.weekly.buckets) do
         table.insert(activity, {v.key, v.doc_count})
     end
     
-    local doc = elastic.raw {
-        size = 0, -- we don't need the hits themselves
-        aggs = {
-            from = {
-                terms = {
-                    field = "from_raw",
-                    size = 100
-                }
-            }
-        },
-        query = {
-            bool = {
-                must = {
-                    {
-                        range = {
-                            date = daterange
-                        }
-                    },
-                    {
-                        term = {
-                            private = false
-                        }
-                    },
-                    sterm
-                }
-            }
-        }
-    }
     local active_senders = {} -- TODO unused?
     
     
@@ -203,7 +138,7 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    for x,y in pairs (doc.aggregations.from.buckets) do
+    for x,y in pairs (doc.aggregations.top100.buckets) do
         local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
         local gravatar = r:md5(eml)
         local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or eml
@@ -229,23 +164,7 @@ function handle(r)
     local emls = {}
     local sid = elastic.scan {
         _source = {'message-id','in-reply-to','subject','epoch','references'},
-        query = {
-            bool = {
-                must = {
-                    {
-                        range = {
-                            date = daterange
-                        }
-                    },
-                    {
-                        term = {
-                            private = false
-                        }
-                    },
-                    sterm
-                }
-            }
-        },
+        query = QUERY,
         sort = {
             {
                 date = {

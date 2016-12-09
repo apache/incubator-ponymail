@@ -3,6 +3,7 @@
 - mbox export now generates valid From_ line (#190)
 - mbox export now escapes 'From ' lines in body text (#188)
 - stats.lua ignores negated words when building the word cloud (#277)
+- combine pminfo.lua aggregations for efficiency (#273)
 
 ## CHANGES in 0.9b:
 
