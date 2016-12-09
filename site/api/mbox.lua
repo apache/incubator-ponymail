@@ -40,6 +40,29 @@ function leapYear(year)
     end
 end
 
+--[[
+    Parse the source to construct a valid 'From ' line.
+
+    Look for:
+    Return-Path: <dev-return-648-archive-asf-public=cust-asf.ponee.io@ponymail.incubator.apache.org>
+    ...
+    Received: from cust-asf.ponee.io (cust-asf.ponee.io [163.172.22.183])
+      by cust-asf2.ponee.io (Postfix) with ESMTP id 9B3A0200BD9
+      for <archive-asf-public-internal@cust-asf2.ponee.io>; Fri,  9 Dec 2016 13:48:01 +0100 (CET)
+    ...
+]]--
+function getFromLine(r, source)
+    local replyTo = source:match("Return%-Path: +<(.-)>")
+    if not replyTo then replyTo = "MAILER-DAEMON" end
+
+    local received = source:match("Received: +from .-; +(.-)[\r\n]")
+    if not received then received = "" end
+    local recd = r.date_parse_rfc(received) or 0
+    local timeStamp = os.date('%c',  recd) -- ctime format
+
+    return "From " .. replyTo .. " " .. timeStamp
+end
+
 function handle(r)
     r.content_type = "application/mbox"
     local get = r:parseargs()
@@ -116,7 +139,8 @@ function handle(r)
             if listAccessible or not v.private then
                 local doc = elastic.get('mbox_source', v.mid)
                 if doc and doc.source then
-                    r:puts("From \n")
+                    r:puts(getFromLine(r, doc.source))
+                    r:puts("\n")
                     r:puts(doc.source)
                     r:puts("\n")
                 end
