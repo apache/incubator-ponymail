@@ -1,3 +1,6 @@
+## CHANGES in 0.10:
+
+
 ## CHANGES in 0.9b:
 
 - Private lists can be hidden in the index from users without access
