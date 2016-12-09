@@ -63,10 +63,11 @@ function handle(r)
             bool = {
                 must = {
                     {
-                    range = {
-                        date = daterange
-                    }
-                }, {
+                        range = {
+                            date = daterange
+                        }
+                    }, 
+                    {
                         term = {
                             private = false
                         }
@@ -84,8 +85,8 @@ function handle(r)
             }
         }
     }
-    local lists = {}
-    local nal = 0
+    local lists = {} -- TODO unused?
+    local nal = 0 -- This *is* used
 
     for x,y in pairs (doc.aggregations.from.buckets) do
         local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
@@ -105,14 +106,16 @@ function handle(r)
             bool = {
                 must = {
                     {
-                    range = {
-                        date = daterange
-                    }
-                }, {
+                        range = {
+                            date = daterange
+                        }
+                    }, 
+                    {
                         term = {
                             private = false
                         }
-                    },sterm
+                    },
+                    sterm
                 }
             }
         },
@@ -144,14 +147,16 @@ function handle(r)
             bool = {
                 must = {
                     {
-                    range = {
-                        date = daterange
-                    }
-                }, {
+                        range = {
+                            date = daterange
+                        }
+                    },
+                    {
                         term = {
                             private = false
                         }
-                    },sterm
+                    },
+                    sterm
                 }
             }
         }
@@ -176,19 +181,21 @@ function handle(r)
             bool = {
                 must = {
                     {
-                    range = {
-                        date = daterange
-                    }
-                }, {
+                        range = {
+                            date = daterange
+                        }
+                    },
+                    {
                         term = {
                             private = false
                         }
-                    },sterm
+                    },
+                    sterm
                 }
             }
         }
     }
-    local active_senders = {}
+    local active_senders = {} -- TODO unused?
     
     
     
@@ -226,14 +233,16 @@ function handle(r)
             bool = {
                 must = {
                     {
-                    range = {
-                        date = daterange
-                    }
-                }, {
+                        range = {
+                            date = daterange
+                        }
+                    },
+                    {
                         term = {
                             private = false
                         }
-                    },sterm
+                    },
+                    sterm
                 }
             }
         },
@@ -339,9 +348,9 @@ function handle(r)
     listdata.no_threads = #threads
     listdata.hits = h
     listdata.participants = no_senders
-    listdata.top100 = active_senders
+    listdata.top100 = active_senders -- TODO unused by callers?
     listdata.no_active_lists = nal
-    listdata.active_lists = lists
+    listdata.active_lists = lists -- TODO unused by callers?
     listdata.took = r:clock() - now
     listdata.activity = activity
     
