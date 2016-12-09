@@ -141,7 +141,14 @@ function handle(r)
                 if doc and doc.source then
                     r:puts(getFromLine(r, doc.source))
                     r:puts("\n")
-                    r:puts(doc.source)
+                    -- pick out individual lines (including last which may not have EOL)
+                    for line in doc.source:gmatch("[^\r\n]*\r?\n?") do
+                        -- check if 'From ' needs to be escaped
+                        if line:match("^From ") then r:puts(">") end
+                        -- TODO consider whether to optionally prefix '>From ', '^>>From ' etc. 
+                        -- If so, just change the RE to "^>*From "
+                        r:puts(line) -- original line
+                    end
                     r:puts("\n")
                 end
             end
