@@ -193,7 +193,7 @@ function handle(r)
         end
     end
     
-    -- Debug time point 6
+    -- Debug time point 5
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -257,7 +257,7 @@ function handle(r)
         table.insert(emls, email)
     end
     
-    -- Debug time point 7
+    -- Debug time point 6
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -273,7 +273,7 @@ function handle(r)
     listdata.took = r:clock() - now
     listdata.activity = activity
     
-    -- Debug time point 8
+    -- Debug time point 7
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
