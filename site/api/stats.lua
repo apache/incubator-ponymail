@@ -365,7 +365,7 @@ function handle(r)
                 eml = "unknown"
             end
             local gravatar = r:md5(eml:lower())
-            local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+")
+            local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or "unknown"
             name = name:gsub("\"", "")
             table.insert(top10, {
                 id = y.key,
