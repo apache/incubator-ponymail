@@ -194,7 +194,7 @@ Number.prototype.pad = function(size) {
 
 // formatDate: Return a date as YYYY-MM-DD HH:mm
 function formatDate(date, dtz){
-    tz = new Date().getTimezoneOffset()
+    tz = new Date(date).getTimezoneOffset()
     ttz = 0
     var plus = "-"
     if (tz < 0) {
