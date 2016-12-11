@@ -53,6 +53,7 @@
 - stored date uses locale-dependent conversion and is ambiguous (#86)
 - search strings not properly quoted. (#76)
 - pminfo.lua creates top100 sender information but it's not used (#282)
+- stats.lua could use single aggregate query to get first and last years (#276)
 
 ## CHANGES in 0.9b:
 

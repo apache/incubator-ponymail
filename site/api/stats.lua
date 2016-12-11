@@ -445,41 +445,12 @@ function handle(r)
     -- Get years active
     local NOWISH = math.floor(os.time()/600)
     local FIRSTYEAR_KEY = "firstYear:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
-    local firstYear = r:ivm_get(FIRSTYEAR_KEY)
-    if (not firstYear or firstYear == "") and not statsOnly then
-        local doc = elastic.raw {
-            query = {
-                bool = {
-                    must = {
-                        {
-                            range = {
-                                date = {
-                                    gt = "1970/01/01 00:00:00",
-                                }
-                            }
-                        },
-                        sterm
-                    }
-                }
-            },
-            sort = {
-                {
-                    date = {
-                        order = "asc"
-                    }
-                }  
-            },
-            size = 1
-        }
-        firstYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
-        r:ivm_set(FIRSTYEAR_KEY, firstYear)
-    end
-    
-    -- Get years active
     local LASTYEAR_KEY = "lastYear:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
+    local firstYear = r:ivm_get(FIRSTYEAR_KEY)
     local lastYear = r:ivm_get(LASTYEAR_KEY)
-    if (not lastYear or lastYear == "")  and not statsOnly then
+    if (not firstYear or firstYear == "" or not lastYear or lastYear == "") and not statsOnly then
         local doc = elastic.raw {
+            size = 0,
             query = {
                 bool = {
                     must = {
@@ -494,20 +465,24 @@ function handle(r)
                     }
                 }
             },
-            
-            sort = {
-                {
-                    epoch = {
-                        order = "desc"
-                    }
-                }  
-            },
-            size = 1
+            aggs = {
+                first = {
+                   min =  {
+                      field = "date"
+                  }
+              },
+              last = {
+                   max = {
+                    field = "date"
+                  }
+                }
+            }
         }
-        lastYear = tonumber(os.date("%Y", doc.hits.hits[1] and doc.hits.hits[1]._source.epoch or os.time()))
+        firstYear = tonumber(os.date("%Y", doc.aggregations.first.value/1000))
+        r:ivm_set(FIRSTYEAR_KEY, firstYear)
+        lastYear = tonumber(os.date("%Y", doc.aggregations.last.value/1000))
         r:ivm_set(LASTYEAR_KEY, lastYear)
     end
-    
     
     -- Debug time point 6
     table.insert(t, r:clock() - tnow)
