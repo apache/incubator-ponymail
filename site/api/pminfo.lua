@@ -80,10 +80,15 @@ function handle(r)
         size = 0, -- we don't need the hits themselves
         query = QUERY,
         aggs = {
-            lists = { -- active lists (needed?)
-                terms = {
-                    field = "list_raw",
-                    size = MAXRESULTS
+--            lists = { -- active lists (needed?)
+--                terms = {
+--                    field = "list_raw",
+--                    size = MAXRESULTS
+--                }
+--            },
+            nlists = { -- total active lists
+                cardinality = {
+                    field = "list_raw"
                 }
             },
             cards = { -- total participants
@@ -96,26 +101,26 @@ function handle(r)
                     field = "date",
                     interval = "1d"
                 }
-            },
-            top100 = { -- top100 senders (needed?)
-                terms = {
-                    field = "from_raw",
-                    size = 100
-                }
+--            },
+--            top100 = { -- top100 senders (needed?)
+--                terms = {
+--                    field = "from_raw",
+--                    size = 100
+--                }
             }
         }
     }
-    local lists = {} -- TODO unused?
-    local nal = 0 -- This *is* used
+--    local lists = {} -- TODO unused?
+    local nal = doc.aggregations.nlists.value -- This *is* used
 
-    for x,y in pairs (doc.aggregations.lists.buckets) do
-        local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
-        if not domain:match("%..-%..-%..-") and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
-            lists[domain] = lists[domain] or {}
-            lists[domain][list] = y.doc_count
-            nal = nal + 1
-        end
-    end
+--    for x,y in pairs (doc.aggregations.lists.buckets) do
+--        local list, domain = y.key:match("^<?(.-)%.(.-)>?$")
+--        if not domain:match("%..-%..-%..-") and domain:match("^[-_a-z0-9.]+$") and list:match("^[-_a-z0-9.]+$") then
+--            lists[domain] = lists[domain] or {}
+--            lists[domain][list] = y.doc_count
+--            nal = nal + 1
+--        end
+--    end
     
     -- Debug time point 2
     
@@ -130,7 +135,7 @@ function handle(r)
         table.insert(activity, {v.key, v.doc_count})
     end
     
-    local active_senders = {} -- TODO unused?
+--    local active_senders = {} -- TODO unused?
     
     
     
@@ -138,19 +143,19 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    for x,y in pairs (doc.aggregations.top100.buckets) do
-        local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
-        local gravatar = r:md5(eml)
-        local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or eml
-        name = name:gsub("\"", "")
-        table.insert(active_senders, {
-            id = y.key,
-            email = eml,
-            gravatar = gravatar,
-            name = name,
-            count = y.doc_count
-        })
-    end
+--    for x,y in pairs (doc.aggregations.top100.buckets) do
+--        local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or "unknown"
+--        local gravatar = r:md5(eml)
+--        local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or eml
+--        name = name:gsub("\"", "")
+--        table.insert(active_senders, {
+--            id = y.key,
+--            email = eml,
+--            gravatar = gravatar,
+--            name = name,
+--            count = y.doc_count
+--        })
+--    end
 
     
     -- Debug time point 4
@@ -267,9 +272,9 @@ function handle(r)
     listdata.no_threads = #threads
     listdata.hits = h
     listdata.participants = no_senders
-    listdata.top100 = active_senders -- TODO unused by callers?
+--    listdata.top100 = active_senders -- TODO unused by callers?
     listdata.no_active_lists = nal
-    listdata.active_lists = lists -- TODO unused by callers?
+--    listdata.active_lists = lists -- TODO unused by callers?
     listdata.took = r:clock() - now
     listdata.activity = activity
     

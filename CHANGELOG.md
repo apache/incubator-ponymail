@@ -52,6 +52,7 @@
 - get by message-id does not work (#88)
 - stored date uses locale-dependent conversion and is ambiguous (#86)
 - search strings not properly quoted. (#76)
+- pminfo.lua creates top100 sender information but it's not used (#282)
 
 ## CHANGES in 0.9b:
 
