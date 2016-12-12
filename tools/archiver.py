@@ -197,6 +197,8 @@ class Archiver(object):
                         for subpart in part.walk():
                             if subpart.get_content_type() == 'text/plain' and not body:
                                 body = subpart.get_payload(decode=True)
+                            if subpart.get_content_type() == 'text/enriched' and not body:
+                                body = subpart.get_payload(decode=True)
                             elif subpart.get_content_type() == 'text/html' and self.html and not firstHTML:
                                 firstHTML = subpart.get_payload(decode=True)
             
