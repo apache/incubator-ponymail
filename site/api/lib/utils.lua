@@ -60,7 +60,7 @@ end
 
 -- does the user have the rights to access the mailing list?
 -- N.B. will fail if rights or list_raw are invalid
-function canAccessList(rights, lid)
+function canAccessList(lid, rights)
     -- we don't need the name
     local flid, _ , domain = parseLid(lid)
     for _, v in pairs(rights) do
@@ -73,9 +73,9 @@ end
 
 -- does the user have the rights to access the document?
 -- N.B. will fail if doc is invalid; may fail if rights is invalid
-function canAccessDoc(rights, doc)
+function canAccessDoc(doc, rights)
     if doc.private then
-        return canAccessList(rights, doc.list_raw)
+        return canAccessList(doc.list_raw, rights)
     else
         return true
     end

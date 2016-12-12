@@ -130,8 +130,7 @@ function handle(r)
             if v.private and listAccessible == nil then
                 -- we are dealing with a single list here so only need to check once
                 if account then
-                    local rights = aaa.rights(r, account)
-                    listAccessible = canAccessList(rights, lid)
+                    listAccessible = canAccessList(lid, aaa.rights(r, account))
                 else
                     listAccessible = false
                 end
