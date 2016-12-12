@@ -296,7 +296,7 @@ class Archiver(object):
 
         attachments, contents = self.msgfiles(msg)
         irt = ""
-        if body or attachments:
+        if body is not None or attachments:
             pmid = mid
             try:
                 # Use full message as bytes for mid?

@@ -57,6 +57,7 @@
 - stats.lua can fail when creating top10 senders (#283)
 - ponymail.js/formatDate may show the wrong timezone (#285)
 - archiver.py fails when attachment name is not ASCII (#287)
+- emails with no body content are ignored (#109)
 
 ## CHANGES in 0.9b:
 
