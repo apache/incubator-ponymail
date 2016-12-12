@@ -59,6 +59,7 @@
 - archiver.py fails when attachment name is not ASCII (#287)
 - emails with no body content are ignored (#109)
 - does not handle text/enriched mails (#289)
+- ll.py retrieves results but does not use them (#291)
 
 ## CHANGES in 0.9b:
 

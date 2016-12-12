@@ -61,7 +61,7 @@ then = time.time()
 page = es.search(
     index=dbname,
     doc_type="mbox",
-    size = 100,
+    size = 0,
     body = {
         'aggs': {
             'lists': {
