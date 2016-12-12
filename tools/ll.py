@@ -92,6 +92,8 @@ parser.add_argument('--pretty', dest='pretty', action='store_true',
                    help='Convert List IDs to email addresses')
 parser.add_argument('--debug', dest='debug', action='store_true', 
                    help='Output the result JSON instead, very noisy!')
+parser.add_argument('--counts', dest='counts', action='store_true', 
+                   help='Show the count of messages for each list')
 
 args = parser.parse_args()
 pretty = args.pretty
@@ -107,7 +109,10 @@ else:
                 plist[d] = plist[d] if d in plist else []
                 plist[d].append(l)
         else:
-            print(domain['key'])
+            if args.counts:
+                print(domain['key'],domain['doc_count'])
+            else:
+                print(domain['key'])
     
     for dom in sorted(plist):
         for ln in sorted(plist[dom]):
