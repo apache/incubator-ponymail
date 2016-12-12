@@ -208,6 +208,8 @@ class Archiver(object):
                     print(err)
         elif msg.get_content_type() == 'text/plain':
             body = msg.get_payload(decode=True)
+        elif msg.get_content_type() == 'text/enriched':
+            body = msg.get_payload(decode=True)
         elif msg.get_content_type() == 'text/html' and self.html and not firstHTML:
             firstHTML = msg.get_payload(decode=True)
             

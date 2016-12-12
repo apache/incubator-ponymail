@@ -1,0 +1,87 @@
+From tomcat-user-return-34660-apmail-jakarta-tomcat-user-archive=jakarta.apache.org@jakarta.apache.org Mon May 14 19:23:38 2001
+Return-Path: <tomcat-user-return-34660-apmail-jakarta-tomcat-user-archive=jakarta.apache.org@jakarta.apache.org>
+Delivered-To: apmail-jakarta-tomcat-user-archive@jakarta.apache.org
+Received: (qmail 71623 invoked by uid 500); 14 May 2001 19:23:25 -0000
+Mailing-List: contact tomcat-user-help@jakarta.apache.org; run by ezmlm
+Precedence: bulk
+Reply-To: tomcat-user@jakarta.apache.org
+list-help: <mailto:tomcat-user-help@jakarta.apache.org>
+list-unsubscribe: <mailto:tomcat-user-unsubscribe@jakarta.apache.org>
+list-post: <mailto:tomcat-user@jakarta.apache.org>
+List-Id: <tomcat-user.jakarta.apache.org>
+Delivered-To: mailing list tomcat-user@jakarta.apache.org
+Received: (qmail 71599 invoked from network); 14 May 2001 19:23:07 -0000
+Received: from netgate.emmes.com (root@208.208.19.150)
+  by h31.sny.collab.net with SMTP; 14 May 2001 19:23:07 -0000
+Received: from kumar ([10.0.0.229])
+	by netgate.emmes.com (8.9.3/8.9.3) with SMTP id OAA09624
+	for <tomcat-user@jakarta.apache.org>; Mon, 14 May 2001 14:58:19 -0400
+Message-Id: <3.0.5.32.20010514152321.0090b230@netgate.emmes.com>
+X-Sender: kumar@netgate.emmes.com
+X-Mailer: QUALCOMM Windows Eudora Pro Version 3.0.5 (32)
+Date: Mon, 14 May 2001 15:23:21 -0400
+To: tomcat-user@jakarta.apache.org
+From: Kumar Thotapally <kthotapally@emmes.com>
+Subject: Virtual Hosts
+Mime-Version: 1.0
+Content-Type: text/enriched; charset="us-ascii"
+X-Spam-Rating: h31.sny.collab.net 1.6.2 0/1000/N
+
+Hi,
+
+
+I am able to startup and shutdown multiple JVMs (using server1.xml ...
+etc).  I created applications (for example, JVM1, JVM2) under web-apps.
+
+
+When I enter http://localhost:8007/jvm1/servlet/HelloWorld1 in my
+browser,
+
+it works fine.
+
+
+However, with the following code in server1.xml :
+
+
+<fontfamily><param>Courier New</param><bigger>    <<ContextManager
+debug="0" workDir="work_jvm1" showDebugInfo="true" >
+
+</bigger></fontfamily>
+
+followed by 
+
+<fontfamily><param>Courier New</param><bigger>        <<!-- @@@ the /jvm1
+context -->
+
+
+         <<Host name="www.tomcat1.com" >
+
+          <<Context path="/jvm1" 
+
+                   docBase="webapps/jvm1" 
+
+                   crossContext="false"
+
+</bigger></fontfamily><fontfamily><param>Courier New</param><bigger>                  
+debug="1" 
+
+                   reloadable="true" > 
+
+          <</Context>
+
+        <</Host>
+
+</bigger></fontfamily>along with other contexts.
+
+
+When I enter www.tomcat1.com, I am not able to get the result.
+
+
+Any suggestions?
+
+
+Thanks,
+
+
+Kumar.
+
