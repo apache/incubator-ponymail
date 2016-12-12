@@ -82,7 +82,9 @@ archiver_generator = config.get("archiver", "generator", fallback="")
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
     if cd:
-        dispositions = cd.strip().split(";")
+        # Use str() in case the name is not in ASCII.
+        # In such cases, the get() method returns a Header not a string
+        dispositions = str(cd).strip().split(";")
         if dispositions[0].lower() == "attachment":
             fd = part.get_payload(decode=True)
             # Allow for empty string

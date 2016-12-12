@@ -56,6 +56,7 @@
 - stats.lua could use single aggregate query to get first and last years (#276)
 - stats.lua can fail when creating top10 senders (#283)
 - ponymail.js/formatDate may show the wrong timezone (#285)
+- archiver.py fails when attachment name is not ASCII (#287)
 
 ## CHANGES in 0.9b:
 

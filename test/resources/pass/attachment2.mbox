@@ -1,0 +1,165 @@
+From tomcat-user-return-26880-apmail-jakarta-tomcat-user-archive=jakarta.apache.org@jakarta.apache.org Fri Mar 09 09:25:03 2001
+Return-Path: <tomcat-user-return-26880-apmail-jakarta-tomcat-user-archive=jakarta.apache.org@jakarta.apache.org>
+Delivered-To: apmail-jakarta-tomcat-user-archive@jakarta.apache.org
+Received: (qmail 93883 invoked by uid 500); 9 Mar 2001 09:25:01 -0000
+Mailing-List: contact tomcat-user-help@jakarta.apache.org; run by ezmlm
+Precedence: bulk
+Reply-To: tomcat-user@jakarta.apache.org
+list-help: <mailto:tomcat-user-help@jakarta.apache.org>
+list-unsubscribe: <mailto:tomcat-user-unsubscribe@jakarta.apache.org>
+list-post: <mailto:tomcat-user@jakarta.apache.org>
+List-Id: <tomcat-user.jakarta.apache.org>
+Delivered-To: mailing list tomcat-user@jakarta.apache.org
+Received: (qmail 93873 invoked from network); 9 Mar 2001 09:25:00 -0000
+Received: from mail.pi.se (195.7.64.8)
+  by h31.sny.collab.net with SMTP; 9 Mar 2001 09:25:00 -0000
+Received: from troubadix ([195.7.85.166])
+	by mail.pi.se (8.11.2/8.11.2) with SMTP id f299PBR23636
+	for <tomcat-user@jakarta.apache.org>; Fri, 9 Mar 2001 10:25:11 +0100 (MET)
+From: "Måns af Klercker" <mans.af.klercker@tacton.com>
+To: <tomcat-user@jakarta.apache.org>
+Subject: ISAPI problems - worker not found??
+Date: Fri, 9 Mar 2001 10:25:11 +0100
+Message-ID: <CBEBKDOIKJBGAMFECIJHMEIJCKAA.mans.af.klercker@tacton.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_000_01E4_01C0A883.390F4CA0"
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2911.0)
+Importance: Normal
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4133.2400
+X-Spam-Rating: h31.sny.collab.net 1.6.2 0/1000/N
+
+------=_NextPart_000_01E4_01C0A883.390F4CA0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+
+Hi All!
+
+I'm trying to set up the ISAPI redirect service on a server and am running
+into some problems. I have tried to search the archives, but haven't found
+anything (not to put mikal.org down, but the search facilities there aren't
+stellar...).
+
+setup:
+- Win 2000 Pro
+- IIS 5.0
+- Tomcat 3.2.1 (inkl isapi_redirect.dll)
+
+I have followed the instructions in the tomcat-iis-howto.html on a copy of
+Tomcat 3.2.1 downloaded this morning (I have tried the same kind of setup
+with another tomcat installation, but decieded to repeat the problem to you
+with an unchanged Tomcat installation instead...). Everything seem to be
+working smoothly, I get the green arrow and Tomcat and the Ajp12Connector
+has started on 8007, but I get a 404 and the log is like follows:
+
+------------------------------------------------------------
+[jk_uri_worker_map.c (155)]: Into jk_uri_worker_map_t::uri_worker_map_alloc
+[jk_uri_worker_map.c (195)]: Into jk_uri_worker_map_t::uri_worker_map_open
+[jk_uri_worker_map.c (210)]: jk_uri_worker_map_t::uri_worker_map_open, rule
+map size is 2
+[jk_uri_worker_map.c (266)]: Into jk_uri_worker_map_t::uri_worker_map_open,
+match rule /servlet/=ajp12 was added
+[jk_uri_worker_map.c (266)]: Into jk_uri_worker_map_t::uri_worker_map_open,
+match rule /examples/=ajp12 was added
+[jk_uri_worker_map.c (295)]: Into jk_uri_worker_map_t::uri_worker_map_open,
+there are 2 rules
+[jk_uri_worker_map.c (316)]: jk_uri_worker_map_t::uri_worker_map_open, done
+[jk_worker.c (82)]: Into wc_open
+[jk_worker.c (207)]: Into build_worker_map, creating 2 workers
+[jk_worker.c (213)]: build_worker_map, creating worker ajp12
+[jk_worker.c (138)]: Into wc_create_worker
+[jk_worker.c (152)]: wc_create_worker, about to create instance ajp12 of
+ajp12
+[jk_ajp12_worker.c (264)]: Into ajp12_worker_factory
+[jk_worker.c (161)]: wc_create_worker, about to validate and init ajp12
+[jk_ajp12_worker.c (182)]: Into jk_worker_t::validate
+[jk_ajp12_worker.c (194)]: In jk_worker_t::validate for worker ajp12 contact
+is localhost:8007
+[jk_worker.c (177)]: wc_create_worker, done
+[jk_worker.c (223)]: build_worker_map, removing old ajp12 worker
+[jk_worker.c (213)]: build_worker_map, creating worker ajp13
+[jk_worker.c (138)]: Into wc_create_worker
+[jk_worker.c (152)]: wc_create_worker, about to create instance ajp13 of
+ajp13
+[jk_ajp13_worker.c (708)]: Into ajp23_worker_factory
+[jk_worker.c (161)]: wc_create_worker, about to validate and init ajp13
+[jk_ajp13_worker.c (383)]: Into jk_worker_t::validate
+[jk_ajp13_worker.c (396)]: In jk_worker_t::validate for worker ajp13 contact
+is localhost:8009
+[jk_ajp13_worker.c (422)]: Into jk_worker_t::init
+[jk_worker.c (177)]: wc_create_worker, done
+[jk_worker.c (223)]: build_worker_map, removing old ajp13 worker
+[jk_worker.c (235)]: build_worker_map, done
+[jk_worker.c (102)]: wc_open, done
+[jk_isapi_plugin.c (408)]: HttpFilterProc started
+[jk_isapi_plugin.c (429)]: In HttpFilterProc test redirection of
+/examples/jsp/index.html
+[jk_uri_worker_map.c (344)]: Into jk_uri_worker_map_t::map_uri_to_worker
+[jk_uri_worker_map.c (406)]: jk_uri_worker_map_t::map_uri_to_worker, Found a
+match ajp12
+[jk_isapi_plugin.c (439)]: HttpFilterProc [/examples/jsp/index.html] is a
+servlet url - should redirect to ajp12
+[jk_isapi_plugin.c (461)]: HttpFilterProc check if
+[/examples/jsp/index.html] is points to the web-inf directory
+-------------------------------------------------------
+
+To me, it seems like everything is correctly started, the redirector matches
+the request (the one from tomcat-iis-howto.html) but does not send it to the
+worker. What have I missed? Both worker and uriworkermap are unchanged from
+the distribution.
+
+
+Thanks in advance!
+/Måns af Klercker
+
+Tacton Systems AB, Saltmätargatan 7, 113 59 Stockholm, Sweden
+Phone +46 8 6900750, Direct +46 8 6900767, Mobile +46 730 324932
+mans.af.klercker@tacton.com | http://www.tacton.com
+
+
+------=_NextPart_000_01E4_01C0A883.390F4CA0
+Content-Type: text/x-vcard;
+	name="Måns af Klercker.vcf"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+	filename="Måns af Klercker.vcf"
+
+BEGIN:VCARD
+VERSION:2.1
+N:af Klercker;M=E5ns
+FN:M=E5ns af Klercker
+ORG:Tacton Systems AB
+TITLE:Developer
+TEL;WORK;VOICE:+46-8-6900767
+TEL;HOME;VOICE:+46-18-714722
+TEL;CELL;VOICE:+46 (-730) -324932
+TEL;WORK;FAX:+46-8-6900764
+ADR;WORK:;;Saltm=E4targatan 7;Stockholm;;S-11359;Sweden
+LABEL;WORK;ENCODING=3DQUOTED-PRINTABLE:Saltm=3DE4targatan =
+7=3D0D=3D0AStockholm S-11359=3D0D=3D0ASweden
+ADR;HOME:;;V=E4derkvarnsgatan 52A;75326  Uppsala;;;Sweden
+LABEL;HOME;ENCODING=3DQUOTED-PRINTABLE:V=3DE4derkvarnsgatan =
+52A=3D0D=3D0A75326  Uppsala=3D0D=3D0ASweden
+X-WAB-GENDER:2
+URL:http://www.tacton.com
+URL:http://www.tacton.com
+BDAY:19730713
+EMAIL;PREF;INTERNET:mans.af.klercker@tacton.com
+EMAIL;INTERNET:mans.af.klercker@home.se
+EMAIL;INTERNET:mans@klercker.com
+REV:20010103T094021Z
+END:VCARD
+
+
+------=_NextPart_000_01E4_01C0A883.390F4CA0
+Content-Type: text/plain; charset=us-ascii
+
+---------------------------------------------------------------------
+To unsubscribe, e-mail: tomcat-user-unsubscribe@jakarta.apache.org
+For additional commands, email: tomcat-user-help@jakarta.apache.org
+------=_NextPart_000_01E4_01C0A883.390F4CA0--
+
+
