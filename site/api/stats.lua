@@ -478,9 +478,14 @@ function handle(r)
                 }
             }
         }
-        firstYear = tonumber(os.date("%Y", doc.aggregations.first.value/1000))
+        local first = doc.aggregations.first.value
+        if first == JSON.null then first = os.time() else first = first/1000 end
+        firstYear = tonumber(os.date("%Y", first))
         r:ivm_set(FIRSTYEAR_KEY, firstYear)
-        lastYear = tonumber(os.date("%Y", doc.aggregations.last.value/1000))
+
+        local last = doc.aggregations.last.value
+        if last == JSON.null then last = os.time() else last = last/1000 end
+        lastYear = tonumber(os.date("%Y", last))
         r:ivm_set(LASTYEAR_KEY, lastYear)
     end
     
