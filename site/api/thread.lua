@@ -59,15 +59,7 @@ local function fetchChildren(r, pdoc, c, biglist, rights, account)
         -- if we haven't seen this email before, check for its kids and add it to the bunch
         local canAccess = true
         if doc.private then
-            canAccess = false
-            local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-            local flid = doc.list_raw:match("<([^.]+%..-)>")
-            for k, v in pairs(rights) do
-                if v == "*" or v == lid or v == flid then
-                    canAccess = true
-                    break
-                end
-            end
+            canAccess = canAccessDoc(doc, rights)
         end
         
         if canAccess and (not biglist[doc['message-id']]) then
@@ -129,15 +121,7 @@ function handle(r)
         -- if private, can we access it?
         if doc.private then
             if account then
-                local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-                local flid = doc.list_raw:match("<([^.]+%..-)>")
-                rights = aaa.rights(r, account)
-                for k, v in pairs(rights) do
-                    if v == "*" or v == lid or v == flid then
-                        canAccess = true
-                        break
-                    end
-                end
+                canAccess = canAccessDoc(doc, aaa.rights(r, account))
             else
                 r:puts(JSON.encode{
                     error = "You must be logged in to view this email"

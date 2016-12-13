@@ -62,6 +62,7 @@
 - ll.py retrieves results but does not use them (#291)
 - lib/aaa.lua various bugs (#140)
 - lua modules should define local functions only (#294)
+- inconsistent rights checking (#267)
 
 ## CHANGES in 0.9b:
 

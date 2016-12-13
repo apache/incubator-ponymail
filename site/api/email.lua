@@ -69,14 +69,7 @@ function handle(r)
         -- Is this a private email? and if so, does the user have access to view it?
         if doc.private then
             if account then
-                local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-                local flid = doc.list_raw:match("<([^.]+%..-)>")
-                for k, v in pairs(aaa.rights(r, account)) do
-                    if v == "*" or v == lid or v == flid then
-                        canAccess = true
-                        break
-                    end
-                end
+                canAccess = canAccessDoc(doc, aaa.rights(r, account))
             else
                 r:puts(JSON.encode{
                     error = "You must be logged in to view this email"

@@ -24,6 +24,8 @@ local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
 
+require 'lib/utils'
+
 function handle(r)
     r.content_type = "application/json"
     local now = r:clock()
@@ -53,23 +55,17 @@ function handle(r)
         -- Find all recent notification docs, up to 50 latest results
         local docs = elastic.find("recipient:\"" .. r:sha1(account.cid) .. "\"", 50, "notifications")
         for k, doc in pairs(docs) do
-            local canUse = true
+            local canUse = false
             -- check we have rights to view this notification (it might be from a private email we shouldn't see)
             if doc.private then
-                if not rights then
-                    rights = aaa.rights(r, account)
-                end
-                canUse = false
                 if account then
-                    local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-                    local flid = doc.list_raw:match("<([^.]+%..-)>")
-                    for k, v in pairs(rights or {}) do
-                        if v == "*" or v == lid or v == flid then
-                            canUse = true
-                            break
-                        end
-                    end
+                  if not rights then
+                      rights = aaa.rights(r, account)
+                  end
+                  canUse = canAccessDoc(doc, rights)
                 end
+            else
+                canUse = true
             end
             -- if we can see the email, push the notif to the list
             if canUse then

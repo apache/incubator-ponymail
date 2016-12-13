@@ -40,13 +40,7 @@ function handle(r)
         if doc.private then
             local account = user.get(r)
             if account then
-                local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-                for k, v in pairs(aaa.rights(r, account)) do
-                    if v == "*" or v == lid then
-                        canAccess = true
-                        break
-                    end
-                end
+                canAccess = canAccessDoc(doc, aaa.rights(r, account))
             else
                 r:puts("You must be logged in to view this email")
                 return cross.OK

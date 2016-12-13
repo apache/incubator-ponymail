@@ -123,22 +123,16 @@ function handle(r)
         for k = #doc.hits.hits, 1, -1 do
             local v = doc.hits.hits[k]
             local email = v._source
-            local canUse = true
+            local canUse = false
             if email.private then
-                if account and not rights then
-                    rights = aaa.rights(r, account)
-                end
-                canUse = false
                 if account then
-                    local lid = email.list_raw:match("<[^.]+%.(.-)>")
-                    local flid = email.list_raw:match("<([^.]+%..-)>")
-                    for k, v in pairs(rights or {}) do
-                        if v == "*" or v == lid or v == flid then
-                            canUse = true
-                            break
-                        end
+                    if rights then
+                        rights = aaa.rights(r, account)
                     end
+                    canUse = canAccessDoc(email, rights)
                 end
+            else
+                canUse = true
             end
             if canUse then
                 local mid = email['message-id']
@@ -166,21 +160,16 @@ function handle(r)
                 fetchChildren(r, parent)
                 -- ensure access and process all children
                 for k, doc in pairs(emls_thrd) do
-                    local canUse = true
+                    local canUse = false
                     if doc.private then
-                        canUse = false
-                        if account and not rights then
-                            rights = aaa.rights(r, account)
-                        end
                         if account then
-                            local lid = doc.list_raw:match("<[^.]+%.(.-)>")
-                            for k, v in pairs(rights or {}) do
-                                if v == "*" or v == lid then
-                                    canUse = true
-                                    break
-                                end
+                            if not rights then
+                                rights = aaa.rights(r, account)
                             end
+                            canUse = canAccessDoc(doc, rights)
                         end
+                    else
+                        canUse = true
                     end
                     if canUse then
                         table.insert(emls, doc)
