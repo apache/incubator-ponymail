@@ -25,7 +25,7 @@ local cross = require 'lib/cross'
 local config = require 'lib/config'
 
 -- anonymizer func
-function anonymize(doc)
+local function anonymize(doc)
     if doc.from and doc.from ~= JSON.null and #doc.from > 0 then
         doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
     end

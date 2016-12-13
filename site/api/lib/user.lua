@@ -18,7 +18,7 @@ local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 
 -- Get user data from DB
-function getUser(r, override)
+local function getUser(r, override)
     local ocookie = r:getcookie("ponymail")
     local login = {}
     if override or (ocookie and #ocookie > 43) then
@@ -51,7 +51,7 @@ function getUser(r, override)
 end
 
 -- Update or set up a new user
-function updateUser(r, cid, data)
+local function updateUser(r, cid, data)
     local cookie = r:sha1(r.useragent_ip .. ':' .. (math.random(1,9999999)*os.time()) .. r:clock())
     
     -- Does this account exists? If so, grab the prefs first
@@ -88,7 +88,7 @@ end
 
 
 -- Log out a user
-function logoutUser(r, usr)
+local function logoutUser(r, usr)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.internal.cookie = 'nil'
@@ -103,7 +103,7 @@ end
 
 
 -- Save preferences
-function savePreferences(r, usr, alts)
+local function savePreferences(r, usr, alts)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.preferences = usr.preferences
@@ -115,7 +115,7 @@ function savePreferences(r, usr, alts)
 end
 
 -- Save favorites
-function saveFavorites(r, usr)
+local function saveFavorites(r, usr)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.favorites = usr.favorites

@@ -20,7 +20,7 @@
 local config = require 'lib/config'
 
 -- Get a list of PMCs the user is a part of
-function getPMCs(r, uid)
+local function getPMCs(r, uid)
     local groups = {}
     local ldapdata = io.popen( ([[ldapsearch -x -LLL "(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))" cn]]):format(uid,uid) )
     local data = ldapdata:read("*a")
@@ -32,7 +32,7 @@ end
 
 
 -- Is $uid a member of the org?
-function isMember(r, uid)
+local function isMember(r, uid)
     
     -- First, check the 30 minute cache
     local NOWISH = math.floor(os.time() / 1800)
@@ -63,7 +63,7 @@ function isMember(r, uid)
 end
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
-function getRights(r, usr)
+local function getRights(r, usr)
     if not usr.credentials then
         return {}
     end

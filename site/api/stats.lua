@@ -28,7 +28,7 @@ local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
 
-function sortEmail(thread)
+local function sortEmail(thread)
     if thread.children and type(thread.children) == "table" then
         table.sort (thread.children, function (k1, k2) return k1.epoch > k2.epoch end )
         for k, v in pairs(thread.children) do
@@ -39,7 +39,7 @@ end
 
 -- findSubject: match an email with an earlier one with the same topic
 -- used for orphaned emails
-function findSubject(gblob, blob, subject, epoch, maxAge)
+local function findSubject(gblob, blob, subject, epoch, maxAge)
     local subj = subject:gsub("^[A-Za-z]:%s+", "")
     for k, v in pairs(blob) do
         if v.subject and v.subject == subj and v.epoch < epoch and (not maxAge or (maxAge and v.epoch >= (epoch - (maxAge*86400)))) then
@@ -52,7 +52,7 @@ function findSubject(gblob, blob, subject, epoch, maxAge)
     return nil
 end
 
-function leapYear(year)
+local function leapYear(year)
     if (year % 4 == 0) then
         if (year%100 == 0)then                
             if (year %400 == 0) then                    

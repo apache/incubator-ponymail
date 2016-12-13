@@ -28,7 +28,7 @@ require 'lib/utils'
 local emls_thrd
 
 -- func for fetching all child emails of a parent topic
-function fetchChildren(r, pdoc, c, biglist)
+local function fetchChildren(r, pdoc, c, biglist)
     c = (c or 0) + 1
     if c > 250 then
         return {}

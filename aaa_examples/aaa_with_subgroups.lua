@@ -46,7 +46,7 @@ local access_list = {
 }
 
 -- Get rights (full or no access)
-function getRights(r, usr)
+local function getRights(r, usr)
     if not usr.credentials then
         return {}
     end

@@ -30,7 +30,7 @@ local emls_thrd
 require 'lib/utils'
 
 -- anonymizer func
-function anonymize(doc)
+local function anonymize(doc)
     if doc.from and doc.from ~= JSON.null and #doc.from > 0 then
         doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
     end
@@ -44,7 +44,7 @@ function anonymize(doc)
 end
 
 -- func that fetches all children of an original topic email thingy
-function fetchChildren(r, pdoc, c, biglist, rights, account)
+local function fetchChildren(r, pdoc, c, biglist, rights, account)
     c = (c or 0) + 1
     -- don't fetch more than 250 subtrees, we don't want to nest ad nauseam
     if c > 250 then

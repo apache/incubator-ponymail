@@ -27,7 +27,7 @@ local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
 
-function leapYear(year)
+local function leapYear(year)
     if (year % 4 == 0) then
         if (year%100 == 0)then                
             if (year %400 == 0) then                    
@@ -51,7 +51,7 @@ end
       for <archive-asf-public-internal@cust-asf2.ponee.io>; Fri,  9 Dec 2016 13:48:01 +0100 (CET)
     ...
 ]]--
-function getFromLine(r, source)
+local function getFromLine(r, source)
     local replyTo = source:match("Return%-Path: +<(.-)>")
     if not replyTo then replyTo = "MAILER-DAEMON" end
 

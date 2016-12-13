@@ -30,7 +30,7 @@ local grant_access_to = "*" -- use * for access to all, or specify a (sub)domain
 local useAlternates = false -- also check against alternate email addresses??
 
 -- Is email a valid foocorp email?
-function validateEmail(r, email)
+local function validateEmail(r, email)
     -- do a GLOB match, testing email aginst valid_email
     if r:strcmp_match(valid_email, email) then
         return true
@@ -40,7 +40,7 @@ end
 
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
-function getRights(r, usr)
+local function getRights(r, usr)
     if not usr.credentials then
         return {}
     end

@@ -17,7 +17,7 @@
 
 -- cross-server module for making apache and nginx work roughly the same way
 
-function setContentType(r, foo)
+local function setContentType(r, foo)
     if ngx and ngx.header then
         ngx.header['Content-Type'] = foo
     else
@@ -30,7 +30,7 @@ _M = {}
 apr = nil
 pcall(function() apr = require 'apr' end)
 
-function ngstart(handler)
+local function ngstart(handler)
     if ngx then
         _G.apache2 = {
             OK = 0

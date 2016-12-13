@@ -65,7 +65,7 @@ local function performRequest(url, query)
 end
 
 -- Standard ES query, returns $size results of any doc of type $doc, sorting by $sitem
-function getHits(query, size, doc, sitem)
+local function getHits(query, size, doc, sitem)
     doc = doc or "mbox"
     sitem = sitem or "epoch"
     size = size or 10
@@ -87,7 +87,7 @@ function getHits(query, size, doc, sitem)
 end
 
 -- Get a single document
-function getDoc (ty, id)
+local function getDoc (ty, id)
     local url = config.es_url  .. ty .. "/" .. id
     local json = performRequest(url)
     if json and json._source then
@@ -101,7 +101,7 @@ end
 
 -- Get results (a'la getHits), but only return email headers, not the body
 -- provides faster transport when we don't need everything
-function getHeaders(query, size, doc)
+local function getHeaders(query, size, doc)
     doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
@@ -118,7 +118,7 @@ function getHeaders(query, size, doc)
 end
 
 -- Same as above, but reverse return order
-function getHeadersReverse(query, size, doc)
+local function getHeadersReverse(query, size, doc)
     doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
@@ -144,7 +144,7 @@ local function contains(table,value)
 end
 
 -- Do a raw ES query with a JSON query
-function raw(query, doctype)
+local function raw(query, doctype)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search"
     local json = performRequest(url, query)
@@ -167,7 +167,7 @@ end
 local scanHasBody = {}
 
 -- Raw query with scroll/scan
-function scan(query, doctype)
+local function scan(query, doctype)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
     local json = performRequest(url, query)
@@ -184,7 +184,7 @@ function scan(query, doctype)
     return nil
 end
 
-function scroll(sid)
+local function scroll(sid)
     -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
     -- But in case we're being proxied, let's just cut off the last part of the URL
     local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
@@ -208,7 +208,7 @@ function scroll(sid)
 end
 
 -- Update a document
-function update(doctype, id, query, consistency)
+local function update(doctype, id, query, consistency)
     doctype = doctype or default_doc
     local url = config.es_url .. doctype .. "/" .. id .. "/_update"
     if consistency then
@@ -219,7 +219,7 @@ function update(doctype, id, query, consistency)
 end
 
 -- Put a new document somewhere
-function index(id, ty, body, consistency)
+local function index(id, ty, body, consistency)
     if not id then
         error("id parameter must be provided", 3)
     end
@@ -231,7 +231,7 @@ function index(id, ty, body, consistency)
     return json or {}
 end
 
-function setDefault(typ)
+local function setDefault(typ)
     default_doc = typ
 end
 

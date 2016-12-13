@@ -61,6 +61,7 @@
 - does not handle text/enriched mails (#289)
 - ll.py retrieves results but does not use them (#291)
 - lib/aaa.lua various bugs (#140)
+- lua modules should define local functions only (#294)
 
 ## CHANGES in 0.9b:
 

@@ -28,7 +28,7 @@ local valid_portal = "www.googleapis.com"
 local grant_access_to = "*" -- use * for access to all, or specify a (sub)domain to grant access to
 
 -- Get rights (full or no access)
-function getRights(r, usr)
+local function getRights(r, usr)
     if not usr.credentials then
         return {}
     end

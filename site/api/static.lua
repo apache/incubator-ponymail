@@ -28,7 +28,7 @@ local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
 
-function sortEmail(thread)
+local function sortEmail(thread)
     if thread.children and type(thread.children) == "table" then
         table.sort (thread.children, function (k1, k2) return k1.epoch > k2.epoch end )
         for k, v in pairs(thread.children) do
@@ -37,7 +37,7 @@ function sortEmail(thread)
     end
 end
 
-function showThreads(r, thread, emails)
+local function showThreads(r, thread, emails)
     r:puts("<ul>\n")
     for k, v in pairs(thread.children) do
         local email = nil
