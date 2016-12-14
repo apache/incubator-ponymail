@@ -56,12 +56,18 @@ local function fetchChildren(r, pdoc, c, biglist, rights, account)
     local docs = elastic.findFast('in-reply-to:"' .. r:escape(pdoc['message-id'])..'"', 50, "mbox")
     for k, doc in pairs(docs) do
         -- if we haven't seen this email before, check for its kids and add it to the bunch
-        local canAccess = true
+        local canAccess = false
         if doc.private then
-            if account and not rights then
-                rights = aaa.rights(r, account)
+            if not rights then
+                if account then
+                    rights = aaa.rights(r, account)
+                else
+                    rights = {}
+                end
             end
             canAccess = utils.canAccessDoc(doc, rights)
+        else
+            canAccess = true
         end
         
         if canAccess and (not biglist[doc['message-id']]) then
