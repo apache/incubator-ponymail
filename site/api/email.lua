@@ -23,6 +23,7 @@ local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
 local config = require 'lib/config'
+local utils = require 'lib/utils'
 
 -- anonymizer func
 local function anonymize(doc)
