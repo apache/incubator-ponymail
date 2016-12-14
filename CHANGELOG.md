@@ -63,6 +63,7 @@
 - lib/aaa.lua various bugs (#140)
 - lua modules should define local functions only (#294)
 - inconsistent rights checking (#267)
+- thread.lua fails to fetch rights when fetching private child of public parent (#296)
 
 ## CHANGES in 0.9b:
 

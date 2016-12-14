@@ -58,6 +58,9 @@ local function fetchChildren(r, pdoc, c, biglist, rights, account)
         -- if we haven't seen this email before, check for its kids and add it to the bunch
         local canAccess = true
         if doc.private then
+            if account and not rights then
+                rights = aaa.rights(r, account)
+            end
             canAccess = utils.canAccessDoc(doc, rights)
         end
         
@@ -115,7 +118,7 @@ function handle(r)
     -- did we find an email?
     if doc then
         local canAccess = false
-        local rights = {}
+        local rights = nil
         local account = user.get(r)
         -- if private, can we access it?
         if doc.private then
