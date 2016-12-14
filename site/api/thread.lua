@@ -120,7 +120,8 @@ function handle(r)
         -- if private, can we access it?
         if doc.private then
             if account then
-                canAccess = utils.canAccessDoc(doc, aaa.rights(r, account))
+                rights = aaa.rights(r, account)
+                canAccess = utils.canAccessDoc(doc, rights)
             else
                 r:puts(JSON.encode{
                     error = "You must be logged in to view this email"
