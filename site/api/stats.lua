@@ -23,8 +23,7 @@ local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local config = require 'lib/config'
 local cross = require 'lib/cross'
-
-require 'lib/utils'
+local utils = require 'lib/utils'
 
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
@@ -587,7 +586,7 @@ function handle(r)
             end
             canUse = false
             if account then
-                canUse = canAccessDoc(email, rights)
+                canUse = utils.canAccessDoc(email, rights)
             end
         end
         if canUse then

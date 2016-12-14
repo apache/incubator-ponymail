@@ -17,14 +17,8 @@
 
 -- This is lib/utils.lua - utility methods
 
---[[
-This module is intended to be directly required by the caller
-and so should not have any global state.
-For this reason it cannot include other lib files such as elastic
-]]--
-
 -- find the original topic starter
-function findParent(r, doc, elastic)
+local function findParent(r, doc, elastic)
     local step = 0
     -- max 50 steps up in the hierarchy
     while step < 50 do
@@ -53,14 +47,14 @@ end
   returns the full lid, listname and the domain from "<listname.domain>"
    where listname cannot contain any "." chars
 ]]--
-function parseLid(lid)
+local function parseLid(lid)
     return lid:match("^<(([^.]+)%.(.-))>$")
 end
 
 
 -- does the user have the rights to access the mailing list?
 -- N.B. will fail if rights or list_raw are invalid
-function canAccessList(lid, rights)
+local function canAccessList(lid, rights)
     -- we don't need the name
     local flid, _ , domain = parseLid(lid)
     for _, v in pairs(rights) do
@@ -73,7 +67,7 @@ end
 
 -- does the user have the rights to access the document?
 -- N.B. will fail if doc is invalid; may fail if rights is invalid
-function canAccessDoc(doc, rights)
+local function canAccessDoc(doc, rights)
     if doc.private then
         return canAccessList(doc.list_raw, rights)
     else
@@ -89,3 +83,10 @@ end
     Also the functions do not check their parameters.
     This is because they may be called frequently.
 ]]--
+
+return {
+    findParent = findParent,
+    parseLid = parseLid,
+    canAccessList = canAccessList,
+    canAccessDoc = canAccessDoc
+}

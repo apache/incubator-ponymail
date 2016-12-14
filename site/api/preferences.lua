@@ -24,8 +24,7 @@ local cross = require 'lib/cross'
 local smtp = require 'socket.smtp'
 local config = require 'lib/config'
 local aaa = require 'lib/aaa'
-
-require 'lib/utils'
+local utils = require 'lib/utils'
 
 --[[
 Get login details (if logged in), mail list counts and descriptions
@@ -321,9 +320,9 @@ Pony Mail - Email for Ponies and People.
         -- i.e. the user won't see the list name if it contains a single private mail they cannot access
         for x,y in pairs (pdoc.aggregations.from.buckets) do
             local canAccess = false
-            local _, list, domain = parseLid(y.key:lower())
+            local _, list, domain = utils.parseLid(y.key:lower())
             if list and domain and #list > 0 and #domain > 2 then
-                canAccess = canAccessList(y.key:lower(), rights)
+                canAccess = utils.canAccessList(y.key:lower(), rights)
                 if not canAccess then
                     lists[domain] = lists[domain] or {}
                     lists[domain][list] = nil

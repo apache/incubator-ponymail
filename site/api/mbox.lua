@@ -21,7 +21,7 @@ local elastic = require 'lib/elastic'
 local cross = require 'lib/cross'
 local user = require 'lib/user'
 local aaa = require 'lib/aaa'
-require 'lib/utils'
+local utils = require 'lib/utils'
 
 local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
@@ -130,7 +130,7 @@ function handle(r)
             if v.private and listAccessible == nil then
                 -- we are dealing with a single list here so only need to check once
                 if account then
-                    listAccessible = canAccessList(lid, aaa.rights(r, account))
+                    listAccessible = utils.canAccessList(lid, aaa.rights(r, account))
                 else
                     listAccessible = false
                 end

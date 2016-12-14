@@ -21,6 +21,7 @@ local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
+local utils = require 'lib/utils'
 
 function handle(r)
     r.content_type = "text/plain"
@@ -40,7 +41,7 @@ function handle(r)
         if doc.private then
             local account = user.get(r)
             if account then
-                canAccess = canAccessDoc(doc, aaa.rights(r, account))
+                canAccess = utils.canAccessDoc(doc, aaa.rights(r, account))
             else
                 r:puts("You must be logged in to view this email")
                 return cross.OK

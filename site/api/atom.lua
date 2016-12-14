@@ -22,8 +22,7 @@ local elastic = require 'lib/elastic'
 local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local cross = require 'lib/cross'
-
-require 'lib/utils'
+local utils = require 'lib/utils'
 
 local emls_thrd
 
@@ -129,7 +128,7 @@ function handle(r)
                     if rights then
                         rights = aaa.rights(r, account)
                     end
-                    canUse = canAccessDoc(email, rights)
+                    canUse = utils.canAccessDoc(email, rights)
                 end
             else
                 canUse = true
@@ -152,7 +151,7 @@ function handle(r)
         local doc = elastic.get("mbox", get.mid)
         if doc then
             -- make sure we have the real parent
-            local parent = findParent(r, doc, elastic)
+            local parent = utils.findParent(r, doc, elastic)
 
             -- we got the original email, now let's find and process all kids
             if parent then
@@ -166,7 +165,7 @@ function handle(r)
                             if not rights then
                                 rights = aaa.rights(r, account)
                             end
-                            canUse = canAccessDoc(doc, rights)
+                            canUse = utils.canAccessDoc(doc, rights)
                         end
                     else
                         canUse = true

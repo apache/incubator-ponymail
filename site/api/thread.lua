@@ -24,10 +24,9 @@ local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
 local config = require 'lib/config'
+local utils = require 'lib/utils'
 
 local emls_thrd
-
-require 'lib/utils'
 
 -- anonymizer func
 local function anonymize(doc)
@@ -59,7 +58,7 @@ local function fetchChildren(r, pdoc, c, biglist, rights, account)
         -- if we haven't seen this email before, check for its kids and add it to the bunch
         local canAccess = true
         if doc.private then
-            canAccess = canAccessDoc(doc, rights)
+            canAccess = utils.canAccessDoc(doc, rights)
         end
         
         if canAccess and (not biglist[doc['message-id']]) then
@@ -109,7 +108,7 @@ function handle(r)
         end
     end
     if get.timetravel then
-        doc = findParent(r, doc, elastic)
+        doc = utils.findParent(r, doc, elastic)
     end
     local doclist = {}
     
@@ -121,7 +120,7 @@ function handle(r)
         -- if private, can we access it?
         if doc.private then
             if account then
-                canAccess = canAccessDoc(doc, aaa.rights(r, account))
+                canAccess = utils.canAccessDoc(doc, aaa.rights(r, account))
             else
                 r:puts(JSON.encode{
                     error = "You must be logged in to view this email"

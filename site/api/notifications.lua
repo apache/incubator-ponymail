@@ -23,8 +23,7 @@ local elastic = require 'lib/elastic'
 local aaa = require 'lib/aaa'
 local user = require 'lib/user'
 local cross = require 'lib/cross'
-
-require 'lib/utils'
+local utils = require 'lib/utils'
 
 function handle(r)
     r.content_type = "application/json"
@@ -62,7 +61,7 @@ function handle(r)
                   if not rights then
                       rights = aaa.rights(r, account)
                   end
-                  canUse = canAccessDoc(doc, rights)
+                  canUse = utils.canAccessDoc(doc, rights)
                 end
             else
                 canUse = true
