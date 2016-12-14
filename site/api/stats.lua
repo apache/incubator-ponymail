@@ -575,19 +575,20 @@ function handle(r)
     for k = #dhh, 1, -1 do
         local v = dhh[k]
         local email = v._source
-        local canUse = true
         local eepoch = tonumber(email.epoch)
         if eepoch > lastEmail then
             lastEmail = eepoch
         end
+        local canUse = false
         if email.private then
-            if account and not rights then
-                rights = aaa.rights(r, account)
-            end
-            canUse = false
             if account then
+                if not rights then
+                    rights = aaa.rights(r, account)
+                end
                 canUse = utils.canAccessDoc(email, rights)
             end
+        else
+            canUse = true
         end
         if canUse then
 
