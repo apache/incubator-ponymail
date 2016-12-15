@@ -37,19 +37,8 @@ function handle(r)
         end
     end
     if doc then
-        local canAccess = false
-        if doc.private then
-            local account = user.get(r)
-            if account then
-                canAccess = utils.canAccessDoc(doc, aaa.rights(r, account))
-            else
-                r:puts("You must be logged in to view this email")
-                return cross.OK
-            end
-        else
-            canAccess = true
-        end
-        if canAccess then
+        local account = user.get(r)
+        if aaa.canAccessDoc(r, doc, account) then
             doc.tid = doc.request_id
             local doc_raw = elastic.get('mbox_source', doc.request_id)
             if doc_raw then

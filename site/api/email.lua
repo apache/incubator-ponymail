@@ -64,25 +64,10 @@ function handle(r)
     
     -- Did we find an email?
     if doc then
-        local canAccess = false
         local account = user.get(r)
         
-        -- Is this a private email? and if so, does the user have access to view it?
-        if doc.private then
-            if account then
-                canAccess = utils.canAccessDoc(doc, aaa.rights(r, account))
-            else
-                r:puts(JSON.encode{
-                    error = "You must be logged in to view this email"
-                })
-                return cross.OK
-            end
-        else
-            canAccess = true
-        end
-        
         -- If we can access this email, ...
-        if canAccess then
+        if aaa.canAccessDoc(r, doc, account) then
             doc.tid = doc.request_id
             
             -- Are we in fact looking for an attachment inside this email?

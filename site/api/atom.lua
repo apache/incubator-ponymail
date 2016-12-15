@@ -122,18 +122,7 @@ function handle(r)
         for k = #doc.hits.hits, 1, -1 do
             local v = doc.hits.hits[k]
             local email = v._source
-            local canUse = false
-            if email.private then
-                if account then
-                    if rights then
-                        rights = aaa.rights(r, account)
-                    end
-                    canUse = utils.canAccessDoc(email, rights)
-                end
-            else
-                canUse = true
-            end
-            if canUse then
+            if aaa.canAccessDoc(r, email, account) then
                 local mid = email['message-id']
                 local irt = email['in-reply-to']
                 email.id = v._id
@@ -159,18 +148,7 @@ function handle(r)
                 fetchChildren(r, parent)
                 -- ensure access and process all children
                 for k, doc in pairs(emls_thrd) do
-                    local canUse = false
-                    if doc.private then
-                        if account then
-                            if not rights then
-                                rights = aaa.rights(r, account)
-                            end
-                            canUse = utils.canAccessDoc(doc, rights)
-                        end
-                    else
-                        canUse = true
-                    end
-                    if canUse then
+                    if aaa.canAccessDoc(r, doc, account) then
                         table.insert(emls, doc)
                     end
                 end

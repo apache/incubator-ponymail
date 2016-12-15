@@ -43,7 +43,7 @@ local function anonymize(doc)
 end
 
 -- func that fetches all children of an original topic email thingy
-local function fetchChildren(r, pdoc, c, biglist, rights, account)
+local function fetchChildren(r, pdoc, c, biglist, account)
     c = (c or 0) + 1
     -- don't fetch more than 250 subtrees, we don't want to nest ad nauseam
     if c > 250 then
@@ -56,23 +56,9 @@ local function fetchChildren(r, pdoc, c, biglist, rights, account)
     local docs = elastic.findFast('in-reply-to:"' .. r:escape(pdoc['message-id'])..'"', 50, "mbox")
     for k, doc in pairs(docs) do
         -- if we haven't seen this email before, check for its kids and add it to the bunch
-        local canAccess = false
-        if doc.private then
-            if not rights then
-                if account then
-                    rights = aaa.rights(r, account)
-                else
-                    rights = {}
-                end
-            end
-            canAccess = utils.canAccessDoc(doc, rights)
-        else
-            canAccess = true
-        end
-        
-        if canAccess and (not biglist[doc['message-id']]) then
+        if (not biglist[doc['message-id']]) and aaa.canAccessDoc(r, doc, account) then
             biglist[doc['message-id']] = true
-            local mykids = fetchChildren(r, doc, c, biglist, rights, account)
+            local mykids = fetchChildren(r, doc, c, biglist, account)
             if not account and config.antispam then
                 doc = anonymize(doc)
             end
@@ -123,29 +109,13 @@ function handle(r)
     
     -- did we find an email?
     if doc then
-        local canAccess = false
-        local rights = nil
         local account = user.get(r)
-        -- if private, can we access it?
-        if doc.private then
-            if account then
-                rights = aaa.rights(r, account)
-                canAccess = utils.canAccessDoc(doc, rights)
-            else
-                r:puts(JSON.encode{
-                    error = "You must be logged in to view this email"
-                })
-                return cross.OK
-            end
-        else
-            canAccess = true
-        end
-        if canAccess and doc and doc.mid then
+        if doc and doc.mid and aaa.canAccessDoc(r, doc, account) then
             if not account and config.antispam then
                 doc = anonymize(doc)
             end
             table.insert(emls_thrd, doc)
-            doc.children = fetchChildren(r, doc, 1, nil, rights, account)
+            doc.children = fetchChildren(r, doc, 1, nil, account)
             doc.tid = doc.mid
             doc.id = doc.request_id
             --doc.body = nil

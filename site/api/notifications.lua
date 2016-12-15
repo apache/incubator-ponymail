@@ -49,25 +49,12 @@ function handle(r)
             return cross.OK
         end
         local peml = {}
-        local rights = nil
         
         -- Find all recent notification docs, up to 50 latest results
         local docs = elastic.find("recipient:\"" .. r:sha1(account.cid) .. "\"", 50, "notifications")
         for k, doc in pairs(docs) do
-            local canUse = false
-            -- check we have rights to view this notification (it might be from a private email we shouldn't see)
-            if doc.private then
-                if account then
-                  if not rights then
-                      rights = aaa.rights(r, account)
-                  end
-                  canUse = utils.canAccessDoc(doc, rights)
-                end
-            else
-                canUse = true
-            end
             -- if we can see the email, push the notif to the list
-            if canUse then
+            if aaa.canAccessDoc(r, doc, account) then
                 doc.id = doc['message-id']
                 doc.tid = doc.id
                 doc.nid = doc.request_id

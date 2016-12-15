@@ -65,7 +65,8 @@
 - inconsistent rights checking (#267)
 - thread.lua fails to fetch rights when fetching private child of public parent (#296)
 - typo in all example aaa modules: xemail != exmail (#299)
-- 
+- lib/aaa.lua overwrites local customisations on updates (#292)
+- rights checking should be localised (#293)
 
 ## CHANGES in 0.9b:
 

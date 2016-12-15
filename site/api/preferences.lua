@@ -311,19 +311,13 @@ Pony Mail - Email for Ponies and People.
             r:ivm_set(PM_LISTS_PRIVATE_KEY, JSON.encode(pdoc))
         end
         
-        local rights = {}
-        if account then
-            rights = aaa.rights(r, account)
-        end
         -- remove any lists containing mails that the user is not allowed to access
         -- N.B. this removes mixed lists
         -- i.e. the user won't see the list name if it contains a single private mail they cannot access
         for x,y in pairs (pdoc.aggregations.from.buckets) do
-            local canAccess = false
-            local _, list, domain = utils.parseLid(y.key:lower())
+            local _, list, domain = aaa.parseLid(y.key:lower())
             if list and domain and #list > 0 and #domain > 2 then
-                canAccess = utils.canAccessList(y.key:lower(), rights)
-                if not canAccess then
+                if not aaa.canAccessList(r, y.key:lower(), account) then
                     lists[domain] = lists[domain] or {}
                     lists[domain][list] = nil
                 end

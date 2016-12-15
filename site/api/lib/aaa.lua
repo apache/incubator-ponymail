@@ -92,7 +92,57 @@ local function getRights(r, account)
     end
 end
 
+--[[ 
+  parse a listid
+  returns the full lid, listname and the domain from "<listname.domain>"
+   where listname cannot contain any "." chars
+]]--
+local function parseLid(lid)
+    return lid:match("^<(([^.]+)%.(.-))>$")
+end
+
+
+-- does the account have the rights to access the mailing list?
+-- N.B. will fail if rights or list_raw are invalid
+local function canAccessList(r, lid, account)
+    if not account then return false end
+    -- check the rights cache
+    local rights = account._rights_ 
+    if not rights then
+        rights = getRights(r, account)
+        account._rights_ = rights
+    end
+    -- we don't need the name
+    local flid, _ , domain = parseLid(lid)
+    for _, v in pairs(rights) do
+        if v == "*" or v == flid or v == domain then
+            return true
+        end
+    end
+    return false
+end
+
+-- does the account have the rights to access the document?
+-- N.B. will fail if doc is invalid
+local function canAccessDoc(r, doc, account)
+    if doc.private then
+        -- if not account then return false end (done by canAccessList)
+        -- assume that rights are list-based
+        return canAccessList(doc.list_raw, account)
+    else
+        return true
+    end
+end
+
+--[[
+    Note that the functions do not check their parameters.
+    This is because they may be called frequently.
+]]--
+
 -- module defs
 return {
-    rights = getRights
+    rights = getRights,
+    parseLid = parseLid,
+    canAccessList = canAccessList,
+    canAccessDoc = canAccessDoc
 }

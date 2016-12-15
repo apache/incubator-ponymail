@@ -579,18 +579,7 @@ function handle(r)
         if eepoch > lastEmail then
             lastEmail = eepoch
         end
-        local canUse = false
-        if email.private then
-            if account then
-                if not rights then
-                    rights = aaa.rights(r, account)
-                end
-                canUse = utils.canAccessDoc(email, rights)
-            end
-        else
-            canUse = true
-        end
-        if canUse then
+        if aaa.canAccessDoc(r, email, account) then
 
             h = h + 1
             

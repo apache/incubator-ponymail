@@ -121,7 +121,6 @@ function handle(r)
         }
 
         local account = user.get(r)
-        local rights = nil
         local listAccessible = nil -- not yet initialised
         -- for each email, get the actual source of it to plop into the mbox file
         for k, v in pairs(docs.hits.hits) do
@@ -129,11 +128,7 @@ function handle(r)
             -- aaa.rights() can be expensive, so only do it once per download
             if v.private and listAccessible == nil then
                 -- we are dealing with a single list here so only need to check once
-                if account then
-                    listAccessible = utils.canAccessList(lid, aaa.rights(r, account))
-                else
-                    listAccessible = false
-                end
+                listAccessible = aaa.canAccessList(r, lid, account)
             end
             if listAccessible or not v.private then
                 local doc = elastic.get('mbox_source', v.mid)
