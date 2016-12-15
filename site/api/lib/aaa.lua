@@ -128,7 +128,7 @@ local function canAccessDoc(r, doc, account)
     if doc.private then
         -- if not account then return false end (done by canAccessList)
         -- assume that rights are list-based
-        return canAccessList(doc.list_raw, account)
+        return canAccessList(r, doc.list_raw, account)
     else
         return true
     end
