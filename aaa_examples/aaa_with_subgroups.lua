@@ -47,35 +47,12 @@ local access_list = {
 
 -- Get rights (full or no access)
 local function getRights(r, usr)
-    if not usr.credentials then
-        return {}
-    end
     local email = usr.credentials.email or "|||"
     local xemail = email:match("([-a-zA-Z0-9._@]+)") -- whitelist characters
     local rights = {}
     
     -- bad char in email?
     if not email or xemail ~= email then
-        return rights
-    end
-    
-    -- Check that we used oauth, bail if not
-    local oauth_domain = usr.internal and usr.internal.oauth_used or nil
-    if not oauth_domain then
-        return {}
-    end
-    
-    -- check if oauth was through an oauth portal that can give privacy rights
-    local authority = false
-    for k, v in pairs(config.admin_oauth or {}) do
-        if r.strcmp_match(oauth_domain, v) then
-            authority = true
-            break
-        end
-    end
-    
-    -- if not a 'good' oauth, then let's forget all about it
-    if not authority then
         return rights
     end
     
@@ -89,5 +66,6 @@ end
 
 -- module defs
 return {
+    validateParams = true,
     rights = getRights
 }
