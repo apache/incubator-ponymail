@@ -13,75 +13,41 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-]]--
+]]
 
--- This is aaa.lua - AAA filter for ASF.
+--[[
+    This is aaa.lua - generic AAA module.
+    It includes a basic version of the API.
+    However the default does not grant any rights.
+
+    Each site must provide their own customised AAA module.
+    The site-specific module must be called 'aaa_site.lua'
+    and be located in the lib/ directory.
+ ]]
 
 local config = require 'lib/config'
 
--- Get a list of PMCs the user is a part of
-local function getPMCs(r, uid)
-    local groups = {}
-    local ldapdata = io.popen( ([[ldapsearch -x -LLL "(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))" cn]]):format(uid,uid) )
-    local data = ldapdata:read("*a")
-    for match in data:gmatch("dn: cn=([-a-zA-Z0-9]+),ou=pmc,ou=committees,ou=groups,dc=apache,dc=org") do
-        table.insert(groups, match)
+local aaa_site = nil 
+pcall(function() aaa_site = require 'lib/aaa_site' end)
+--[[
+    The module is expected to return the following:
+    {
+        rights = function(r, account) to get the rights
+        validateParams = true/false (optional)
+    }
+]]
+
+--Basic parameter validation
+local function validateParams(r, account)
+    if not account.credentials then
+        return false -- no credentials, cannot grant rights
     end
-    return groups
-end
-
-
--- Is $uid a member of the org?
-local function isMember(r, uid)
-    
-    -- First, check the 30 minute cache
-    local NOWISH = math.floor(os.time() / 1800)
-    local MEMBER_KEY = "isMember_" .. NOWISH .. "_" .. uid
-    local t = r:ivm_get(MEMBER_KEY)
-    
-    -- If cached, then just return the value
-    if t then
-        return tonumber(t) == 1
-    
-    -- Otherwise, look in LDAP
-    else
-        local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
-        local data = ldapdata:read("*a")
-        for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
-            -- Found it?
-            if match == uid then
-                -- Set cache
-                r:ivm_set(MEMBER_KEY, "1")
-                return true
-            end
-        end
-    end
-    
-    -- Set cache
-    r:ivm_set(MEMBER_KEY, "0")
-    return false
-end
-
--- Get a list of domains the user has private email access to (or wildcard if org member)
-local function getRights(r, usr)
-    if not usr.credentials then
-        return {}
-    end
-
-    local xuid = usr.credentials.uid or usr.credentials.email or "|||"
-    local uid = xuid:match("([-a-zA-Z0-9._]+)") -- whitelist
-    local rights = {}
-    -- bad char in uid?
-    if not uid or xuid ~= uid then
-        return rights
-    end
-
     -- Check that we used oauth, bail if not
-    local oauth_domain = usr.internal and usr.internal.oauth_used or nil
+    local oauth_domain = account.internal and account.internal.oauth_used or nil
     if not oauth_domain then
-        return {}
+        return false -- no valid auth
     end
-
+    
     -- check if oauth was through an oauth portal that can give privacy rights
     local authority = false
     for k, v in pairs(config.admin_oauth or {}) do
@@ -90,22 +56,40 @@ local function getRights(r, usr)
             break
         end
     end
+    
     -- if not a 'good' oauth, then let's forget all about it
     if not authority then
-        return rights
+        return false
     end
-    
-    -- Check if uid has member (admin) rights
-    if usr.internal.admin or isMember(r, uid) then
-        table.insert(rights, "*")
-    -- otherwise, get PMC list and construct array
-    else
-        local list = getPMCs(r, uid)
-        for k, v in pairs(list) do
-            table.insert(rights, v .. ".apache.org")
+
+    -- if the uid exists, then validate it
+    local uid = account.credentials.uid
+    if uid and (not uid:match("^[-a-zA-Z0-9._]+$") or uid:sub(1,1) == '-') then
+        return false
+    end
+    -- TODO is there any further common validation possible?
+    -- not sure it makes sense to validate an email address here;
+    -- if required it should be done by the site module
+    return true
+end
+
+--[[
+    Get the set of rights to be used for checking access to private documents.
+
+    The default implementation returns an empty set of rights.
+]]
+local function getRights(r, account)
+    if aaa_site then -- we have a site override module
+        -- should we pre-validate the params?
+        if aaa_site.validateParams then
+            if not validateParams(r, account) then
+                return {}
+            end
         end
+        return aaa_site.rights(r, account)
+    else
+        return {}
     end
-    return rights
 end
 
 -- module defs

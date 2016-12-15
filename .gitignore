@@ -14,6 +14,10 @@ site/api/lib/config.lua
 site/js/config.js
 tools/ponymail.cfg
 
+# site-local AAA module
+site/api/lib/aaa_site.lua
+
+
 # Note:
 # Add local overrides to one of the following files:
 # $HOME/.config/git/ignore - applies to all local git repos
