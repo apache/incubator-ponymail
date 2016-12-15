@@ -55,7 +55,7 @@ local function getRights(r, usr)
     local rights = {}
     
     -- bad char in email?
-    if not email or exmail ~= email then
+    if not email or xemail ~= email then
         return rights
     end
     
