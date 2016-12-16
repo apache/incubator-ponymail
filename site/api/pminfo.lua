@@ -164,9 +164,8 @@ function handle(r)
     
     
     -- Get threads
-    local threads = {}
+    local num_threads = 0
     local emails = {}
-    local emls = {}
     local sid = elastic.scan {
         _source = {'message-id','in-reply-to','subject','epoch','references'},
         query = QUERY,
@@ -254,12 +253,9 @@ function handle(r)
                     tid = v._id
                 }
                 emails[mid].nest = emails[irt].nest + 1
-                table.insert(threads, emails[irt])
-            else
-                table.insert(threads, emails[mid])
             end
+            num_threads = num_threads + 1
         end
-        table.insert(emls, email)
     end
     
     -- Debug time point 6
@@ -269,7 +265,7 @@ function handle(r)
     JSON.encode_max_depth(500)
     local listdata = {}
     listdata.max = MAXRESULTS
-    listdata.no_threads = #threads
+    listdata.no_threads = num_threads
     listdata.hits = h
     listdata.participants = no_senders
 --    listdata.top100 = active_senders -- TODO unused by callers?

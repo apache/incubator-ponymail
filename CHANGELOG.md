@@ -67,6 +67,7 @@
 - typo in all example aaa modules: xemail != exmail (#299)
 - lib/aaa.lua overwrites local customisations on updates (#292)
 - rights checking should be localised (#293)
+- pminfo.lua does some unnecessary work (#220)
 
 ## CHANGES in 0.9b:
 
