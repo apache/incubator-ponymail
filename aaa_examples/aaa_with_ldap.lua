@@ -17,6 +17,8 @@
 
 -- This is aaa_site.lua - site-specific AAA filter for ASF.
 
+local JSON = require 'cjson'
+
 -- Get a list of PMCs the user is a part of
 local function getPMCs(r, uid)
     local groups = {}
@@ -32,37 +34,29 @@ end
 -- Is $uid a member of the ASF?
 local function isMember(r, uid)
     
-    -- First, check the 30 minute cache
-    local NOWISH = math.floor(os.time() / 1800)
-    local MEMBER_KEY = "isMember_" .. NOWISH .. "_" .. uid
-    local t = r:ivm_get(MEMBER_KEY)
-    
-    -- If cached, then just return the value
-    if t then
-        return tonumber(t) == 1
-    
-    -- Otherwise, look in LDAP
-    else
-        local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
-        local data = ldapdata:read("*a")
-        for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
-            -- Found it?
-            if match == uid then
-                -- Set cache
-                r:ivm_set(MEMBER_KEY, "1")
-                return true
-            end
+    local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
+    local data = ldapdata:read("*a")
+    for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
+        -- Found it?
+        if match == uid then
+            return true
         end
     end
-    
-    -- Set cache
-    r:ivm_set(MEMBER_KEY, "0")
     return false
 end
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
 local function getRights(r, usr)
     local uid = usr.credentials.uid
+    
+    -- First, check the 30 minute cache
+    local NOWISH = math.floor(os.time() / 1800)
+    local USER_KEY = "aaa_rights_" .. NOWISH .. "_" .. uid
+    local t = r:ivm_get(USER_KEY)
+    if t then
+        return JSON.decode(t)
+    end
+
     local rights = {}
     -- Check if uid has member (admin) rights
     if usr.internal.admin or isMember(r, uid) then
@@ -74,6 +68,7 @@ local function getRights(r, usr)
             table.insert(rights, v .. ".apache.org")
         end
     end
+    r:ivm_set(USER_KEY, JSON.encode(rights))
     return rights
 end
 
