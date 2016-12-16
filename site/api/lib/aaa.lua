@@ -95,27 +95,36 @@ local function getRights(r, account)
 end
 
 --[[ 
-  parse a listid
-  returns the full lid, listname and the domain from "<listname.domain>"
-   where listname cannot contain any "." chars
+  parse a list-id of the form "<name.dom.ain>"
+  returns the full lid, listname and the domain
+  The listname is assumed to be the leading characters upto the first '.'
+  The domain is the rest. The full lid is the whole input, without < and >.
 ]]
 local function parseLid(lid)
     return lid:match("^<(([^.]+)%.(.-))>$")
 end
 
 
--- does the account have the rights to access the mailing list?
--- N.B. will fail if account or lid are invalid
+--[[
+    Does the account have the rights to access the mailing list?
+    This implementation checks the full list name and domain for an
+    exact match with one of the rights entries.
+    A rights entry of '*' matches all lists.
+    There is no wild-card matching apart from the '*' special case.
+    The name and domain are as determined by the parseLid function.
+
+    N.B. will fail if account or lid are invalid
+]]
 local function canAccessList(r, lid, account)
     if aaa_site and aaa_site.canAccessList then -- we have a site override method
         return aaa_site.canAccessList(r, lid, account) -- delegate to it
     end
     if not account then return false end
     -- check the rights cache
-    local rights = account._rights_ 
+    local rights = account._rights_ -- get cached version
     if not rights then
         rights = getRights(r, account)
-        account._rights_ = rights
+        account._rights_ = rights -- cache them
     end
     -- we don't need the name
     local flid, _ , domain = parseLid(lid)
@@ -127,8 +136,13 @@ local function canAccessList(r, lid, account)
     return false
 end
 
--- does the account have the rights to access the document?
--- N.B. will fail if doc is invalid
+--[[
+    does the account have the rights to access the document?
+    This implementation assumes that access is based on the list-id only,
+    so delegates the check to canAccessList.
+
+    N.B. will fail if doc is invalid
+]]
 local function canAccessDoc(r, doc, account)
     if aaa_site and aaa_site.canAccessDoc then -- we have a site override method
         return aaa_site.canAccessDoc(r, doc, account) -- delegate to it
