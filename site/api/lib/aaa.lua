@@ -32,8 +32,10 @@ pcall(function() aaa_site = require 'lib/aaa_site' end)
 --[[
     The module is expected to return the following:
     {
-        rights = function(r, account) to get the rights
+        rights = function(r, account) to get the rights (required)
         validateParams = true/false (optional)
+        canAccessList = function override (optional)
+        canAccessDoc = function override (optional)
     }
 ]]
 
@@ -96,15 +98,18 @@ end
   parse a listid
   returns the full lid, listname and the domain from "<listname.domain>"
    where listname cannot contain any "." chars
-]]--
+]]
 local function parseLid(lid)
     return lid:match("^<(([^.]+)%.(.-))>$")
 end
 
 
 -- does the account have the rights to access the mailing list?
--- N.B. will fail if rights or list_raw are invalid
+-- N.B. will fail if account or lid are invalid
 local function canAccessList(r, lid, account)
+    if aaa_site and aaa_site.canAccessList then -- we have a site override method
+        return aaa_site.canAccessList(r, lid, account) -- delegate to it
+    end
     if not account then return false end
     -- check the rights cache
     local rights = account._rights_ 
@@ -125,6 +130,9 @@ end
 -- does the account have the rights to access the document?
 -- N.B. will fail if doc is invalid
 local function canAccessDoc(r, doc, account)
+    if aaa_site and aaa_site.canAccessDoc then -- we have a site override method
+        return aaa_site.canAccessDoc(r, doc, account) -- delegate to it
+    end
     if doc.private then
         -- if not account then return false end (done by canAccessList)
         -- assume that rights are list-based
@@ -137,7 +145,11 @@ end
 --[[
     Note that the functions do not check their parameters.
     This is because they may be called frequently.
-]]--
+
+    TODO consider whether to replace the relevant local functions entirely
+    rather than using delegation if the aaa_site module provides them.
+    This would need to be done here, at the end of this module.
+]]
 
 -- module defs
 return {
