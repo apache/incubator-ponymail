@@ -68,6 +68,7 @@
 - lib/aaa.lua overwrites local customisations on updates (#292)
 - rights checking should be localised (#293)
 - pminfo.lua does some unnecessary work (#220)
+- stats.lua uses inconsistent email canonicalisation code (#300)
 
 ## CHANGES in 0.9b:
 

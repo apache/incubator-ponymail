@@ -66,6 +66,16 @@ local function leapYear(year)
     end
 end
 
+-- extract canonical email address from from field
+local function extractCanonEmail(from)
+    local eml = from:match("<(.-)>") or from:match("%S+@%S+") or nil
+    if eml == nil and from:match(".- at .- %(") then
+        eml = from:match("(.- at .-) %("):gsub(" at ", "@")
+    elseif eml == nil then
+        eml = "unknown"
+    end
+    return eml
+end
 
 function handle(r)
     cross.contentType(r, "application/json")
@@ -359,12 +369,7 @@ function handle(r)
         tnow = r:clock()
         
         for x,y in pairs (doc.aggregations.from.buckets) do
-            local eml = y.key:match("<(.-)>") or y.key:match("%S+@%S+") or nil
-            if eml == nil and y.key:match(".- at .- %(") then
-                eml = y.key:match("(.- at .-) %("):gsub(" at ", "@")
-            elseif eml == nil then
-                eml = "unknown"
-            end
+            local eml = extractCanonEmail(y.key)
             local gravatar = r:md5(eml:lower())
             local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or "unknown"
             name = name:gsub("\"", "")
@@ -584,12 +589,7 @@ function handle(r)
             h = h + 1
             
             if not config.slow_count then
-                local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or nil
-                if eml == nil and email.from:match(".- at .- %(") then
-                    eml = email.from:match("(.- at .-) %("):gsub(" at ", "@")
-                elseif eml == nil then
-                    eml = "unknown"
-                end
+                local eml = extractCanonEmail(email.from)
                 local gravatar = r:md5(eml:lower())
                 local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+") or email.from:match("%((.-)%)") or "unknown"
                 email.gravatar = gravatar
@@ -689,8 +689,7 @@ function handle(r)
             end
         elseif config.slow_count then
             for k, v in pairs(top10) do
-                local eml = email.from:match("<(.-)>") or email.from:match("%S+@%S+") or "unknown"
-                if v.email == eml then
+                if v.email == extractCanonEmail(email.from) then
                     v.count = v.count - 1
                 end
             end
@@ -765,6 +764,7 @@ function handle(r)
     tnow = r:clock()
     
     listdata.debug = t
+    listdata.slow_count = config.slow_count -- debug
     
     r:puts(JSON.encode(listdata))
     
