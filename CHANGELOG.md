@@ -69,6 +69,7 @@
 - rights checking should be localised (#293)
 - pminfo.lua does some unnecessary work (#220)
 - stats.lua uses inconsistent email canonicalisation code (#300)
+- stats.lua - inconsistent output between slow_count = true/false (#301)
 
 ## CHANGES in 0.9b:
 

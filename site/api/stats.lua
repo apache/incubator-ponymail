@@ -66,6 +66,12 @@ local function leapYear(year)
     end
 end
 
+-- extract canonical email name from from field
+local function extractCanonName(from)
+    local name = from:match("([^<]+)%s*<.->") or from:match("%S+@%S+") or from:match("%((.-)%)") or "unknown"
+    return name:gsub("\"", ""):gsub("%s+$", "")
+end
+
 -- extract canonical email address from from field
 local function extractCanonEmail(from)
     local eml = from:match("<(.-)>") or from:match("%S+@%S+") or nil
@@ -371,10 +377,8 @@ function handle(r)
         for x,y in pairs (doc.aggregations.from.buckets) do
             local eml = extractCanonEmail(y.key)
             local gravatar = r:md5(eml:lower())
-            local name = y.key:match("([^<]+)%s*<.->") or y.key:match("%S+@%S+") or "unknown"
-            name = name:gsub("\"", "")
+            local name = extractCanonName(y.key)
             table.insert(top10, {
-                id = y.key,
                 email = eml,
                 gravatar = gravatar,
                 name = name,
@@ -587,13 +591,14 @@ function handle(r)
         if aaa.canAccessDoc(r, email, account) then
 
             h = h + 1
-            
+
+            -- This is needed by ths slow_count method            
+            local eml = extractCanonEmail(email.from)
+            local gravatar = r:md5(eml:lower())
+            email.gravatar = gravatar
+
             if not config.slow_count then
-                local eml = extractCanonEmail(email.from)
-                local gravatar = r:md5(eml:lower())
-                local name = email.from:match("([^<]+)%s*<.->") or email.from:match("%S+@%S+") or email.from:match("%((.-)%)") or "unknown"
-                email.gravatar = gravatar
-                name = name:gsub("\"", ""):gsub("%s+$", "")
+                local name = extractCanonName(email.from)
                 local eid = ("%s <%s>"):format(name, eml)
                 senders[eid] = senders[eid] or {
                     email = eml,
@@ -691,6 +696,7 @@ function handle(r)
             for k, v in pairs(top10) do
                 if v.email == extractCanonEmail(email.from) then
                     v.count = v.count - 1
+                    break -- don't count the e-mail again
                 end
             end
         end
@@ -711,12 +717,20 @@ function handle(r)
             end
         end
     end
-    for k, v in pairs(top10) do
-        if v.count <= 0 then
-            top10[k] = nil
+
+    -- drop any non-participants and count the remainders
+    -- count the participants
+    if config.slow_count then
+        local top10_copy = top10
+        top10 = {}
+        for k, v in pairs(top10_copy) do
+            if v.count > 0 then
+                table.insert(top10, v)
+                allparts = allparts + 1
+            end
         end
     end
-    
+
     -- anonymize emails if not logged in - anti-spam!
     if not account and config.antispam then
         for k, v in pairs(top10) do
