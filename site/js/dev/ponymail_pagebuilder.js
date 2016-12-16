@@ -350,7 +350,6 @@ function getListInfo(list, xdomain, nopush) {
                 if (arr[1].match(/-/) && !arr[1].match(/\|/)) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
-                    var dp = document.getElementById('d')
                     current_retention = arr[1]
                     dealtwithit = true
                 } else {
