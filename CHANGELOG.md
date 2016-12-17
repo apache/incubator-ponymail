@@ -77,6 +77,7 @@
 - elastic.lua:getHeaders uses different sort field (#146)
 - redundant matching of same string (#117)
 - ponymail.js uses unsupported preferences.lua parameter (#165)
+- preferences.lua never fetches descriptions (#163)
 
 ## CHANGES in 0.9b:
 

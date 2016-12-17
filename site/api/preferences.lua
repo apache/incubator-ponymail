@@ -345,13 +345,13 @@ Pony Mail - Email for Ponies and People.
     end
      
     account = account or {}
-    local _, descs = pcall(function() return elastic.find("*", 9999, "mailinglists", "name") end) or nil
-    if not descs then
-        descs = {}
+    local stat, descs = pcall(function() return elastic.find("*", 9999, "mailinglists", "name") end)
+    if not stat or not descs then
+        descs = {} -- ensure descs is valid
     end
     -- try to extrapolate foo@bar.tld here
     for k, v in pairs(descs) do
-        local l, d = v.list:lower():match("<([^.]+)%.(.-)>")
+        local _, l, d = aaa.parseLid(v.list:lower())
         if l and d then
             descs[k].lid = ("%s@%s"):format(l, d)
         else
