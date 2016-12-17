@@ -34,7 +34,7 @@ Parameters: (cookie required)
   - associate=$email - associate the account with the $email address
   - verify&hash=$hash - verify an association request $hash
   - removealt=$email - remove an alternate $email address
-  - save - save preferences
+  - save - save preferences as specified (does not merge)
   - addfav=$list - add a favourite $list
   - remfav=$list - remove a favourite $list
 ]]--
