@@ -92,17 +92,22 @@ function handle(r)
     local lastEmail = 0
     -- statsOnly: Whether to only send statistical info (for n-grams etc), and not the
     -- thread struct and message bodies
+    -- Param: quick
     local statsOnly = get.quick
+    -- Param: list=<listname> or '*' (required)
+    -- Param: domain=<domain> or '*' (required)
     if not get.list or not get.domain then
         r:puts("{}")
         return cross.OK
     end
-    local qs = "*"
-    local nqs = ""
+    local qs = "*" -- positive query
+    local nqs = "" -- negative query
     local dd = "lte=1M"
     local maxresults = config.maxResults or 5000
     local account = user.get(r)
     local rights = nil
+    -- Param: d=nnnnn (numeric)
+    -- does not appear to be supported below
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
         dd = tonumber(get.d)
     end
@@ -111,6 +116,7 @@ function handle(r)
     local y
     local z
     local ec
+    -- Param: q=query
     if get.q and #get.q > 0 then
         x = {}
         nx = {}
@@ -167,6 +173,10 @@ function handle(r)
     }
 
     z = {}
+    -- Param: header_from=
+    -- Param: header_subject=
+    -- Param: header_body=
+    -- Param: header_to=
     for k, v in pairs({'from','subject','body', 'to'}) do
         if get['header_' .. v] then
             local word = get['header_' .. v]
@@ -186,6 +196,9 @@ function handle(r)
     tnow = r:clock()
     
     local daterange = {gt = "now-1M", lte = "now+1d" }
+    -- Param: dfrom=.*ddd (days ago to start)
+    -- Param: dto=dddd.* (total days to match)
+    -- Must both be present
     if get.dfrom and get.dto then
         local ef = tonumber(get.dfrom:match("(%d+)$")) or 0
         local et = tonumber(get.dto:match("^(%d+)")) or 0
@@ -204,10 +217,13 @@ function handle(r)
     end
     
     -- d=YYYY-mm translates into s+e being equal to d
+    -- Param: d=yyyy-mm
     if not (get.s and get.e) and get.d and get.d:match("^%d+%-%d+$") then
         get.s = get.d
         get.e = get.d
     end
+    -- Param: d=.*lte=n[wMyd].* (how long ago to start search)
+    -- from now-nP to now+1d (P=period)
     if get.d then
         local lte = get.d:match("lte=([0-9]+[wMyd])")
         if lte then
@@ -216,6 +232,8 @@ function handle(r)
             daterange.gt = nil
         end
     end
+    -- Param: d=.*gte=n[wMyd].* (how long ago to end search)
+    -- before now-nP (P=period)
     if get.d then
         local gte = get.d:match("gte=([0-9]+[wMyd])")
         if gte then
@@ -224,6 +242,8 @@ function handle(r)
             daterange.lte = "now-" .. gte
         end
     end
+    -- Param: d=.*dfr=yyyy-mm-dd.*
+    -- start date for search
     if get.d then
         local y,m,d = get.d:match("dfr=(%d+)%-(%d+)%-(%d+)")
         if y and m and d then
@@ -231,6 +251,8 @@ function handle(r)
             daterange.gt = nil
         end
     end
+    -- Param: d=.*dto=yyyy-mm-dd.*
+    -- end date for search
     if get.d then
         local y,m,d = get.d:match("dto=(%d+)%-(%d+)%-(%d+)")
         if y and m and d then
@@ -238,6 +260,8 @@ function handle(r)
             daterange.gt = nil
         end
     end
+    -- Param: s=yyyy-m[m]
+    -- Param: e=yyyy-m[m]
     if get.s and get.e then
         local em = tonumber(get.e:match("%-(%d%d?)$"))
         local ey = tonumber(get.e:match("^(%d%d%d%d)"))
@@ -275,8 +299,10 @@ function handle(r)
     
     local top10 = {}
     local allparts = 0
-    
+    r:warn(get.d)
+    r:warn(JSON.encode(daterange))
     -- Check for changes?
+    -- Param: since=epoch (optional, defaults to now)
     if get.since then
         local epoch = tonumber(get.since) or os.time()
         local doc = elastic.raw {
