@@ -299,8 +299,6 @@ function handle(r)
     
     local top10 = {}
     local allparts = 0
-    r:warn(get.d)
-    r:warn(JSON.encode(daterange))
     -- Check for changes?
     -- Param: since=epoch (optional, defaults to now)
     if get.since then
