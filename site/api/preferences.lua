@@ -149,7 +149,8 @@ Pony Mail - Email for Ponies and People.
     -- remove alt email?
     if get.removealt and account and account.credentials.altemail then
         for k, v in pairs(account.credentials.altemail) do
-            if v.email == get.removealt then
+            -- allow for null just in case table was corrupted
+            if v == JSON.null or v.email == get.removealt then
                 table.remove(account.credentials.altemail, k)
                 break
             end
