@@ -176,3 +176,13 @@ Response example:
 }
 ~~~
 
+### Fetching a month's data as an mbox file
+Usage:
+`GET /api/mbox.lua?list=issues@ponymail.apache.org&date=2016-06`
+
+Response example:
+
+~~~
+TBA
+~~~
+
