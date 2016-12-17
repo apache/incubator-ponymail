@@ -74,7 +74,8 @@
 - unnecessary double-checking of window.sessionStorage in ponymail.js (#193)
 - lua scripts not using cross.contentType() compatibility function (#218)
 - code assumes that subject is always present in an e-mail (#149)
-- elastic.lua:getHeaders uses different sort field #146
+- elastic.lua:getHeaders uses different sort field (#146)
+- redundant matching of same string (#117)
 
 ## CHANGES in 0.9b:
 
