@@ -76,6 +76,7 @@
 - code assumes that subject is always present in an e-mail (#149)
 - elastic.lua:getHeaders uses different sort field (#146)
 - redundant matching of same string (#117)
+- ponymail.js uses unsupported preferences.lua parameter (#165)
 
 ## CHANGES in 0.9b:
 

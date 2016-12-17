@@ -229,7 +229,7 @@ function listDomains() {
         
     // Table view mode?
     } else if (pm_config.indexMode == 'table') {
-        GetAsync("/api/preferences.lua?detailed=true", null, seedTable)
+        GetAsync("/api/preferences.lua", null, seedTable)
     }
     
     GetAsync("/api/pminfo.lua", null, showStats)
