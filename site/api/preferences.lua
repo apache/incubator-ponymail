@@ -74,9 +74,6 @@ function handle(r)
         end
         
         local hash = r:md5(math.random(1,999999) .. os.time() .. account.cid)
-        account.credentials.altemail = account.credentials.altemail or {}
-        table.insert(account.credentials.altemail, { email = get.associate, hash = hash, verified = false})
-        user.save(r, account, true)
         local scheme = "https"
         if r.port == 80 then
             scheme = "http"
@@ -115,6 +112,12 @@ Pony Mail - Email for Ponies and People.
             server = config.mailserver,
             port = config.mailport or nil -- if not specified, use the default
         }
+         -- only update the account if the mail was sent OK
+        if rv then
+            account.credentials.altemail = account.credentials.altemail or {}
+            table.insert(account.credentials.altemail, { email = get.associate, hash = hash, verified = false})
+            user.save(r, account, true)
+        end
         r:puts(JSON.encode{requested = rv or er})
         return cross.OK
     end

@@ -81,6 +81,7 @@
 - API.md does not document all the stats.lua parameters (#115)
 - allow preferences to use non-default mail port (#303)
 - preferences.lua should not return list data if it was not requested (#305)
+- preferences.lua should not update the user account if the mail is not sent OK (#306)
 
 
 ## CHANGES in 0.9b:
