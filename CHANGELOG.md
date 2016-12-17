@@ -78,6 +78,8 @@
 - redundant matching of same string (#117)
 - ponymail.js uses unsupported preferences.lua parameter (#165)
 - preferences.lua never fetches descriptions (#163)
+- API.md does not document all the stats.lua parameters (#115)
+
 
 ## CHANGES in 0.9b:
 

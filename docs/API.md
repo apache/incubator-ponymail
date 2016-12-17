@@ -38,18 +38,23 @@ Response example:
 
 ### Fetching list data
 Usage:
-`GET /api/stats.lua?list=$list&domain=$domain[&d=$timespan][&q=$query][&header_from=$from][&header_subject=$subject]`
+`GET /api/stats.lua?list=$list&domain=$domain[&d=$timespan][&q=$query][&header_from=$from][&header_to=$to][&header_subject=$subject][&header_body=$body][&quick][&s=$s&e=$e]`
 
 Parameters:
+
     - $list: The list prefix (e.g. `dev`). Wildcards may be used
     - $domain: The list domain (e.g. `httpd.apache.org`). Wildcards may be used
     - $timespan: A [timespan](#Timespans) value
+    - $s: yyyy-mm start of month (day 1)
+    - $e: yyyy-mm end of month (last day)
     - $query: A search query (may contain wildcards or negations):
       - `foo`: Find all documents containing `foo` in headers or body
       - `-foo`: Find all documents NOT containing `foo`.
       - `foo*`: Find all documents containing `foo`, `fooa`, `foob` etc
     - $from: Optional From: address
+    - $to: Optional To: address
     - $subject: Optional Subject: line
+    - $body: Optional body text
     
 Response example:
 
@@ -94,6 +99,19 @@ Response example:
 }
 ~~~
 
+### <a name="Timespans"></a>Timespans
+
+Timespans supported by the &d= parameter.
+
+    - d=nnnn
+    - d=yyyy-mm => equivalent to &s=yyyy-mm&e=yyyy-mm
+    - d=lte=n[wMyd] (less than n[wMyd] ago, inclusive)
+    - d=gte=n[wMyd] (more than n[wMyd] ago, inclusive)
+    - d=.*dfr=yyyy-mm-dd.* (start date for search, inclusive)
+    - d=.*dto=yyyy-mm-dd.* (end date for search, inclusive)
+    - [wMyd] = weeks, Months, years, days
+    - lte and gte are mutually exclusive
+    - dfr and dto are normally both present
 
 ### Fetching preferences and quick list overview
 Usage:
