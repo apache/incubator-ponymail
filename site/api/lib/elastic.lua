@@ -105,7 +105,7 @@ local function getHeaders(query, size, doc)
     doc = doc or "mbox"
     size = size or 10
     query = query:gsub(" ", "+")
-    local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=date:desc&size=" .. size
+    local url = config.es_url  .. doc .. "/_search?_source_exclude=body&q="..query.."&sort=epoch:desc&size=" .. size
     local json = performRequest(url)
     local out = {}
     if json and json.hits and json.hits.hits then
