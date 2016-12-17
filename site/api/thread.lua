@@ -124,15 +124,10 @@ function handle(r)
                 thread = doc,
                 emails = emls_thrd,
             }))
-        else
-            r:puts(JSON.encode{
-                    error = "You do not have access to view this email, sorry."
-                })
             return cross.OK
         end
-    else
-        r:puts[[{}]]
     end
+    r:puts[[{"No such e-mail or you do not have access to it."}]]
     return cross.OK
 end
 

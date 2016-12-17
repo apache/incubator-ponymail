@@ -44,14 +44,12 @@ function handle(r)
             if doc_raw then
                 r:puts(doc_raw.source)
             else
-                r:puts("No such email")
+                r:puts("Could not find the email source, sorry!")
             end
-        else
-            r:puts("You do not have access to view this email, sorry.")
+            return cross.OK
         end
-    else
-        r:puts[[No such email, sorry!]]
     end
+    r:puts[[No such email, or you don't have access. Sorry!]]
     return cross.OK
 end
 
