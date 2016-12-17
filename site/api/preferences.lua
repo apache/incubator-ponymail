@@ -112,7 +112,8 @@ Pony Mail - Email for Ponies and People.
             from = ("\"Pony Mail\"<no-reply@%s>"):format(r.hostname),
             rcpt = get.associate,
             source = source,
-            server = config.mailserver
+            server = config.mailserver,
+            port = config.mailport or nil -- if not specified, use the default
         }
         r:puts(JSON.encode{requested = rv or er})
         return cross.OK

@@ -79,6 +79,7 @@
 - ponymail.js uses unsupported preferences.lua parameter (#165)
 - preferences.lua never fetches descriptions (#163)
 - API.md does not document all the stats.lua parameters (#115)
+- allow preferences to use non-default mail port (#303)
 
 
 ## CHANGES in 0.9b:

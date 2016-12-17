@@ -465,6 +465,7 @@ with open(os.path.join(config_path,config_file), "w") as f:
 local config = {
     es_url = "http://%s:%u/%s/",
     mailserver = "%s",
+--  mailport = 1025, -- override the default port (25)
     accepted_domains = "%s",
     wordcloud = %s,
     slow_count = false,
