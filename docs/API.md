@@ -103,7 +103,6 @@ Response example:
 
 Timespans supported by the &d= parameter.
 
-    - d=nnnn
     - d=yyyy-mm => equivalent to &s=yyyy-mm&e=yyyy-mm
     - d=lte=n[wMyd] (less than n[wMyd] ago, inclusive)
     - d=gte=n[wMyd] (more than n[wMyd] ago, inclusive)
