@@ -18,12 +18,10 @@
 
 // loadList_treeview: Load a list as a treeview object, grouped by threads
 function loadList_treeview(mjson, limit, start, deep) {
-    if (storageAvailable) {
-        if (typeof(window.localStorage) !== "undefined") {
-            var th = window.localStorage.getItem("pm_theme")
-            if (th) {
-                prefs.theme = th
-            }
+    if (localStorageAvailable) {
+        var th = window.localStorage.getItem("pm_theme")
+        if (th) {
+            prefs.theme = th
         }
     }
     // Set displayed posts per page to 10 if social/compact theme, or auto-scale
@@ -113,11 +111,9 @@ function loadList_treeview(mjson, limit, start, deep) {
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
-        if (storageAvailable) {
-            if (typeof(window.localStorage) !== "undefined") {
-                if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
-                    estyle = "font-weight: bold;"
-                }
+        if (localStorageAvailable) {
+            if (! window.localStorage.getItem("viewed_" + eml.id) || (subs > 0 && parseInt(window.localStorage.getItem("viewed_" + eml.id)) < latest )){
+                estyle = "font-weight: bold;"
             }
         }
         var people_label = "<label style='visibility:" + pds + "; float: right; margin-right: 8px; ' id='people_"+i+"' class='listview_label label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " <span class='hidden-xs hidden-sm'>people</span></label>"
@@ -345,7 +341,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
         
         // style based on view before or not??
         var estyle = ""
-        if (typeof(window.localStorage) !== "undefined") {
+        if (localStorageAvailable) {
             if (! window.localStorage.getItem("viewed_" + eml.id) ){
                 estyle = "font-weight: bold;"
             }
@@ -393,15 +389,13 @@ function toggleEmails_treeview(id, close, toverride) {
             return
         }
         var epoch = null
-        if (storageAvailable) {
-            if (typeof(window.localStorage) !== "undefined") {
-                epoch = latestEmailInThread + "!"
-                var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
-                if (xx) {
-                    var yy = parseInt(xx)
-                    if (yy >= parseInt(latestEmailInThread)) {
-                        epoch = yy
-                    }
+        if (localStorageAvailable) {
+            epoch = latestEmailInThread + "!"
+            var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+            if (xx) {
+                var yy = parseInt(xx)
+                if (yy >= parseInt(latestEmailInThread)) {
+                    epoch = yy
                 }
             }
         }
@@ -456,7 +450,7 @@ function toggleEmails_treeview(id, close, toverride) {
         var html = buildTreeview(nesting, [current_thread_json[id]], thread, [true])
         current_thread = current_thread_json[id].tid
         
-        if (epoch !== null) { // only non-null if localstorage works
+        if (epoch !== null && localStorageAvailable) { // only non-null if localstorage works, but check anyway for consistency
             try {
                 window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
             } catch(e) {

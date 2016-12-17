@@ -218,7 +218,7 @@ function findEpoch(epoch) {
 
 // popup reminder shutoff mechanism
 function setPopup(pid, close) {
-    if (typeof(window.localStorage) !== "undefined") {
+    if (localStorageAvailable) {
         window.localStorage.setItem("popup_reminder_" + pid, close)
     }
 }
@@ -229,7 +229,7 @@ function setPopup(pid, close) {
 function popup(title, body, timeout, pid, wloc) {
     var obj = document.getElementById('popupper')
     if (pid) {
-        if (typeof(window.localStorage) !== "undefined") {
+        if (localStorageAvailable) {
             var popre = window.localStorage.getItem("popup_reminder_" + pid)
             if (popre) {
                 return

@@ -20,22 +20,18 @@ function saveDraft() {
     // If the user was composing a new thread, let's save the contents (if any)
     // for next time
     if (document.getElementById('reply_body')) {
-        if (storageAvailable) {
+        if (sessionStorageAvailable) {
             if (composeType == "new") {
-                if (typeof(window.sessionStorage) !== "undefined") {
-                    window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
-                    window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
-                    window.sessionStorage.setItem("reply_list", xlist)
-                }
+                window.sessionStorage.setItem("reply_body_" + xlist, document.getElementById('reply_body').value)
+                window.sessionStorage.setItem("reply_subject_" + xlist, document.getElementById('reply_subject').value)
+                window.sessionStorage.setItem("reply_list", xlist)
                 composeType = ""
             // Likewise, if composing a reply, save it in case the user wants to revisit
             // the draft
             } else if (composeType == "reply" && current_reply_eid) {
-                if (typeof(window.sessionStorage) !== "undefined") {
-                    window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
-                    window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
-                    window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
-                }
+                window.sessionStorage.setItem("reply_body_eid_" + current_reply_eid, document.getElementById('reply_body').value)
+                window.sessionStorage.setItem("reply_subject_eid_" + current_reply_eid, document.getElementById('reply_subject').value)
+                window.sessionStorage.setItem("reply_list_eid_", current_reply_eid)
                 composeType = ""
             }
         }
@@ -78,13 +74,13 @@ function sendEmail(form) {
     request.send(of.join("&")) // send email as a POST string
     
     // Clear the draft stuff
-    if (storageAvailable) {
-        if (typeof(window.sessionStorage) !== "undefined" && compose_headers.eid && compose_headers.eid.length > 0) {
+    if (sessionStorageAvailable) {
+        if (compose_headers.eid && compose_headers.eid.length > 0) {
             window.sessionStorage.removeItem("reply_subject_eid_" + compose_headers.eid)
             window.sessionStorage.removeItem("reply_body_eid_" + compose_headers.eid)
         }
         // Clear new draft too if need be
-        if (typeof(window.sessionStorage) !== "undefined" && composeType == "new") {
+        if (composeType == "new") {
             window.sessionStorage.removeItem("reply_subject_" + xlist)
             window.sessionStorage.removeItem("reply_body_" + xlist)
         }
@@ -200,14 +196,11 @@ function compose(eid, lid, type) {
             obj.appendChild(area)
             
             // Do we need to fetch cache here?
-            if (storageAvailable) {
-                    
-                if (composeType == "new" && typeof(window.sessionStorage) !== "undefined" &&
-                    window.sessionStorage.getItem("reply_subject_" + xlist)) {
+            if (sessionStorageAvailable) {
+                if (composeType == "new" && window.sessionStorage.getItem("reply_subject_" + xlist)) {
                     area.innerHTML = window.sessionStorage.getItem("reply_body_" + xlist)
                     txt.value = window.sessionStorage.getItem("reply_subject_" + xlist)
-                } else if (composeType == "reply" && typeof(window.sessionStorage) !== "undefined" &&
-                    window.sessionStorage.getItem("reply_subject_eid_" + eid)) {
+                } else if (composeType == "reply" && window.sessionStorage.getItem("reply_subject_eid_" + eid)) {
                     area.innerHTML = window.sessionStorage.getItem("reply_body_eid_" + eid)
                     txt.value = window.sessionStorage.getItem("reply_subject_eid_" + eid)
                 }

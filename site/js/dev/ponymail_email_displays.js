@@ -40,25 +40,22 @@ function displayEmail(json, id, level) {
     last_opened_email = json.mid
     
     // color based on view before or not??
-    if (storageAvailable) {
-        if (typeof(window.localStorage) !== "undefined") {
-            if (! window.localStorage.getItem("viewed_" + json.mid) ){
-                //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
+    if (localStorageAvailable) {
+        if (! window.localStorage.getItem("viewed_" + json.mid) ){
+            //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
+
+            try {
+                window.localStorage.setItem("viewed_" + json.mid, json.epoch)
+            } catch(e) {
                 
-                try {
-                    window.localStorage.setItem("viewed_" + json.mid, json.epoch)
-                } catch(e) {
-                    
-                }
             }
-            if (window.localStorage.getItem("viewed_" + json.mid) && window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
-                //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
-                var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
-                try {
-                    window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
-                } catch(e) {
-                    
-                }
+        }
+        if (window.localStorage.getItem("viewed_" + json.mid) && window.localStorage.getItem("viewed_" + json.mid).search("!") == 10){
+            //estyle = "linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%)"
+            var epoch = parseInt(window.localStorage.getItem("viewed_" + json.mid))
+            try {
+                window.localStorage.setItem("viewed_" + json.mid, epoch + ":")
+            } catch(e) {
                 
             }
         }
@@ -97,12 +94,10 @@ function displayEmail(json, id, level) {
         ebody = ebody.replace(re_weburl, "<a href='$1'>$1</a>")
         
         // Get theme (social, default etc) if set locally in browser
-        if (storageAvailable) {
-            if (typeof(window.localStorage) !== "undefined") {
-                var th = window.localStorage.getItem("pm_theme")
-                if (th) {
-                    prefs.theme = th
-                }
+        if (localStorageAvailable) {
+            var th = window.localStorage.getItem("pm_theme")
+            if (th) {
+                prefs.theme = th
             }
         }
         
@@ -227,15 +222,13 @@ function displaySingleEmail(json, id) {
 
     var thread = document.getElementById('email')
     if (thread) {
-        if (storageAvailable) {
-            if (typeof(window.localStorage) !== "undefined") {
-                if (! window.localStorage.getItem("viewed_" + json.id) ){
-                    estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
-                    try {
-                        window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
-                    } catch(e) {
-                        
-                    }
+        if (localStorageAvailable) {
+            if (! window.localStorage.getItem("viewed_" + json.id) ){
+                estyle = "background: background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%);"
+                try {
+                    window.localStorage.setItem("viewed_" + json.id, latestEmailInThread + "!")
+                } catch(e) {
+                    
                 }
             }
         }
@@ -353,22 +346,20 @@ function toggleEmails_threaded(id, close, toverride, threadobj) {
     var thread = threadobj ? threadobj : document.getElementById('thread_' + id.toString().replace(/@<.+>/, ""))
     if (thread) {
         current_thread = id
-        if (storageAvailable) {
-            if (typeof(window.localStorage) !== "undefined") {
-                var epoch = latestEmailInThread + "!"
-                if (current_thread_json[id]) {
-                    var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
-                    if (xx) {
-                        var yy = parseInt(xx)
-                        if (yy >= parseInt(latestEmailInThread)) {
-                            epoch = yy
-                        }
+        if (localStorageAvailable) {
+            var epoch = latestEmailInThread + "!"
+            if (current_thread_json[id]) {
+                var xx = window.localStorage.getItem("viewed_" + current_thread_json[id].tid)
+                if (xx) {
+                    var yy = parseInt(xx)
+                    if (yy >= parseInt(latestEmailInThread)) {
+                        epoch = yy
                     }
-                    try {
-                        window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
-                    } catch(e) {
-                        
-                    }
+                }
+                try {
+                    window.localStorage.setItem("viewed_" + current_thread_json[id].tid, epoch)
+                } catch(e) {
+                    
                 }
             }
         }
@@ -451,27 +442,25 @@ function toggleEmails_threaded(id, close, toverride, threadobj) {
 // actually viewed before.
 function highlightNewEmails(id) {
     // This currently requires localStorage to store the view data
-    if (storageAvailable) {
-        if (typeof(window.localStorage) !== "undefined") {
-            kiddos = []
-            var t = document.getElementById("thread_" + id)
-            if (t) {
-                traverseThread(t, 'thread') // find all child elements called 'thread*'
-                // For each email in this thread, check (or set) when it was first viewed
-                for (var i in kiddos) {
-                    var mid = kiddos[i].getAttribute("id")
-                    var epoch = window.localStorage.getItem("first_view_" + mid)
-                    if (epoch && epoch != pb_refresh) { // did we view this before the last page build?
-                        kiddos[i].style.color = "#AAA"
-                    } else { // never seen it before, have it at normal color and set the first-view-date
+    if (localStorageAvailable) {
+        kiddos = []
+        var t = document.getElementById("thread_" + id)
+        if (t) {
+            traverseThread(t, 'thread') // find all child elements called 'thread*'
+            // For each email in this thread, check (or set) when it was first viewed
+            for (var i in kiddos) {
+                var mid = kiddos[i].getAttribute("id")
+                var epoch = window.localStorage.getItem("first_view_" + mid)
+                if (epoch && epoch != pb_refresh) { // did we view this before the last page build?
+                    kiddos[i].style.color = "#AAA"
+                } else { // never seen it before, have it at normal color and set the first-view-date
+                    
+                    try {
+                        window.localStorage.setItem("first_view_" + mid, pb_refresh)
+                    } catch(e) {
                         
-                        try {
-                            window.localStorage.setItem("first_view_" + mid, pb_refresh)
-                        } catch(e) {
-                            
-                        }
-                        kiddos[i].style.color = "#000"
                     }
+                    kiddos[i].style.color = "#000"
                 }
             }
         }

@@ -59,16 +59,23 @@ var pending_urls = {} // URL list for GetAsync's support functions (such as the 
 var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
-var storageAvailable = false
 
-try {
-    if (typeof(window.sessionStorage) !== "undefined") {
-        window.sessionStorage.setItem("pm_test", "1")
-        storageAvailable = true
+function isStorageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = 'pm_test';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
     }
-} catch(e) {
-    storageAvailable = false
+    catch(e) {
+        return false;
+    }
 }
+
+var localStorageAvailable   = isStorageAvailable('localStorage')
+var sessionStorageAvailable = isStorageAvailable('sessionStorage')
+
 // Links from viewmode to the function that handles them
 var viewModes = {
     threaded: {

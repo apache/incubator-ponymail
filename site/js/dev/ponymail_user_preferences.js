@@ -46,10 +46,8 @@ function savePreferences() {
     GetAsync("/api/preferences.lua?save=true&" + prefarr.join("&"), null, hideComposer)
     
     // Save ephemeral settings
-    if (storageAvailable) {
-        if (typeof(window.localStorage) !== "undefined") {
-            window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
-        }
+    if (localStorageAvailable) {
+        window.localStorage.setItem("ponymail_config_ephemeral", JSON.stringify(prefs))
     }
 }
 
@@ -262,10 +260,8 @@ function setupUser() {
 // set theme, both in prefs and localstorage (for non-logged-in-users)
 function setTheme(theme) {
     prefs.theme = theme
-    if (storageAvailable) {
-        if (typeof(window.localStorage) !== "undefined") {
-            window.localStorage.setItem("pm_theme", theme)
-        }
+    if (localStorageAvailable) {
+        window.localStorage.setItem("pm_theme", theme)
         if (document.getElementById('emails')) {
             buildPage()
         }

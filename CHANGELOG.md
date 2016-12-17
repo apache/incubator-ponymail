@@ -70,6 +70,8 @@
 - pminfo.lua does some unnecessary work (#220)
 - stats.lua uses inconsistent email canonicalisation code (#300)
 - stats.lua - inconsistent output between slow_count = true/false (#301)
+- confusion of storageAvailable and localStorage in ponymail.js (#194)
+- unnecessary double-checking of window.sessionStorage in ponymail.js (#193)
 
 ## CHANGES in 0.9b:
 
