@@ -217,7 +217,7 @@ Pony Mail - Email for Ponies and People.
 
     -- don't allow failed options to drop-thru
     for _, v in pairs({'associate', 'verify', 'removealt', 'save', 'addfav', 'remfav'}) do
-        if get['header_' .. v] then
+        if get[v] then
             if not account then
                 r:puts(JSON.encode{error="Not logged in"})
             else
