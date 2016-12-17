@@ -95,13 +95,13 @@ function handle(r)
                     from = ("\"Pony Mail\"<no-reply@%s>"):format(mldom)
                     },
                 body = ([[
-You (or someone else) has requested to associate this email address with the account '%s' in Pony Mail.
-If you wish to complete this association, please visit %s
+You (or someone else) has requested to associate the email address '%s' with the account '%s' in Pony Mail.
+If you wish to complete this association, please visit %s whilst logged in to Pony Mail.
  ...Or don't if you didn't request this, just ignore this email.
 
 With regards,
 Pony Mail - Email for Ponies and People.
-]]):format(account.credentials.email, vURL)
+]]):format(get.associate, account.credentials.email, vURL)
             }
         
         -- send email!
