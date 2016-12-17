@@ -64,14 +64,14 @@ local function getFromLine(r, source)
 end
 
 function handle(r)
-    r.content_type = "application/mbox"
+    cross.contentType(r, "application/mbox")
     local get = r:parseargs()
     if get.list and get.date then
         local lid = ("<%s>"):format(get.list:gsub("@", "."):gsub("[<>]", ""))
         local flid = get.list:gsub("[.@]", "_")
         local month = get.date:match("(%d+%-%d+)")
         if not month then
-            r.content_type = "text/plain"
+            cross.contentType(r, "text/plain")
             r:puts("Wrong date format given!\n")
             return cross.OK
         end
@@ -148,7 +148,7 @@ function handle(r)
             end
         end
     else
-        r.content_type = "text/plain"
+        cross.contentType(r, "text/plain")
         r:puts("Both list and date are required!\n")
     end
     return cross.OK

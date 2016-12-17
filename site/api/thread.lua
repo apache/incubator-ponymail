@@ -83,7 +83,7 @@ local function fetchChildren(r, pdoc, c, biglist, account)
 end
 
 function handle(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local now = r:clock()
     local get = r:parseargs()
     local eid = (get.id or ""):gsub("\"", "")

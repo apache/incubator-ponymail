@@ -22,7 +22,7 @@ local elastic = require 'lib/elastic'
 local cross = require 'lib/cross'
 
 function handle(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local t = {}
     local now = r:clock()
     local tnow = now

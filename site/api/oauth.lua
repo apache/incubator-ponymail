@@ -26,7 +26,7 @@ local cross = require 'lib/cross'
 local config = require 'lib/config'
 
 function handle(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local get = r:parseargs()
     local post = r:parsebody()
     local valid, json

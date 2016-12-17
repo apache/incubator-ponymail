@@ -27,7 +27,7 @@ local cross = require 'lib/cross'
 
 function handle(r)
     local account = user.get(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     
     -- make sure the user is logged in
     if account and account.cid then

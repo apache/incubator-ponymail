@@ -24,7 +24,7 @@ local cross = require 'lib/cross'
 local utils = require 'lib/utils'
 
 function handle(r)
-    r.content_type = "text/plain"
+    cross.contentType(r, "text/plain")
     local get = r:parseargs()
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")
     local doc = elastic.get("mbox", eid or "hmm")

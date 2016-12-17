@@ -40,7 +40,7 @@ Parameters: (cookie required)
 ]]--
 function handle(r)
     local now = r:clock()
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local now = r:clock()
     local get = r:parseargs()
     
@@ -133,7 +133,7 @@ Pony Mail - Email for Ponies and People.
             end
         end
         user.save(r, account, true)
-        r.content_type = "text/plain"
+        cross.contentType(r, "text/plain")
         if verified then
             r:puts("Email address verified! Thanks for shopping at Pony Mail!\n")
         else

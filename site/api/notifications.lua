@@ -26,7 +26,7 @@ local cross = require 'lib/cross'
 local utils = require 'lib/utils'
 
 function handle(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local now = r:clock()
     local get = r:parseargs()
     

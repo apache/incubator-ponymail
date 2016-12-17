@@ -40,7 +40,7 @@ local function anonymize(doc)
 end
 
 function handle(r)
-    r.content_type = "application/json"
+    cross.contentType(r, "application/json")
     local get = r:parseargs()
     local eid = (get.id or ""):gsub("\"", "")
     local _, doc = pcall(function() return elastic.get("mbox", eid or "hmm") end)
@@ -87,7 +87,7 @@ function handle(r)
                             break
                         end
                     end
-                    r.content_type = ct
+                    cross.contentType(r, ct)
                     r.headers_out['Content-Length'] = fs
                     if not (ct:match("image") or ct:match("text")) then
                         r.headers_out['Content-Disposition'] = ("attachment; filename=\"%s\";"):format(fn)

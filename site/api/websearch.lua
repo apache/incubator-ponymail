@@ -25,7 +25,7 @@ function handle(r)
         scheme = "http"
     end
     local hostname = ("%s://%s:%u"):format(scheme, r.hostname, r.port)
-    r.content_type = 'application/opensearchdescription+xml'
+    cross.contentType(r, 'application/opensearchdescription+xml')
     r:puts(([[<?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>Pony Mail: %s</ShortName>

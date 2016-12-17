@@ -72,6 +72,7 @@
 - stats.lua - inconsistent output between slow_count = true/false (#301)
 - confusion of storageAvailable and localStorage in ponymail.js (#194)
 - unnecessary double-checking of window.sessionStorage in ponymail.js (#193)
+- lua scripts not using cross.contentType() compatibility function (#218)
 
 ## CHANGES in 0.9b:
 
