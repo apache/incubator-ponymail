@@ -80,6 +80,7 @@
 - preferences.lua never fetches descriptions (#163)
 - API.md does not document all the stats.lua parameters (#115)
 - allow preferences to use non-default mail port (#303)
+- preferences.lua should not return list data if it was not requested (#305)
 
 
 ## CHANGES in 0.9b:

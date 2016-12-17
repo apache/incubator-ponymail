@@ -210,7 +210,19 @@ Pony Mail - Email for Ponies and People.
         r:puts[[{"saved": true}]]
         return cross.OK
     end
-    
+
+    -- don't allow failed options to drop-thru
+    for _, v in pairs({'associate', 'verify', 'removealt', 'save', 'addfav', 'remfav'}) do
+        if get['header_' .. v] then
+            if not account then
+                r:puts(JSON.encode{error="Not logged in"})
+            else
+                r:puts(JSON.encode{error="Missing or invalid parameter(s)"})
+            end
+            return cross.OK
+        end
+    end
+
     -- Get lists (cached if possible)
     local lists = {}
     local NOWISH = math.floor(os.time() / 600)
