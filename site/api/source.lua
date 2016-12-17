@@ -30,7 +30,7 @@ function handle(r)
     local doc = elastic.get("mbox", eid or "hmm")
     
     -- Try searching by mid if not found, for backward compat
-    if not doc or not doc.subject then
+    if not doc or not doc.mid then
         local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
         if #docs == 1 then
             doc = docs[1]
