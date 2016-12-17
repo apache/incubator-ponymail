@@ -82,6 +82,7 @@
 - allow preferences to use non-default mail port (#303)
 - preferences.lua should not return list data if it was not requested (#305)
 - preferences.lua should not update the user account if the mail is not sent OK (#306)
+- alts.js does not check for errors when calling preferences.lua (#304)
 
 
 ## CHANGES in 0.9b:
