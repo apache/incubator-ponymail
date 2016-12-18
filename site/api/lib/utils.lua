@@ -82,10 +82,22 @@ local function anonymizeHdrs(doc, from_raw)
     return doc
 end
 
+-- extract canonical email address from from field
+local function extractCanonEmail(from)
+    local eml = from:match("<(.-)>") or from:match("%S+@%S+") or nil
+    if eml == nil and from:match(".- at .- %(") then
+        eml = from:match("(.- at .-) %("):gsub(" at ", "@")
+    elseif eml == nil then
+        eml = "unknown"
+    end
+    return eml
+end
+
 
 return {
     anonymizeHdrs = anonymizeHdrs,
     anonymizeBody = anonymizeBody,
     anonymizeEmail = anonymizeEmail,
+    extractCanonEmail = extractCanonEmail,
     findParent = findParent
 }

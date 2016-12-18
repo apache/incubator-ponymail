@@ -85,6 +85,7 @@
 - alts.js does not check for errors when calling preferences.lua (#304)
 - An unauthorised private mail should be treated like a non-existent mail (#295)
 - Move common anonymizing code to utils (#308)
+- Move extractCanonEmail to utils
 
 ## CHANGES in 0.9b:
 

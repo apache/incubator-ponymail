@@ -72,17 +72,6 @@ local function extractCanonName(from)
     return name:gsub("\"", ""):gsub("%s+$", "")
 end
 
--- extract canonical email address from from field
-local function extractCanonEmail(from)
-    local eml = from:match("<(.-)>") or from:match("%S+@%S+") or nil
-    if eml == nil and from:match(".- at .- %(") then
-        eml = from:match("(.- at .-) %("):gsub(" at ", "@")
-    elseif eml == nil then
-        eml = "unknown"
-    end
-    return eml
-end
-
 function handle(r)
     cross.contentType(r, "application/json")
     local t = {}
@@ -399,7 +388,7 @@ function handle(r)
         tnow = r:clock()
         
         for x,y in pairs (doc.aggregations.from.buckets) do
-            local eml = extractCanonEmail(y.key)
+            local eml = utils.extractCanonEmail(y.key)
             local gravatar = r:md5(eml:lower())
             local name = extractCanonName(y.key)
             table.insert(top10, {
