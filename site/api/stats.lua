@@ -606,7 +606,7 @@ function handle(r)
             h = h + 1
 
             -- This is needed by ths slow_count method            
-            local eml = extractCanonEmail(email.from)
+            local eml = utils.extractCanonEmail(email.from)
             local gravatar = r:md5(eml:lower())
             email.gravatar = gravatar
 
@@ -707,7 +707,7 @@ function handle(r)
             end
         elseif config.slow_count then
             for k, v in pairs(top10) do
-                if v.email == extractCanonEmail(email.from) then
+                if v.email == utils.extractCanonEmail(email.from) then
                     v.count = v.count - 1
                     break -- don't count the e-mail again
                 end
