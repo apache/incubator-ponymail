@@ -94,7 +94,31 @@ function handle(r)
                 end
             end
         end
-        
+
+        if get.associate == account.credentials.email then
+            r:puts(JSON.encode{error="The primary mail address cannot be added as an alternate"})
+            return cross.OK
+        end
+
+
+        account.credentials.altemail = account.credentials.altemail or {}
+        filtertable(account.credentials.altemail)
+        local duplicateRequest = false
+        for k, v in pairs(account.credentials.altemail) do
+            if v.email == get.associate then -- duplicate request
+                if v.verified then -- already exists
+                    r:puts(JSON.encode{error="That email is already defined as an alternate"})
+                    -- OK to return here as we don't need to update anything
+                    return cross.OK
+                else -- pending verification, update the hash
+                    v.hash = hash -- update all pending requests to the new hash
+                    -- cannot return here in case there are multiple entries
+                    -- also we need to mail the new hash to the user
+                    duplicateRequest = true
+                end
+            end
+        end
+
         local hash = r:md5(math.random(1,999999) .. os.time() .. account.cid)
         local scheme = "https"
         if r.port == 80 then
@@ -118,8 +142,11 @@ function handle(r)
                     },
                 body = ([[
 You (or someone else) has requested to associate the email address '%s' with the account '%s' in Pony Mail.
-If you wish to complete this association, please visit %s whilst logged in to Pony Mail.
- ...Or don't if you didn't request this, just ignore this email.
+If you wish to complete this association, please visit
+%s
+whilst logged in to Pony Mail.
+Note: if you have repeated the association request, only the last URL will work.
+ ...Or if you didn't request this, just ignore this email.
 
 With regards,
 Pony Mail - Email for Ponies and People.
@@ -136,8 +163,9 @@ Pony Mail - Email for Ponies and People.
         }
          -- only update the account if the mail was sent OK
         if rv then
-            account.credentials.altemail = account.credentials.altemail or {}
-            table.insert(account.credentials.altemail, { email = get.associate, hash = hash, verified = false})
+            if not duplicateRequest then
+                table.insert(account.credentials.altemail, { email = get.associate, hash = hash, verified = false})
+            end
             user.save(r, account, true)
         end
         r:puts(JSON.encode{requested = rv or er})
@@ -151,11 +179,13 @@ Pony Mail - Email for Ponies and People.
         for k, v in pairs(account.credentials.altemail) do
             if v.hash == get.hash then
                 account.credentials.altemail[k].verified = true
+                account.credentials.altemail[k].hash = nil
                 verified = true
-                break
+                -- fix all the matches
             end
         end
         user.save(r, account, true)
+        -- response goes back to the browser direct
         cross.contentType(r, "text/plain")
         if verified then
             r:puts("Email address verified! Thanks for shopping at Pony Mail!\n")

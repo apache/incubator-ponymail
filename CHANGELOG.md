@@ -87,6 +87,7 @@
 - Move common anonymizing code to utils (#308)
 - Move extractCanonEmail to utils
 - preferences does not properly remove nulls from account.credentials.altemail (#309)
+- manage e-mails can create multiple identical alternate addresses (#307)
 
 ## CHANGES in 0.9b:
 
