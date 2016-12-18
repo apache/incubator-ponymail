@@ -113,7 +113,7 @@ function handle(r)
             return cross.OK
         end
     end
-    r:puts[[{"No such e-mail or you do not have access to it."}]]
+    r:puts(JSON.encode{error = "No such e-mail or you do not have access to it."})
     return cross.OK
 end
 
