@@ -84,6 +84,7 @@
 - preferences.lua should not update the user account if the mail is not sent OK (#306)
 - alts.js does not check for errors when calling preferences.lua (#304)
 - An unauthorised private mail should be treated like a non-existent mail (#295)
+- Move common anonymizing code to utils (#308)
 
 ## CHANGES in 0.9b:
 

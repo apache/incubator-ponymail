@@ -25,20 +25,6 @@ local cross = require 'lib/cross'
 local config = require 'lib/config'
 local utils = require 'lib/utils'
 
--- anonymizer func
-local function anonymize(doc)
-    if doc.from and doc.from ~= JSON.null and #doc.from > 0 then
-        doc.from = doc.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
-    end
-    if doc.cc and doc.cc ~= JSON.null and #doc.cc > 0 then
-        doc.cc = doc.cc:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
-    end
-    if doc.to and doc.to ~= JSON.null and #doc.to > 0 then
-        doc.to = doc.to:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
-    end
-    return doc
-end
-
 function handle(r)
     cross.contentType(r, "application/json")
     local get = r:parseargs()
@@ -106,15 +92,12 @@ function handle(r)
                     eml = "unknown"
                 end
                 if not account then -- anonymize email address if not logged in
-                    doc = anonymize(doc)
-                    if doc.from_raw then
-                        doc.from_raw = doc.from_raw:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
-                    end
+                    doc = utils.anonymizeHdrs(doc, true)
                 end
                 
                 -- Anonymize any email address mentioned in the email if not logged in
                 if not account and config.antispam then
-                    doc.body = doc.body:gsub("<(%S+)@([-a-zA-Z0-9_.]+)>", function(a,b) return "<" .. a:sub(1,2) .. "..." .. "@" .. b .. ">" end)
+                    doc.body = utils.anonymizeBody(doc.body)
                 end
                 
                 

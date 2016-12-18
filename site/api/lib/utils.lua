@@ -17,6 +17,8 @@
 
 -- This is lib/utils.lua - utility methods
 
+local JSON = require 'cjson' -- for JSON.null
+
 -- find the original topic starter
 local function findParent(r, doc, elastic)
     local step = 0
@@ -42,6 +44,48 @@ local function findParent(r, doc, elastic)
 end
 
 
+
+--[[
+    Anonymize the document body
+]]
+local function anonymizeBody(body)
+    return body:gsub("<(%S+)@([-a-zA-Z0-9_.]+)>", function(a,b) return "<" .. a:sub(1,2) .. "..." .. "@" .. b .. ">" end)
+end
+
+--[[
+    Anonymize an email address
+]]
+local function anonymizeEmail(email)
+    return email:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
+end
+
+--[[
+    Anonymize document headers:
+    - from
+    - cc
+    - to
+    Also processes from_raw if specified
+]]
+local function anonymizeHdrs(doc, from_raw)
+    if doc.from and doc.from ~= JSON.null and #doc.from > 0 then
+        doc.from = anonymizeEmail(doc.from)
+    end
+    if doc.cc and doc.cc ~= JSON.null and #doc.cc > 0 then
+        doc.cc = anonymizeEmail(doc.cc)
+    end
+    if doc.to and doc.to ~= JSON.null and #doc.to > 0 then
+        doc.to = anonymizeEmail(doc.to)
+    end
+    if from_raw and doc.from_raw then
+        doc.from_raw = anonymizeEmail(doc.from_raw)
+    end
+    return doc
+end
+
+
 return {
+    anonymizeHdrs = anonymizeHdrs,
+    anonymizeBody = anonymizeBody,
+    anonymizeEmail = anonymizeEmail,
     findParent = findParent
 }
