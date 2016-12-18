@@ -84,6 +84,14 @@ function handle(r)
             -- Or do we just want the email itself?
             else
                 local eml = utils.extractCanonEmail(doc.from or "unknown")
+
+                -- Anonymize to/cc if full_headers is false
+                -- do this before anonymizing the headers
+                if not config.full_headers or not account then
+                    doc.to = nil
+                    doc.cc = nil
+                end      
+
                 if not account then -- anonymize email address if not logged in
                     doc = utils.anonymizeHdrs(doc, true)
                 end
@@ -94,11 +102,6 @@ function handle(r)
                 end
                 
                 
-                -- Anonymize to/cc if full_headers is false
-                if not config.full_headers or not account then
-                    doc.to = nil
-                    doc.cc = nil
-                end      
                 doc.gravatar = r:md5(eml:lower())
                 r:puts(JSON.encode(doc))
                 return cross.OK
