@@ -27,6 +27,28 @@ local aaa = require 'lib/aaa'
 local utils = require 'lib/utils'
 
 --[[
+    Remove nulls values from a table
+    This is for use in tidying up account.credentials.altemail
+    which may contain null entries.
+    Rather than continually check for them, remove them from
+    the input before use.
+]]
+local function filtertable(input)
+    -- table.remove can affect pairs()
+    -- so repeat until no more to do
+    repeat
+        local isClean = true
+        for k, v in pairs(input) do
+            if not v or v == JSON.null then
+                table.remove(input, k)
+                isClean = false
+                break
+            end
+        end
+    until isClean
+end
+
+--[[
 Get login details (if logged in), mail list counts and descriptions
 
 Parameters: (cookie required)
@@ -124,15 +146,12 @@ Pony Mail - Email for Ponies and People.
     
     -- verify alt email?
     if get.verify and get.hash and account and account.credentials.altemail then
+        filtertable(account.credentials.altemail)
         local verified = false
         for k, v in pairs(account.credentials.altemail) do
-            if v and not (v == JSON.null) and v.hash == get.hash then
+            if v.hash == get.hash then
                 account.credentials.altemail[k].verified = true
                 verified = true
-                break
-            end
-            if v == JSON.null then
-                table.remove(account.credentials.altemail, k)
                 break
             end
         end
@@ -148,9 +167,9 @@ Pony Mail - Email for Ponies and People.
     
     -- remove alt email?
     if get.removealt and account and account.credentials.altemail then
+        filtertable(account.credentials.altemail)
         for k, v in pairs(account.credentials.altemail) do
-            -- allow for null just in case table was corrupted
-            if v and not (v == JSON.null) and v.email == get.removealt then
+            if v.email == get.removealt then
                 table.remove(account.credentials.altemail, k)
                 break
             end
@@ -378,14 +397,8 @@ Pony Mail - Email for Ponies and People.
     
     local alts = {}
     if account and account.credentials and type(account.credentials.altemail) == "table" then
+        filtertable(account.credentials.altemail)
         for k, v in pairs(account.credentials.altemail) do
-                
-            -- null check from previous corruptions
-            if v == JSON.null then
-                table.remove(account.credentials.altemail, k)
-                break
-            end
-            
             if v.verified then
                 table.insert(alts, v.email)
             end

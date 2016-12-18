@@ -86,6 +86,7 @@
 - An unauthorised private mail should be treated like a non-existent mail (#295)
 - Move common anonymizing code to utils (#308)
 - Move extractCanonEmail to utils
+- preferences does not properly remove nulls from account.credentials.altemail (#309)
 
 ## CHANGES in 0.9b:
 
