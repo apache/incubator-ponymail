@@ -89,6 +89,7 @@
 - preferences does not properly remove nulls from account.credentials.altemail (#309)
 - manage e-mails can create multiple identical alternate addresses (#307)
 - elastic.get does not return if a document is not found but some callers overlook this (#137)
+- pcall() idiom to protect against elastic.lua exceptions is flawed (#162)
 
 ## CHANGES in 0.9b:
 

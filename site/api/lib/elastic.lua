@@ -26,11 +26,11 @@ local default_doc = "mbox"
 -- N.B. if the index is closed, ES returns 403, but that may perhaps be true for other conditions
 -- ES returns 404 if the index is missing
 -- ES also returns 404 if a document is missing
-local function checkReturn(code)
+local function checkReturn(code, ok404)
     if type(code) == "number" then -- we have a valid HTTP status code
         -- ignore expected return codes here
         -- index returns 201 when an entry is created
-        if code ~= 200 and code ~= 201 then
+        if code ~= 200 and code ~= 201 and not (ok404 and code == 404) then
             -- code is called by 2nd-level functions only, so level 4 is the external caller
             error("Backend Database returned code " .. code .. "!", 4)
         end
@@ -48,20 +48,22 @@ end
 -- Parameters:
 --  - url (required)
 --  - query (optional); if this is a table it is decoded into JSON
+--  - ok404 (optional); if true, then 404 is allowed as a status return
 -- returns decoded JSON result
 -- may throw an error if the request fails
---
-local function performRequest(url, query) 
+-- Returns:
+-- json, status code (i.e. 200,201 or 404)
+local function performRequest(url, query, ok404) 
     local js = query
     if type(query) == "table" then
         js = JSON.encode(query)
     end
     local result, hc = http.request(url, js)
-    checkReturn(hc)
+    checkReturn(hc, ok404)
     local json = JSON.decode(result)
     -- TODO should we return the http status code?
     -- This might be necessary if codes such as 404 did not cause an error
-    return json
+    return json, hc
 end
 
 -- Standard ES query, returns $size results of any doc of type $doc, sorting by $sitem
@@ -87,16 +89,16 @@ local function getHits(query, size, doc, sitem)
 end
 
 -- Get a single document
-local function getDoc (ty, id)
+local function getDoc (ty, id, ok404)
     local url = config.es_url  .. ty .. "/" .. id
-    local json = performRequest(url)
+    local json, status = performRequest(url, nil, ok404)
     if json and json._source then
         json._source.request_id = json._id
         if ty == "mbox" and json._source.body == JSON.null then
             json._source.body = ''
         end
     end
-    return (json and json._source) and json._source or {}
+    return (json and json._source) and json._source or {}, status
 end
 
 -- Get results (a'la getHits), but only return email headers, not the body

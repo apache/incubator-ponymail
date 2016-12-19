@@ -27,7 +27,7 @@ function handle(r)
     cross.contentType(r, "text/plain")
     local get = r:parseargs()
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")
-    local _, doc = pcall(function() return elastic.get("mbox", eid or "hmm") end)
+    local doc = elastic.get("mbox", eid or "hmm", true)
     
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.mid then
