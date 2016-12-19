@@ -27,7 +27,7 @@ function handle(r)
     cross.contentType(r, "text/plain")
     local get = r:parseargs()
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")
-    local doc = elastic.get("mbox", eid or "hmm")
+    local _, doc = pcall(function() return elastic.get("mbox", eid or "hmm") end)
     
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.mid then
@@ -36,7 +36,7 @@ function handle(r)
             doc = docs[1]
         end
     end
-    if doc then
+    if doc and doc.mid then
         local account = user.get(r)
         if aaa.canAccessDoc(r, doc, account) then
             doc.tid = doc.request_id
