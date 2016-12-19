@@ -90,6 +90,7 @@
 - manage e-mails can create multiple identical alternate addresses (#307)
 - elastic.get does not return if a document is not found but some callers overlook this (#137)
 - pcall() idiom to protect against elastic.lua exceptions is flawed (#162)
+- unhelpful error reporting for invalid Permalinks/Source links (#123)
 
 ## CHANGES in 0.9b:
 
