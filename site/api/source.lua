@@ -39,7 +39,6 @@ function handle(r)
     if doc and doc.mid then
         local account = user.get(r)
         if aaa.canAccessDoc(r, doc, account) then
-            doc.tid = doc.request_id
             local doc_raw = elastic.get('mbox_source', doc.request_id)
             if doc_raw then
                 r:puts(doc_raw.source)
