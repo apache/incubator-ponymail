@@ -1,0 +1,108 @@
+From users-de-return-6891-apmail-openoffice-users-de-archive=openoffice.apache.org@openoffice.apache.org  Sun Dec 18 14:53:19 2016
+Return-Path: <users-de-return-6891-apmail-openoffice-users-de-archive=openoffice.apache.org@openoffice.apache.org>
+X-Original-To: apmail-openoffice-users-de-archive@www.apache.org
+Delivered-To: apmail-openoffice-users-de-archive@www.apache.org
+Received: from mail.apache.org (hermes.apache.org [140.211.11.3])
+	by minotaur.apache.org (Postfix) with SMTP id 7497219057
+	for <apmail-openoffice-users-de-archive@www.apache.org>; Sun, 18 Dec 2016 14:53:19 +0000 (UTC)
+Received: (qmail 21707 invoked by uid 500); 18 Dec 2016 14:53:19 -0000
+Delivered-To: apmail-openoffice-users-de-archive@openoffice.apache.org
+Received: (qmail 21668 invoked by uid 500); 18 Dec 2016 14:53:19 -0000
+Mailing-List: contact users-de-help@openoffice.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:users-de-help@openoffice.apache.org>
+List-Unsubscribe: <mailto:users-de-unsubscribe@openoffice.apache.org>
+List-Post: <mailto:users-de@openoffice.apache.org>
+List-Id: <users-de.openoffice.apache.org>
+Reply-To: users-de@openoffice.apache.org
+Delivered-To: mailing list users-de@openoffice.apache.org
+Received: (qmail 21654 invoked by uid 99); 18 Dec 2016 14:53:19 -0000
+Received: from pnap-us-west-generic-nat.apache.org (HELO spamd1-us-west.apache.org) (209.188.14.142)
+    by apache.org (qpsmtpd/0.29) with ESMTP; Sun, 18 Dec 2016 14:53:19 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by spamd1-us-west.apache.org (ASF Mail Server at spamd1-us-west.apache.org) with ESMTP id AB191C00AF
+	for <users-de@openoffice.apache.org>; Sun, 18 Dec 2016 14:53:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at spamd1-us-west.apache.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.2
+X-Spam-Level:
+X-Spam-Status: No, score=-3.2 tagged_above=-999 required=6.31
+	tests=[RCVD_IN_DNSWL_LOW=-0.7, RCVD_IN_SORBS_SPAM=0.5,
+	RP_MATCHES_RCVD=-2.999, SPF_PASS=-0.001] autolearn=disabled
+Received: from mx1-lw-eu.apache.org ([10.40.0.8])
+	by localhost (spamd1-us-west.apache.org [10.40.0.7]) (amavisd-new, port 10024)
+	with ESMTP id sXYoDj9mWgQi for <users-de@openoffice.apache.org>;
+	Sun, 18 Dec 2016 14:53:17 +0000 (UTC)
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	by mx1-lw-eu.apache.org (ASF Mail Server at mx1-lw-eu.apache.org) with ESMTPS id 34F6D5F2EF
+	for <users-de@openoffice.apache.org>; Sun, 18 Dec 2016 14:53:17 +0000 (UTC)
+Received: from [192.168.2.101] ([84.135.71.51]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Meh8S-1byv9Y0kZc-00OGfe for
+ <users-de@openoffice.apache.org>; Sun, 18 Dec 2016 15:53:16 +0100
+From: Josef Latt <Josef.Latt@gmx.net>
+Subject: Re: Bildverankerung, Bildbeschriftung
+To: users-de@openoffice.apache.org
+References: <0190D133-3E19-4A84-AF6D-254842E90943@gmx.net>
+ <2227446.RBzkAGCCxL@merlin> <F0FE475969DB42408FADED1D8972F624@Esprimo7935>
+ <1656299.T3UoDgk8S8@merlin>
+Message-ID: <906a12f9-a548-19d3-29d9-d39d9d7bd4c5@gmx.net>
+Date: Sun, 18 Dec 2016 15:53:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.5.1
+MIME-Version: 1.0
+In-Reply-To: <1656299.T3UoDgk8S8@merlin>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K0:8RlrHUatpJK7gtm0TvBiEPb+uzz4ounhqJSUdYDPdVt5LjRyzgY
+ ozWJaIcB09SRHHhkmZfoAcpDmsWU/vliOsj3DCe5zy2savGUCnP/Ok3efiMlwF+sfmm9MCK
+ 3r0DxlsX1btX6zZuyiQ/QEE5Led2+f7MmnxxgEgQFwWqzG3dEqAw8dhceXsLtyUBBAVoAe+
+ lElYBj1BQFo4hMGY983Mw==
+X-UI-Out-Filterresults: notjunk:1;V01:K0:RrwwKaDx4GA=:MX/ZFnCvJ14Vfe4XFY7M1F
+ bxZWaXgmKYFkeepezfbyiIsK4YBl9eo2ZdOqjqASEFCU7M+JNIcn2dGE++3FZNBLKDqDPP4uM
+ RzzztxR/WAiABJPKQRYg8+c17LbY4ImGEbsdZT9LXeLatjWsQ6azMOrdP8HpQqhobWsUffjnG
+ V8UUSMRn40Q4vEjJut7L7NQj1qLSoFXEKxD6J7wahhw2vDR1Viv6aPLFojhL/Bzp6/zgAuiTL
+ LYjgrj6ts4SDJDpSO40Gcs/D3S2IzjuRMI6VcF/Qf+352C6v/ONXfZQ13uabFHUe87c7Gbv61
+ 3Ps54RF+QC6GZFRMsZvVoYrXJoOKRW173v+36QGc7G3oVy6OxBrhkEkGU2dWS1s6ynU70WBmf
+ 09AZ6+XbD6Kc8N+dGcz0BeRH3YWtbT2sTAH4Vgha3kaPRrC3GnSwZI7rzyu9PewsD/fqYCuPF
+ grNWLXPhMFyMQ9NWefzXP8KiVGvLCtyZni5IKbrwx2XNCpKp8Owb5l/QFs6ij/qcH3QmYB8jH
+ cv+i8+paa7boTi4TiH+ypPNC9JNDbBapyuVXADuGJG/e9G3Nzl+kwggiTEkbS67/hOR+GXOxy
+ WvLZ0x9KBwOFqkOlFOq+6GzmAE6mAn7OnmFtUac3UkZ4J2ACMQYwnxj7mR7oSZtlHhCUa3+mB
+ w6+1qayozUhcA3xofoAtBCksTb/NH8L76uXgqBGv5ZlkQX1bRCsab3cN0ocZzaSQ92/oHuXtb
+ dA21pQdCM2Z6G4B9pp6qBk63C7sewHi6iW/d8029osyGAJ6am1ebUzPL4EikZ1/WXREgMEgRt
+ uSM2FHH
+
+Hi,
+
+Am 18.12.2016 um 15:01 schrieb Matthias Müller:
+> Hallo Jörg,
+> 
+> Am Sonntag, 18. Dezember 2016, 06:46:39 schrieb Jörg Schmidt:
+>>> From: Matthias Müller [mailto:matth_mueller_hbg@posteo.de]
+>>
+>> Du solltest hier keine Unwahrheiten verbreiten! Wenn Du FUD verbreiten
+>> willst lass es lieber bleiben!
+> Ich bemühe mich keine wissentlichen Unwahrheiten zu schreiben. Und was du als 
+> FUD (Fear, Uncertainty and Doubt, englisch für Furcht, Ungewissheit und 
+> Zweifel) bezeichnest, sind für mich durchaus berechtigte Zweifel an der 
+> Zukunft von Apache OpenOffice (AOO).
+> Die offizielle Homepage dieses Projektes ist übrigens immer noch:
+> 	www.openoffice.org 
+
+Wo ist das Problem?
+
+> In der URL taucht keine Apache Foundation auf.
+
+Wie wär's damit:
+-> https://openoffice.apache.org
+
+
+BTW, wenn Du schon Links betreffs der Zukunft von OO anführst, solltest
+Du fairerweise auch benennen, was danach geschehen ist.
+
+Gruß
+
+---------------------------------------------------------------------
+To unsubscribe, e-mail: users-de-unsubscribe@openoffice.apache.org
+For additional commands, e-mail: users-de-help@openoffice.apache.org
+
+
