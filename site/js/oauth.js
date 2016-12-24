@@ -107,19 +107,6 @@ function oauthOptions() {
             oobj.appendChild(document.createElement('br'))
         }
     }
-    
-    // Mozilla Persona
-    if (pm_config.persona && pm_config.persona.enabled) {
-        var img = document.createElement('img')
-        img.setAttribute("src", "images/persona.png")
-        img.setAttribute("title", "Log on with persona")
-        img.setAttribute("onclick", "navigator.id.request();")
-        img.style.cursor = "pointer"
-        oobj.appendChild(img)
-        oobj.appendChild(document.createElement('br'))
-        oobj.appendChild(document.createTextNode(' '))
-        oobj.appendChild(document.createElement('br'))
-    }
 }
 
 // onLoad function for oauth. If args (query string or bookmark) are supplied,

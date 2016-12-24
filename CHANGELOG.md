@@ -94,6 +94,7 @@
 - import-mbox.py fails to unescape >From lines (#212)
 - Updated Google+ API for logins
 - Fixed a redirect bug with oauth
+- Removed support for Mozilla Persona
 
 ## CHANGES in 0.9b:
 
