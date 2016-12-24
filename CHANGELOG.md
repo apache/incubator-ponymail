@@ -92,6 +92,7 @@
 - pcall() idiom to protect against elastic.lua exceptions is flawed (#162)
 - unhelpful error reporting for invalid Permalinks/Source links (#123)
 - import-mbox.py fails to unescape >From lines (#212)
+- Updated Google+ API for logins
 
 ## CHANGES in 0.9b:
 

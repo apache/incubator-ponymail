@@ -52,11 +52,25 @@ function handle(r)
         valid, json = pcall(function() return JSON.decode(result) end)
         
     -- Google Auth callback
-    elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.id_token then
+    elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.code then
         oauth_domain = "www.googleapis.com"
-        local result = https.request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" .. r:escape(get.id_token))
+        local result = https.request("https://www.googleapis.com/oauth2/v4/token",
+                                     ("client_secret=%s&code=%s&client_id=%s&grant_type=authorization_code&redirect_uri=%s" ):format(
+                                        r:escape(config.oauth_fields.google.client_secret),
+                                        r:escape(get.code),
+                                        r:escape(config.oauth_fields.google.client_id),
+                                        r:escape(config.oauth_fields.google.redirect_uri)
+                                        ))
         valid, json = pcall(function() return JSON.decode(result) end)
-        
+        if valid and json and json.access_token then
+            r:err(result)
+            local ac = json.access_token
+            local result = https.request("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" .. r:escape(ac))
+            valid, json = pcall(function() return JSON.decode(result) end)
+        else
+            json = nil
+            valid = false
+        end
     -- GitHub Auth callback
     elseif get.oauth_token and get.key == 'github' then
         local result = https.request(get.oauth_token, r.args)

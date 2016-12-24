@@ -134,12 +134,16 @@ function oauthWelcome(args) {
         if (key) {
             key = key[1]
         }
-        if (args.match(/id_token=/)) {
+        if (args.match(/code=/) && !key) {
             key = 'google'
         }
         if (key && key.length > 0 && pm_config.oauth[key]) {
             document.getElementById('oauthtypes').innerHTML = "Logging you in, hang on..!"
-            GetAsync("/api/oauth.lua?" + args + "&oauth_token=" + pm_config.oauth[key].oauth_url, {}, parseOauthResponse)
+            var extra = "&key=" + key
+            if (pm_config.oauth[key].oauth_url) {
+                extra += "&oauth_token=" + pm_config.oauth[key].oauth_url
+            }
+            GetAsync("/api/oauth.lua?" + args + extra, {}, parseOauthResponse)
         } else {
             alert("Key missing or invalid! " + key)
         }
