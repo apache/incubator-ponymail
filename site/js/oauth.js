@@ -76,6 +76,10 @@ function parseOauthResponse(json) {
         window.sessionStorage.removeItem("ponymail_redirect_oauth")
     }
     if (json.okay) {
+        // if wloc tries to redirect to oauth.html, rewrite that to the front page instead
+        if (wloc.match(/oauth.html/)) {
+            wloc = "./"
+        }
         location.href = wloc
     } else {
         popup("Oauth failed", "Authentication failed: " + json.msg, null, 10, wloc)

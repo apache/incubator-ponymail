@@ -93,6 +93,7 @@
 - unhelpful error reporting for invalid Permalinks/Source links (#123)
 - import-mbox.py fails to unescape >From lines (#212)
 - Updated Google+ API for logins
+- Fixed a redirect bug with oauth
 
 ## CHANGES in 0.9b:
 
