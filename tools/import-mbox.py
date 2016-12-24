@@ -35,6 +35,10 @@ import multiprocessing
 import tempfile
 import gzip
 
+# Temporary patch to fix Python email package limitation
+# It must be removed when the Python package is fixed
+from mboxo_patch import MboxoFactory
+
 try:
     from elasticsearch import Elasticsearch, helpers
     from formatflowed import convertToWrapped # only needed by archiver
@@ -142,7 +146,6 @@ class BulkThread(Thread):
                 print("%s: Warning: Could not bulk insert: %s into %s" % (self.id,err,self.dtype))
 #             print("%s: Inserted %u entries into %s" % (self.id, len(js_arr),self.dtype))
 
-
 class SlurpThread(Thread):
 
     def printid(self, message):
@@ -211,7 +214,7 @@ class SlurpThread(Thread):
                     except Exception as err:
                         self.printid("This wasn't a gzip file: %s" % err )
                 self.printid("Slurping %s" % filename)
-                messages = mailbox.mbox(tmpname)
+                messages = mailbox.mbox(tmpname, MboxoFactory)
 
             else:
                 ml = mla[0]
