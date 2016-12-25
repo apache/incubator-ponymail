@@ -32,7 +32,7 @@ private.
 * Multi-site, multi-list handling
 * Word clouds
 * Fuzzy-logic email grouping/threading (based in part on JWZ's ideas)
-* Supports both custom OAuth, Google Auth, OAuth.online and Mozilla Persona
+* Supports both custom OAuth, Google Auth, GitHub etc.
 * Atom feeds for all lists (including private ones!)
 * Source view and custom range mbox export
 * Customized trend analysis and n-grams
@@ -83,7 +83,7 @@ To contribute to Pony Mail, follow these steps (also see [this doc](docs/CONTRIB
 - Fork the repo
 - Subscribe to the Pony Mail dev list:
   - Either send an email to dev-subscribe@ponymail.incubator.apache.org OR
-  - Visit https://lists.apache.org/list.html?dev@ponymail.apache.org (You can use Persona or ASF OAuth)
+  - Visit https://lists.apache.org/list.html?dev@ponymail.apache.org (You can use Google+ or ASF OAuth)
 - Find something to fix or help out with
 - Let us know what you want to do, and we'll add you to our contributors list!
 - Join us on #ponymail on the Freenode IRC network

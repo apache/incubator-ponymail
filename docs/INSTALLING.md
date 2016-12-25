@@ -109,16 +109,9 @@ Run `python3 edit-list.py --help` for CLI args.
 
 
 ## Setting up OAuth for Pony Mail ##
-If you want people to be able to log in and reply via the Web UI, you can either
-use the default Persona login (works for all email addresses) or specify an
-OAuth provider.
+If you want people to be able to log in and reply via the Web UI, you
+can specify an OAuth provider.
 
-### Setting up or disabling Persona ###
-Persona is enabled by default, as it's a fast and convenient way to enable
-logins for *public* lists. Should you wish to disable Persona, set the
-`enabled` variable to `false` in the persona section of `site/js/config.js`.
-Persona will only ever work for public lists. For private lists, you will need
-to specify and implement an OAuth provider.
 
 ### Setting up an OAuth provider ###
 Pony Mail comes with a few default OAuth examples in `site/js/config.js`, such
