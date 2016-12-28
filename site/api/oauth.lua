@@ -45,14 +45,8 @@ function handle(r)
         end
     end
     
-    -- Persona callback
-    if get.mode and get.mode == "persona" then
-        oauth_domain = "verifier.login.persona.org"
-        local result = https.request("https://verifier.login.persona.org/verify", ("assertion=%s&audience=%s://%s:%u/"):format(post.assertion, scheme, r.hostname, r.port))
-        valid, json = pcall(function() return JSON.decode(result) end)
-        
     -- Google Auth callback
-    elseif get.oauth_token and get.oauth_token:match("^https://www.google") and get.code then
+    if get.oauth_token and get.oauth_token:match("^https://www.google") and get.code then
         oauth_domain = "www.googleapis.com"
         local result = https.request("https://www.googleapis.com/oauth2/v4/token",
                                      ("client_secret=%s&code=%s&client_id=%s&grant_type=authorization_code&redirect_uri=%s" ):format(

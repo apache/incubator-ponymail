@@ -138,7 +138,7 @@ function oauthWelcome(args) {
         } else {
             alert("Key missing or invalid! " + key)
         }
-    // Not a callback, let's just show which oauth/persona options are enabled.
+    // Not a callback, let's just show which oauth options are enabled.
     } else {
         window.sessionStorage.setItem("ponymail_redirect_oauth", document.referrer)
         oauthOptions()
