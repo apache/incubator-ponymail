@@ -11,8 +11,8 @@ authorities, as such:
 
 ~~~
 ...,
--- This adds Persona and Google OAuth as authorities
-admin_oauth = { "verifier.login.persona.org", "www.googleapis.com" }
+-- This Google OAuth as an authority
+admin_oauth = { "www.googleapis.com" }
 ...
 ~~~
 
