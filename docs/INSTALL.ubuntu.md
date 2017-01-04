@@ -67,14 +67,14 @@ sudo python3 setup.py
 
 Set up Apache httpd by adding, for example, the following virtual host configuration (e.g. in `/etc/apache2/sites-enabled/000-default.conf`):
 ~~~
-&lt;VirtualHost *:80&gt;
+<VirtualHost *:80>
     ServerName mylists.foo.tld
     DocumentRoot /var/www/ponymail/site
     AddHandler      lua-script .lua
     LuaScope        thread
     LuaCodeCache    stat
     AcceptPathInfo  On
-&lt;/VirtualHost&gt;
+</VirtualHost>
 ~~~
 
 Enable mod_lua and start apache, if not already enabled:
