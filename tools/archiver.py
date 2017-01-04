@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -33,7 +33,7 @@ plugin: true
 
 OR, to use the STDIN version (non-MM3 mailing list managers),
 sub someone to the list(s) and add this to their .forward file:
-"|/usr/bin/env python3.4 /path/to/archiver.py"
+"|/usr/bin/env python3 /path/to/archiver.py"
 
 """
 

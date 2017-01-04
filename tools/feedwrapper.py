@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/env python3
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,8 +15,8 @@
 # limitations under the License.
 """
 Thie is feedwrapper - a mailing list auto-subscriber and/or feed passthrough program.
-Activate it by adding "|/usr/bin/env python3.4 /path/to/ponymail/tools/feedwrapper.py localuser@thisdomain.abc"
-Then subscribe to lists by running: python3.4 feedwrapper sub localuser@thisdomain.abc ml-subscribe@mldomain.foo"
+Activate it by adding "|/usr/bin/env python3 /path/to/ponymail/tools/feedwrapper.py localuser@thisdomain.abc"
+Then subscribe to lists by running: python3 feedwrapper sub localuser@thisdomain.abc ml-subscribe@mldomain.foo"
 """
 
 import sys, re, os, email, smtplib
@@ -67,7 +67,7 @@ Subject: %s
                 with open("%s/wrapper.log" % path, "a") as f:
                     f.write("Got an email for %s\n" % (msg.get('list-id') or "??"))
                     f.write("%s - %s: %s\n" % (msg.get('to'), msg.get('reply-to'), msg.get('subject')))
-                    p = Popen("/usr/bin/python3.4 %s/../mm3/plugin.py" % path, shell=True, stdin=PIPE, stderr=PIPE, stdout=sys.stdout)
+                    p = Popen("/usr/bin/python3 %s/../mm3/plugin.py" % path, shell=True, stdin=PIPE, stderr=PIPE, stdout=sys.stdout)
                     print(p.communicate(input=msg.as_string().encode('utf-8')))
                     p.stdin.close()
                     f.write("-----\n")
