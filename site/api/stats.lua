@@ -511,7 +511,7 @@ function handle(r)
         datespan.lastYear = tonumber(os.date("%Y", last))
         datespan.lastMonth = tonumber(os.date("%m", last))
 
-        r:ivm_set(DATESPAN_KEY, datespan) 
+        r:ivm_set(DATESPAN_KEY, JSON.encode(datespan)) 
     end
     
     -- Debug time point 6
