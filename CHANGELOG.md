@@ -95,6 +95,7 @@
 - Updated Google+ API for logins
 - Fixed a redirect bug with oauth
 - Removed support for Mozilla Persona
+- elastic.scroll does not return nil sid when there are no more results (#315)
 
 ## CHANGES in 0.9b:
 

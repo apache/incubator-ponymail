@@ -179,21 +179,15 @@ function handle(r)
         size = MAXRESULTS
     }
     local h = 0
-    local maxScrolls = 5
     local hits = {}
-    while sid ~= nil do
-        maxScrolls = maxScrolls - 1
-        if maxScrolls < 0 then
-            break
-        end
+    if sid then
         doc, sid = elastic.scroll(sid)
-        if doc then
+        while doc and doc.hits and doc.hits.hits and #doc.hits.hits > 0 do -- scroll as long as we get new results
             h = h + #doc.hits.hits
             for k, v in pairs(doc.hits.hits) do
                 table.insert(hits, v)
             end
-        else
-            break
+            doc, sid = elastic.scroll(sid)
         end
     end
     

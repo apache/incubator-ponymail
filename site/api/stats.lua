@@ -573,9 +573,6 @@ function handle(r)
                 for k, v in pairs(js.hits.hits) do
                     table.insert(dhh, v)
                 end
-                if not sid then -- break if last scroll
-                    break
-                end
                 js, sid = elastic.scroll(sid)
             end
         end
