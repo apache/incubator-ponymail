@@ -391,6 +391,7 @@ function handle(r)
             local eml = utils.extractCanonEmail(y.key)
             local gravatar = r:md5(eml:lower())
             local name = extractCanonName(y.key)
+            -- N.B. the canonicalisation process can result in duplicates in the top10 table
             table.insert(top10, {
                 email = eml,
                 gravatar = gravatar,
@@ -600,12 +601,12 @@ function handle(r)
         if eepoch > lastEmail then
             lastEmail = eepoch
         end
+        -- This is also needed by ths slow_count method            
+        local eml = utils.extractCanonEmail(email.from)
         if aaa.canAccessDoc(r, email, account) then
 
             h = h + 1
 
-            -- This is needed by ths slow_count method            
-            local eml = utils.extractCanonEmail(email.from)
             local gravatar = r:md5(eml:lower())
             email.gravatar = gravatar
 
@@ -704,9 +705,11 @@ function handle(r)
             else
                 table.insert(emls, {epoch= email.epoch})
             end
-        elseif config.slow_count then
+        elseif config.slow_count then -- not authorised, fix up counts
             for k, v in pairs(top10) do
-                if v.email == utils.extractCanonEmail(email.from) then
+                -- because of canonicalisation, there can be multiple matches in the top10 list
+                -- carry on to next match if first one is exhausted
+                if v.email == eml and v.count > 0 then
                     v.count = v.count - 1
                     break -- don't count the e-mail again
                 end
