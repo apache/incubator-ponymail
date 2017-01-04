@@ -90,8 +90,9 @@ if args.missing:
                                 'list_raw': sourceLID
                                 }
                             },
-                        "filter": {
-                            "missing" : {
+                        # missing is not supported in ES 5.x
+                        "must_not": {
+                            "exists" : {
                                 "field" : field
                             }
                         }
