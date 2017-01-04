@@ -467,11 +467,10 @@ function handle(r)
     
     -- Get years active
     local NOWISH = math.floor(os.time()/600)
-    local FIRSTYEAR_KEY = "firstYear:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
-    local LASTYEAR_KEY = "lastYear:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
-    local firstYear = r:ivm_get(FIRSTYEAR_KEY)
-    local lastYear = r:ivm_get(LASTYEAR_KEY)
-    if (not firstYear or firstYear == "" or not lastYear or lastYear == "") and not statsOnly then
+    local DATESPAN_KEY = "dateSpan:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
+    local datespan = JSON.decode(r:ivm_get(DATESPAN_KEY) or "{}")
+    
+    if not (datespan.firstYear and datespan.lastYear and datespan.firstMonth and datespan.lastMonth) and not statsOnly then
         local doc = elastic.raw {
             size = 0,
             query = {
@@ -501,15 +500,18 @@ function handle(r)
                 }
             }
         }
+        datespan = {}
         local first = doc.aggregations.first.value
         if first == JSON.null then first = os.time() else first = first/1000 end
-        firstYear = tonumber(os.date("%Y", first))
-        r:ivm_set(FIRSTYEAR_KEY, firstYear)
+        datespan.firstYear = tonumber(os.date("%Y", first))
+        datespan.firstMonth = tonumber(os.date("%m", first))
 
         local last = doc.aggregations.last.value
         if last == JSON.null then last = os.time() else last = last/1000 end
-        lastYear = tonumber(os.date("%Y", last))
-        r:ivm_set(LASTYEAR_KEY, lastYear)
+        datespan.lastYear = tonumber(os.date("%Y", last))
+        datespan.lastMonth = tonumber(os.date("%m", last))
+
+        r:ivm_set(DATESPAN_KEY, datespan) 
     end
     
     -- Debug time point 6
@@ -765,8 +767,10 @@ function handle(r)
     if not statsOnly then
         listdata.thread_struct = threads
     end
-    listdata.firstYear = firstYear
-    listdata.lastYear = lastYear
+    listdata.firstYear = datespan.firstYear
+    listdata.lastYear = datespan.lastYear
+    listdata.firstMonth = datespan.firstMonth
+    listdata.lastMonth = datespan.lastMonth
     listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")
     listdata.emails = emls
     listdata.hits = h
