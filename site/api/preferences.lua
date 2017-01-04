@@ -284,111 +284,63 @@ Pony Mail - Email for Ponies and People.
     if cache then
         lists = JSON.decode(cache)
     else
-        -- get all the list names
-        local doc = elastic.raw {
+        -- aggregate the documents by listname, privacy flag, recent docs
+
+        local alldocs = elastic.raw{
             size = 0, -- we don't need the hits themselves
             aggs = {
-                from = {
+                listnames = {
                     terms = {
                         field = "list_raw",
                         size = 500000
-                    }
-                }
-            }
-        }
-        -- get list names with messages in the last 90 days
-        local ndoc = elastic.raw {
-            size = 0, -- we don't need the hits themselves
-            aggs = {
-                from = {
-                    terms = {
-                        field = "list_raw",
-                        size = 500000
-                    }
-                }
-            },
-            query = {
-                range = {
-                        date = { gte = "now-90d" }
-                    }
-            }
-        }
-        
-        -- init the lists with the names (no counts)
-        for x,y in pairs (doc.aggregations.from.buckets) do
-            local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
-            if domain and domain:match("^[-_a-z0-9.]+$") and #domain > 3 and list:match("^[-_a-z0-9.]+$") then
-                lists[domain] = lists[domain] or {}
-                lists[domain][list] = 0
-            end
-        end
-        -- add the counts of recent mails
-        for x,y in pairs (ndoc.aggregations.from.buckets) do
-            local list, domain = y.key:lower():match("^<?(.-)%.(.-)>?$")
-            if domain and domain:match("^[-_a-z0-9.]+$") and #domain > 3 and list:match("^[-_a-z0-9.]+$") then
-                lists[domain] = lists[domain] or {}
-                lists[domain][list] = y.doc_count
-            end
-        end
-        
-        -- save temporary list in cache
-        r:ivm_set(PM_LISTS_KEY, JSON.encode(lists))
-        
-        -- hide private lists?
-        -- this invalidates any cache there is and forces a check for
-        -- private emails inside lists. If found and the current user
-        -- does not have access, the list is hidden
-    end
-    if config.hidePrivate then
-        local PM_LISTS_PRIVATE_KEY = "pm_lists_cache_private_" .. r.hostname .. "-" .. NOWISH
-        local cache = r:ivm_get(PM_LISTS_PRIVATE_KEY)
-        local pdoc
-        if cache then
-            pdoc = JSON.decode(cache)
-        else
-            -- get list names which have at least one private message in the last 20 years
-            pdoc = elastic.raw {
-                size = 0, -- we don't need the hits themselves
-                aggs = {
-                    from = {
-                        terms = {
-                            field = "list_raw",
-                            size = 500000
-                        }
-                    }
-                },
-                query = {
-                    bool = {
-                        must = {
-                            {
-                                range = {
-                                        date = { gte = "now-20y" }
-                                    },
+                    },
+                    aggs = {
+                        -- split list into public and private buckets
+                        privacy = {
+                            terms = {
+                                field = "private"
                             },
-                            {
-                                term = {
-                                    private = true
+                            aggs = {
+                                -- Create a single bucket of recent mails
+                                recent = {
+                                    range = {
+                                        field = "date",
+                                        ranges = { {from = "now-90d"} }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            r:ivm_set(PM_LISTS_PRIVATE_KEY, JSON.encode(pdoc))
-        end
-        
-        -- remove any lists containing mails that the user is not allowed to access
-        -- N.B. this removes mixed lists
-        -- i.e. the user won't see the list name if it contains a single private mail they cannot access
-        for x,y in pairs (pdoc.aggregations.from.buckets) do
-            local _, list, domain = aaa.parseLid(y.key:lower())
-            if list and domain and #list > 0 and #domain > 2 then
-                if not aaa.canAccessList(r, y.key:lower(), account) then
-                    lists[domain] = lists[domain] or {}
-                    lists[domain][list] = nil
+        }
+        -- Now process the docs that are visible to the user
+        for _, entry in pairs (alldocs.aggregations.listnames.buckets) do
+            local listname = entry.key:lower()
+            local _, list, domain = aaa.parseLid(listname)
+            -- TODO is it necessary to check the lengths?
+            if list and domain and #list > 0 and #domain > 3 then
+                -- check public and private (only one may be present)
+                for _, privacy in pairs(entry.privacy.buckets) do
+                    local isPublic = privacy.key_as_string == 'false'
+                    -- do the user have access?
+                    if isPublic or aaa.canAccessList(r, listname, account)  then
+                        -- there is only a single recent bucket; access it directly
+                        local recent_count = privacy.recent.buckets[1].doc_count
+                        -- create the domain entry if necessary
+                        lists[domain] = lists[domain] or {}
+                        -- check if we have a list entry yet
+                        if lists[domain][list] then
+                            lists[domain][list] = lists[domain][list] + recent_count
+                        else
+                            lists[domain][list] = recent_count -- init the entry
+                        end
+                    end
                 end
             end
         end
+        -- save temporary list in cache
+        r:ivm_set(PM_LISTS_KEY, JSON.encode(lists))
     end
     
         -- do we need to remove junk?

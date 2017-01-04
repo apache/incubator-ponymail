@@ -98,6 +98,7 @@
 - elastic.scroll does not return nil sid when there are no more results (#315)
 - stats.lua should return firstMonth and lastMonth (#120)
 - many python scripts insist on Python 3.4 (#312)
+- config.hidePrivate should be dropped (#272)
 
 ## CHANGES in 0.9b:
 
