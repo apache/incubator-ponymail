@@ -27,10 +27,6 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
-    local domain = get.domain or ""
-    if #domain < 2 then
-        domain = "*"
-    end
     local DD = 14
     local MAXRESULTS = 10000
 
@@ -50,12 +46,6 @@ function handle(r)
     
     local daterange = {gt = "now-"..DD.."d", lt = "now+1d" }
     
-    local sterm = {
-              wildcard = {
-                  list = "*." .. domain
-              }
-          }
-
     -- common query
     local QUERY = {
             bool = {
@@ -69,8 +59,7 @@ function handle(r)
                         term = {
                             private = false
                         }
-                    },
-                    sterm
+                    }
                 }
             }
     }
