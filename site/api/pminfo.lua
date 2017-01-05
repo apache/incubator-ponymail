@@ -26,7 +26,6 @@ function handle(r)
     local t = {}
     local now = r:clock()
     local tnow = now
-    local get = r:parseargs()
     local DD = 14
     local MAXRESULTS = 10000
 
