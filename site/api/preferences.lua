@@ -275,13 +275,13 @@ Pony Mail - Email for Ponies and People.
         end
     end
 
-    -- Get lists (cached if possible)
-    local lists = {}
+    -- Get list counts (cached if possible)
     local NOWISH = math.floor(os.time() / 600)
-    local PM_LISTS_KEY = "pm_lists_cache_" .. r.hostname .. "-" .. NOWISH
+    local PM_LISTS_KEY = "pm_lists_counts_" .. r.hostname .. "-" .. NOWISH
     local cache = r:ivm_get(PM_LISTS_KEY)
+    local listcounts = {} -- summary of aggregated data for cache
     if cache then
-        lists = JSON.decode(cache)
+        listcounts = JSON.decode(cache)
     else
         -- aggregate the documents by listname, privacy flag, recent docs
 
@@ -313,33 +313,41 @@ Pony Mail - Email for Ponies and People.
                 }
             }
         }
-        -- Now process the docs that are visible to the user
+        -- squash the output for caching (it's quite verbose otherwise)
         for _, entry in pairs (alldocs.aggregations.listnames.buckets) do
             local listname = entry.key:lower()
-            local _, list, domain = aaa.parseLid(listname)
-            -- TODO is it necessary to check the lengths?
-            if list and domain and #list > 0 and #domain > 3 then
-                -- check public and private (only one may be present)
-                for _, privacy in pairs(entry.privacy.buckets) do
-                    local isPublic = privacy.key_as_string == 'false'
-                    -- do the user have access?
-                    if isPublic or aaa.canAccessList(r, listname, account)  then
-                        -- there is only a single recent bucket; access it directly
-                        local recent_count = privacy.recent.buckets[1].doc_count
-                        -- create the domain entry if necessary
-                        lists[domain] = lists[domain] or {}
-                        -- check if we have a list entry yet
-                        if lists[domain][list] then
-                            lists[domain][list] = lists[domain][list] + recent_count
-                        else
-                            lists[domain][list] = recent_count -- init the entry
-                        end
+            listcounts[listname] = {}
+            -- the same list may have both private and public docs
+            for _, privacy in pairs(entry.privacy.buckets) do
+                listcounts[listname][privacy.key_as_string] = privacy.recent.buckets[1].doc_count
+            end
+        end
+        -- save the squashed counts in cache
+        r:ivm_set(PM_LISTS_KEY, JSON.encode(listcounts))
+    end
+
+    -- Now count the docs and lists that are visible to the current user
+    local lists = {}
+    for listname, entry in pairs(listcounts) do
+        local _, list, domain = aaa.parseLid(listname)
+        -- TODO is it necessary to check the lengths?
+        if list and domain and #list > 0 and #domain > 3 then
+            -- there may be both private and public docs in the list
+            for privacy, recent_count in pairs(entry) do
+                local isPublic = privacy == 'false'
+                -- does the user have access to this list?
+                if isPublic or aaa.canAccessList(r, listname, account)  then
+                    -- create the domain entry if necessary
+                    lists[domain] = lists[domain] or {}
+                    -- check if we have a list entry yet
+                    if lists[domain][list] then
+                        lists[domain][list] = lists[domain][list] + recent_count
+                    else
+                        lists[domain][list] = recent_count -- init the entry
                     end
                 end
             end
         end
-        -- save temporary list in cache
-        r:ivm_set(PM_LISTS_KEY, JSON.encode(lists))
     end
     
         -- do we need to remove junk?
