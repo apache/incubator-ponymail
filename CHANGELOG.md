@@ -102,6 +102,7 @@
 - limit filter is deprecated in ES 2.0; dropped in ES 5.0 (#318)
 - domain parameter is not used externally (#319)
 - pminfo.lua fetches and saves epoch but never uses it #320
+- pminfo.lua - no need to use scroll unless doc count > 10000 (#321)
 
 ## CHANGES in 0.9b:
 

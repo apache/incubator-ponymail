@@ -27,7 +27,7 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local DD = 14
-    local MAXRESULTS = 10000
+    local MAXRESULTS = 10000 -- max value for from + size in a single query
 
     
     local NOWISH = math.floor(os.time() / 1800)
@@ -115,7 +115,7 @@ function handle(r)
     -- Get threads
     local num_threads = 0
     local emails = {}
-    local sid = elastic.scan {
+    local squery = {
         _source = {'message-id','in-reply-to','subject','references'},
         query = QUERY,
         sort = {
@@ -128,14 +128,21 @@ function handle(r)
         size = MAXRESULTS
     }
     local hits = {}
-    if sid then
-        doc, sid = elastic.scroll(sid)
-        while doc and doc.hits and doc.hits.hits and #doc.hits.hits > 0 do -- scroll as long as we get new results
-            for k, v in pairs(doc.hits.hits) do
-                table.insert(hits, v)
-            end
+    -- check if we need to use scrolling
+    if total_docs > MAXRESULTS then
+        local sid = elastic.scan(squery)
+        if sid then
             doc, sid = elastic.scroll(sid)
+            while doc and doc.hits and doc.hits.hits and #doc.hits.hits > 0 do -- scroll as long as we get new results
+                for k, v in pairs(doc.hits.hits) do
+                    table.insert(hits, v)
+                end
+                doc, sid = elastic.scroll(sid)
+            end
         end
+    else
+        local doc = elastic.raw(squery)
+        hits = doc.hits.hits
     end
     
     -- Debug time point 5
