@@ -89,10 +89,11 @@ function handle(r)
 
     local nal = doc.aggregations.nlists.value -- number of active lists
     
-    -- Debug time point 2
+    local total_docs = doc.hits.total
     
     local no_senders = doc.aggregations.cards.value
     
+    -- Debug time point 2
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
@@ -126,12 +127,10 @@ function handle(r)
         },
         size = MAXRESULTS
     }
-    local h = 0
     local hits = {}
     if sid then
         doc, sid = elastic.scroll(sid)
         while doc and doc.hits and doc.hits.hits and #doc.hits.hits > 0 do -- scroll as long as we get new results
-            h = h + #doc.hits.hits
             for k, v in pairs(doc.hits.hits) do
                 table.insert(hits, v)
             end
@@ -208,7 +207,7 @@ function handle(r)
     local listdata = {}
     listdata.max = MAXRESULTS
     listdata.no_threads = num_threads
-    listdata.hits = h
+    listdata.hits = total_docs
     listdata.participants = no_senders
     listdata.no_active_lists = nal
     listdata.took = r:clock() - now
