@@ -24,7 +24,6 @@ local cross = require 'lib/cross'
 local smtp = require 'socket.smtp'
 local config = require 'lib/config'
 local aaa = require 'lib/aaa'
-local utils = require 'lib/utils'
 
 --[[
     Remove nulls values from a table
