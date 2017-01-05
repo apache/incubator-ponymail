@@ -99,6 +99,7 @@
 - stats.lua should return firstMonth and lastMonth (#120)
 - many python scripts insist on Python 3.4 (#312)
 - config.hidePrivate should be dropped (#272)
+- limit filter is deprecated in ES 2.0; dropped in ES 5.0 (#318)
 
 ## CHANGES in 0.9b:
 

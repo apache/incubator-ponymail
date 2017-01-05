@@ -410,19 +410,13 @@ function handle(r)
         -- Word cloud!
         local doc = elastic.raw {
             size = 0, -- we don't need the hits themselves
+            terminate_after = 100,
             aggs = {
-                subdoc = {
-                    filter = {
-                       limit = {value = 100} -- Max 100 x N documents used for this, otherwise it's too slow
-                   },
-                    aggs = {
-                        cloud = {
-                            significant_terms =  {
-                                field =  "subject",
-                                size = 10,
-                                chi_square = {}
-                            }
-                        }
+                cloud = {
+                    significant_terms =  {
+                        field =  "subject",
+                        size = 10,
+                        chi_square = {}
                     }
                 }
             }, 
@@ -458,7 +452,7 @@ function handle(r)
                 }
             }
         }
-        for x,y in pairs (doc.aggregations.subdoc.cloud.buckets) do
+        for x,y in pairs (doc.aggregations.cloud.buckets) do
             cloud[y.key] = y.doc_count
         end
     end
