@@ -102,19 +102,14 @@ function handle(r)
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
         dd = tonumber(get.d)
     end
-    local x
-    local nx
-    local y
-    local z
-    local ec
     -- Param: q=query
     if get.q and #get.q > 0 then
-        x = {}
-        nx = {}
+        local x = {}
+        local nx = {}
         local q = get.q:gsub("+", " ") -- apache quirk?
         for k, v in pairs({'from','subject','body'}) do
-            y = {}
-            z = {}
+            local y = {}
+            local z = {}
             local words = {}
             
             -- first, grab all "foo bar" quotes
@@ -163,7 +158,7 @@ function handle(r)
         domain = get.domain
     }
 
-    z = {}
+    local z = {}
     -- Param: header_from=
     -- Param: header_subject=
     -- Param: header_body=
@@ -256,7 +251,7 @@ function handle(r)
     if get.s and get.e then
         local em = tonumber(get.e:match("%-(%d%d?)$"))
         local ey = tonumber(get.e:match("^(%d%d%d%d)"))
-        ec = days[em]
+        local ec = days[em]
         if em == 2 and leapYear(ey) then
             ec = ec + 1
         end
