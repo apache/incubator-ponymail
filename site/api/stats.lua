@@ -211,7 +211,7 @@ function handle(r)
         get.s = get.d
         get.e = get.d
     end
-    -- Param: d=.*lte=n[wMyd].* (how long ago to start search)
+    -- Param: d=.*lte=n[wMyd].* (less than or equal to n days/weeks/etc ago)
     -- from now-nP to now+1d (P=period)
     if get.d then
         local lte = get.d:match("lte=([0-9]+[wMyd])")
@@ -221,7 +221,7 @@ function handle(r)
             daterange.gt = nil
         end
     end
-    -- Param: d=.*gte=n[wMyd].* (how long ago to end search)
+    -- Param: d=.*gte=n[wMyd].* (greater than or equal to n days/weeks/etc ago)
     -- before now-nP (P=period)
     if get.d then
         local gte = get.d:match("gte=([0-9]+[wMyd])")
@@ -231,7 +231,7 @@ function handle(r)
             daterange.lte = "now-" .. gte
         end
     end
-    -- Param: d=.*dfr=yyyy-mm-dd.*
+    -- Param: d=.*dfr=yyyy-mm-dd.* (dates from)
     -- start date for search
     if get.d then
         local y,m,d = get.d:match("dfr=(%d+)%-(%d+)%-(%d+)")
@@ -240,7 +240,7 @@ function handle(r)
             daterange.gt = nil
         end
     end
-    -- Param: d=.*dto=yyyy-mm-dd.*
+    -- Param: d=.*dto=yyyy-mm-dd.* (dates up to)
     -- end date for search
     if get.d then
         local y,m,d = get.d:match("dto=(%d+)%-(%d+)%-(%d+)")
@@ -263,8 +263,8 @@ function handle(r)
             lte = get.e:gsub("%-","/").."/" .. ec .. " 23:59:59",
         }
     end
-    local wc = false
-    local sterm = {
+    local wc = false -- wildcard?
+    local sterm = { -- which lists to process
               term = {
                   list_raw = listraw
               }
@@ -287,7 +287,7 @@ function handle(r)
     end
     
     local top10 = {}
-    local allparts = 0
+    local allparts = 0 -- number of participants
     -- Check for changes?
     -- Param: since=epoch (optional, defaults to now)
     if get.since then
