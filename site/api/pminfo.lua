@@ -116,11 +116,11 @@ function handle(r)
     local num_threads = 0
     local emails = {}
     local squery = {
-        _source = {'message-id','in-reply-to','subject','references'},
+        _source = {'message-id','in-reply-to','subject','references','epoch'},
         query = QUERY,
         sort = {
             {
-                date = {
+                epoch = {
                     order = "desc"
                 }
             }
@@ -140,6 +140,8 @@ function handle(r)
                 doc, sid = elastic.scroll(sid)
             end
         end
+        -- scroll/scan ignores the sort order!
+        table.sort (hits, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     else
         local doc = elastic.raw(squery)
         hits = doc.hits.hits
