@@ -29,6 +29,8 @@ local days = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
 }
 
+local BODY_MAXLEN = config.stats_maxBody or 200
+
 local function sortEmail(thread)
     if thread.children and type(thread.children) == "table" then
         table.sort (thread.children, function (k1, k2) return k1.epoch > k2.epoch end )
@@ -678,9 +680,6 @@ function handle(r)
                 else
                     table.insert(threads, emails[mid])
                 end
-                if not statsOnly then
-                    threads[#threads].body = #email.body < 300 and email.body or email.body:sub(1,300) .. "..."
-                end
             end
             email.references = nil
             email.to = nil
@@ -693,7 +692,7 @@ function handle(r)
             else
                 email.attachments = 0
             end
-            email.body = nil
+            email.body = #email.body < BODY_MAXLEN and email.body or email.body:sub(1, BODY_MAXLEN) .. "..."
             if not statsOnly then
                 table.insert(emls, email)
             else

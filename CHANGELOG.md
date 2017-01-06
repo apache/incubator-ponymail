@@ -104,6 +104,7 @@
 - pminfo.lua fetches and saves epoch but never uses it #320
 - pminfo.lua - no need to use scroll unless doc count > 10000 (#321)
 - pminfo.lua - scroll/scan ignores sort order (#322)
+- flat view mode does not show first line of body (#198)
 
 ## CHANGES in 0.9b:
 

@@ -472,6 +472,7 @@ local config = {
     email_footer = nil, -- see the docs for how to set this up.
     full_headers = false,
     maxResults = 5000, -- max emails to return in one go. Might need to be bumped for large lists
+--  stats_maxBody = 200, -- max size of body snippet returned by stats.lua
     admin_oauth = {}, -- list of domains that may do administrative oauth (private list access)
                      -- add 'www.googleapis.com' to the list for google oauth to decide, for instance.
     oauth_fields = { -- used for specifying individual oauth handling parameters.
