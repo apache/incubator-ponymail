@@ -13,6 +13,8 @@
 site/api/lib/config.lua
 site/js/config.js
 tools/ponymail.cfg
+site/api/lib/config.lua.tmp
+tools/ponymail.cfg.tmp
 
 # site-local AAA module
 site/api/lib/aaa_site.lua
