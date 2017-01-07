@@ -63,6 +63,10 @@ parser.add_argument('--dbport', dest='dbport', type=str, nargs=1,
                    help='DB port')
 parser.add_argument('--dbname', dest='dbname', type=str, nargs=1,
                    help='ES DB name')
+parser.add_argument('--dbshards', dest='dbshards', type=int, nargs=1,
+                   help='DB Shard Count')
+parser.add_argument('--dbreplicas', dest='dbreplicas', type=int, nargs=1,
+                  help='DB Replica Count')
 parser.add_argument('--mailserver', dest='mailserver', type=str, nargs=1,
                    help='Host name of outgoing mail server')
 parser.add_argument('--mldom', dest='mldom', type=str, nargs=1,
@@ -89,7 +93,8 @@ mlserver = ""
 mldom = ""
 wc = ""
 wce = False
-
+shards = 0
+replicas = -1
 
 
 # If called with --defaults (like from Docker), use default values
@@ -101,6 +106,8 @@ if args.defaults:
     mldom = "example.org"
     wc = "Y"
     wce = True
+    shards = 1
+    replicas = 0
 
 # Accept CLI args, copy them
 if args.dbhost:
@@ -117,6 +124,10 @@ if args.wc:
     wc = args.wc
 if args.nwc:
     wc = False
+if args.dbshards:
+    shards = args.dbshards[0]
+if args.dbreplicas:
+    replicas = args.dbreplicas[0]
     
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
@@ -141,6 +152,17 @@ while wc == "":
     if wc.lower() == "y":
         wce = True
 
+while shards < 1:
+    try:
+        shards = int(input("How many shards for the ElasticSearch index? "))
+    except ValueError:
+        pass
+
+while replicas < 0:
+    try:
+        replicas = int(input("How many replicas for each shard? "))
+    except ValueError:
+        pass
 
 print("Okay, I got all I need, setting up Pony Mail...")
 
@@ -166,6 +188,11 @@ def createIndex():
             sys.exit(-1)
 
     print("Creating index " + dbname)
+
+    settings = {
+        "number_of_shards" :   shards,
+        "number_of_replicas" : replicas
+    }
 
     mappings = {
         "mbox" : {
@@ -400,7 +427,8 @@ def createIndex():
     }
  
     res = es.indices.create(index = dbname, body = {
-                "mappings" : mappings
+                "mappings" : mappings,
+                "settings": settings
             }
         )
     
