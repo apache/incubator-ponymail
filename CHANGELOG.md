@@ -109,6 +109,7 @@
 - absolute URLs must be prefixed with URLBase in JS files (#327)
 - cannot use absolute URLs in HTML pages (#328)
 - setup.py now prompts for shard and replica counts when creating the index (#313)
+- 'hot topics' feature should use terms, not significant_terms (#329)
 
 ## CHANGES in 0.9b:
 

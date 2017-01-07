@@ -30,6 +30,8 @@ local days = {
 }
 
 local BODY_MAXLEN = config.stats_maxBody or 200
+-- words to exclude from word cloud:
+local EXCLUDE = config.stats_wordExclude or ".|..|..."
 
 local function sortEmail(thread)
     if thread.children and type(thread.children) == "table" then
@@ -411,10 +413,10 @@ function handle(r)
             terminate_after = 100,
             aggs = {
                 cloud = {
-                    significant_terms =  {
+                    terms =  {
                         field =  "subject",
                         size = 10,
-                        chi_square = {}
+                        exclude = EXCLUDE
                     }
                 }
             }, 
