@@ -282,9 +282,9 @@ function handle(r)
             }
         }
     end
-    
-    local top10 = {}
-    local allparts = 0 -- number of participants
+
+--[[ ============ Completed all parameter parsing, now process the data ============ ]]
+
     -- Check for changes?
     -- Param: since=epoch (optional, defaults to now)
     if get.since then
@@ -326,8 +326,7 @@ function handle(r)
             },
             size = 1
         }
-        local h = #doc.hits.hits
-        if h == 0 then
+        if #doc.hits.hits == 0 then
             r:puts(JSON.encode{
                 changed = false,
                 took = r:clock() - tnow
@@ -335,7 +334,9 @@ function handle(r)
             return cross.OK
         end
     end
-    
+
+    local top10 = {}
+
     if config.slow_count then
         -- Debug time point 2
         table.insert(t, r:clock() - tnow)
@@ -705,6 +706,7 @@ function handle(r)
         end
     end
     
+    local allparts = 0 -- number of participants
     if not config.slow_count and not statsOnly then
         local stable = {}
         for k, v in pairs(senders) do
