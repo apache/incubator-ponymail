@@ -49,7 +49,7 @@ local function showThreads(r, thread, emails)
         end
         if email then
             local from = r:escape_html(email.from:gsub("(%S+@)", function(a) return a:sub(1,3) .. "...@" end))
-            r:puts(([[<li><a href="/thread.html/%s">%s</a> - %s<br/><blockquote>%s</blockquote>]]):format(email['message-id'], email.subject, from, r:escape_html(v.body or "")) )
+            r:puts(([[<li><a href="../../thread.html/%s">%s</a> - %s<br/><blockquote>%s</blockquote>]]):format(email['message-id'], email.subject, from, r:escape_html(v.body or "")) )
             showThreads(r, v, emails)
             r:puts("</li>")
         end
@@ -77,7 +77,7 @@ function handle(r)
         local listid = pinfo:match("^/?([^@]+@[^@]+)$"):gsub("@", ".")
         r:puts("<h2>" .. r:escape_html(listid) .. " list archive, last 30 days</h2>\
                <p style='color:#963; font-size: 125%;'>You are viewing the static version of this archive.<br/> \
-               For the interactive version, please visit: <a href='/list.html?" .. pinfo:gsub("[<>]", "") .. "'>This page</a></p>")
+               For the interactive version, please visit: <a href='../../list.html?" .. pinfo:gsub("[<>]", "") .. "'>This page</a></p>")
         local threads = {}
         local emails = {}
         local emails_full = {}
@@ -228,7 +228,7 @@ function handle(r)
         local a = 0
         for k, v in pairs(lists) do
             a = a + 1
-            r:puts(([[<a href="/api/static.lua/%s@%s">%s@%s list: %u new emails</a><br/>]]):format(k, adomain, k, adomain, v))
+            r:puts(([[<a href="static.lua/%s@%s">%s@%s list: %u new emails</a><br/>]]):format(k, adomain, k, adomain, v))
         end
         if a == 0 then
             r:puts("Hm, no activity found on any list matching this domain")
@@ -267,7 +267,7 @@ function handle(r)
         local a = 0
         for k, v in pairs(lists) do
             a = a + 1
-            r:puts(([[<a href="/api/static.lua/%s">%s lists: %u new emails here.</a><br/>]]):format(k, k, v))
+            r:puts(([[<a href="static.lua/%s">%s lists: %u new emails here.</a><br/>]]):format(k, k, v))
         end
         if a == 0 then
             r:puts("Hm, no activity found on any list matching any domains")

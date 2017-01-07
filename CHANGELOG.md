@@ -107,6 +107,7 @@
 - flat view mode does not show first line of body (#198)
 - Fetch URLBase once in Javascript
 - absolute URLs must be prefixed with URLBase in JS files (#327)
+- cannot use absolute URLs in HTML pages (#328)
 
 ## CHANGES in 0.9b:
 
