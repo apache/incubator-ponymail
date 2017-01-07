@@ -473,7 +473,7 @@ function displaySingleThread(json) {
         popup("Email not found!",
             ["Sorry, it seems like we couldn't find this email for you.",
              "It may be private and hidden for non-authenticated users.",
-             "In which case you could <a href='/oauth.html'>Log in</a> and see if that helps."],
+             "In which case you could <a href='" + URL_BASE + "/oauth.html'>Log in</a> and see if that helps."],
             60)
     }
     var mid = current_thread_json[0].mid.replace(/[<>]/g, "")

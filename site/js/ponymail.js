@@ -1830,7 +1830,7 @@ function displaySingleThread(json) {
         popup("Email not found!",
             ["Sorry, it seems like we couldn't find this email for you.",
              "It may be private and hidden for non-authenticated users.",
-             "In which case you could <a href='/oauth.html'>Log in</a> and see if that helps."],
+             "In which case you could <a href='" + URL_BASE + "/oauth.html'>Log in</a> and see if that helps."],
             60)
     }
     var mid = current_thread_json[0].mid.replace(/[<>]/g, "")
@@ -3989,7 +3989,7 @@ function getListInfo(list, xdomain, nopush) {
         
         // List may be private...who knows?
         if ((list && list.length > 1) && (!login || !login.credentials)) {
-            popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='/oauth.html'>Logging in</a> to resolve the situation.")
+            popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='" + URL_BASE + "/oauth.html'>Logging in</a> to resolve the situation.")
         }
         else {
             if (listnames.length > 0 && xdomain) {
@@ -4076,7 +4076,7 @@ function getListInfo(list, xdomain, nopush) {
             ll.appendChild(li)
             if (typeof all_lists[xdomain][listname] == 'undefined') {
                 if ((list && list.length > 1) && (!login || !login.credentials)) {
-                    popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='/oauth.html'>Logging in</a> to resolve the situation.")
+                    popup("List not found!", "Looks like this list is either not here or private.<br>You can try <a href='" + URL_BASE + "/oauth.html'>Logging in</a> to resolve the situation.")
                 } else {
                     listname = key
                     list = ln

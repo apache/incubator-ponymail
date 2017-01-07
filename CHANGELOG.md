@@ -106,6 +106,7 @@
 - pminfo.lua - scroll/scan ignores sort order (#322)
 - flat view mode does not show first line of body (#198)
 - Fetch URLBase once in Javascript
+- absolute URLs must be prefixed with URLBase in JS files (#327)
 
 ## CHANGES in 0.9b:
 
