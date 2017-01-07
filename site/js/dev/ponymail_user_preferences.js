@@ -156,13 +156,10 @@ function setupUser() {
     if (!uimg) {
         return
     }
-    var base = pm_config.URLBase ? pm_config.URLBase : ""
-    base = base.replace(/\/+/g, "/")
-    
-    uimg.setAttribute("src", base + "/images/user.png")
+    uimg.setAttribute("src", URL_BASE + "/images/user.png")
     uimg.setAttribute("title", "Logged in as " + login.credentials.fullname)
     if (login.notifications && login.notifications > 0) {
-        uimg.setAttribute("src", base + "/images/user_notif.png")
+        uimg.setAttribute("src", URL_BASE + "/images/user_notif.png")
         uimg.setAttribute("title", "Logged in as " + login.credentials.fullname + " - You have " + login.notifications + " new notifications!")
     }
     var pd = document.getElementById('prefs_dropdown')

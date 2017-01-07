@@ -55,10 +55,7 @@ function GetAsync(theUrl, xstate, callback) {
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    if (pm_config.URLBase && pm_config.URLBase.length > 0) {
-        theUrl = pm_config.URLBase + theUrl
-        theUrl = theUrl.replace(/\/+/g, "/")
-    }
+    theUrl = URL_BASE + theUrl
     // Set the start time of the request, used for the 'loading data...' spinner later on
     if (pending_urls) {
         pending_urls[theUrl] = new Date().getTime() / 1000;
@@ -129,12 +126,9 @@ function showSpinner(show) {
     var obj = document.getElementById('spinner')
     // If no such obj yet, create it
     if (!obj) {
-        var base = pm_config.URLBase ? pm_config.URLBase : ""
-        base = base.replace(/\/+/g, "/")
-
         obj = document.createElement('div')
         obj.setAttribute("id", "spinner")
-        obj.innerHTML = "<img src='" + base + "/images/spinner.gif'><br/>Loading data, please wait..."
+        obj.innerHTML = "<img src='" + URL_BASE + "/images/spinner.gif'><br/>Loading data, please wait..."
         document.body.appendChild(obj)
     }
     // told to show the spinner?

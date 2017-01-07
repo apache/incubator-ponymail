@@ -65,11 +65,8 @@ function sendEmail(form) {
         of.push("alt=" + encodeURIComponent(document.getElementById('alt').options[document.getElementById('alt').selectedIndex].value))
     }
         
-    var base = pm_config.URLBase ? pm_config.URLBase : ""
-    base = base.replace(/\/+/g, "/")
-
     var request = new XMLHttpRequest();
-    request.open("POST", base + "/api/compose.lua");
+    request.open("POST", URL_BASE + "/api/compose.lua");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send(of.join("&")) // send email as a POST string
     

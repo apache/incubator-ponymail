@@ -60,6 +60,8 @@ var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
 
+var URL_BASE = pm_config.URLBase ? pm_config.URLBase.replace(/\/+/g, "/") : ""
+
 function isStorageAvailable(type) {
     try {
         var storage = window[type],

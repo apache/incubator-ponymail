@@ -19,9 +19,7 @@
 // simple func that just redirects to the original thread URL we just got if possible
 function timeTravelSingleThreadRedirect(json) {
     if (json && json.thread) {
-        var base = pm_config.URLBase ? pm_config.URLBase : ""
-        base = base.replace(/\/+/g, "/")
-        location.href = base + "/thread.html/" + (pm_config.shortLinks ? shortenID(json.thread.mid) : json.thread.mid)
+        location.href = URL_BASE + "/thread.html/" + (pm_config.shortLinks ? shortenID(json.thread.mid) : json.thread.mid)
     }
 }
 
