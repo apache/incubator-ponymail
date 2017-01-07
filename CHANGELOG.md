@@ -108,6 +108,7 @@
 - Fetch URLBase once in Javascript
 - absolute URLs must be prefixed with URLBase in JS files (#327)
 - cannot use absolute URLs in HTML pages (#328)
+- setup.py now prompts for shard and replica counts when creating the index (#313)
 
 ## CHANGES in 0.9b:
 
