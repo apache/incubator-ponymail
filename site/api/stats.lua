@@ -337,8 +337,6 @@ function handle(r)
         end
     end
 
-    local top10 = {}
-
     -- Debug time point 3 was for slow_count
     
     -- Debug time point 4
@@ -637,6 +635,8 @@ function handle(r)
     end
     
     local allparts = 0 -- number of participants
+    local top10 = {}
+
     if not statsOnly then
         local stable = {}
         for k, v in pairs(senders) do
