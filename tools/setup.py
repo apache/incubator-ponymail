@@ -496,7 +496,6 @@ local config = {
 --  mailport = 1025, -- override the default port (25)
     accepted_domains = "%s",
     wordcloud = %s,
-    slow_count = false,
     email_footer = nil, -- see the docs for how to set this up.
     full_headers = false,
     maxResults = 5000, -- max emails to return in one go. Might need to be bumped for large lists

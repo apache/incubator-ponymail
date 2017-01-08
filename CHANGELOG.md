@@ -110,6 +110,7 @@
 - cannot use absolute URLs in HTML pages (#328)
 - setup.py now prompts for shard and replica counts when creating the index (#313)
 - 'hot topics' feature should use terms, not significant_terms (#329)
+- stats.lua - slow_count option is unnecessary (#323)
 
 ## CHANGES in 0.9b:
 

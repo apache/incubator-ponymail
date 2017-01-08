@@ -339,67 +339,7 @@ function handle(r)
 
     local top10 = {}
 
-    if config.slow_count then
-        -- Debug time point 2
-        table.insert(t, r:clock() - tnow)
-        tnow = r:clock()
-        
-        local doc = elastic.raw {
-            size = 0, -- we don't need the hits themselves
-            aggs = {
-                from = {
-                    terms = {
-                        field = "from_raw",
-                        size = 10
-                    }
-                }
-            },
-            query = {
-                bool = {
-                    must = {
-                        {
-                            range = {
-                                date = daterange
-                            }
-                        },
-                        {
-                            query_string = {
-                                default_field = "subject",
-                                query = qs
-                            }
-                        },
-                        sterm
-                    },
-                    must_not = {
-                        {
-                            query_string = {
-                                default_field = "subject",
-                                query = nqs
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-    
-        -- Debug time point 3
-        table.insert(t, r:clock() - tnow)
-        tnow = r:clock()
-        
-        for x,y in pairs (doc.aggregations.from.buckets) do
-            local eml = utils.extractCanonEmail(y.key)
-            local gravatar = r:md5(eml:lower())
-            local name = extractCanonName(y.key)
-            -- N.B. the canonicalisation process can result in duplicates in the top10 table
-            table.insert(top10, {
-                email = eml,
-                gravatar = gravatar,
-                name = name,
-                count = y.doc_count
-            })
-        end
-    end
+    -- Debug time point 3 was for slow_count
     
     -- Debug time point 4
     table.insert(t, r:clock() - tnow)
@@ -595,7 +535,6 @@ function handle(r)
         if eepoch > lastEmail then
             lastEmail = eepoch
         end
-        -- This is also needed by ths slow_count method            
         local eml = utils.extractCanonEmail(email.from)
         if aaa.canAccessDoc(r, email, account) then
 
@@ -604,17 +543,15 @@ function handle(r)
             local gravatar = r:md5(eml:lower())
             email.gravatar = gravatar
 
-            if not config.slow_count then
-                local name = extractCanonName(email.from)
-                local eid = ("%s <%s>"):format(name, eml)
-                senders[eid] = senders[eid] or {
-                    email = eml,
-                    gravatar = gravatar,
-                    name = name,
-                    count = 0
-                }
-                senders[eid].count = senders[eid].count + 1
-            end
+            local name = extractCanonName(email.from)
+            local eid = ("%s <%s>"):format(name, eml)
+            senders[eid] = senders[eid] or {
+                email = eml,
+                gravatar = gravatar,
+                name = name,
+                count = 0
+            }
+            senders[eid].count = senders[eid].count + 1
             local mid = email['message-id']
             local irt = email['in-reply-to']
             email.id = v._id
@@ -696,20 +633,11 @@ function handle(r)
             else
                 table.insert(emls, {epoch= email.epoch})
             end
-        elseif config.slow_count then -- not authorised, fix up counts
-            for k, v in pairs(top10) do
-                -- because of canonicalisation, there can be multiple matches in the top10 list
-                -- carry on to next match if first one is exhausted
-                if v.email == eml and v.count > 0 then
-                    v.count = v.count - 1
-                    break -- don't count the e-mail again
-                end
-            end
         end
     end
     
     local allparts = 0 -- number of participants
-    if not config.slow_count and not statsOnly then
+    if not statsOnly then
         local stable = {}
         for k, v in pairs(senders) do
             table.insert(stable, v)
@@ -721,19 +649,6 @@ function handle(r)
                 table.insert(top10, v)
             else
                 break
-            end
-        end
-    end
-
-    -- drop any non-participants and count the remainders
-    -- count the participants
-    if config.slow_count then
-        local top10_copy = top10
-        top10 = {}
-        for k, v in pairs(top10_copy) do
-            if v.count > 0 then
-                table.insert(top10, v)
-                allparts = allparts + 1
             end
         end
     end
@@ -787,7 +702,6 @@ function handle(r)
     tnow = r:clock()
     
     listdata.debug = t
-    listdata.slow_count = config.slow_count -- debug
     
     r:puts(JSON.encode(listdata))
     
