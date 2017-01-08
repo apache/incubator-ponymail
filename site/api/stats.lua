@@ -410,8 +410,8 @@ function handle(r)
                     must = {
                         {
                             range = {
-                                date = {
-                                    gt = "1970/01/01 00:00:00",
+                                epoch = {
+                                    gt = 0
                                 }
                             }
                         },
@@ -422,24 +422,24 @@ function handle(r)
             aggs = {
                 first = {
                    min =  {
-                      field = "date"
+                      field = "epoch"
                   }
               },
               last = {
                    max = {
-                    field = "date"
+                    field = "epoch"
                   }
                 }
             }
         }
         datespan = {}
         local first = doc.aggregations.first.value
-        if first == JSON.null then first = os.time() else first = first/1000 end
+        if first == JSON.null then first = os.time() else first = first end
         datespan.firstYear = tonumber(os.date("%Y", first))
         datespan.firstMonth = tonumber(os.date("%m", first))
 
         local last = doc.aggregations.last.value
-        if last == JSON.null then last = os.time() else last = last/1000 end
+        if last == JSON.null then last = os.time() else last = last end
         datespan.lastYear = tonumber(os.date("%Y", last))
         datespan.lastMonth = tonumber(os.date("%m", last))
 
