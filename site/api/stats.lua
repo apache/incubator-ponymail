@@ -533,23 +533,25 @@ function handle(r)
         if eepoch > lastEmail then
             lastEmail = eepoch
         end
-        local eml = utils.extractCanonEmail(email.from)
         if aaa.canAccessDoc(r, email, account) then
 
             h = h + 1
 
+            local eml = utils.extractCanonEmail(email.from)
             local gravatar = r:md5(eml:lower())
             email.gravatar = gravatar
 
             local name = extractCanonName(email.from)
             local eid = ("%s <%s>"):format(name, eml)
-            senders[eid] = senders[eid] or {
-                email = eml,
-                gravatar = gravatar,
-                name = name,
-                count = 0
-            }
-            senders[eid].count = senders[eid].count + 1
+            if not statsOnly then
+                senders[eid] = senders[eid] or {
+                    email = eml,
+                    gravatar = gravatar,
+                    name = name,
+                    count = 0
+                }
+                senders[eid].count = senders[eid].count + 1
+            end
             local mid = email['message-id']
             local irt = email['in-reply-to']
             email.id = v._id
