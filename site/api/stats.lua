@@ -82,7 +82,6 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local get = r:parseargs()
-    local lastEmail = 0
     -- statsOnly: Whether to only send statistical info (for n-grams etc), and not the
     -- thread struct and message bodies
     -- Param: quick
@@ -529,10 +528,6 @@ function handle(r)
     for k = #dhh, 1, -1 do
         local v = dhh[k]
         local email = v._source
-        local eepoch = tonumber(email.epoch)
-        if eepoch > lastEmail then
-            lastEmail = eepoch
-        end
         if aaa.canAccessDoc(r, email, account) then
 
             h = h + 1
@@ -691,13 +686,7 @@ function handle(r)
     listdata.cloud = cloud
     listdata.took = r:clock() - now
     listdata.numparts = allparts
-    
-    -- date of last email seen
-    if lastEmail == 0 then
-        lastEmail = os.time()
-    end
-    
-    listdata.unixtime = lastEmail
+    listdata.unixtime = os.time()
     
     -- Debug time point 9
     table.insert(t, r:clock() - tnow)

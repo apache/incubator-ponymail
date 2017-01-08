@@ -112,6 +112,7 @@
 - 'hot topics' feature should use terms, not significant_terms (#329)
 - stats.lua - slow_count option is unnecessary (#323)
 - stats.lua updates senders array unnecessarily in statsOnly (quick) mode (#330)
+- stats.lua returns email time instead of os time in unixtime field (#331)
 
 ## CHANGES in 0.9b:
 
