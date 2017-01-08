@@ -402,7 +402,7 @@ function handle(r)
     local DATESPAN_KEY = "dateSpan:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
     local datespan = JSON.decode(r:ivm_get(DATESPAN_KEY) or "{}")
     
-    if not (datespan.firstYear and datespan.lastYear and datespan.firstMonth and datespan.lastMonth) and not statsOnly then
+    if not (datespan.firstYear and datespan.lastYear and datespan.firstMonth and datespan.lastMonth) then
         local doc = elastic.raw {
             size = 0,
             query = {
