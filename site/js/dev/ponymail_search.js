@@ -58,7 +58,9 @@ function toggleEmail(year, mo, nopush) {
         xmo = '0' + xmo
     }
     // push history state, fetch the data from API
-    if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
+    if (!nopush) {
+        window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
+    }
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     
     // set list title to list and year/month
@@ -101,7 +103,9 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     
     // As usual, push new history state
-    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + encodeURIComponent(q));
+    if (!nopush) {
+        window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + encodeURIComponent(q));
+    }
     
     // get the data from backend, push to page builder func
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + encodeURIComponent(q) + "&d=" + d, null, buildPage)

@@ -266,7 +266,9 @@ function openEmail() {
     kiddos = []
     traverseThread(document.body, '(thread|helper)_', 'DIV')
     for (var i in kiddos) {
-        if (kiddos[i].style.display == 'block') return true
+        if (kiddos[i].style.display == 'block') {
+            return true
+        }
     }
     return false
 }

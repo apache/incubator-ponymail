@@ -160,10 +160,18 @@ function makeNgramURL() {
     var list = document.getElementById('listname').value
     var timespan = document.getElementById('timespan').getAttribute("data")
     var qs = []
-    if (document.getElementById('stack').checked) qs.push("stack")
-    if (document.getElementById('topics').checked) qs.push("topics")
-    if (document.getElementById('avg').checked) qs.push("avg")
-    if (document.getElementById('plaw').checked) qs.push("plaw")
+    if (document.getElementById('stack').checked) {
+        qs.push("stack")
+    }
+    if (document.getElementById('topics').checked) {
+        qs.push("topics")
+    }
+    if (document.getElementById('avg').checked) {
+        qs.push("avg")
+    }
+    if (document.getElementById('plaw').checked) {
+        qs.push("plaw")
+    }
     for (n = 0; n < 20; n++) {
         if (document.getElementById('query' + n) && document.getElementById('query' + n).value.length > 0) {
             qs.push(document.getElementById('query' + n).value)

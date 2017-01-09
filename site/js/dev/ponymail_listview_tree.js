@@ -433,11 +433,15 @@ function toggleEmails_treeview(id, close, toverride) {
             helper.style.display = 'none'
             prefs.groupBy = 'treeview' // hack for now
             thread.innerHTML = ""
-            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'block'
+            if (document.getElementById('bubble_' + id)) {
+                document.getElementById('bubble_' + id).style.display = 'block'
+            }
             return
         } else {
             helper.style.display = 'block'
-            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'none'
+            if (document.getElementById('bubble_' + id)) {
+                document.getElementById('bubble_' + id).style.display = 'none'
+            }
         }
         if (!open_emails[id]) {
             open_emails[id] = true

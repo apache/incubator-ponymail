@@ -138,7 +138,9 @@ function saveDraft() {
 function hideComposer(evt, nosave) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.getAttribute || !es.getAttribute("class") || (es.nodeName != 'A' && es.getAttribute("class").search(/label/) == -1))  {
-        if (!nosave) saveDraft()
+        if (!nosave) {
+            saveDraft()
+        }
         document.getElementById('splash').style.display = "none"
     }
 }
@@ -1361,7 +1363,9 @@ function openEmail() {
     kiddos = []
     traverseThread(document.body, '(thread|helper)_', 'DIV')
     for (var i in kiddos) {
-        if (kiddos[i].style.display == 'block') return true
+        if (kiddos[i].style.display == 'block') {
+            return true
+        }
     }
     return false
 }
@@ -1758,11 +1762,15 @@ function toggleEmails_threaded(id, close, toverride, threadobj) {
             helper.style.display = 'none'
             prefs.groupBy = 'thread' // hack for now
             thread.innerHTML = ""
-            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'block'
+            if (document.getElementById('bubble_' + id)) {
+                document.getElementById('bubble_' + id).style.display = 'block'
+            }
             return
         } else {
             helper.style.display = 'block'
-            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'none'
+            if (document.getElementById('bubble_' + id)) {
+                document.getElementById('bubble_' + id).style.display = 'none'
+            }
         }
         if (!open_emails[id]) {
             open_emails[id] = true
@@ -3283,11 +3291,15 @@ function toggleEmails_treeview(id, close, toverride) {
             helper.style.display = 'none'
             prefs.groupBy = 'treeview' // hack for now
             thread.innerHTML = ""
-            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'block'
+            if (document.getElementById('bubble_' + id)) {
+                document.getElementById('bubble_' + id).style.display = 'block'
+            }
             return
         } else {
             helper.style.display = 'block'
-            if (document.getElementById('bubble_' + id)) document.getElementById('bubble_' + id).style.display = 'none'
+            if (document.getElementById('bubble_' + id)) {
+                document.getElementById('bubble_' + id).style.display = 'none'
+            }
         }
         if (!open_emails[id]) {
             open_emails[id] = true
@@ -3462,10 +3474,18 @@ function makeNgramURL() {
     var list = document.getElementById('listname').value
     var timespan = document.getElementById('timespan').getAttribute("data")
     var qs = []
-    if (document.getElementById('stack').checked) qs.push("stack")
-    if (document.getElementById('topics').checked) qs.push("topics")
-    if (document.getElementById('avg').checked) qs.push("avg")
-    if (document.getElementById('plaw').checked) qs.push("plaw")
+    if (document.getElementById('stack').checked) {
+        qs.push("stack")
+    }
+    if (document.getElementById('topics').checked) {
+        qs.push("topics")
+    }
+    if (document.getElementById('avg').checked) {
+        qs.push("avg")
+    }
+    if (document.getElementById('plaw').checked) {
+        qs.push("plaw")
+    }
     for (n = 0; n < 20; n++) {
         if (document.getElementById('query' + n) && document.getElementById('query' + n).value.length > 0) {
             qs.push(document.getElementById('query' + n).value)
@@ -4426,7 +4446,9 @@ function toggleEmail(year, mo, nopush) {
         xmo = '0' + xmo
     }
     // push history state, fetch the data from API
-    if (!nopush) window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
+    if (!nopush) {
+        window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
+    }
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     
     // set list title to list and year/month
@@ -4469,7 +4491,9 @@ function search(q, d, nopush, all) {
     clearCalendarHover()
     
     // As usual, push new history state
-    if (!nopush) window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + encodeURIComponent(q));
+    if (!nopush) {
+        window.history.pushState({}, "", "list.html?" + listname + "@" + domain + ":" + d + ":" + encodeURIComponent(q));
+    }
     
     // get the data from backend, push to page builder func
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&q=" + encodeURIComponent(q) + "&d=" + d, null, buildPage)

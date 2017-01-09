@@ -42,7 +42,9 @@ function saveDraft() {
 function hideComposer(evt, nosave) {
     var es = evt ? (evt.target || evt.srcElement) : null;
     if (!es || !es.getAttribute || !es.getAttribute("class") || (es.nodeName != 'A' && es.getAttribute("class").search(/label/) == -1))  {
-        if (!nosave) saveDraft()
+        if (!nosave) {
+            saveDraft()
+        }
         document.getElementById('splash').style.display = "none"
     }
 }
