@@ -31,6 +31,7 @@ function toggleEmail(year, mo, nopush) {
     }
     global_deep = false
     current_query = ""
+    current_retention = year + "-" + mo
     var arr = xlist.split('@', 2)
     var listname = arr[0]
     var domain = arr[1]
@@ -61,6 +62,10 @@ function toggleEmail(year, mo, nopush) {
     if (!nopush) {
         window.history.pushState({}, "", "list.html?" + xlist + ":" + year + '-' + xmo);
     }
+    // update the quick search box
+    var dp = document.getElementById('d')
+    dp.value = datePickerValue(current_retention)
+    dp.setAttribute("data", current_retention)
     GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain + "&s=" + s + "&e=" + e, null, buildPage)
     
     // set list title to list and year/month

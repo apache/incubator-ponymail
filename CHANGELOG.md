@@ -117,6 +117,7 @@
 - does not show mixed private/public lists unless logged in (#70)
 - inconsistent error reporting for invalid mailing lists (#112)
 - Always use Javascript conditional blocks (#333)
+- links in stats pane don't set up the correct date range (#106)
 
 ## CHANGES in 0.9b:
 
