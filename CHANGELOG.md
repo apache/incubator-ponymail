@@ -115,6 +115,7 @@
 - stats.lua returns email time instead of os time in unixtime field (#331)
 - stats.lua - cache causes inconsistent output when quick is used (#118)
 - does not show mixed private/public lists unless logged in (#70)
+- inconsistent error reporting for invalid mailing lists (#112)
 
 ## CHANGES in 0.9b:
 
