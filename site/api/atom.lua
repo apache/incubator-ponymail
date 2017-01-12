@@ -116,7 +116,6 @@ function handle(r)
             },
             size = maxresults
         }
-        local h = #doc.hits.hits
 
         -- for each email found, check if we can access it and then digest it if so
         for k = #doc.hits.hits, 1, -1 do
