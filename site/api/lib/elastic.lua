@@ -18,6 +18,7 @@
 -- This is elastic.lua - ElasticSearch library
 
 local http = require 'socket.http'
+local ltn12 = require 'ltn12'
 local JSON = require 'cjson'
 local config = require 'lib/config'
 local default_doc = "mbox"
@@ -64,6 +65,17 @@ local function performRequest(url, query, ok404)
     -- TODO should we return the http status code?
     -- This might be necessary if codes such as 404 did not cause an error
     return json, hc
+end
+
+-- Simple ES delete request
+-- returns status code only
+local function performDelete(url, ok404) 
+    local _, hc = http.request{
+    url = url,
+    method = 'DELETE'
+    }
+    checkReturn(hc, ok404)
+    return hc
 end
 
 -- Standard ES query, returns $size results of any doc of type $doc, sorting by $sitem
@@ -209,6 +221,12 @@ local function scroll(sid)
     return nil
 end
 
+-- delete a scroll id after use
+local function deleteScrollId(sid)
+    local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll_id=" .. sid
+    return performDelete(url, true)
+end
+
 -- Update a document
 local function update(doctype, id, query, consistency)
     doctype = doctype or default_doc
@@ -248,5 +266,6 @@ return {
     default = setDefault,
     update = update,
     scan = scan,
-    scroll = scroll
+    scroll = scroll,
+    scrollrelease = deleteScrollId
 }

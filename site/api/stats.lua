@@ -509,6 +509,7 @@ function handle(r)
                 end
                 js, sid = elastic.scroll(sid)
             end
+            elastic.scrollrelease(sid) -- we're done with the sid, release it
         end
     -- otherwise, we can just do a standard raw query
     else

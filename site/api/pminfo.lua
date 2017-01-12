@@ -139,6 +139,7 @@ function handle(r)
                 end
                 doc, sid = elastic.scroll(sid)
             end
+            elastic.scrollrelease(sid) -- we're done with the sid, release it
         end
         -- scroll/scan ignores the sort order!
         table.sort (hits, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
