@@ -134,7 +134,10 @@ if targetLID:
     targetLID = "<%s>" % targetLID.replace("@", ".").strip("<>")
 
 print("Beginning list edit:")
-print("  - List ID: %s" % (sourceLID if sourceLID else mid))
+if sourceLID:
+    print("  - List ID: %s" % sourceLID)
+else:
+    print("  - MID: %s" % mid)
 if targetLID:
     print("  - Target ID: %s" % targetLID)
 if makePublic:
