@@ -119,6 +119,7 @@
 - Always use Javascript conditional blocks (#333)
 - links in stats pane don't set up the correct date range (#106)
 - code should delete scroll id after use (#336)
+- ll.py - Make --count work with --pretty
 
 ## CHANGES in 0.9b:
 

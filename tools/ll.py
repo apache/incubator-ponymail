@@ -106,8 +106,8 @@ else:
         if pretty:
             if domain['key'].find(".") != -1:
                 l, d = domain['key'].strip("<>").split(".", 1)
-                plist[d] = plist[d] if d in plist else []
-                plist[d].append(l)
+                plist[d] = plist[d] if d in plist else {}
+                plist[d][l]=domain['doc_count']
         else:
             if args.counts:
                 print(domain['key'],domain['doc_count'])
@@ -116,5 +116,8 @@ else:
     
     for dom in sorted(plist):
         for ln in sorted(plist[dom]):
-            print("%s@%s" % (ln, dom))
+            if args.counts:
+                print("%s@%s %d" % (ln, dom, plist[dom][ln]))
+            else:
+                print("%s@%s" % (ln, dom))
             
