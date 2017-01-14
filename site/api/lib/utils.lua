@@ -19,6 +19,10 @@
 
 local JSON = require 'cjson' -- for JSON.null
 
+local days = { -- days in months of the year
+    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31
+}
+
 -- find the original topic starter
 local function findParent(r, doc, elastic)
     local step = 0
@@ -93,11 +97,37 @@ local function extractCanonEmail(from)
     return eml
 end
 
+-- is it a leap year?
+local function leapYear(year)
+    if (year % 4 == 0) then
+        if (year%100 == 0) then
+            if (year %400 == 0) then
+                return true
+            end
+        else
+            return true
+        end
+        return false
+    end
+end
+
+-- get the last day of the month
+local function lastDayOfMonth(yyyy, mm)
+    local ldom
+    if mm == 2 and leapYear(yyyy) then
+        ldom = 29
+    else
+        ldom = days[mm]
+    end
+    return ldom
+end
 
 return {
     anonymizeHdrs = anonymizeHdrs,
     anonymizeBody = anonymizeBody,
     anonymizeEmail = anonymizeEmail,
     extractCanonEmail = extractCanonEmail,
-    findParent = findParent
+    findParent = findParent,
+    leapYear = leapYear,
+    lastDayOfMonth = lastDayOfMonth
 }

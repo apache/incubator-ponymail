@@ -25,10 +25,6 @@ local config = require 'lib/config'
 local cross = require 'lib/cross'
 local utils = require 'lib/utils'
 
-local days = {
-    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
-}
-
 local BODY_MAXLEN = config.stats_maxBody or 200
 -- words to exclude from word cloud:
 local EXCLUDE = config.stats_wordExclude or ".|..|..."
@@ -55,19 +51,6 @@ local function findSubject(gblob, blob, subject, epoch, maxAge)
         end
     end
     return nil
-end
-
-local function leapYear(year)
-    if (year % 4 == 0) then
-        if (year%100 == 0)then                
-            if (year %400 == 0) then                    
-                return true
-            end
-        else                
-            return true
-        end
-        return false
-    end
 end
 
 -- extract canonical email name from from field
@@ -252,10 +235,7 @@ function handle(r)
     if get.s and get.e then
         local em = tonumber(get.e:match("%-(%d%d?)$"))
         local ey = tonumber(get.e:match("^(%d%d%d%d)"))
-        local ec = days[em]
-        if em == 2 and leapYear(ey) then
-            ec = ec + 1
-        end
+        local ec = utils.lastDayOfMonth(ey, em)
         daterange = {        
             gte = get.s:gsub("%-","/").."/01 00:00:00",
             lte = get.e:gsub("%-","/").."/" .. ec .. " 23:59:59",

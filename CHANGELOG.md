@@ -120,6 +120,7 @@
 - links in stats pane don't set up the correct date range (#106)
 - code should delete scroll id after use (#336)
 - ll.py - Make --count work with --pretty
+- DRY: move leapYear and end of month calculations to utils
 
 ## CHANGES in 0.9b:
 

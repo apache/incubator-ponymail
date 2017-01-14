@@ -23,23 +23,6 @@ local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local utils = require 'lib/utils'
 
-local days = {
-    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
-}
-
-local function leapYear(year)
-    if (year % 4 == 0) then
-        if (year%100 == 0)then                
-            if (year %400 == 0) then                    
-                return true
-            end
-        else                
-            return true
-        end
-        return false
-    end
-end
-
 --[[
     Parse the source to construct a valid 'From ' line.
 
@@ -81,12 +64,7 @@ function handle(r)
         local y, m = month:match("(%d+)%-(%d+)")
         m = tonumber(m)
         y = tonumber(y)
-        local d
-        if m == 2 and leapYear(y) then
-            d = 29
-        else
-            d = days[m]
-        end
+        local d = utils.lastDayOfMonth(y,m)
         
         -- fetch all results from the list (up to 10k results), make sure to get the 'private' element
         local docs = elastic.raw {
