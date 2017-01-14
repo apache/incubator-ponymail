@@ -68,6 +68,15 @@ page = es.search(
                 'terms': {
                     'field': "list_raw",
                     'size': 500000
+                },
+                'aggs': {
+                    'privacy' : {
+                        'filter' : {# are there any private messages?
+                            'term': {
+                                 'private': True
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -98,26 +107,31 @@ parser.add_argument('--counts', dest='counts', action='store_true',
 args = parser.parse_args()
 pretty = args.pretty
 plist = {}
-
+total_private = 0
 if args.debug:
-    print(json.dumps(page['aggregations']))
+    print(json.dumps(page))
 else:
     for domain in page['aggregations']['lists']['buckets']:
+        listid = domain['key']
+        msgcount = domain['doc_count']
+        prvcount = domain['privacy']['doc_count']
+        total_private += prvcount
         if pretty:
-            if domain['key'].find(".") != -1:
-                l, d = domain['key'].strip("<>").split(".", 1)
+            if listid.find(".") != -1:
+                l, d = listid.strip("<>").split(".", 1)
                 plist[d] = plist[d] if d in plist else {}
-                plist[d][l]=domain['doc_count']
+                plist[d][l]=[msgcount, prvcount]
         else:
             if args.counts:
-                print(domain['key'],domain['doc_count'])
+                print(listid, msgcount, prvcount)
             else:
-                print(domain['key'])
+                print(listid)
     
     for dom in sorted(plist):
         for ln in sorted(plist[dom]):
             if args.counts:
-                print("%s@%s %d" % (ln, dom, plist[dom][ln]))
+                print("%s@%s %d %d" % (ln, dom, plist[dom][ln][0], plist[dom][ln][1]))
             else:
                 print("%s@%s" % (ln, dom))
-            
+    if args.counts:
+        print("Total messages %d of which private %d" % (page['hits']['total'], total_private))
