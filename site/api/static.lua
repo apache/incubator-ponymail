@@ -24,10 +24,6 @@ local aaa = require 'lib/aaa'
 local config = require 'lib/config'
 local cross = require 'lib/cross'
 
-local days = {
-    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31 
-}
-
 local function sortEmail(thread)
     if thread.children and type(thread.children) == "table" then
         table.sort (thread.children, function (k1, k2) return k1.epoch > k2.epoch end )
