@@ -3649,7 +3649,11 @@ function toggleCalendar(year) {
 
 
 // buildCalendar: build the calendar
-function buildCalendar(firstYear, lastYear) {
+function buildCalendar(json) {
+    var firstYear = json.firstYear
+    var lastYear  = json.lastYear
+    var firstMonth0 = json.firstMonth - 1 // 0-based
+    var lastMonth0 = json.lastMonth - 1 // 0-based
     
     // Build the main calendar (desktop version)
     var dp = document.getElementById('datepicker')
@@ -3672,7 +3676,13 @@ function buildCalendar(firstYear, lastYear) {
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
             var url = "list.html?" + xlist + ":" + (year+"-"+(y+1))
-            cale += "<a href='" + url + "' onclick='return false;'><label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + "</label></a><br/>"
+            var pfx = ''
+            var sfx = ''
+            if ((year == firstYear && y < firstMonth0) || (year == lastYear && y > lastMonth0)) {
+                pfx = '<i>'
+                sfx = '</i>'
+            }
+            cale += "<a href='" + url + "' onclick='return false;'><label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + pfx + months[y] + sfx + "</label></a><br/>"
         }
         cale += "</div>"
         dp.innerHTML += cale
@@ -3694,7 +3704,13 @@ function buildCalendar(firstYear, lastYear) {
             var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
             for (var y = em; y >= 0; y--) {
                 var m = document.createElement('OPTION');
-                m.textContent = months[y] + ", " + year
+            var pfx = ''
+            var sfx = ''
+            if ((year == firstYear && y < firstMonth0) || (year == lastYear && y > lastMonth0)) {
+                pfx = '('
+                sfx = ')'
+            }
+                m.textContent = pfx + months[y] + ", " + year + sfx
                 m.value = year + '-' + (y+1)
                 ye.appendChild(m)
             }
@@ -3730,10 +3746,10 @@ function checkCalendar(json) {
     if (json.list && !list_year[json.list]) {
         xlist = (json.list && json.list.search(/\*/) == -1) ? json.list : xlist
         list_year[json.list] = json.firstYear
-        buildCalendar(json.firstYear, json.lastYear)
+        buildCalendar(json)
     }
     if (xlist != json.list || current_cal_min != json.firstYear) {
-        buildCalendar(json.firstYear, json.lastYear)
+        buildCalendar(json)
         xlist = (json.list && json.list.search(/\*/) == -1) ? json.list : xlist
         current_cal_min = json.firstYear
     }

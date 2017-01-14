@@ -121,6 +121,7 @@
 - code should delete scroll id after use (#336)
 - ll.py - Make --count work with --pretty; show private message counts
 - DRY: move leapYear and end of month calculations to utils
+- indicate which months are outside the archive span for a list (#340)
 
 ## CHANGES in 0.9b:
 
