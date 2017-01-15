@@ -41,7 +41,7 @@ private.
 ### Requirements: ###
 
 * Linux operating system (tested on Ubuntu, Debian, Fedora and CentOS - Windows or OS/X may work)
-* ElasticSearch backend
+* ElasticSearch backend (2.1 minumum)
 * Apache HTTP Server frontend with mod_lua loaded OR
   * Nginx with nginx-extras (ng-lua module) AND lua-apr installed
 * Python 3.x for importing (with elasticsearch and formatflowed via pip)
