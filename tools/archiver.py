@@ -77,7 +77,7 @@ elif __name__ == '__main__':
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
-archiver_generator = config.get("archiver", "generator", fallback="")
+archiver_generator = config.get("archiver", "generator", fallback="medium")
 
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
