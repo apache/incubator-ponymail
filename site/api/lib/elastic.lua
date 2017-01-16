@@ -231,7 +231,7 @@ local function scroll(sidOrQuery, doctype)
 end
 
 -- delete a scroll id after use
-local function deleteScrollId(sid)
+local function clear_scroll(sid)
     local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll_id=" .. sid
     return performDelete(url, true)
 end
@@ -278,5 +278,5 @@ return {
     default = setDefault,
     update = update,
     scroll = scroll,
-    scrollrelease = deleteScrollId
+    clear_scroll = clear_scroll
 }
