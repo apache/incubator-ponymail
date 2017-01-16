@@ -27,8 +27,6 @@ function handle(r)
     local now = r:clock()
     local tnow = now
     local DD = 14
-    local MAXRESULTS = 10000 -- max value for from + size in a single query
-
     
     local NOWISH = math.floor(os.time() / 1800)
     local PMINFO_CACHE_KEY = "pminfo_cache_" .. r.hostname .. "-" .. NOWISH
@@ -125,23 +123,21 @@ function handle(r)
                 }
             }
         },
-        size = MAXRESULTS
+        size = elastic.MAX_RESULT_WINDOW
     }
     local hits = {}
     -- check if we need to use scrolling
-    if total_docs > MAXRESULTS then
-        local sid = elastic.scan(squery)
-        if sid then
-            doc, sid = elastic.scroll(sid)
-            while doc and doc.hits and doc.hits.hits and #doc.hits.hits > 0 do -- scroll as long as we get new results
-                for k, v in pairs(doc.hits.hits) do
-                    table.insert(hits, v)
-                end
-                doc, sid = elastic.scroll(sid)
+    if total_docs > elastic.MAX_RESULT_WINDOW then
+        local sid
+        doc, sid = elastic.scroll(squery) -- init the scroll
+        while doc and doc.hits and doc.hits.hits and #doc.hits.hits > 0 do -- scroll as long as we get new results
+            for k, v in pairs(doc.hits.hits) do
+                table.insert(hits, v)
             end
-            elastic.scrollrelease(sid) -- we're done with the sid, release it
+            doc, sid = elastic.scroll(sid)
         end
-        -- scroll/scan ignores the sort order!
+        elastic.scrollrelease(sid) -- we're done with the sid, release it
+        -- scroll always sorts by _doc so we need to fix that
         table.sort (hits, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     else
         local doc = elastic.raw(squery)

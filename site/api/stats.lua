@@ -478,19 +478,19 @@ function handle(r)
             size = maxresults
         }
     
-    -- If max results limit is beyond 10k, we have to do a scan/scroll to fetch it.
-    if maxresults > 10000 then
-        local sid = elastic.scan(squery) -- get scroll ID
-        if sid then -- if results
-            local js, sid = elastic.scroll(sid)
-            while js and js.hits and js.hits.hits and #js.hits.hits > 0 do -- scroll as long as we get new results
-                for k, v in pairs(js.hits.hits) do
-                    table.insert(dhh, v)
-                end
-                js, sid = elastic.scroll(sid)
+    -- If max results limit is beyond the limit, we have to do a scroll to fetch it.
+    if maxresults > elastic.MAX_RESULT_WINDOW then
+        squery.size = elastic.MAX_RESULT_WINDOW -- limit the maximum batch sizes
+        local js, sid = elastic.scroll(squery)
+        while js and js.hits and js.hits.hits and #js.hits.hits > 0 do -- scroll as long as we get new results
+            for k, v in pairs(js.hits.hits) do
+                table.insert(dhh, v)
             end
-            elastic.scrollrelease(sid) -- we're done with the sid, release it
+            js, sid = elastic.scroll(sid)
         end
+        elastic.scrollrelease(sid) -- we're done with the sid, release it
+		    -- ES scroll uses _doc order for efficiency; we need to sort here
+    		table.sort (dhh, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     -- otherwise, we can just do a standard raw query
     else
         local doc = elastic.raw(squery)
@@ -503,8 +503,6 @@ function handle(r)
     table.insert(t, r:clock() - tnow)
     tnow = r:clock()
     
-    -- Sometimes ES screws up, so let's sort for it!
-    table.sort (dhh, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     
     for k = #dhh, 1, -1 do
         local v = dhh[k]

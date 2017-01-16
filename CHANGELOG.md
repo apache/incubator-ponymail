@@ -123,6 +123,7 @@
 - DRY: move leapYear and end of month calculations to utils
 - indicate which months are outside the archive span for a list (#340)
 - default to medium ID generator (#343)
+- scroll/scan is not supported in ES 5.x (#344)
 
 ## CHANGES in 0.9b:
 

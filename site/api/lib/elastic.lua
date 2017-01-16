@@ -177,48 +177,57 @@ local function raw(query, doctype)
     return json or {}, url
 end
 
--- communicate between scan and scroll
-local scanHasBody = {}
+-- communicate between scroll calls
+local queryHasBody = {}
 
--- Raw query with scroll/scan
-local function scan(query, doctype)
-    doctype = doctype or default_doc
-    local url = config.es_url .. doctype .. "/_search?search_type=scan&scroll=1m"
-    local json = performRequest(url, query)
-    if json and json._scroll_id then
+--[[
+Raw query with scroll
+Parameters:
+   sidOrQuery - if table, then this is the initial query, otherwise it is the sid
+   doctype - optional document type, only relevant for initial query
+
+Returns:
+   json, sid
+]]
+local function scroll(sidOrQuery, doctype)
+    local json
+    local hasBody = false
+    if type(sidOrQuery) == 'table' then
+        local query = sidOrQuery
+        doctype = doctype or default_doc
         if doctype == "mbox" then
             -- Check if the query returns the body attribute
-           if contains(query._source, 'body') then
-               -- save the flag for the scroll function (don't bother saving if false)
-               scanHasBody[json._scroll_id] = true
-           end
-        end
-        return json._scroll_id
-    end
-    return nil
-end
-
-local function scroll(sid)
-    -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
-    -- But in case we're being proxied, let's just cut off the last part of the URL
-    local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
-    local json = performRequest(url)
-    if json and json._scroll_id then
-        if scanHasBody[sid] then
-            -- propagate the setting for the next call
-            scanHasBody[sid] = nil -- no longer needed (must be done first in case sid has not changed)
-            scanHasBody[json._scroll_id] = true
-            local dhh = json.hits.hits
-            for k = 1, #dhh do
-                local v = dhh[k]._source
-                if v.body == JSON.null then
-                    v.body = ''
-                end
+            if contains(query._source, 'body') then
+                hasBody = true
             end
         end
-        return json, json._scroll_id
+        -- ensure we sort by _doc
+        query.sort = { '_doc' }
+        local url = config.es_url .. doctype .. "/_search?scroll=1m"
+        -- start off the scroll
+        json = performRequest(url, query)
+    else
+        local sid = sidOrQuery
+        hasBody = queryHasBody[sid]
+        queryHasBody[sid] = nil -- drop old entry (sid may change)
+        -- We have to do some gsubbing here, as ES expects us to be at the root of the ES URL
+        -- But in case we're being proxied, let's just cut off the last part of the URL
+        local url = config.es_url:gsub("[^/]+/?$", "") .. "/_search/scroll?scroll=1m&scroll_id=" .. sid
+        -- continue the scroll
+        json = performRequest(url)
     end
-    return nil
+    if hasBody then
+        -- propagate the setting for the next call
+        queryHasBody[json._scroll_id] = true
+        local dhh = json.hits.hits
+        for k = 1, #dhh do
+            local v = dhh[k]._source
+            if v.body == JSON.null then
+                v.body = ''
+            end
+        end
+    end
+    return json, json._scroll_id
 end
 
 -- delete a scroll id after use
@@ -257,6 +266,9 @@ end
 
 -- module defs
 return {
+    -- maximum results that can be returned by a query
+    -- above this number, must use scrolling or search_after (ES 5.x)
+    MAX_RESULT_WINDOW = 10000,
     find = getHits,
     findFast = getHeaders,
     findFastReverse = getHeadersReverse,
@@ -265,7 +277,6 @@ return {
     index = index,
     default = setDefault,
     update = update,
-    scan = scan,
     scroll = scroll,
     scrollrelease = deleteScrollId
 }
