@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 ]]--
-local JSON = require 'cjson'
+
 local elastic = require 'lib/elastic'
 
 -- Get user data from DB
@@ -62,7 +62,7 @@ local function updateUser(r, cid, data)
         prefs = oaccount.preferences
         favs = oaccount.favorites
     end
-    elastic.index(r:sha1(cid), 'account', JSON.encode{
+    elastic.index(r:sha1(cid), 'account', {
         credentials = {
             uid = data.uid,
             email = data.email,
@@ -92,7 +92,7 @@ local function logoutUser(r, usr)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.internal.cookie = 'nil'
-        elastic.index(r:sha1(usr.cid), 'account', JSON.encode(js))
+        elastic.index(r:sha1(usr.cid), 'account', js)
     end
     r:setcookie{
         key = "ponymail",
@@ -110,7 +110,7 @@ local function savePreferences(r, usr, alts)
         if alts then
             js.credentials.altemail = usr.credentials.altemail
         end
-        elastic.index(r:sha1(usr.cid), 'account', JSON.encode(js))
+        elastic.index(r:sha1(usr.cid), 'account', js)
     end
 end
 
@@ -119,7 +119,7 @@ local function saveFavorites(r, usr)
     if usr and usr.cid then
         local js = elastic.get('account', r:sha1(usr.cid))
         js.favorites = usr.favorites
-        elastic.index(r:sha1(usr.cid), 'account', JSON.encode(js))
+        elastic.index(r:sha1(usr.cid), 'account', js)
     end
 end
 
