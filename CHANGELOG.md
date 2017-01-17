@@ -124,6 +124,7 @@
 - indicate which months are outside the archive span for a list (#340)
 - default to medium ID generator (#343)
 - scroll/scan is not supported in ES 5.x (#344)
+- GUI does not report maxResult truncation correctly (#335)
 
 ## CHANGES in 0.9b:
 

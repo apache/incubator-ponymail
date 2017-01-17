@@ -151,8 +151,9 @@ function buildStats(json, state, show) {
         return;
     }
 
-    if (json.emails && json.emails.length >= json.max) {
-        stats.innerHTML += "<font color='#FA0'>More than " + json.max.toLocaleString() + " emails found, truncating!</font><br/>"
+//  See bug 335 for why only equality matters here
+    if (json.emails && json.emails.length == json.max) {
+        stats.innerHTML += "<font color='#FA0'>Reached the limit of " + json.max.toLocaleString() + " emails, truncation may have occurred</font><br/>"
     }
     var ap = ""
     if (json.numparts && json.numparts > 1) {
