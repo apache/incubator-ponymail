@@ -57,7 +57,6 @@ function handle(r)
                                         ))
         valid, json = pcall(function() return JSON.decode(result) end)
         if valid and json and json.access_token then
-            r:err(result)
             local ac = json.access_token
             local result = https.request("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" .. r:escape(ac))
             valid, json = pcall(function() return JSON.decode(result) end)
