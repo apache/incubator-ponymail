@@ -33,6 +33,9 @@ Response example:
     "tid": "06b318af97ca96c115e878c14d0814a53407751c31388410421c1751@1441467256@<dev.any23.apache.org>",
     "list_raw": "<dev.any23.apache.org>"
 }
+
+Note: date and epoch are in UTC
+
 ~~~
 
 
@@ -91,6 +94,35 @@ Response example:
     "cloud": {...},
     "hits": 25,
     "thread_struct": {...},
+    thread_struct":
+    {
+        "nest": 2,
+        "children": {
+            {
+                "children": {
+                    {
+                        "children": {
+                            {
+                                "children": { },
+                                epoch: ...,
+                                tid: ...,
+                                nest: 1
+                            }
+                        },
+                        epoch: ...,
+                        tid: ...,
+                        nest: 2
+                    }
+                },
+                "epoch": 1474883100,
+                "tid": "b1d6446f5cc8f4846454cbabc48ddb08afbb601a77169f8e32e34102@<dev.ponymail.apache.org>",
+                "nest": 2
+            }
+        },
+        epoch: ...,
+        tid: ...,
+        body: ...
+    },
     "max": 5000,
     "searchlist": "<dev.ponymail.info>",
     "list": "dev@ponymail.info",
