@@ -192,29 +192,15 @@ Number.prototype.pad = function(size) {
 }
 
 
-// formatDate: Return a date as YYYY-MM-DD HH:mm
-function formatDate(date, dtz){
-    tz = new Date(date).getTimezoneOffset()
-    ttz = 0
-    var plus = "-"
-    if (tz < 0) {
-        plus = "+"
-        tz = Math.abs(tz)
-    }
-    while (tz >= 60) {
-        tz-= 60;
-        ttz++
-    }
-    ttz = (ttz*100) + tz
-    while (String(ttz).length < 4) ttz = "0" + String(ttz)
-    return (date.getFullYear() + "-" +
-        (date.getMonth()+1).pad(2) + "-" +
-        date.getDate().pad(2) + " " +
-        date.getHours().pad(2) + ":" +
-        date.getMinutes().pad(2)) +
-        (dtz ? " (" + plus + ttz + ")" : "")
+// formatEpoch: Return an epoch value (seconds) as YYYY-MM-DD HH:mm using UTC
+function formatEpochUTC(epoch){
+    var date = new Date(epoch*1000)
+    return (date.getUTCFullYear() + "-" +
+        (date.getUTCMonth()+1).pad(2) + "-" +
+        date.getUTCDate().pad(2) + " " +
+        date.getUTCHours().pad(2) + ":" +
+        date.getUTCMinutes().pad(2))
 }
-
 
 // hex -> base 36 conversion for creating shorter permalinks
 function shortenID(mid) {

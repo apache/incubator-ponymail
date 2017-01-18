@@ -107,8 +107,7 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
         // Get date and format it to YYYY-MM-DD HH:mm
-        mdate = new Date(eml.epoch * 1000)
-        mdate = formatDate(mdate)
+        mdate = formatEpochUTC(eml.epoch)
         
         // format subject and from to weed out <> tags and <foo@bar.tld> addresses
         var subject = eml.subject.replace(/</mg, "&lt;")

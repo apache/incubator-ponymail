@@ -1424,7 +1424,6 @@ function displayEmail(json, id, level) {
     var id_sanitised = id.toString().replace(/@<.+>/, "")
     var thread = document.getElementById('thread_' + id_sanitised)
     if (thread) {
-        json.date = formatDate(new Date(json.epoch*1000), true)
         // transform <foo.bar.tld> to foo@bar.tld
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         
@@ -1460,7 +1459,7 @@ function displayEmail(json, id, level) {
         if (prefs.theme && prefs.theme == "social") {
             
             // Date and sender formatting
-            var sdate = new Date(json.epoch*1000).toLocaleString('en-US',  { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+            var sdate = new Date(json.epoch*1000).toLocaleString('en-US',  { timeZone: 'UTC', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })
             var fr = json['from'].replace(/"/g, "").replace(/<.+>/, "").replace(/</g, "&lt;")
             thread.style.background = estyle
             
@@ -1593,7 +1592,6 @@ function displaySingleEmail(json, id) {
             thread.innerHTML = "<h4>Error: " + json.error + "</h4>"
             return;
         }
-        json.date = new Date(json.epoch*1000).toLocaleString();
         var fields = ['From', 'To', 'Subject', 'Date']
         var fields = ['From', 'To', 'CC', 'Subject', 'Date']
         for (var i in fields) {
@@ -2064,29 +2062,15 @@ Number.prototype.pad = function(size) {
 }
 
 
-// formatDate: Return a date as YYYY-MM-DD HH:mm
-function formatDate(date, dtz){
-    tz = new Date(date).getTimezoneOffset()
-    ttz = 0
-    var plus = "-"
-    if (tz < 0) {
-        plus = "+"
-        tz = Math.abs(tz)
-    }
-    while (tz >= 60) {
-        tz-= 60;
-        ttz++
-    }
-    ttz = (ttz*100) + tz
-    while (String(ttz).length < 4) ttz = "0" + String(ttz)
-    return (date.getFullYear() + "-" +
-        (date.getMonth()+1).pad(2) + "-" +
-        date.getDate().pad(2) + " " +
-        date.getHours().pad(2) + ":" +
-        date.getMinutes().pad(2)) +
-        (dtz ? " (" + plus + ttz + ")" : "")
+// formatEpoch: Return an epoch value (seconds) as YYYY-MM-DD HH:mm using UTC
+function formatEpochUTC(epoch){
+    var date = new Date(epoch*1000)
+    return (date.getUTCFullYear() + "-" +
+        (date.getUTCMonth()+1).pad(2) + "-" +
+        date.getUTCDate().pad(2) + " " +
+        date.getUTCHours().pad(2) + ":" +
+        date.getUTCMinutes().pad(2))
 }
-
 
 // hex -> base 36 conversion for creating shorter permalinks
 function shortenID(mid) {
@@ -2427,8 +2411,7 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
         // Get date and format it to YYYY-MM-DD HH:mm
-        mdate = new Date(eml.epoch * 1000)
-        mdate = formatDate(mdate)
+        mdate = formatEpochUTC(eml.epoch)
         
         // format subject and from to weed out <> tags and <foo@bar.tld> addresses
         var subject = eml.subject.replace(/</mg, "&lt;")
@@ -2707,9 +2690,8 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
         // escape subject
         var subject = eml.subject.replace(/</mg, "&lt;")
-        var mdate = new Date(latest * 1000)
         
-        mdate = formatDate(mdate)
+        var mdate = formatEpochUTC(latest)
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
@@ -2963,9 +2945,8 @@ function loadList_treeview(mjson, limit, start, deep) {
             }
         }
         var subject = eml.subject.replace(/</mg, "&lt;")
-        var mdate = new Date(latest * 1000)
         
-        mdate = formatDate(mdate)
+        var mdate = formatEpochUTC(latest)
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
@@ -3166,9 +3147,8 @@ function buildTreeview(nesting, list, obj, pbigger) {
             }
         }
         var subject = eml.subject.replace(/</mg, "&lt;")
-        var mdate = new Date(latest * 1000)
         
-        mdate = formatDate(mdate)
+        var mdate = formatEpochUTC(latest)
         var pds = people > 1 ? "visible" : "hidden"
         
         ld = 'default'
@@ -3190,8 +3170,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
-        mdate = new Date(eml.epoch * 1000)
-        mdate = formatDate(mdate)
+        mdate = formatEpochUTC(eml.epoch)
             
         var subject = eml.subject.replace(/</mg, "&lt;")
         var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
@@ -3722,7 +3701,7 @@ function buildCalendar(json) {
 function dailyStats(json) {
     var days = {}
     for (var i in json) {
-        var day = new Date(json[i].epoch * 1000).getDate()
+        var day = new Date(json[i].epoch * 1000).getUTCDate()
         days[day] = days[day] ? (days[day] + 1) : 1
     }
     var stats = []

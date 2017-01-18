@@ -132,9 +132,8 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
         // escape subject
         var subject = eml.subject.replace(/</mg, "&lt;")
-        var mdate = new Date(latest * 1000)
         
-        mdate = formatDate(mdate)
+        var mdate = formatEpochUTC(latest)
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??

@@ -63,7 +63,6 @@ function displayEmail(json, id, level) {
     var id_sanitised = id.toString().replace(/@<.+>/, "")
     var thread = document.getElementById('thread_' + id_sanitised)
     if (thread) {
-        json.date = formatDate(new Date(json.epoch*1000), true)
         // transform <foo.bar.tld> to foo@bar.tld
         var lid = json.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
         
@@ -99,7 +98,7 @@ function displayEmail(json, id, level) {
         if (prefs.theme && prefs.theme == "social") {
             
             // Date and sender formatting
-            var sdate = new Date(json.epoch*1000).toLocaleString('en-US',  { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+            var sdate = new Date(json.epoch*1000).toLocaleString('en-US',  { timeZone: 'UTC', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })
             var fr = json['from'].replace(/"/g, "").replace(/<.+>/, "").replace(/</g, "&lt;")
             thread.style.background = estyle
             
@@ -232,7 +231,6 @@ function displaySingleEmail(json, id) {
             thread.innerHTML = "<h4>Error: " + json.error + "</h4>"
             return;
         }
-        json.date = new Date(json.epoch*1000).toLocaleString();
         var fields = ['From', 'To', 'Subject', 'Date']
         var fields = ['From', 'To', 'CC', 'Subject', 'Date']
         for (var i in fields) {

@@ -105,9 +105,8 @@ function loadList_treeview(mjson, limit, start, deep) {
             }
         }
         var subject = eml.subject.replace(/</mg, "&lt;")
-        var mdate = new Date(latest * 1000)
         
-        mdate = formatDate(mdate)
+        var mdate = formatEpochUTC(latest)
         var pds = people > 1 ? "visible" : "hidden"
         
         // style based on view before or not??
@@ -308,9 +307,8 @@ function buildTreeview(nesting, list, obj, pbigger) {
             }
         }
         var subject = eml.subject.replace(/</mg, "&lt;")
-        var mdate = new Date(latest * 1000)
         
-        mdate = formatDate(mdate)
+        var mdate = formatEpochUTC(latest)
         var pds = people > 1 ? "visible" : "hidden"
         
         ld = 'default'
@@ -332,8 +330,7 @@ function buildTreeview(nesting, list, obj, pbigger) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
-        mdate = new Date(eml.epoch * 1000)
-        mdate = formatDate(mdate)
+        mdate = formatEpochUTC(eml.epoch)
             
         var subject = eml.subject.replace(/</mg, "&lt;")
         var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")

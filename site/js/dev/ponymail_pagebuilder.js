@@ -105,7 +105,7 @@ function buildCalendar(json) {
 function dailyStats(json) {
     var days = {}
     for (var i in json) {
-        var day = new Date(json[i].epoch * 1000).getDate()
+        var day = new Date(json[i].epoch * 1000).getUTCDate()
         days[day] = days[day] ? (days[day] + 1) : 1
     }
     var stats = []

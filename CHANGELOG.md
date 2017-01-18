@@ -125,6 +125,7 @@
 - default to medium ID generator (#343)
 - scroll/scan is not supported in ES 5.x (#344)
 - GUI does not report maxResult truncation correctly (#335)
+- ponymail.js creates/displays dates with no timezone - confusing (#286)
 
 ## CHANGES in 0.9b:
 
