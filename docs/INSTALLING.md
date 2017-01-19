@@ -16,6 +16,7 @@ You will need the following software installed on your machine:
 
 - ElasticSearch >= 2.1
 - Python 3.x for the archiver plugin (setup.py will handle dependencies) and importer
+- Python `html2text` package (GPLv3) if you wish to archive HTML-only mails (remember to add the `--html2text` command line arg)
 - Apache HTTP Server 2.4.x with mod_lua (see http://modlua.org/gs/installing if you need to build mod_lua manually)
 - Lua >=5.1 with the following modules: cjson, luasec, luasocket
   (Note: Lua 5.3 is not currently supported by httpd mod_lua or luasocket)
