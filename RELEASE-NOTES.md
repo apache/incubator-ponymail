@@ -20,4 +20,28 @@ If this is a new installation, the lib/aaa_site.lua module needs to be created.
 There are several examples in the aaa_examples directory or you can create your own.
 
 This was done to simplify subsequent releases.
+
+### Significant changes to GUI ###
+
+- mixed public/private lists are now displayed in the menu
+- improved display of quoted material in messages
+- better handling of missing/empty Subjects and bodies
+- better handling of broken mail threads
+- dates are all displayed in UTC
+- improved error reporting including for missing / inaccessible links
+- flat view mode now shows first line of body (as for threaded views)
+- search panel is updated with current month when selection changes
+
+### Significant changes to functionality ###
+
+- private messages are now included in archive downloads if the user has access to them
+- various improvements to the archiver/importer:
+  better handling of encodings, including attachment names
+  handles more attachment types
+  handles more text types
+  can import individual mbox files
+- better error handling when communicating with the ES server
+- setup.py now sets up all mappings
+- stored dates are now all in UTC
+- API modules no longer return unnecessary data, reducing network traffic
  
