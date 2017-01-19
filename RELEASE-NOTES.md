@@ -2,7 +2,7 @@
 
 Release Notes
 
-## Version 0.10 ##
+## Version 0.10 (TBA) ##
 
 ### Change to AAA ###
 
@@ -44,4 +44,20 @@ This was done to simplify subsequent releases.
 - setup.py now sets up all mappings
 - stored dates are now all in UTC
 - API modules no longer return unnecessary data, reducing network traffic
+ 
+ ### Restrictions/Known bugs ###
+ 
+ ------
+There are unresolved design issues with the existing id generators.
+
+The original and medium generators don't generate unique ids, so not
+all distinct emails can be archived.
+The full generator probably generates unique ids, however these are not
+guaranteed stable, so re-importing mail may cause duplicates to be archived. 
+
+Since Permalinks currently rely on the generated ids, there is no guarantee
+that Permalinks are unique or permanent.
+------
+
+ - HTML-only mails are not archived unless the Python `html2text` package (GPLv3) is installed and the `--html2text` command line arg is used
  
