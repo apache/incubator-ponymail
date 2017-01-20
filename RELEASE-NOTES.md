@@ -57,7 +57,7 @@ guaranteed stable, so re-importing mail may cause duplicates to be archived.
 
 Since Permalinks currently rely on the generated ids, there is no guarantee
 that Permalinks are unique or permanent.
-------
+ ------
 
  - HTML-only mails are not archived unless the Python `html2text` package (GPLv3) is installed and the `--html2text` command line arg is used
  
