@@ -127,6 +127,7 @@
 - GUI does not report maxResult truncation correctly (#335)
 - ponymail.js creates/displays dates with no timezone - confusing (#286)
 - Make it clearer when you're not logged in. (#195)
+- list name not normalised when imported (#253)
 
 ## CHANGES in 0.9b:
 
