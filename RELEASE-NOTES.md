@@ -45,7 +45,7 @@ This was done to simplify subsequent releases.
 - stored dates are now all in UTC
 - API modules no longer return unnecessary data, reducing network traffic
  
- ### Restrictions/Known bugs ###
+### Restrictions/Known bugs ###
  
  ------
 There are unresolved design issues with the existing id generators.
