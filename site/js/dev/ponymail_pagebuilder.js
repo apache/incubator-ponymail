@@ -363,8 +363,10 @@ function getListInfo(list, xdomain, nopush) {
             if (xdomain.search(/:/) != -1) {
                 var arr = xdomain.split(/:/)
                 xdomain = arr[0]
+                current_query = unescape(arr[2] || '')
                 xlist = xdomain
-                if (arr[1].match(/-/) && !arr[1].match(/\|/)) {
+                // ensure query is not ignored
+                if (current_query == "" && arr[1].match(/-/) && !arr[1].match(/\|/)) {
                     var ya = arr[1].split(/-/)
                     toggleEmail(ya[0], ya[1], nopush)
                     current_retention = arr[1]
@@ -374,9 +376,7 @@ function getListInfo(list, xdomain, nopush) {
                     if (("x"+current_retention) != ("x"+arr[1])) {
                         current_retention = arr[1]
                         nopush = true
-                        
                     }
-                    current_query = unescape(arr[2])
                 }
             }
             if (xdomain.search(/@/) != -1) {

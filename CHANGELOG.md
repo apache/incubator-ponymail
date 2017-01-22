@@ -129,6 +129,7 @@
 - Make it clearer when you're not logged in. (#195)
 - list name not normalised when imported (#253)
 - GUI ignores date span in list.html URI if query is blank (#346)
+- search phrase dropped from list.html URI if date span is yyyy-mm (#347)
 
 ## CHANGES in 0.9b:
 
