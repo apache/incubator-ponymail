@@ -128,6 +128,7 @@
 - ponymail.js creates/displays dates with no timezone - confusing (#286)
 - Make it clearer when you're not logged in. (#195)
 - list name not normalised when imported (#253)
+- GUI ignores date span in list.html URI if query is blank (#346)
 
 ## CHANGES in 0.9b:
 
