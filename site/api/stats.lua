@@ -382,7 +382,7 @@ function handle(r)
     local DATESPAN_KEY = "dateSpan:" .. NOWISH .. ":" .. get.list .. "@" .. get.domain
     local datespan = JSON.decode(r:ivm_get(DATESPAN_KEY) or "{}")
     
-    if not (datespan.firstYear and datespan.lastYear and datespan.firstMonth and datespan.lastMonth) then
+    if not (datespan.pubfirst and datespan.publast) then
         local doc = elastic.raw {
             size = 0,
             query = {
@@ -400,31 +400,90 @@ function handle(r)
                 }
             },
             aggs = {
-                first = {
-                   min =  {
-                      field = "epoch"
-                  }
-              },
-              last = {
-                   max = {
-                    field = "epoch"
-                  }
+                lists = {
+                    terms = {
+                        field = "list_raw",
+                        size = 500000
+                    },
+                    aggs = {
+                        private = {
+                            terms = {
+                                field = "private",
+                                size = 2
+                            },
+                            aggs = {
+                                first = {
+                                    min =  {
+                                        field = "epoch"
+                                    }
+                                },
+                                last = {
+                                    max = {
+                                        field = "epoch"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
         datespan = {}
-        local first = doc.aggregations.first.value
-        if first == JSON.null then first = os.time() else first = first end
-        datespan.firstYear = tonumber(os.date("%Y", first))
-        datespan.firstMonth = tonumber(os.date("%m", first))
+        local NOW = os.time()
+        datespan.pubfirst = NOW -- earliest time must be less than this
+        datespan.publast = 0
+        -- find public min and max (buckets will be empty if there are no matching lists)
+        for _, list in pairs(doc.aggregations.lists.buckets) do
+            for _, private in pairs(list.private.buckets) do
+                if private.key_as_string == "false" then
+                    if private.last.value > datespan.publast then datespan.publast = private.last.value end
+                    if private.first.value < datespan.pubfirst then datespan.pubfirst = private.first.value end
+                end
+            end
+        end
+        if datespan.publast == 0 then datespan.publast = NOW end -- no value found
 
-        local last = doc.aggregations.last.value
-        if last == JSON.null then last = os.time() else last = last end
-        datespan.lastYear = tonumber(os.date("%Y", last))
-        datespan.lastMonth = tonumber(os.date("%m", last))
-
-        r:ivm_set(DATESPAN_KEY, JSON.encode(datespan)) 
+        -- find private min and max and store them if they could change the public ones
+        -- store the list entries under the 'private' key to make them easier to process
+        for _, list in pairs(doc.aggregations.lists.buckets) do
+            for _, private in pairs(list.private.buckets) do
+                if private.key_as_string == "true" then
+                    local prvlast = private.last.value
+                    if prvlast > datespan.publast then
+                        datespan.private = datespan.private or {}
+                        datespan.private[list.key] = datespan.private[list.key] or {}
+                        datespan.private[list.key].last = prvlast
+                    end
+                    local prvfirst = private.first.value
+                    if prvfirst < datespan.pubfirst then
+                        datespan.private = datespan.private or {}
+                        datespan.private[list.key] = datespan.private[list.key] or {}
+                        datespan.private[list.key].first = prvfirst
+                    end
+                end
+            end
+        end
+ 
+        r:ivm_set(DATESPAN_KEY, JSON.encode(datespan))
     end
+
+    -- process the raw list data:
+    -- get the first and last dates, adjusting as necessary to allow for private lists
+    local first = datespan.pubfirst
+    local last = datespan.publast
+    for lid, prvdates in pairs(datespan.private or {}) do
+        if aaa.canAccessList(r, lid, account) then
+           if prvdates.first and prvdates.first < first then first = prvdates.first end
+           if prvdates.last and prvdates.last > last then last = prvdates.last end
+        end
+    end
+
+    -- extract years and months for response
+    datespan.firstYear = tonumber(os.date("%Y", first))
+    datespan.firstMonth = tonumber(os.date("%m", first))
+
+    datespan.lastYear = tonumber(os.date("%Y", last))
+    datespan.lastMonth = tonumber(os.date("%m", last))
     
     -- Debug time point 6
     table.insert(t, r:clock() - tnow)
