@@ -335,6 +335,7 @@ function buildPage(json, state) {
 // getListInfo: Renders the top ML index
 function getListInfo(list, xdomain, nopush) {
     current_query = ""
+    current_retention = DEFAULT_RETENTION
     var dealtwithit = false
     if (xdomain && xdomain.search("utm_source=opensearch") != -1) {
         var strs = xdomain.split(/&/)
@@ -354,7 +355,7 @@ function getListInfo(list, xdomain, nopush) {
         }
         nopush = true
         dealtwithit = true
-        search(current_query, "lte=1M", true, true)
+        search(current_query, DEFAULT_RETENTION, true, true)
     }
     else if (xdomain && xdomain != "") {
         if (xdomain.length <= 1) {
@@ -547,7 +548,7 @@ function getListInfo(list, xdomain, nopush) {
             kiddos[n].setAttribute("class", "label label-default label-hover")
         }
         document.getElementById('listtitle').innerHTML = list + ", last month <a href='api/atom.lua?list=" + list + "'><img src='images/atom.png'></a>"
-        if (current_query == "" && current_retention == "") {
+        if (current_query == "" && (current_retention == "" || current_retention == DEFAULT_RETENTION)) {
             global_deep = false
             current_query = ""
             GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)

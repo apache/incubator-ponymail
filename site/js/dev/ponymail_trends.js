@@ -310,7 +310,7 @@ function gatherTrends() {
     }
     // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
-        dspan = "lte=1M"
+        dspan = DEFAULT_RETENTION
     }
     // figure out when this is and what the double is (for comparisons)
     var xa = datePickerDouble(dspan)

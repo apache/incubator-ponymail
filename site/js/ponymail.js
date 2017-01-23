@@ -33,7 +33,8 @@ var d_ppp = 15; // results per page
 var c_page = 0; // current page position for list view
 var open_emails = [] // cache index for loaded emails
 var list_year = {}
-var current_retention = "lte=1M" // default timespan for list view
+var DEFAULT_RETENTION = "lte=1M" // default timespan for list view
+var current_retention = DEFAULT_RETENTION
 var current_cal_min = 1997 // don't go further back than 1997 in case everything blows up, date-wise
 var keywords = ""
 var current_thread = 0 // marker for list view; currently open thread/email
@@ -3544,7 +3545,7 @@ function loadNgrams() {
     
     // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
-        dspan = "lte=1M"
+        dspan = DEFAULT_RETENTION
     }
     
     // figure out when this is and what the double is (for comparisons)
@@ -3931,6 +3932,7 @@ function buildPage(json, state) {
 // getListInfo: Renders the top ML index
 function getListInfo(list, xdomain, nopush) {
     current_query = ""
+    current_retention = DEFAULT_RETENTION
     var dealtwithit = false
     if (xdomain && xdomain.search("utm_source=opensearch") != -1) {
         var strs = xdomain.split(/&/)
@@ -3950,7 +3952,7 @@ function getListInfo(list, xdomain, nopush) {
         }
         nopush = true
         dealtwithit = true
-        search(current_query, "lte=1M", true, true)
+        search(current_query, DEFAULT_RETENTION, true, true)
     }
     else if (xdomain && xdomain != "") {
         if (xdomain.length <= 1) {
@@ -4143,7 +4145,7 @@ function getListInfo(list, xdomain, nopush) {
             kiddos[n].setAttribute("class", "label label-default label-hover")
         }
         document.getElementById('listtitle').innerHTML = list + ", last month <a href='api/atom.lua?list=" + list + "'><img src='images/atom.png'></a>"
-        if (current_query == "" && current_retention == "") {
+        if (current_query == "" && (current_retention == "" || current_retention == DEFAULT_RETENTION)) {
             global_deep = false
             current_query = ""
             GetAsync("/api/stats.lua?list=" + listname + "&domain=" + domain, null, buildPage)
@@ -5048,7 +5050,7 @@ function gatherTrends() {
     }
     // default to 1 month view if nothing else is supplied
     if (!dspan || dspan.length == 0) {
-        dspan = "lte=1M"
+        dspan = DEFAULT_RETENTION
     }
     // figure out when this is and what the double is (for comparisons)
     var xa = datePickerDouble(dspan)

@@ -25,7 +25,8 @@ var d_ppp = 15; // results per page
 var c_page = 0; // current page position for list view
 var open_emails = [] // cache index for loaded emails
 var list_year = {}
-var current_retention = "lte=1M" // default timespan for list view
+var DEFAULT_RETENTION = "lte=1M" // default timespan for list view
+var current_retention = DEFAULT_RETENTION
 var current_cal_min = 1997 // don't go further back than 1997 in case everything blows up, date-wise
 var keywords = ""
 var current_thread = 0 // marker for list view; currently open thread/email
