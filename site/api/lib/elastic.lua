@@ -18,7 +18,6 @@
 -- This is elastic.lua - ElasticSearch library
 
 local http = require 'socket.http'
-local ltn12 = require 'ltn12'
 local JSON = require 'cjson'
 local config = require 'lib/config'
 local default_doc = "mbox"
