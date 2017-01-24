@@ -132,6 +132,8 @@
 - search phrase dropped from list.html URI if date span is yyyy-mm (#347)
 - stats.lua first/last dates don't always agree with visible mails (#350)
 - Use constant for max list count instead of 500000 (#352)
+- Tighten wildcard searches to only search in the same domain level (#348)
+
 
 ## CHANGES in 0.9b:
 

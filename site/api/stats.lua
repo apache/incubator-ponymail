@@ -250,8 +250,8 @@ function handle(r)
     if get.list == "*" then
         wc = true
         sterm = {
-            wildcard = {
-                list = "*." .. get.domain
+            regexp = {
+                list = "^[^.]+." .. get.domain .. "$"
             }
         }
     end
