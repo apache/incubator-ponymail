@@ -26,8 +26,12 @@ local utils = require 'lib/utils'
 function handle(r)
     cross.contentType(r, "text/plain")
     local get = r:parseargs()
+    -- get the parameter (if any) and tidy it up
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")
-    local doc = elastic.get("mbox", eid or "hmm", true)
+    -- If it is the empty string then set it to "1" so ES doesn't barf
+    -- N.B. ?id is treated as ?id=1
+    if #eid == 0 then eid = "1" end
+    local doc = elastic.get("mbox", eid, true)
     
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.mid then

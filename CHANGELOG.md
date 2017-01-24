@@ -133,6 +133,7 @@
 - stats.lua first/last dates don't always agree with visible mails (#350)
 - Use constant for max list count instead of 500000 (#352)
 - Tighten wildcard searches to only search in the same domain level (#348)
+- useless conditional when fetching id parameter (#353)
 
 
 ## CHANGES in 0.9b:
