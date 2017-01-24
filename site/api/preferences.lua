@@ -24,6 +24,7 @@ local cross = require 'lib/cross'
 local smtp = require 'socket.smtp'
 local config = require 'lib/config'
 local aaa = require 'lib/aaa'
+local utils = require 'lib/utils'
 
 --[[
     Remove nulls values from a table
@@ -291,7 +292,7 @@ Pony Mail - Email for Ponies and People.
                 listnames = {
                     terms = {
                         field = "list_raw",
-                        size = 500000
+                        size = utils.MAX_LIST_COUNT
                     },
                     aggs = {
                         -- split list into public and private buckets

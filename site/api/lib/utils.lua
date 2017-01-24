@@ -123,6 +123,7 @@ local function lastDayOfMonth(yyyy, mm)
 end
 
 return {
+    MAX_LIST_COUNT = 500000, -- used for aggs size=n
     anonymizeHdrs = anonymizeHdrs,
     anonymizeBody = anonymizeBody,
     anonymizeEmail = anonymizeEmail,

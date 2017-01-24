@@ -23,6 +23,7 @@ local user = require 'lib/user'
 local aaa = require 'lib/aaa'
 local config = require 'lib/config'
 local cross = require 'lib/cross'
+local utils = require 'lib/utils'
 
 local function sortEmail(thread)
     if thread.children and type(thread.children) == "table" then
@@ -203,7 +204,7 @@ function handle(r)
                 from = {
                     terms = {
                         field = "list_raw",
-                        size = 500000
+                        size = utils.MAX_LIST_COUNT
                     }
                 }
             },
@@ -242,7 +243,7 @@ function handle(r)
                 from = {
                     terms = {
                         field = "list_raw",
-                        size = 500000
+                        size = utils.MAX_LIST_COUNT
                     }
                 }
             },

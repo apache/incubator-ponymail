@@ -403,7 +403,7 @@ function handle(r)
                 lists = {
                     terms = {
                         field = "list_raw",
-                        size = 500000
+                        size = utils.MAX_LIST_COUNT
                     },
                     aggs = {
                         private = {

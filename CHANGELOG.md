@@ -131,6 +131,7 @@
 - GUI ignores date span in list.html URI if query is blank (#346)
 - search phrase dropped from list.html URI if date span is yyyy-mm (#347)
 - stats.lua first/last dates don't always agree with visible mails (#350)
+- Use constant for max list count instead of 500000 (#352)
 
 ## CHANGES in 0.9b:
 
