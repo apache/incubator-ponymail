@@ -50,6 +50,7 @@ function handle(r)
                 r:puts("Could not find the email source, sorry!")
             end
             return cross.OK
+--            N.B. no need to check for shortened links here as they are not used for the source
         end
     end
     r:puts[[No such email, or you don't have access. Sorry!]]
