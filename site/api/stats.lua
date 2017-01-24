@@ -429,19 +429,22 @@ function handle(r)
             }
         }
         datespan = {}
-        local NOW = os.time()
-        datespan.pubfirst = NOW -- earliest time must be less than this
-        datespan.publast = 0
+        datespan.pubfirst = nil
+        datespan.publast = nil
         -- find public min and max (buckets will be empty if there are no matching lists)
         for _, list in pairs(doc.aggregations.lists.buckets) do
             for _, private in pairs(list.private.buckets) do
                 if private.key_as_string == "false" then
-                    if private.last.value > datespan.publast then datespan.publast = private.last.value end
-                    if private.first.value < datespan.pubfirst then datespan.pubfirst = private.first.value end
+                    if (datespan.publast == nil) or (private.last.value > datespan.publast) then datespan.publast = private.last.value end
+                    if (datespan.pubfirst == nil) or (private.first.value < datespan.pubfirst) then datespan.pubfirst = private.first.value end
                 end
             end
         end
-        if datespan.publast == 0 then datespan.publast = NOW end -- no value found
+        if datespan.publast == nil then -- did not find any values
+            local NOW = os.time()
+            datespan.publast = NOW 
+            datespan.pubfirst = NOW 
+        end
 
         -- find private min and max and store them if they could change the public ones
         -- store the list entries under the 'private' key to make them easier to process
