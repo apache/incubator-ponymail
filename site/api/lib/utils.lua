@@ -124,6 +124,7 @@ end
 
 return {
     MAX_LIST_COUNT = 500000, -- used for aggs size=n
+    SHORTENED_LINK_LEN = 18, -- length of a shortened link
     anonymizeHdrs = anonymizeHdrs,
     anonymizeBody = anonymizeBody,
     anonymizeEmail = anonymizeEmail,
