@@ -82,6 +82,8 @@ local function updateUser(r, cid, data)
     r:setcookie{
         key = "ponymail",
         value = cookie .. "==" .. (cid),
+        secure = true,
+        httpOnly = true,
         path = "/"
     }
 end

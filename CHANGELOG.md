@@ -135,6 +135,7 @@
 - Tighten wildcard searches to only search in the same domain level (#348)
 - useless conditional when fetching id parameter (#353)
 - ES 5.0 no longer supports the write consistency option for index(); archiver fails (#351)
+- Cookie should use httpOnly and Secure (#355)
 
 
 ## CHANGES in 0.9b:
