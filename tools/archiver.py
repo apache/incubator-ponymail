@@ -40,6 +40,8 @@ sub someone to the list(s) and add this to their .forward file:
 logger = None
 
 from elasticsearch import Elasticsearch
+from elasticsearch import VERSION as ES_VERSION
+ES_MAJOR = ES_VERSION[0]
 from formatflowed import convertToWrapped
 import hashlib
 import email.utils
@@ -140,6 +142,16 @@ class Archiver(object):
         "x-mailman-rule-misses",
     ]
 
+    """ Intercept index calls and fix up consistency argument """
+    def index(self, **kwargs):
+        if ES_MAJOR == 5:
+            if kwargs.pop('consistency', None): # drop the key if present
+                if self.wait_for_active_shards: # replace with wait if defined
+                    kwargs['wait_for_active_shards'] = self.wait_for_active_shards
+        return self.es.index(
+            **kwargs
+        )
+
     def __init__(self, parseHTML=False):
         """ Just initialize ES. """
         self.html = parseHTML
@@ -148,7 +160,14 @@ class Archiver(object):
             self.html2text = html2text.html2text
         self.dbname = config.get("elasticsearch", "dbname")
         ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
+        # Always allow this to be set; will be replaced as necessary by wait_for_active_shards
         self.consistency = config.get('elasticsearch', 'write', fallback='quorum')
+        if ES_MAJOR == 2:
+            pass
+        elif ES_MAJOR == 5:
+            self.wait_for_active_shards = config.get('elasticsearch', 'wait', fallback=1)
+        else:
+            raise Exception("Unexpected elasticsearch version ", ES_VERSION)
         self.cropout = config.get("debug", "cropout", fallback=None)
         uri = config.get("elasticsearch", "uri", fallback="")
         dbs = [
@@ -383,7 +402,7 @@ class Archiver(object):
 
         if contents:
             for key in contents:
-                self.es.index(
+                self.index(
                     index=self.dbname,
                     doc_type="attachment",
                     id=key,
@@ -392,7 +411,7 @@ class Archiver(object):
                     }
                 )
     
-        self.es.index(
+        self.index(
             index=self.dbname,
             doc_type="mbox",
             id=ojson['mid'],
@@ -400,7 +419,7 @@ class Archiver(object):
             body = ojson
         )
         
-        self.es.index(
+        self.index(
             index=self.dbname,
             doc_type="mbox_source",
             id=ojson['mid'],
@@ -413,7 +432,7 @@ class Archiver(object):
         
         # If MailMan and list info is present, save/update it in ES:
         if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
-            self.es.index(
+            self.index(
                 index=self.dbname,
                 doc_type="mailinglists",
                 id=lid,
@@ -441,7 +460,7 @@ class Archiver(object):
                     if doc:
                         oldrefs.append(cid)
                         # N.B. no index is supplied, so ES will generate one
-                        self.es.index(
+                        self.index(
                             index=self.dbname,
                             doc_type="notifications",
                             consistency = self.consistency,
@@ -476,7 +495,7 @@ class Archiver(object):
                     if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
                         oldrefs.append(cid)
                         # N.B. no index is supplied, so ES will generate one
-                        self.es.index(
+                        self.index(
                             index=self.dbname,
                             consistency = self.consistency,
                             doc_type="notifications",

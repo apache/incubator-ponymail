@@ -27,6 +27,8 @@ if sys.version_info <= (3, 3):
 dopip = False
 try:
     from elasticsearch import Elasticsearch
+    from elasticsearch import VERSION as ES_VERSION
+    ES_MAJOR = ES_VERSION[0]
 except:
     dopip = True
     
@@ -468,7 +470,7 @@ ssl:                    false
 #user:                  username
 #password:              password
 
-#write:                 consistency level (default quorum)
+#%s
 
 #backup:                database name
 
@@ -479,7 +481,8 @@ ssl:                    false
 #cropout:               string to crop from list-id
 
 ###############################################################
-            """ % (hostname, dbname, port))
+            """ % (hostname, dbname, port, 
+                   'wait:                  active shard count' if ES_MAJOR == 5 else 'write:                 consistency level (default quorum)'))
     f.close()
 
 config_path = "../site/api/lib"
