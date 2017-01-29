@@ -218,12 +218,12 @@ class Archiver(object):
                                 body = subpart.get_payload(decode=True)
                             if subpart.get_content_type() == 'text/enriched' and not body:
                                 body = subpart.get_payload(decode=True)
-                            elif subpart.get_content_type() == 'text/html' and self.html and not firstHTML:
+                            elif self.html and subpart.get_content_type() == 'text/html' and not firstHTML:
                                 firstHTML = subpart.get_payload(decode=True)
             
                     elif part.get_content_type() == 'text/plain' and not body:
                         body = part.get_payload(decode=True)
-                    elif part.get_content_type() == 'text/html' and self.html and not firstHTML:
+                    elif self.html and part.get_content_type() == 'text/html' and not firstHTML:
                         firstHTML = part.get_payload(decode=True)
                 except Exception as err:
                     print(err)
@@ -231,7 +231,7 @@ class Archiver(object):
             body = msg.get_payload(decode=True)
         elif msg.get_content_type() == 'text/enriched':
             body = msg.get_payload(decode=True)
-        elif msg.get_content_type() == 'text/html' and self.html and not firstHTML:
+        elif self.html and msg.get_content_type() == 'text/html' and not firstHTML:
             firstHTML = msg.get_payload(decode=True)
             
         # this requires a GPL lib, user will have to install it themselves
