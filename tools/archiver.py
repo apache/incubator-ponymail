@@ -231,7 +231,7 @@ class Archiver(object):
             body = msg.get_payload(decode=True)
         elif msg.get_content_type() == 'text/enriched':
             body = msg.get_payload(decode=True)
-        elif self.html and msg.get_content_type() == 'text/html' and not firstHTML:
+        elif self.html and msg.get_content_type() == 'text/html':
             firstHTML = msg.get_payload(decode=True)
             
         # this requires a GPL lib, user will have to install it themselves
