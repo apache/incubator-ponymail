@@ -211,19 +211,24 @@ class Archiver(object):
         firstHTML = None
         if msg.is_multipart():
             for part in msg.walk():
+                """
+                    find the first body part and the first HTML part
+                    Note: cannot use break here because firstHTML is needed
+                    if len(body) <= 1
+                """
                 try:
                     if part.is_multipart(): 
                         for subpart in part.walk():
-                            if subpart.get_content_type() == 'text/plain' and not body:
+                            if not body and subpart.get_content_type() == 'text/plain':
                                 body = subpart.get_payload(decode=True)
-                            if subpart.get_content_type() == 'text/enriched' and not body:
+                            if not body and subpart.get_content_type() == 'text/enriched':
                                 body = subpart.get_payload(decode=True)
-                            elif self.html and subpart.get_content_type() == 'text/html' and not firstHTML:
+                            elif self.html and not firstHTML and subpart.get_content_type() == 'text/html':
                                 firstHTML = subpart.get_payload(decode=True)
             
-                    elif part.get_content_type() == 'text/plain' and not body:
+                    elif not body and part.get_content_type() == 'text/plain':
                         body = part.get_payload(decode=True)
-                    elif self.html and part.get_content_type() == 'text/html' and not firstHTML:
+                    elif self.html and not firstHTML and part.get_content_type() == 'text/html':
                         firstHTML = part.get_payload(decode=True)
                 except Exception as err:
                     print(err)
