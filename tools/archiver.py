@@ -209,35 +209,20 @@ class Archiver(object):
     def msgbody(self, msg):
         body = None
         firstHTML = None
-        if msg.is_multipart():
-            for part in msg.walk():
-                """
-                    find the first body part and the first HTML part
-                    Note: cannot use break here because firstHTML is needed
-                    if len(body) <= 1
-                """
-                try:
-                    if part.is_multipart(): 
-                        for subpart in part.walk():
-                            if not body and subpart.get_content_type() == 'text/plain':
-                                body = subpart.get_payload(decode=True)
-                            if not body and subpart.get_content_type() == 'text/enriched':
-                                body = subpart.get_payload(decode=True)
-                            elif self.html and not firstHTML and subpart.get_content_type() == 'text/html':
-                                firstHTML = subpart.get_payload(decode=True)
-            
-                    elif not body and part.get_content_type() == 'text/plain':
-                        body = part.get_payload(decode=True)
-                    elif self.html and not firstHTML and part.get_content_type() == 'text/html':
-                        firstHTML = part.get_payload(decode=True)
-                except Exception as err:
-                    print(err)
-        elif msg.get_content_type() == 'text/plain':
-            body = msg.get_payload(decode=True)
-        elif msg.get_content_type() == 'text/enriched':
-            body = msg.get_payload(decode=True)
-        elif self.html and msg.get_content_type() == 'text/html':
-            firstHTML = msg.get_payload(decode=True)
+        for part in msg.walk():
+            """
+                Find the first body part and the first HTML part
+                Note: cannot use break here because firstHTML is needed if len(body) <= 1
+            """
+            try:
+                if not body and part.get_content_type() == 'text/plain':
+                    body = part.get_payload(decode=True)
+                if not body and part.get_content_type() == 'text/enriched':
+                    body = part.get_payload(decode=True)
+                elif self.html and not firstHTML and part.get_content_type() == 'text/html':
+                    firstHTML = part.get_payload(decode=True)
+            except Exception as err:
+                print(err)
             
         # this requires a GPL lib, user will have to install it themselves
         if firstHTML and (not body or len(body) <= 1 or (iBody and str(body).find(str(iBody)) != -1)):
