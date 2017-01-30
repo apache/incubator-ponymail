@@ -261,8 +261,15 @@ class SlurpThread(Thread):
                     self.printid("Whoa, this is taking way too long, ignoring %s for now" % tmpname)
                     break
 
+                # Don't pass message to archiver unless we have a list id
+                if not (list_override or message['list-id']):
+                    self.printid("No list id found for %s " % message['message-id'])
+                    bad += 1
+                    continue
+
                 json, contents = archie.compute_updates(list_override, private, message)
                 
+                # Not sure this can ever happen
                 if json and not (json['list'] and json['list_raw']):
                     self.printid("No list id found for %s " % json['message-id'])
                     bad += 1
