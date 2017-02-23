@@ -139,6 +139,7 @@
 - crash in import-mbox when list-id is missing and --lid is not provided (#358)
 - archiver traverses multi-part message parts twice (#359)
 - Add unsubscribe button (#362)
+- Bug: invalid style setting: overflow:hide => overflow:hidden (#364)
 
 
 ## CHANGES in 0.9b:
