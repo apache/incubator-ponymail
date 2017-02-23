@@ -24,7 +24,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
-    
+
     // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
@@ -46,10 +46,10 @@ function loadList_threaded(mjson, limit, start, deep) {
     }
     // reset open email counter hash
     open_emails = []
-    
+
     // set display limit to default ppp if not set by call
     limit = limit ? limit : d_ppp;
-    
+
     // If no flat JSON is supplied (as with next/prev page clicks), fall back to the previous JSON,
     // otherwise, sort it descending by epoch
     var fjson = mjson ? ('emails' in mjson && isArray(mjson.emails) ? mjson.emails.sort(function(a, b) {
@@ -64,15 +64,15 @@ function loadList_threaded(mjson, limit, start, deep) {
     
     // get $now
     var now = new Date().getTime() / 1000
-    
+
     // start = start or 0 (first email)
     if (!start) {
         start = 0
     }
-    
+
     // start nesting HTML
     nest = '<ul class="list-group">'
-    
+
     c_page = start
     // for each email from start to finish (or page limit), do...
     for (var i = start; i < json.length; i++) {
@@ -85,12 +85,12 @@ function loadList_threaded(mjson, limit, start, deep) {
         if (eml && eml.subject.length == 0) {
             eml.subject = '(no subject)'
         }
-        
+
         // truncate subject (do we need this?)
         if (eml && eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }
-        
+
         // do some counting
         var subs = countSubs(json[i])
         var people = countParts(json[i])
@@ -142,8 +142,8 @@ function loadList_threaded(mjson, limit, start, deep) {
                 estyle = "font-weight: bold;"
             }
         }
-        
-        
+
+
         var people_label = "<label style='visibility:" + pds + "; float: right; margin-right: 8px; ' id='people_"+i+"' class='listview_label label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " <span class='hidden-xs hidden-sm'>people</span></label>"
         var subs_label = "<label id='subs_" + i + "' style='float: right; margin-right: 8px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span>&nbsp;<span style='display: inline-block; width: 16px; text-align: right;'>" + subs + "</span>&nbsp;<span style='display: inline-block; width: 40px; text-align: left;' class='hidden-xs hidden-sm'>" +  (subs != 1 ? "replies" : "reply") + "</span></label>"
         
@@ -245,14 +245,13 @@ function loadList_threaded(mjson, limit, start, deep) {
     // subscribe button
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
-    
+
     var unsublist = xlist.replace(/@/, "-unsubscribe@")
     innerbuttons += ' &nbsp; <a href="mailto:' + unsublist + '" title="Click to unsubscribe from this list" style="margin: 0 auto" class="btn btn-primary">Unsubscribe</a>'
 
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
-    
     // Favorite or forget
     if (login && login.credentials && xlist) {
         var found = false
@@ -270,7 +269,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         }
         innerbuttons += '</span>'
     }
-    
+
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
     

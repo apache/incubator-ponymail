@@ -24,6 +24,7 @@ function loadList_treeview(mjson, limit, start, deep) {
             prefs.theme = th
         }
     }
+
     // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
@@ -43,38 +44,59 @@ function loadList_treeview(mjson, limit, start, deep) {
             }
         }
     }
+    // reset open email counter hash
     open_emails = []
+
+    // set display limit to default ppp if not set by call
     limit = limit ? limit : d_ppp;
+
+    // If no flat JSON is supplied (as with next/prev page clicks), fall back to the previous JSON,
+    // otherwise, sort it descending by epoch
     var fjson = mjson ? ('emails' in mjson && isArray(mjson.emails) ? mjson.emails.sort(function(a, b) {
         return b.epoch - a.epoch
     }) : []) : current_flat_json
+    // sync JSON
     current_flat_json = fjson
     
+    // same with threaded JSON
     var json = mjson ? sortIt(mjson.thread_struct) : current_thread_json
     current_thread_json = json
     
+    // get $now
     var now = new Date().getTime() / 1000
-    nest = '<ul class="list-group">'
+
+    // start = start or 0 (first email)
     if (!start) {
         start = 0
     }
+
+    // start nesting HTML
+    nest = '<ul class="list-group">'
+
     c_page = start
+    // for each email from start to finish (or page limit), do...
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
         }
+        // Get the email
         var eml = findEml(json[i].tid)
         // allow for empty subject
         if (eml && eml.subject.length == 0) {
             eml.subject = '(no subject)'
         }
+
+        // truncate subject (do we need this?)
         if (eml && eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }
+
+        // do some counting
         var subs = countSubs(json[i])
         var people = countParts(json[i])
         var latest = countNewest(json[i])
 
+        // coloring for labels
         var ls = 'default'
         if (subs > 0) {
             ls = 'primary'
@@ -85,25 +107,30 @@ function loadList_treeview(mjson, limit, start, deep) {
         }
         var ld = 'default'
         var ti = ''
+        // orange label for new timestamps
         if (latest > (now - 86400)) {
             ld = 'warning'
             ti = "Has activity in the past 24 hours"
         }
         var d = ''
         var estyle = ""
+        // if deep search (multi-list), show the list name label as well
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if ((qdeep || deep || global_deep) && current_query.length > 0) {
             eml.list = eml.list ? eml.list : eml.list_raw // Sometimes, .list isn't available
             var elist = eml.list.replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = elist
+            // shortlist? show dev@ instead of dev@foo.bar then
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
             d = "<a href='list.html?" + elist2 + "'><label class='label label-warning' style='width: 150px;'>" + elist + "</label></a> &nbsp;"
+            // truncate subject even more if list labels are there
             if (eml.subject.length > 75) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
         }
+        // escape subject
         var subject = eml.subject.replace(/</mg, "&lt;")
         
         var mdate = formatEpochUTC(latest)
@@ -115,9 +142,12 @@ function loadList_treeview(mjson, limit, start, deep) {
                 estyle = "font-weight: bold;"
             }
         }
+
+
         var people_label = "<label style='visibility:" + pds + "; float: right; margin-right: 8px; ' id='people_"+i+"' class='listview_label label label-" + lp + "'> <span class='glyphicon glyphicon-user'> </span> " + people + " <span class='hidden-xs hidden-sm'>people</span></label>"
         var subs_label = "<label id='subs_" + i + "' style='float: right; margin-right: 8px;' class='label label-" + ls + "'> <span class='glyphicon glyphicon-envelope'> </span>&nbsp;<span style='display: inline-block; width: 16px; text-align: right;'>" + subs + "</span>&nbsp;<span style='display: inline-block; width: 40px; text-align: left;' class='hidden-xs hidden-sm'>" +  (subs != 1 ? "replies" : "reply") + "</span></label>"
         
+        // social theme display
         if (prefs.theme && prefs.theme == "social") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
@@ -129,7 +159,7 @@ function loadList_treeview(mjson, limit, start, deep) {
                     subject +
                     "</a> <label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" +
                     mdate +
-                    "</label>" + subs_label + people_label +
+                    "</label> &nbsp; " + subs_label + people_label +
                     "<br/>By " + from + "</div>" 
                     
                     
@@ -144,7 +174,9 @@ function loadList_treeview(mjson, limit, start, deep) {
                     "</div>" +
                     "</div>" +
                     "</div><div id='thread_treeview_" + i + "' style='display:none';></div></li>"
-        } else if (prefs.theme && prefs.theme == "compact") {
+        }
+        // compact theme display
+        else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             var sbody = (eml.body||json[i].body).replace(/</g, "&lt;") + "&nbsp;"
@@ -161,7 +193,9 @@ function loadList_treeview(mjson, limit, start, deep) {
                     subs_label + people_label + "&nbsp; " +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" + sbody +
                     "</div></div>" + "<div id='thread_treeview_" + i + "' style='display:none';></div></li>"
-        } else {
+        }
+        // default theme display
+        else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 220px); white-space:nowrap; overflow: hidden;'>" +
                     d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_treeview(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
@@ -208,7 +242,7 @@ function loadList_treeview(mjson, limit, start, deep) {
         bulk.innerHTML += '<div style="width: 33%; float: left;">&nbsp;</div>'
     }
     
-    
+    // subscribe button
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
 
@@ -235,6 +269,7 @@ function loadList_treeview(mjson, limit, start, deep) {
         }
         innerbuttons += '</span>'
     }
+
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
     
