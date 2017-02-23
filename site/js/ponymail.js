@@ -2496,6 +2496,9 @@ function loadList_flat(mjson, limit, start, deep) {
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
     
+    var unsublist = xlist.replace(/@/, "-unsubscribe@")
+    innerbuttons += ' &nbsp; <a href="mailto:' + unsublist + '" title="Click to unsubscribe from this list" style="margin: 0 auto" class="btn btn-primary">Unsubscribe</a>'
+
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
@@ -2805,7 +2808,9 @@ function loadList_threaded(mjson, limit, start, deep) {
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
     
-    // show subscribe button if logged in
+    var unsublist = xlist.replace(/@/, "-unsubscribe@")
+    innerbuttons += ' &nbsp; <a href="mailto:' + unsublist + '" title="Click to unsubscribe from this list" style="margin: 0 auto" class="btn btn-primary">Unsubscribe</a>'
+
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
@@ -3052,6 +3057,10 @@ function loadList_treeview(mjson, limit, start, deep) {
     
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
+
+    var unsublist = xlist.replace(/@/, "-unsubscribe@")
+    innerbuttons += ' &nbsp; <a href="mailto:' + unsublist + '" title="Click to unsubscribe from this list" style="margin: 0 auto" class="btn btn-primary">Unsubscribe</a>'
+
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
