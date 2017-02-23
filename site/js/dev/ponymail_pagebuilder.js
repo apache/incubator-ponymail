@@ -242,7 +242,7 @@ function buildStats(json, state, show) {
         if (json.cloud) {
             for (var i in json.cloud) {
                 stats.innerHTML += "<h4 style='text-align: center;'>Hot topics:</h4>"
-                stats.appendChild(wordCloud(json.cloud, 250, 80))
+                stats.appendChild(wordCloud(json.cloud, 250, 80, pm_config.debug))
                 break // so..this'll run if cloud has stuff, otherwise not.
             }
         }

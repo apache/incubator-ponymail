@@ -140,7 +140,7 @@
 - archiver traverses multi-part message parts twice (#359)
 - Add unsubscribe button (#362)
 - Bug: invalid style setting: overflow:hide => overflow:hidden (#364)
-
+- Bug: wordcloud.js logs to the console (#363)
 
 ## CHANGES in 0.9b:
 

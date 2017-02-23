@@ -44,7 +44,7 @@ function makeWord(word, size) {
     return txt
 }
 
-function wordCloud(hash, width, height) {
+function wordCloud(hash, width, height, debug) {
     var total = 0
     var boxes = []
     var space = width * height
@@ -63,7 +63,9 @@ function wordCloud(hash, width, height) {
         var word = hashSorted[n]
         var size = 0;
         var expected_area = ( Math.sqrt(hash[word]) / total ) * (space*0.9)
-        console.log(expected_area)
+        if (debug) {
+            console.log(expected_area)
+        }
         
         var txt = document.createElementNS(svgNS, "text");
         txt.textContent = word
