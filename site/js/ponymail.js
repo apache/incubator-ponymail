@@ -2323,7 +2323,7 @@ window.setInterval(checkForSlows, 100)
 
 // loadList_flat: Load a chunk of emails as a flat (non-threaded) list
 function loadList_flat(mjson, limit, start, deep) {
-    
+
     // Set displayed posts per page to 10 if social/compact theme, or auto-scale
     if (prefs.theme && (prefs.theme == "social" || prefs.theme == "compact")) {
         d_ppp = 10
@@ -2343,46 +2343,45 @@ function loadList_flat(mjson, limit, start, deep) {
             }
         }
     }
-    // Reset the open_emails hash
+    // reset open email counter hash
     open_emails = []
-    // If no limit is specified, fall back to default ppp
+
+    // set display limit to default ppp if not set by call
     limit = limit ? limit : d_ppp;
-    
-    // If no JSON was passed along (as with page scrolling), fall back to the previously fetched JSON
-    // otherwise, sort mjson by epoch descending
-    var json = mjson ? ('emails' in mjson && mjson.emails.constructor == Array ? mjson.emails.sort(function(a, b) {
+
+    // If no flat JSON is supplied (as with next/prev page clicks), fall back to the previous JSON,
+    // otherwise, sort it descending by epoch
+    var json = mjson ? ('emails' in mjson && isArray(mjson.emails) ? mjson.emails.sort(function(a, b) {
         return b.epoch - a.epoch
     }) : []) : current_flat_json
-    
-    // Sync previous and current JSON
+    // sync JSON
     current_flat_json = json
     
-    // get epoch now
+    // get $now
     var now = new Date().getTime() / 1000
-    
-    // if no start position defined, set it to position 0 (first email)
+
+    // start = start or 0 (first email)
     if (!start) {
         start = 0
     }
-    
-    // Start nest HTML
+
+    // start nesting HTML
     nest = '<ul class="list-group">'
-    
-    // set current page to where we are now
+
     c_page = start
-    // iterate through emails from $start til either we hit the last one or ($start + $limit)
+    // for each email from start to finish (or page limit), do...
     for (var i = start; i < json.length; i++) {
         if (i >= (start + limit)) {
             break
         }
-        // fetch an email
+        // Get the email
         var eml = json[i]
         // allow for empty subject
         if (eml.subject.length == 0) {
             eml.subject = '(no subject)'
         }
-        
-        // truncate subject if too long (do we really still need this?)
+
+        // truncate subject (do we need this?)
         if (eml.subject.length > 90) {
             eml.subject = eml.subject.substr(0, 90) + "..."
         }
@@ -2395,18 +2394,18 @@ function loadList_flat(mjson, limit, start, deep) {
             ld = 'warning'
             ti = "Has activity in the past 24 hours"
         }
-        var d = ""
-        // Are we in deep search (multi-list)? If so, we need to add the list name as well
+        var d = ''
+        // if deep search (multi-list), show the list name label as well
         var qdeep = document.getElementById('checkall') ? document.getElementById('checkall').checked : false
         if (qdeep || deep || global_deep && typeof eml.list != undefined && eml.list != null) {
             // Usual list ID transformation
             var elist = (eml.list ? eml.list : "").replace(/[<>]/g, "").replace(/^([^.]+)\./, "$1@")
             var elist2 = elist
-            // using shortlist format? dev@ instead of dev@foo.bar
+            // shortlist? show dev@ instead of dev@foo.bar then
             if (pm_config.shortLists) {
                 elist = elist.replace(/\.[^.]+\.[^.]+$/, "")
             }
-            var d = "<a href='list.html?" + elist2 + "'><label class='label label-warning' style='width: 150px;'>" + elist + "</label></a> &nbsp;"
+            d = "<a href='list.html?" + elist2 + "'><label class='label label-warning' style='width: 150px;'>" + elist + "</label></a> &nbsp;"
             if (eml.subject.length > 75) {
                 eml.subject = eml.subject.substr(0, 75) + "..."
             }
@@ -2475,14 +2474,14 @@ function loadList_flat(mjson, limit, start, deep) {
     }
     tnav += "</div><br/><br/>"
     
-    
+    // Emails
     bulk.innerHTML += tnav + nest
     if (prefs.hideStats == 'yes') {
         bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-10")
     } else {
         bulk.parentNode.setAttribute("class", "well col-md-10 col-lg-7")
     }
-    
+
 
     // Bottom nav buttons
     if (start > 0) {
@@ -2495,14 +2494,13 @@ function loadList_flat(mjson, limit, start, deep) {
     // subscribe button
     var sublist = xlist.replace(/@/, "-subscribe@")
     var innerbuttons = '<a href="mailto:' + sublist + '" title="Click to subscribe to this list" style="margin: 0 auto" class="btn btn-primary">Subscribe</a>'
-    
+
     var unsublist = xlist.replace(/@/, "-unsubscribe@")
     innerbuttons += ' &nbsp; <a href="mailto:' + unsublist + '" title="Click to unsubscribe from this list" style="margin: 0 auto" class="btn btn-primary">Unsubscribe</a>'
 
     if (login && login.credentials) {
         innerbuttons += ' &nbsp; <a href="javascript:void(0);" style="margin: 0 auto" class="btn btn-danger" onclick="compose(null, \'' + xlist + '\');">Start a new thread</a>'
     }
-    
     // Favorite or forget
     if (login && login.credentials && xlist) {
         var found = false
@@ -2521,10 +2519,8 @@ function loadList_flat(mjson, limit, start, deep) {
         innerbuttons += '</span>'
     }
     
-    // add them buttons
     bulk.innerHTML += '<div style="width: 33%; float: left;">' + innerbuttons + '</div>'
     
-    // next page
     if (json.length > (start + limit)) {
         remain = Math.min(d_ppp, json.length - (start + limit))
         bulk.innerHTML += '<div style="width: 33%; float: left;"><a href="javascript:void(0);" style="float: right;" class="btn btn-success" onclick="loadList_flat(false, ' + d_ppp + ', ' + (start + d_ppp) + ');">Show next ' + remain + '</a></div>'
