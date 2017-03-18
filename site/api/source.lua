@@ -24,7 +24,9 @@ local cross = require 'lib/cross'
 local utils = require 'lib/utils'
 
 function handle(r)
-    cross.contentType(r, "text/plain")
+    -- content is currently utf-8, see #367
+    -- TODO this may need to be adjusted when #366 is fixed
+    cross.contentType(r, "text/plain; charset=utf-8")
     local get = r:parseargs()
     -- get the parameter (if any) and tidy it up
     local eid = (get.id or r.path_info):gsub("\"", ""):gsub("/", "")

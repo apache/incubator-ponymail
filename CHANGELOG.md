@@ -141,6 +141,7 @@
 - Add unsubscribe button (#362)
 - Bug: invalid style setting: overflow:hide => overflow:hidden (#364)
 - Bug: wordcloud.js logs to the console (#363)
+- Bug: source.lua does not specify the charset (#367)
 
 ## CHANGES in 0.9b:
 
