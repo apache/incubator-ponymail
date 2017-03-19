@@ -20,6 +20,7 @@
 local http = require 'socket.http'
 local JSON = require 'cjson'
 local config = require 'lib/config'
+local mime = require('mime')
 local default_doc = "mbox"
 
 -- http code return check
@@ -107,6 +108,17 @@ local function getDoc (ty, id, ok404)
         json._source.request_id = json._id
         if ty == "mbox" and json._source.body == JSON.null then
             json._source.body = ''
+        end
+        if ty == "mbox_source" then
+            local src = json._source.source
+            -- could it be base64 encoded?
+            -- Unencoded source must contain at least one space; b64 does not
+            if src:len() % 4 == 0 and src:find(' ') == nil then
+                src = (mime.unb64(src))
+                if src ~= nil then
+                    json._source.source = src
+                end
+            end
         end
     end
     return (json and json._source) and json._source or {}, status

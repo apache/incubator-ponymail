@@ -143,6 +143,7 @@
 - Bug: wordcloud.js logs to the console (#363)
 - Bug: source.lua does not specify the charset (#367)
 - Bug: archiver stores attachment binary data types with embedded newlines (#262)
+- Bug: may corrupt 8bit message source if it is not encoded in UTF-8 (#366)
 
 ## CHANGES in 0.9b:
 
