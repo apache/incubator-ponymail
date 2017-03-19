@@ -142,6 +142,7 @@
 - Bug: invalid style setting: overflow:hide => overflow:hidden (#364)
 - Bug: wordcloud.js logs to the console (#363)
 - Bug: source.lua does not specify the charset (#367)
+- Bug: archiver stores attachment binary data types with embedded newlines (#262)
 
 ## CHANGES in 0.9b:
 

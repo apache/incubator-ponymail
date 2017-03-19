@@ -49,7 +49,7 @@ from email import policy
 import time
 from collections import namedtuple
 import re
-import codecs
+from base64 import standard_b64encode
 import chardet
 import configparser
 import os
@@ -81,6 +81,10 @@ if config.has_option('elasticsearch', 'user'):
 
 archiver_generator = config.get("archiver", "generator", fallback="medium")
 
+def encode_base64(bytes):
+    """ Convert bytes to base64 as text string (no newlines) """
+    return standard_b64encode(bytes).decode('ascii', 'ignore')
+
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
     if cd:
@@ -99,7 +103,7 @@ def parse_attachment(part):
                 attachment['size'] = len(fd)
                 attachment['filename'] = filename
                 h = hashlib.sha256(fd).hexdigest()
-                b64 = codecs.encode(fd, "base64").decode('ascii', 'ignore')
+                b64 = encode_base64(fd)
                 attachment['hash'] = h
                 return attachment, b64 # Return meta data and contents separately
     return None, None
