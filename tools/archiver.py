@@ -516,7 +516,13 @@ class Archiver(object):
     def mbox_source(self, msg):
         # Common method shared with import-mbox
         policy = msg.policy.clone(max_line_length=0) # don't wrap headers
-        return encode_base64(msg.as_bytes(policy=policy))
+        b = msg.as_bytes(policy=policy)
+        try:
+            # Can we store as ASCII?
+            return b.decode('ascii', errors='strict')
+        except UnicodeError:
+            # No, so must use base64 to avoid corruption on re-encoding
+            return encode_base64(b)
 
     def list_url(self, mlist):
         """ Required by MM3 plugin API
