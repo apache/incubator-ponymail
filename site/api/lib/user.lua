@@ -83,7 +83,7 @@ local function updateUser(r, cid, data)
         key = "ponymail",
         value = cookie .. "==" .. (cid),
         secure = true,
-        httpOnly = true,
+        httponly = true,
         path = "/"
     }
 end
