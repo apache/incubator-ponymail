@@ -136,6 +136,7 @@
 - useless conditional when fetching id parameter (#353)
 - ES 5.0 no longer supports the write consistency option for index(); archiver fails (#351)
 - Cookie should use httpOnly and Secure (#355)
+- Allow insecure cookie (config item intended for local testing only) (#355)
 - crash in import-mbox when list-id is missing and --lid is not provided (#358)
 - archiver traverses multi-part message parts twice (#359)
 - Add unsubscribe button (#362)

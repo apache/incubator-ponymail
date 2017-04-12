@@ -16,6 +16,12 @@
 ]]--
 
 local elastic = require 'lib/elastic'
+local config = require 'lib/config'
+
+-- allow local override of secure cookie attribute
+-- Note: the config item is named to make it more obvious that enabling it is not recommended
+-- This makes the expression below a bit more complicated
+local SECURE = not(config.allow_insecure_cookie or false)
 
 -- Get user data from DB
 local function getUser(r, override)
@@ -82,7 +88,7 @@ local function updateUser(r, cid, data)
     r:setcookie{
         key = "ponymail",
         value = cookie .. "==" .. (cid),
-        secure = true,
+        secure = SECURE,
         httponly = true,
         path = "/"
     }
