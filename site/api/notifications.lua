@@ -27,7 +27,6 @@ local utils = require 'lib/utils'
 
 function handle(r)
     cross.contentType(r, "application/json")
-    local now = r:clock()
     local get = r:parseargs()
     
     -- make sure we're logged in
