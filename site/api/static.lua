@@ -56,10 +56,6 @@ end
 
 function handle(r)
     cross.contentType(r, "text/html")
-    local t = {}
-    local now = r:clock()
-    local tnow = now
-    local get = r:parseargs()
     local pinfo = r.path_info:gsub("^/", "")
     
     r:puts[[<!DOCTYPE html>
