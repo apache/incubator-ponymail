@@ -61,7 +61,6 @@ Parameters: (cookie required)
   - remfav=$list - remove a favourite $list
 ]]--
 function handle(r)
-    local now = r:clock()
     cross.contentType(r, "application/json")
     local now = r:clock()
     local get = r:parseargs()
