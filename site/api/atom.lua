@@ -49,9 +49,6 @@ end
 
 function handle(r)
     cross.contentType(r, "application/xhtml+xml")
-    local t = {}
-    local now = r:clock()
-    local tnow = now
     local get = r:parseargs()
 
     -- make sure we have a list or a thread to display results from
