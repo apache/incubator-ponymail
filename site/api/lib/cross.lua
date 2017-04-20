@@ -27,7 +27,7 @@ end
 
 _M = {}
 
-apr = nil
+local apr = nil
 pcall(function() apr = require 'apr' end)
 
 local function ngstart(handler)
