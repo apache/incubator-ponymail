@@ -518,6 +518,7 @@ local config = {
 --  allow_insecure_cookie = true, -- override the default (false) - only use for test installations 
 --  no_association = {}, -- domains that are not allowed for email association
 --  listsDisplay = 'regex', -- if defined, hide list names that don't match the regex
+--  debug = false, -- whether to return debug information
     antispam = true  -- Whether or not to add anti-spam measures aimed at anonymous users.
 }
 return config
