@@ -25,7 +25,6 @@ local utils = require 'lib/utils'
 
 function handle(r)
     -- content is currently utf-8, see #367
-    -- TODO this may need to be adjusted when #366 is fixed
     cross.contentType(r, "text/plain; charset=utf-8")
     local get = r:parseargs()
     -- get the parameter (if any) and tidy it up
