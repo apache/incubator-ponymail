@@ -112,10 +112,6 @@ function handle(r)
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
-
-    -- Debug time point 4
-      table.insert(t, r:clock() - tnow)
-      tnow = r:clock()
     end
     
     
@@ -153,7 +149,7 @@ function handle(r)
         hits = doc.hits.hits
     end
     
-    -- Debug time point 5
+    -- Debug time point 4
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -214,7 +210,7 @@ function handle(r)
         end
     end
     
-    -- Debug time point 6
+    -- Debug time point 5
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -229,16 +225,10 @@ function handle(r)
     listdata.no_active_lists = nal
     if DEBUG then
       listdata.took = r:clock() - START
+      listdata.debug = t
     end
 
     listdata.activity = activity
-    
-    -- Debug time point 7
-    if DEBUG then
-      table.insert(t, r:clock() - tnow)
-      tnow = r:clock()
-      listdata.debug = t
-    end
     
     local output = JSON.encode(listdata)
     r:ivm_set(PMINFO_CACHE_KEY, output)

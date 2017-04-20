@@ -319,9 +319,7 @@ function handle(r)
         end
     end
 
-    -- Debug time point 3 was for slow_count
-    
-    -- Debug time point 4
+    -- Debug time point 2
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -379,7 +377,7 @@ function handle(r)
             cloud[y.key] = y.doc_count
         end
     end
-    -- Debug time point 5
+    -- Debug time point 3
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -496,7 +494,7 @@ function handle(r)
     datespan.lastYear = tonumber(os.date("%Y", last))
     datespan.lastMonth = tonumber(os.date("%m", last))
     
-    -- Debug time point 6
+    -- Debug time point 4
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -571,7 +569,7 @@ function handle(r)
 
     local h = 0
     
-    -- Debug time point 7
+    -- Debug time point 5
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -710,7 +708,7 @@ function handle(r)
         end
     end
     
-    -- Debug time point 8
+    -- Debug time point 6
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -718,7 +716,7 @@ function handle(r)
 
     sortEmail(threads)
     
-    -- Debug time point 9
+    -- Debug time point 7
     if DEBUG then
       table.insert(t, r:clock() - tnow)
       tnow = r:clock()
@@ -745,18 +743,11 @@ function handle(r)
     listdata.cloud = cloud
     if DEBUG then
       listdata.took = r:clock() - START
+      listdata.debug = t
     end
     listdata.numparts = allparts
     listdata.unixtime = os.time()
     
-    -- Debug time point 9
-    if DEBUG then
-      table.insert(t, r:clock() - tnow)
-      tnow = r:clock()
-    
-      listdata.debug = t
-    end    
-
     r:puts(JSON.encode(listdata))
     
     return cross.OK
