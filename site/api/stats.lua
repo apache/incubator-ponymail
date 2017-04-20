@@ -313,7 +313,7 @@ function handle(r)
         if #doc.hits.hits == 0 then
             r:puts(JSON.encode{
                 changed = false,
-                took = r:clock() - START
+                  took = DEBUG and (r:clock() - START) or nil
             })
             return cross.OK
         end
