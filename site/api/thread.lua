@@ -70,7 +70,8 @@ end
 
 function handle(r)
     cross.contentType(r, "application/json")
-    local now = r:clock()
+    local DEBUG = config.debug or false
+    local START = DEBUG and r:clock() or nil
     local get = r:parseargs()
     -- get the parameter (if any) and tidy it up
     local eid = (get.id or ""):gsub("\"", "")
@@ -110,7 +111,7 @@ function handle(r)
             doc.id = doc.request_id
             --doc.body = nil
             r:puts(JSON.encode({
-                took = r:clock() - now,
+                took = DEBUG and (r:clock() - START) or nil,
                 thread = doc,
                 emails = emls_thrd,
             }))

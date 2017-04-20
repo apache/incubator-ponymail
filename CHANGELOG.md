@@ -145,6 +145,7 @@
 - Bug: source.lua does not specify the charset (#367)
 - Bug: archiver stores attachment binary data types with embedded newlines (#262)
 - Bug: may corrupt 8bit message source if it is not encoded in UTF-8 (#366)
+- Enh: make debug info optional (#369)
 
 ## CHANGES in 0.9b:
 

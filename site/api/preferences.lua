@@ -62,7 +62,8 @@ Parameters: (cookie required)
 ]]--
 function handle(r)
     cross.contentType(r, "application/json")
-    local now = r:clock()
+    local DEBUG = config.debug or false
+    local START = DEBUG and r:clock() or nil
     local get = r:parseargs()
     
     
@@ -403,7 +404,7 @@ Pony Mail - Email for Ponies and People.
             notifications = notifications,
             alternates = alts
         },
-        took = r:clock() - now
+        took = DEBUG and (r:clock() - START) or nil
     })
     
     return cross.OK

@@ -20,12 +20,15 @@
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
 local cross = require 'lib/cross'
+local config = require 'lib/config'
 
 function handle(r)
     cross.contentType(r, "application/json")
+    local DEBUG = config.debug or false
+    -- Cannot define local variables within a conditional block
     local t = {}
-    local now = r:clock()
-    local tnow = now
+    local START = DEBUG and r:clock() or nil
+    local tnow = START
     local DD = 14
     
     local NOWISH = math.floor(os.time() / 1800)
@@ -38,9 +41,11 @@ function handle(r)
     end
 
     -- Debug time point 1
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
-    
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
+
     local daterange = {gt = "now-"..DD.."d", lt = "now+1d" }
     
     -- common query
@@ -92,8 +97,10 @@ function handle(r)
     local no_senders = doc.aggregations.cards.value
     
     -- Debug time point 2
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     local activity = {}
     
@@ -102,12 +109,14 @@ function handle(r)
     end
         
     -- Debug time point 3
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
-        
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+
     -- Debug time point 4
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     
     -- Get threads
@@ -145,8 +154,10 @@ function handle(r)
     end
     
     -- Debug time point 5
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     for k = #hits, 1, -1 do
         local v = hits[k]
@@ -204,8 +215,10 @@ function handle(r)
     end
     
     -- Debug time point 6
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     JSON.encode_max_depth(500)
     local listdata = {}
@@ -214,14 +227,19 @@ function handle(r)
     listdata.hits = total_docs
     listdata.participants = no_senders
     listdata.no_active_lists = nal
-    listdata.took = r:clock() - now
+    if DEBUG then
+      listdata.took = r:clock() - START
+    end
+
     listdata.activity = activity
     
     -- Debug time point 7
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+      listdata.debug = t
+    end
     
-    listdata.debug = t
     local output = JSON.encode(listdata)
     r:ivm_set(PMINFO_CACHE_KEY, output)
     r:puts(output)

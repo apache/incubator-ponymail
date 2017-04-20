@@ -61,9 +61,10 @@ end
 
 function handle(r)
     cross.contentType(r, "application/json")
+    local DEBUG = config.debug or false
     local t = {}
-    local now = r:clock()
-    local tnow = now
+    local START = DEBUG and r:clock() or nil
+    local tnow = START
     local get = r:parseargs()
     -- statsOnly: Whether to only send statistical info (for n-grams etc), and not the
     -- thread struct and message bodies
@@ -162,8 +163,10 @@ function handle(r)
     end
     
     -- Debug time point 1
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     local daterange = {gt = "now-1M", lte = "now+1d" }
     -- Param: dfrom=.*ddd (days ago to start)
@@ -310,7 +313,7 @@ function handle(r)
         if #doc.hits.hits == 0 then
             r:puts(JSON.encode{
                 changed = false,
-                took = r:clock() - tnow
+                took = r:clock() - START
             })
             return cross.OK
         end
@@ -319,8 +322,11 @@ function handle(r)
     -- Debug time point 3 was for slow_count
     
     -- Debug time point 4
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
+
     local cloud = nil
     if config.wordcloud and not statsOnly then
         cloud = {}
@@ -374,8 +380,10 @@ function handle(r)
         end
     end
     -- Debug time point 5
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     -- Get years active
     local NOWISH = math.floor(os.time()/600)
@@ -489,8 +497,10 @@ function handle(r)
     datespan.lastMonth = tonumber(os.date("%m", last))
     
     -- Debug time point 6
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
 
     -- Get threads
     local threads = {}
@@ -562,8 +572,10 @@ function handle(r)
     local h = 0
     
     -- Debug time point 7
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
     
     
     for k = #dhh, 1, -1 do
@@ -699,13 +711,19 @@ function handle(r)
     end
     
     -- Debug time point 8
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
+
     sortEmail(threads)
     
     -- Debug time point 9
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
+    end
+
     if JSON.encode_max_depth then
         JSON.encode_max_depth(500)
     end
@@ -725,16 +743,20 @@ function handle(r)
     listdata.searchlist = listraw
     listdata.participants = top10
     listdata.cloud = cloud
-    listdata.took = r:clock() - now
+    if DEBUG then
+      listdata.took = r:clock() - START
+    end
     listdata.numparts = allparts
     listdata.unixtime = os.time()
     
     -- Debug time point 9
-    table.insert(t, r:clock() - tnow)
-    tnow = r:clock()
+    if DEBUG then
+      table.insert(t, r:clock() - tnow)
+      tnow = r:clock()
     
-    listdata.debug = t
-    
+      listdata.debug = t
+    end    
+
     r:puts(JSON.encode(listdata))
     
     return cross.OK
