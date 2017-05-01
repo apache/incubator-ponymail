@@ -184,7 +184,7 @@ class SlurpThread(Thread):
             stime = time.time()
             dFile = False
             if maildir:
-                messages = mailbox.Maildir(tmpname)
+                messages = mailbox.Maildir(tmpname, create=False)
             elif imap:
                 imap4 = mla[2]
                 def mailgen(list):
@@ -214,7 +214,7 @@ class SlurpThread(Thread):
                     except Exception as err:
                         self.printid("This wasn't a gzip file: %s" % err )
                 self.printid("Slurping %s" % filename)
-                messages = mailbox.mbox(tmpname, MboxoFactory)
+                messages = mailbox.mbox(tmpname, MboxoFactory, create=False)
 
             else:
                 ml = mla[0]
@@ -233,7 +233,7 @@ class SlurpThread(Thread):
                 with open(tmpname, "w") as f:
                     f.write(inp)
                     f.close()
-                messages = mailbox.mbox(tmpname)
+                messages = mailbox.mbox(tmpname, create=False)
 
             count = 0
             bad = 0

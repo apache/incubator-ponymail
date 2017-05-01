@@ -146,6 +146,7 @@
 - Bug: archiver stores attachment binary data types with embedded newlines (#262)
 - Bug: may corrupt 8bit message source if it is not encoded in UTF-8 (#366)
 - Enh: make debug info optional (#369)
+- import-mbox.py: mailbox defaults to Create if file is not found (#370)
 
 ## CHANGES in 0.9b:
 
