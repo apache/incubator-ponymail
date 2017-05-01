@@ -233,7 +233,7 @@ class SlurpThread(Thread):
                 with open(tmpname, "w") as f:
                     f.write(inp)
                     f.close()
-                messages = mailbox.mbox(tmpname, create=False)
+                messages = mailbox.mbox(tmpname, MboxoFactory, create=False)
 
             count = 0
             bad = 0
