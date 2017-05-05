@@ -23,18 +23,6 @@ local user = require 'lib/user'
 local cross = require 'lib/cross'
 local utils = require 'lib/utils'
 
-function is_base64(msg)
-   -- base64 is always a multiple of 4
-   if #msg % 4 == 0 then
-      -- base64 only has a-zA-Z0-9+=/ in it
-      if not msg:match("([^a-zA-Z0-9+=/])") then
-         -- very likely base64 :)
-         return true
-      end
-   end
-   return false
-end
-
 function handle(r)
     -- content is currently utf-8, see #367
     cross.contentType(r, "text/plain; charset=utf-8")
@@ -58,10 +46,6 @@ function handle(r)
         if aaa.canAccessDoc(r, doc, account) then
             local doc_raw = elastic.get('mbox_source', doc.request_id)
             if doc_raw then
-                -- If this could be base64, try to convert it.
-                if is_base64(doc_raw.source) then
-                    pcall(function() doc_raw.source = r:base64_decode(doc_raw.source) end)
-                end
                 r:puts(doc_raw.source)
             else
                 r:puts("Could not find the email source, sorry!")
