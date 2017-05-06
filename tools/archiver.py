@@ -565,6 +565,7 @@ if __name__ == '__main__':
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     else:
         # elasticsearch logs lots of warnings on retries/connection failure
+        # Also eliminates: 'Undecodable raw error response from server:' warning message
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
         
