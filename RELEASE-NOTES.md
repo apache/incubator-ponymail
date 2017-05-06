@@ -44,7 +44,20 @@ This was done to simplify subsequent releases.
 - setup.py now sets up all mappings
 - stored dates are now all in UTC
 - API modules no longer return unnecessary data, reducing network traffic
- 
+
+### Potentially incompatible changes ###
+
+- mbox_source messages are now stored as base64 encoded text if they cannot be stored as ASCII
+  See #366. 
+  This only affects the backend database contents, as the data is decoded as necessary on fetch.
+  
+- the archiver and importer now generate the same MID for identical messages
+  In version 0.9, the archiver and importer could generate different MIDs for the same message.
+  This has been fixed, however it means that messages archived with 0.9 may have a different MID from
+  the same message archived - or imported - with 0.10.
+  Messages imported with 0.10 will have the same MID as messages imported with 0.9
+  It is only the 0.9 archiver that could generate different MIDs.
+
 ### Restrictions/Known bugs ###
  
  ------
