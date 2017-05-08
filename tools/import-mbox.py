@@ -275,12 +275,13 @@ class SlurpThread(Thread):
                     bad += 1
                     continue
 
-                # If --dedup is active, try to filter out any messages that already exist
+                # If --dedup is active, try to filter out any messages that already exist on the list
                 if json and dedup and message.get('message-id', None):
                     res = es.search(
                         index=dbname,
                         doc_type="mbox",
                         size = 1,
+                        _source = ['mid'], # so can report the match source
                         body = {
                             'query': {
                                 'bool': {
@@ -289,14 +290,19 @@ class SlurpThread(Thread):
                                             'term': {
                                                 'message-id': message.get('message-id', None)
                                             }
+                                        },
+                                        {
+                                            'term': {
+                                                'list_raw': json['list']
+                                            }                                                 
                                         }
                                     ]
                                 }
                             }
                         }
                     )
-                    if res and len(res['hits']['hits']) > 0:
-                        self.printid("Dedupping %s" % json['message-id'])
+                    if res and res['hits']['total'] > 0:
+                        self.printid("Dedupping %s - matched in %s" % (json['message-id'], res['hits']['hits'][0]['_source']['mid']))
                         dedupped += 1
                         continue
 
