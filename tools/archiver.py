@@ -240,7 +240,7 @@ class Archiver(object):
                 
         return body    
 
-    def compute_updates(self, lid, private, msg):
+    def compute_updates(self, lid, private, msg, default_invalid_date_to_now=True):
         """Determine what needs to be sent to the archiver.
 
         :param lid: The list id
@@ -288,9 +288,12 @@ class Archiver(object):
         if not mdate and msg_metadata.get('archived-at'):
             mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
         elif not mdate:
-            print("Date (%s) seems totally wrong, setting to _now_ instead." % mdate)
-            mdate = time.gmtime() # Get a standard 9-tuple
-            mdate = mdate + (0, ) # Fake a TZ (10th element)
+            if default_invalid_date_to_now:
+                print("Date (%s) seems totally wrong, setting to _now_ instead." % mdate)
+                mdate = time.gmtime() # Get a standard 9-tuple
+                mdate = mdate + (0, ) # Fake a TZ (10th element)
+            else:
+                print("Date (%s) seems totally wrong, TODO: figure out what to do now" % mdate)
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
