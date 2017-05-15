@@ -69,7 +69,7 @@ rootURL = ""
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source list to edit')
-parser.add_argument('--rename', dest='target', type=str, nargs=1,
+parser.add_argument('--target', dest='target', type=str, nargs=1,
                    help='(optional) new list ID')
 parser.add_argument('--newdb', dest='newdb', type=str, nargs=1,
                    help='(optional) new ES database name')
