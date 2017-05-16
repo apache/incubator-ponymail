@@ -167,7 +167,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "<div style='width: 64px; float: left;'>" +
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
-                    "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ (eml.body||json[i].body).replace(/</g, "&lt;") + "<br/>" +
+                    "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ (eml.body||json[i].body||'').replace(/</g, "&lt;") + "<br/>" +
                     "<a class='label label-info' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
@@ -179,7 +179,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         else if (prefs.theme && prefs.theme == "compact") {
             var from = eml.from.replace(/<.*>/, "").length > 0 ? eml.from.replace(/<.*>/, "") : eml.from.replace(/[<>]+/g, "")
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
-            var sbody = (eml.body||json[i].body).replace(/</g, "&lt;") + "&nbsp;"
+            var sbody = (eml.body||json[i].body||'').replace(/</g, "&lt;") + "&nbsp;"
             
             nest += "<li class='list-group-item'>" +
                     
