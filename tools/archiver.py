@@ -58,6 +58,7 @@ import io
 import logging
 import traceback
 import sys
+import generators
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -316,20 +317,14 @@ class Archiver(object):
         if body is not None or attachments:
             pmid = mid
             try:
-                # Use full message as bytes for mid?
                 if archiver_generator == "full":
-                    mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
+                    mid = generators.full(msg, body, lid, attachments)
                 elif archiver_generator == "medium":
-                    xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
-                    xbody += bytes(lid, encoding='ascii')
-                    xbody += bytes(mdatestring, encoding='ascii')
-                    mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
-                    if attachments:
-                        for a in attachments:
-                            xbody += bytes(a['hash'], encoding = 'ascii')
+                    mid = generators.medium(msg, body, lid, attachments)
+                elif archiver_generator == "redundant":
+                    mid = generators.redundant(msg, body, lid, attachments)
                 else:
-                    # Or revert to the old way?
-                    mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
+                    mid = generators.legacy(msg, body, lid, attachments)
             except Exception as err:
                 if logger:
                     logger.warn("Could not generate MID: %s" % err)
