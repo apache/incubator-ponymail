@@ -94,6 +94,7 @@ dbname = ""
 mlserver = ""
 mldom = ""
 wc = ""
+genname = ""
 wce = False
 shards = 0
 replicas = -1
@@ -154,6 +155,20 @@ while wc == "":
     if wc.lower() == "y":
         wce = True
 
+while genname == "":
+    gens = ['legacy', 'medium', 'redundant', 'full']
+    print ("Please select a document ID generator:")
+    print("1  LEGACY: The original document generator for v/0.1-0.8 (no longer recommended)")
+    print("2  MEDIUM: The medium comprehensive generator for v/0.9 (no longer recommended)")
+    print("3  REDUNDANT: Near-full message digest, discard MTA trail (recommended for clustered setups)")
+    print("4  FULL: Full message digest with MTA trail (recommended for single-node setups).")
+    try:
+        gno = int(input("Please select a generator [1-4]: "))
+        if gno <= len(gens) and gens[gno-1]:
+            genname = gens[gno-1]
+    except ValueError:
+        pass
+    
 while shards < 1:
     try:
         shards = int(input("How many shards for the ElasticSearch index? "))
@@ -475,14 +490,14 @@ ssl:                    false
 #backup:                database name
 
 [archiver]
-#generator:             medium|full|other
+generator:              %s
 
 [debug]
 #cropout:               string to crop from list-id
 
 ###############################################################
             """ % (hostname, dbname, port, 
-                   'wait:                  active shard count' if ES_MAJOR == 5 else 'write:                 consistency level (default quorum)'))
+                   'wait:                  active shard count' if ES_MAJOR == 5 else 'write:                 consistency level (default quorum)', genname))
     f.close()
 
 config_path = "../site/api/lib"
