@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- more comprehensive ID generation mechanisms
 - private messages are now included in downloads if the user has access to them (#169, #108)
 - mbox export now generates valid From_ line (#190)
 - mbox export now escapes 'From ' lines in body text (#188)

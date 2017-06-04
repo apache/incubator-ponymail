@@ -324,6 +324,9 @@ class Archiver(object):
                     xbody += bytes(lid, encoding='ascii')
                     xbody += bytes(mdatestring, encoding='ascii')
                     mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
+                    if attachments:
+                        for a in attachments:
+                            xbody += bytes(a['hash'], encoding = 'ascii')
                 else:
                     # Or revert to the old way?
                     mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
