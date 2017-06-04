@@ -152,6 +152,7 @@
 - Enh: make debug info optional (#369)
 - import-mbox.py: mailbox defaults to Create if file is not found (#370)
 - Bug: import --dedup does not cater for messages sent to multiple lists (#373)
+- Confusing parameter name (--rename) in copy-list.py (#207)
 
 ## CHANGES in 0.9b:
 

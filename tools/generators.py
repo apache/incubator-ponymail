@@ -22,7 +22,7 @@ This file contains the various ID generators for Pony Mail's archivers.
 import hashlib
 import email.utils
 
-# Full generator: uses the entire email (including sever-depenent data)
+# Full generator: uses the entire email (including server-dependent data)
 # This is the recommended generator for single-node setups.
 def full(msg, body, lid, attachments):
     mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
