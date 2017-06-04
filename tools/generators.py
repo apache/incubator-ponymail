@@ -65,8 +65,12 @@ def redundant(msg, body, lid, attachments):
 
 # Old school way of making IDs
 def legacy(msg, body, lid, attachments):
-    mdate = email.utils.parsedate_tz(msg.get('date'))
-    uid_mdate = email.utils.mktime_tz(mdate) # Only set if Date header is valid
+    uid_mdate = 0 # Default if no date found
+    try:
+        mdate = email.utils.parsedate_tz(msg.get('date'))
+        uid_mdate = email.utils.mktime_tz(mdate) # Only set if Date header is valid
+    except:
+        pass
     mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
     return mid
 
