@@ -81,6 +81,8 @@ parser.add_argument('--noindex', dest='noi', action='store_true',
                    help="Don't make an ES index, assume it exists")
 parser.add_argument('--nocloud', dest='nwc', action='store_true', 
                    help='Do not enable word cloud')
+parser.add_argument('--generator', dest='generator', type=str, nargs=1,
+                   help='Document ID Generator to use (legacy, medium, redundant, full)')
 args = parser.parse_args()    
 
 print("Welcome to the Pony Mail setup script!")
@@ -111,6 +113,7 @@ if args.defaults:
     wce = True
     shards = 1
     replicas = 0
+    genname = "redundant"
 
 # Accept CLI args, copy them
 if args.dbhost:
@@ -131,6 +134,8 @@ if args.dbshards:
     shards = args.dbshards[0]
 if args.dbreplicas:
     replicas = args.dbreplicas[0]
+if args.generator:
+    genname = args.generator[0]
     
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
