@@ -567,8 +567,6 @@ function handle(r)
         dhh = doc.hits.hits
     end
 
-    local h = 0
-    
     -- Debug time point 5
     if DEBUG then
       table.insert(t, r:clock() - tnow)
@@ -580,8 +578,6 @@ function handle(r)
         local v = dhh[k]
         local email = v._source
         if aaa.canAccessDoc(r, email, account) then
-
-            h = h + 1
 
             local eml = utils.extractCanonEmail(email.from)
             local gravatar = r:md5(eml:lower())
@@ -737,7 +733,7 @@ function handle(r)
     listdata.lastMonth = datespan.lastMonth
     listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")
     listdata.emails = emls
-    listdata.hits = h
+    listdata.hits = #emls
     listdata.searchlist = listraw
     listdata.participants = top10
     listdata.cloud = cloud
