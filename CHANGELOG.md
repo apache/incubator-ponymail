@@ -1,4 +1,6 @@
 ## CHANGES in 0.10:
+- Added sample configs for Pony Mail (#374)
+- Renamed ll.py to list-lists.py (#378)
 - ID generators have now been split into a separate library (generators.py)
 - more comprehensive ID generation mechanisms
 - private messages are now included in downloads if the user has access to them (#169, #108)
