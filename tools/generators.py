@@ -26,12 +26,34 @@ import time
 # Full generator: uses the entire email (including server-dependent data)
 # This is the recommended generator for single-node setups.
 def full(msg, body, lid, attachments):
+    """
+    Full generator: uses the entire email
+    (including server-dependent data)
+    The id is almost certainly unique,
+    but different copies of the message are likely to have different headers, thus ids
+    
+    Parameters:
+    msg - the parsed message
+    body - the parsed text content (not used)
+    lid - list id
+    attachments - list of attachments (not used)
+    """
     mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
     return mid
 
 # Medium: Standard 0.9 generator - Not recommended for future installations.
 # See 'full' or 'redundant' generators instead.
 def medium(msg, body, lid, attachments):
+    """
+    Standard 0.9 generator - Not recommended for future installations.
+    (does not generate sufficiently unique ids)
+    
+    Parameters:
+    msg - the parsed message (used to get the date)
+    body - the parsed text content
+    lid - list id
+    attachments - list of attachments (not used)
+    """
     # Use text body
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
     # Use List ID
@@ -61,6 +83,16 @@ def medium(msg, body, lid, attachments):
 # Unlike 'medium', this only makes use of the Date: header and not the archived-at,
 # as the archived-at may change from node to node (and will change if not in the raw mbox file)
 def redundant(msg, body, lid, attachments):
+    """
+    Use data that is guaranteed to be the same across redundant setups
+    (does not guarantee to create unique ids)
+    
+    Parameters:
+    msg - the parsed message (used to get the date)
+    body - the parsed text content
+    lid - list id
+    attachments - list of attachments (uses the hashes)
+    """
     # Use text body
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
     # Use List ID
@@ -92,6 +124,16 @@ def redundant(msg, body, lid, attachments):
 
 # Old school way of making IDs
 def legacy(msg, body, lid, attachments):
+    """
+    Original generator - DO NOT USE
+    (does not generate unique ids)
+    
+    Parameters:
+    msg - the parsed message (used to get the date)
+    body - the parsed text content
+    lid - list id
+    attachments - list of attachments (not used)
+    """
     uid_mdate = 0 # Default if no date found
     try:
         mdate = email.utils.parsedate_tz(msg.get('date'))
@@ -100,6 +142,3 @@ def legacy(msg, body, lid, attachments):
         pass
     mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
     return mid
-
-
-    
