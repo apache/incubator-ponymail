@@ -445,6 +445,19 @@ def createIndex():
               "index" : "not_analyzed"
             }
           }
+        },
+        "mailinglists" : {
+          "properties" : {
+            "list" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "description" : {
+              "type" : "string"
+            }
+          }
         }
     }
  
