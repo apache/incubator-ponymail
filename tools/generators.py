@@ -46,8 +46,8 @@ def medium(msg, body, lid, attachments):
     # For all intents and purposes, this is not a proper way of maintaining
     # a consistent ID in case of missing dates. It is recommended to use
     # another generator such as full or redundant here.
-    if not mdate and msg_metadata.get('archived-at'):
-        mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
+    if not mdate and msg.get('archived-at'):
+        mdate = email.utils.parsedate_tz(msg.get('archived-at'))
     elif not mdate:
         mdate = time.gmtime() # Get a standard 9-tuple
         mdate = mdate + (0, ) # Fake a TZ (10th element)
