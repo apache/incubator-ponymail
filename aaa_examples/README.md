@@ -2,16 +2,17 @@
 This directory contains example AAA (Authentication, Authorization and Access)
 libraries for various use cases. 
 
-To activate one of these scripts (or derivatives thereof), simply replace 
-`site/api/lib/aaa.lua` with the AAA script of your choice.
+To activate one of these scripts (or derivatives thereof), simply copy the appropriate
+AAA script to `site/api/lib/aaa_site.lua`.
+This will then be used by the main aaa.lua script.
 
-These script will require that
+These scripts require that
 `site/api/lib/config.lua` has one or more OAuth providers specified as
 authorities, as such:
 
 ~~~
 ...,
--- This Google OAuth as an authority
+-- Use Google OAuth as an authority
 admin_oauth = { "www.googleapis.com" }
 ...
 ~~~
