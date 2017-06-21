@@ -230,14 +230,24 @@ def read_version(path):
   version_props_file = os.path.join(path, 'lucene', 'version.properties')
   return re.search(r'version\.base=(.*)', open(version_props_file).read()).group(1)
 
-def parse_config():
+def parse_config(ponymail):
   epilogue = textwrap.dedent('''
     Example usage for a Release Manager:
     python3 -u dev-tools/scripts/buildAndPushRelease.py --push-local /tmp/releases/6.0.1 --sign 6E68DA61 --rc-num 1
   ''')
+  if ponymail:
+    epilogue = textwrap.dedent('''
+      Example usage for a Release Manager:
+      python3 -u dev-tools/scripts/buildAndPushRelease.py 0.10
+    ''')
   description = 'Utility to build, push, and test a release.'
   parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                    formatter_class=argparse.RawDescriptionHelpFormatter)
+
+  if ponymail:
+    parser.add_argument('version', type=str)
+    return parser.parse_args()
+
   parser.add_argument('--no-prepare', dest='prepare', default=True, action='store_false',
                       help='Use the already built release in the provided checkout')
   parser.add_argument('--push-local', metavar='PATH',
@@ -288,7 +298,39 @@ def check_cmdline_tools():  # Fail fast if there are cmdline tool problems
 def main():
   check_cmdline_tools()
 
-  c = parse_config()
+  ponymail = True
+  c = parse_config(ponymail)
+
+  if ponymail:
+
+    project = 'ponymail'
+    base_branch_name = 'master'
+    release_branch_name = c.version
+    git_archive_format = 'tar.gz'
+    tarball_name = '~/'+project+'-'+release_branch_name+'.'+git_archive_format
+    tarball_name_sha256 = tarball_name + '.sha256'
+    tarball_name_sha256_asc = tarball_name_sha256 + '.asc'
+    tarball_name_asc = tarball_name + '.asc'
+
+    print('Create a new branch off '+base_branch_name+' called '+release_branch_name+' (ideally, '+base_branch_name+' is always releasable).')
+    print('  git checkout -b '+release_branch_name+' '+base_branch_name)
+
+    print('Tarball the '+release_branch_name+' branch, sans the .git directory:')
+    print('  git archive --format='+git_archive_format+' -o '+tarball_name+' HEAD')
+
+    print('Create checksums of the archive (make sure your PGP key is in our KEYS file!):')
+
+    print('  Make a checksum for the archive itself:')
+    print('    sha256sum '+tarball_name+' > '+tarball_name_sha256)
+
+    print('  Sign the archive:')
+    print('    gpg --output '+tarball_name_asc+' --sign '+tarball_name)
+    print('  OR')
+    print('    gpg --output '+tarball_name_sha256_asc+' --sign '+tarball_name_sha256)
+
+    print('Push the artefacts to https://dist.apache.org/repos/dist/dev/incubator/ponymail/ via subversion')
+    print('  svn ???')
+    return
 
   if c.prepare:
     rev = prepare(c.root, c.version, c.key_id, c.key_password)
