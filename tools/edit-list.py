@@ -66,7 +66,7 @@ source_group.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source list to edit')
 source_group.add_argument('--mid', dest='mid', type=str, nargs=1,
                    help='Source Message-ID to edit')
-parser.add_argument('--rename', dest='target', type=str, nargs=1,
+parser.add_argument('--target', dest='target', type=str, nargs=1,
                    help='(optional) new list ID')
 parser.add_argument('--desc', dest='desc', type=str, nargs=1,
                    help='(optional) new list description')
@@ -125,7 +125,7 @@ if anyChange and deleteEmails:
     parser.print_help()
     sys.exit(-1)
 
-# TODO does it make sense to allow --rename with --mid?
+# TODO does it make sense to allow --target with --mid?
 # i.e. rename the list for a single mid?
 
 if sourceLID:
