@@ -153,6 +153,7 @@
 - import-mbox.py: mailbox defaults to Create if file is not found (#370)
 - Bug: import --dedup does not cater for messages sent to multiple lists (#373)
 - Confusing parameter name (--rename) in copy-list.py (#207)
+- Fix base64 decoding of certain files (#384)
 
 ## CHANGES in 0.9b:
 
