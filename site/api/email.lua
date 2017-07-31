@@ -24,6 +24,7 @@ local user = require 'lib/user'
 local cross = require 'lib/cross'
 local config = require 'lib/config'
 local utils = require 'lib/utils'
+local mime = require "mime"
 
 function handle(r)
     cross.contentType(r, "application/json")
@@ -65,7 +66,7 @@ function handle(r)
                 local hash = r:escape(get.file)
                 local fdoc = elastic.get("attachment", hash)
                 if fdoc and fdoc.source then
-                    local out = r:base64_decode(fdoc.source:gsub("\n", "")) -- bug in mod_lua?
+                    local out = mime.unb64(fdoc.source)
                     local ct = "application/binary"
                     local fn = "unknown"
                     local fs = 0
