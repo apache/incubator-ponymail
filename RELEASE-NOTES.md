@@ -36,10 +36,10 @@ This was done to simplify subsequent releases.
 
 - private messages are now included in archive downloads if the user has access to them
 - various improvements to the archiver/importer:
- - better handling of encodings, including attachment names
- - handles more attachment types
- - handles more text types
- - can import individual mbox files
+  - better handling of encodings, including attachment names
+  - handles more attachment types
+  - handles more text types
+  - can import individual mbox files
 - better error handling when communicating with the ES server
 - setup.py now sets up all mappings
 - stored dates are now all in UTC
