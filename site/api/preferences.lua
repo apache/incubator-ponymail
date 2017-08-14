@@ -253,7 +253,7 @@ Pony Mail - Email for Ponies and People.
         -- ensure it's here....
         for k, v in pairs(favs) do
             if v == rem then
-                favs[k] = nil
+                table.remove(favs, k)
                 break
             end
         end

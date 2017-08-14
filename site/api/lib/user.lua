@@ -17,6 +17,7 @@
 
 local elastic = require 'lib/elastic'
 local config = require 'lib/config'
+local JSON = require 'cjson'
 
 -- allow local override of secure cookie attribute
 -- Note: the config item is named to make it more obvious that enabling it is not recommended
@@ -32,6 +33,18 @@ local function getUser(r, override)
         if override or (cookie and #cookie >= 40 and cid) then
             local js = elastic.get('account', r:sha1(override or cid), true)
             if js and js.credentials and (override or (cookie == js.internal.cookie)) then
+                
+                -- Issue #392: favorites may contain null entries, cull them.
+                if type(js.favorites) == "table" then
+                    local jsfav = {}
+                    for k, v in pairs(js.favorites) do
+                        if v and v ~= JSON.null then
+                            table.insert(jsfav, v)
+                        end
+                    end
+                    js.favorites = jsfav
+                end
+                
                 login = {
                     credentials = {
                         email = js.credentials.email,
