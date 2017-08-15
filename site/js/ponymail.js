@@ -4310,7 +4310,9 @@ function seedDomains(json) {
     if (login && login.favorites && login.favorites.length > 0) {
         domlist['★'] = []
         for (mli in login.favorites) {
-            domlist['★'].push(login.favorites[mli])
+            if (mli != null) { // #392: ensure the list exists
+                domlist['★'].push(login.favorites[mli])
+            }
         }
     }
     var po = document.createElement("div")
@@ -5313,14 +5315,16 @@ function setupUser() {
         li.appendChild(ul)
         for (var i in login.favorites) {
             var l = login.favorites[i]
-            var sli = document.createElement('li')
-            sli.setAttribute("class", "pull-left")
-            var st = document.createTextNode(l)
-            var sa = document.createElement('a')
-            sa.setAttribute("href", "list.html?" + l)
-            sa.appendChild(st)
-            sli.appendChild(sa)
-            ul.appendChild(sli)
+            if (l != null) {
+                var sli = document.createElement('li')
+                sli.setAttribute("class", "pull-left")
+                var st = document.createTextNode(l)
+                var sa = document.createElement('a')
+                sa.setAttribute("href", "list.html?" + l)
+                sa.appendChild(st)
+                sli.appendChild(sa)
+                ul.appendChild(sli)
+            }
         }
         
         pd.appendChild(li)
