@@ -34,17 +34,6 @@ local function getUser(r, override)
             local js = elastic.get('account', r:sha1(override or cid), true)
             if js and js.credentials and (override or (cookie == js.internal.cookie)) then
                 
-                -- Issue #392: favorites may contain null entries, cull them.
-                if type(js.favorites) == "table" then
-                    local jsfav = {}
-                    for k, v in pairs(js.favorites) do
-                        if v and v ~= JSON.null then
-                            table.insert(jsfav, v)
-                        end
-                    end
-                    js.favorites = jsfav
-                end
-                
                 login = {
                     credentials = {
                         email = js.credentials.email,
