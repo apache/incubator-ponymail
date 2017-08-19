@@ -266,7 +266,8 @@ def createIndex():
               "index" : "not_analyzed"
             },
             "in-reply-to" : {
-              "type" : "string"
+              "type" : "string",
+              "index" : "not_analyzed"
             },
             "list" : {
               "type" : "string"
