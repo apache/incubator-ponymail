@@ -4,6 +4,23 @@ Release Notes
 
 ## Version 0.10 (TBA) ##
 
+### Fixing null favorite entries ###
+
+There was a bug in the preferences API that could result in one or more null entries
+being added to the favorite mailing lists for an account. This would prevent the '*' tab from displaying.
+The bug has been fixed which will prevent further nulls from being created.
+There is a script - tools/nullfav.py - which can be used to clean up the favorites.
+Run as follows:
+
+$ python3 nullfav.py # list affected accounts
+
+If there are any, then:
+
+$ python3 nullfav.py --apply # apply changes to affected accounts
+
+If the database is busy it's possible that some accounts may fail to update.
+If so, just run the script again.
+
 ### Change to AAA ###
 
 Pony Mail now has two AAA modules:
