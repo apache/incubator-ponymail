@@ -111,9 +111,7 @@ function seedDomains(json) {
     if (login && login.favorites && login.favorites.length > 0) {
         domlist['★'] = []
         for (mli in login.favorites) {
-            if (mli != null) { // #392: ensure the list exists
-                domlist['★'].push(login.favorites[mli])
-            }
+            domlist['★'].push(login.favorites[mli])
         }
     }
     var po = document.createElement("div")
