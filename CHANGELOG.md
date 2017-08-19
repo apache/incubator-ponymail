@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Fixed an issue with ID generation where an email body does not exist
 - Fixed an issue where favorites could contain null entries due to missing GC (#392)
 - Added sample configs for Pony Mail (#374)
 - Renamed ll.py to list-lists.py (#378)

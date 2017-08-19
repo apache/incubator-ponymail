@@ -55,6 +55,8 @@ def medium(msg, body, lid, attachments):
     attachments - list of attachments (not used)
     """
     # Use text body
+    if not body: # Make sure body is not None, which will fail.
+        body = ""
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
     # Use List ID
     xbody += bytes(lid, encoding='ascii')
@@ -94,6 +96,8 @@ def redundant(msg, body, lid, attachments):
     attachments - list of attachments (uses the hashes)
     """
     # Use text body
+    if not body: # Make sure body is not None, which will fail.
+        body = ""
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
     # Use List ID
     xbody += bytes(lid, encoding='ascii')
