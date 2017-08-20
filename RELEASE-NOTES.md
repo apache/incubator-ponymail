@@ -21,6 +21,12 @@ $ python3 nullfav.py --apply # apply changes to affected accounts
 If the database is busy it's possible that some accounts may fail to update.
 If so, just run the script again.
 
+To confirm that all the accounts have been fixed, run the script again:
+
+$ python3 nullfav.py
+
+Once this has been done, there should be no need to run the script again.
+
 ### Change to AAA ###
 
 Pony Mail now has two AAA modules:
