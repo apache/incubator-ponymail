@@ -201,7 +201,7 @@ class SlurpThread(Thread):
                     try:
                         with open(filename, "rb") as bf:
                             bmd = bf.read()
-                            bf.close()
+                            bf.close() # explicit early close
                             bmd = gzip.decompress(bmd)
                             tmpfile = tempfile.NamedTemporaryFile(mode='w+b', buffering=1, delete=False)
                             tmpfile.write(bmd)
@@ -232,7 +232,6 @@ class SlurpThread(Thread):
                 tmpname = hashlib.sha224(("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile)).encode('utf-8') ).hexdigest()
                 with open(tmpname, "w") as f:
                     f.write(inp)
-                    f.close()
                 messages = mailbox.mbox(tmpname, MboxoFactory, create=False)
 
             count = 0
