@@ -504,7 +504,6 @@ generator:              %s
 ###############################################################
             """ % (hostname, dbname, port, 
                    'wait:                  active shard count' if ES_MAJOR == 5 else 'write:                 consistency level (default quorum)', genname))
-    f.close()
 
 config_path = "../site/api/lib"
 config_file = "config.lua"
@@ -544,7 +543,6 @@ local config = {
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
-    f.close()
     
 print("Copying sample JS config to config.js (if needed)...")
 if not os.path.exists("../site/js/config.js") and os.path.exists("../site/js/config.js.sample"):

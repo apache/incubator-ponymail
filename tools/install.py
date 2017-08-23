@@ -65,7 +65,6 @@ if dname == 'ubuntu' or dname == 'debian':
     LuaCodeCache    stat
     AcceptPathInfo  On
 </VirtualHost>""")
-        f.close()
     
     if dname == 'ubuntu' and dver == '14.04':
         print("Ubuntu 14.04 specific step; Compiling mod_lua")
