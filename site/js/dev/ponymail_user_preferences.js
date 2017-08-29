@@ -218,16 +218,14 @@ function setupUser() {
         li.appendChild(ul)
         for (var i in login.favorites) {
             var l = login.favorites[i]
-            if (l != null) {
-                var sli = document.createElement('li')
-                sli.setAttribute("class", "pull-left")
-                var st = document.createTextNode(l)
-                var sa = document.createElement('a')
-                sa.setAttribute("href", "list.html?" + l)
-                sa.appendChild(st)
-                sli.appendChild(sa)
-                ul.appendChild(sli)
-            }
+            var sli = document.createElement('li')
+            sli.setAttribute("class", "pull-left")
+            var st = document.createTextNode(l)
+            var sa = document.createElement('a')
+            sa.setAttribute("href", "list.html?" + l)
+            sa.appendChild(st)
+            sli.appendChild(sa)
+            ul.appendChild(sli)
         }
         
         pd.appendChild(li)

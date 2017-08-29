@@ -53,7 +53,6 @@ subscribe
                 with open("%s/wrapper.log" % path, "a") as f:
                     f.write("%s - %s: %s\n" % (msg.get('to'), msg.get('reply-to'), msg.get('subject')))
                     f.write("We've got a subscription request for %s. \n" % msg.get('reply-to'))
-                    f.close()
                 
                 smtpObj = smtplib.SMTP('localhost')
                 smtpObj.sendmail(sys.argv[1], [msg.get('reply-to')], """From: %s
@@ -71,5 +70,4 @@ Subject: %s
                     print(p.communicate(input=msg.as_string().encode('utf-8')))
                     p.stdin.close()
                     f.write("-----\n")
-                    f.close()
             

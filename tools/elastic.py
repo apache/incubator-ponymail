@@ -77,6 +77,12 @@ class Elastic:
             **kwargs
         )
     
+    def update(self, **kwargs):
+        return self.es.update(
+            index=self.dbname,
+            **kwargs
+        )
+
     def scan(self, doc_type='mbox', scroll='3m', size = 100, **kwargs):
         return self.es.search(
             index=self.dbname,
