@@ -61,11 +61,7 @@ def medium(msg, body, lid, attachments):
     # Use List ID
     xbody += bytes(lid, encoding='ascii')
     # Use Date header
-    mdate = None
-    try:
-        mdate = email.utils.parsedate_tz(msg.get('date'))
-    except:
-        pass
+    mdate = email.utils.parsedate_tz(msg.get('date'))
     # In keeping with preserving the past, we have kept this next section(s).
     # For all intents and purposes, this is not a proper way of maintaining
     # a consistent ID in case of missing dates. It is recommended to use
