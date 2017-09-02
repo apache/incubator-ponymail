@@ -22,6 +22,7 @@ This file contains the various ID generators for Pony Mail's archivers.
 import hashlib
 import email.utils
 import time
+import re
 
 # Full generator: uses the entire email (including server-dependent data)
 # This is the recommended generator for single-node setups.
@@ -95,8 +96,13 @@ def redundant(msg, body, lid, attachments):
     if not body: # Make sure body is not None, which will fail.
         body = ""
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
+    
+    # Crop out any trailing whitespace in body
+    xbody = re.sub(b"\s+$", b"", xbody)
+    
     # Use List ID
     xbody += bytes(lid, encoding='ascii')
+    
     # Use Date header. Don't use archived-at, as the archiver sets this if not present.
     mdate = None
     mdatestring = "(null)" # Default to null, ONLY changed if replicable across imports
@@ -106,14 +112,17 @@ def redundant(msg, body, lid, attachments):
     except:
         pass
     xbody += bytes(mdatestring, encoding='ascii')
+    
     # Use sender
     sender = msg.get('from', None)
     if sender:
         xbody += bytes(sender, encoding = 'ascii')
+    
     # Use subject
     subject = msg.get('subject', None)
     if subject:
         xbody += bytes(subject, encoding = 'ascii')
+    
     # Use attachment hashes if present
     if attachments:
         for a in attachments:
