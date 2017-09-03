@@ -38,6 +38,8 @@ def full(msg, body, lid, attachments):
     body - the parsed text content (not used)
     lid - list id
     attachments - list of attachments (not used)
+
+    Returns: "<hash>@<lid>" where hash is sha224 of message bytes
     """
     mid = "%s@%s" % (hashlib.sha224(msg.as_bytes()).hexdigest(), lid)
     return mid
@@ -48,13 +50,24 @@ def medium(msg, body, lid, attachments):
     """
     Standard 0.9 generator - Not recommended for future installations.
     (does not generate sufficiently unique ids)
-    
+
+    The following message fields are concatenated to form the hash input:
+    - body: if bytes as is else encoded ascii, ignoring invalid characters; if the body is null an Exception is thrown
+    - lid
+    - Date header if it exists and parses OK; failing that
+    - archived-at header if it exists and parses OK; failing that
+    - current time.
+    The resulting date is converted to YYYY/MM/DD HH:MM:SS (using UTC)
+
     Parameters:
     msg - the parsed message (used to get the date)
-    body - the parsed text content
+    body - the parsed text content (may be null)
     lid - list id
     attachments - list of attachments (not used)
+
+    Returns: "<hash>@<lid>" where hash is sha224 of the message items noted above
     """
+
     # Use text body
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
     # Use List ID
@@ -67,7 +80,7 @@ def medium(msg, body, lid, attachments):
     # In keeping with preserving the past, we have kept this next section(s).
     # For all intents and purposes, this is not a proper way of maintaining
     # a consistent ID in case of missing dates. It is recommended to use
-    # another generator such as full or redundant here.
+    # another generator
     if not mdate and msg.get('archived-at'):
         mdate = email.utils.parsedate_tz(msg.get('archived-at'))
     elif not mdate:
@@ -86,12 +99,24 @@ def redundant(msg, body, lid, attachments):
     """
     Use data that is guaranteed to be the same across redundant setups
     (does not guarantee to create unique ids)
-    
+
+    The following message fields are concatenated to form the hash input:
+    - body as is if bytes else encoded ascii, ignoring invalid characters; if the body is null it is treated as an empty string
+      (currently trailing whitespace is dropped)
+    - lid
+    - Date header converted to YYYY/MM/DD HH:MM:SS (UTC)
+      or "(null)" if the date does not exist or cannot be converted
+    - sender, encoded as ascii (if the field exists)
+    - subject, encoded as ascii (if the field exists)
+    - the hashes of any attachments
+
     Parameters:
     msg - the parsed message (used to get the date)
     body - the parsed text content
     lid - list id
     attachments - list of attachments (uses the hashes)
+
+    Returns: "r<hash>@<lid>" where hash is sha224 of the message items noted above
     """
     # Use text body
     if not body: # Make sure body is not None, which will fail.
@@ -137,12 +162,19 @@ def legacy(msg, body, lid, attachments):
     """
     Original generator - DO NOT USE
     (does not generate unique ids)
-    
+
+    The hash input is created from 
+    - body: if bytes as is else encoded ascii, ignoring invalid characters; if the body is null an Exception is thrown
+
+    The uid_mdate for the id is the Date converted to UTC epoch else 0
+
     Parameters:
     msg - the parsed message (used to get the date)
-    body - the parsed text content
+    body - the parsed text content (may be null)
     lid - list id
     attachments - list of attachments (not used)
+
+    Returns: "<hash>@<uid_mdate>@<lid>" where hash is sha224 of the message items noted above
     """
     uid_mdate = 0 # Default if no date found
     try:
