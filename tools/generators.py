@@ -56,13 +56,14 @@ def medium(msg, body, lid, attachments):
     attachments - list of attachments (not used)
     """
     # Use text body
-    if not body: # Make sure body is not None, which will fail.
-        body = ""
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
     # Use List ID
     xbody += bytes(lid, encoding='ascii')
     # Use Date header
-    mdate = email.utils.parsedate_tz(msg.get('date'))
+    try:
+        mdate = email.utils.parsedate_tz(msg.get('date'))
+    except:
+        pass
     # In keeping with preserving the past, we have kept this next section(s).
     # For all intents and purposes, this is not a proper way of maintaining
     # a consistent ID in case of missing dates. It is recommended to use
