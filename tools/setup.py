@@ -82,7 +82,7 @@ parser.add_argument('--noindex', dest='noi', action='store_true',
 parser.add_argument('--nocloud', dest='nwc', action='store_true', 
                    help='Do not enable word cloud')
 parser.add_argument('--generator', dest='generator', type=str, nargs=1,
-                   help='Document ID Generator to use (legacy, medium, redundant, full)')
+                   help='Document ID Generator to use (legacy, medium, cluster, full)')
 args = parser.parse_args()    
 
 print("Welcome to the Pony Mail setup script!")
@@ -113,7 +113,7 @@ if args.defaults:
     wce = True
     shards = 1
     replicas = 0
-    genname = "redundant"
+    genname = "cluster"
 
 # Accept CLI args, copy them
 if args.dbhost:
@@ -161,7 +161,7 @@ while wc == "":
         wce = True
 
 while genname == "":
-    gens = ['legacy', 'medium', 'redundant', 'full']
+    gens = ['legacy', 'medium', 'cluster', 'full']
     print ("Please select a document ID generator:")
     print("1  LEGACY: The original document generator for v/0.1-0.8 (no longer recommended)")
     print("2  MEDIUM: The medium comprehensive generator for v/0.9 (no longer recommended)")

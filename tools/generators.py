@@ -45,7 +45,7 @@ def full(msg, body, lid, attachments):
     return mid
 
 # Medium: Standard 0.9 generator - Not recommended for future installations.
-# See 'full' or 'redundant' generators instead.
+# See 'full' or 'cluster' generators instead.
 def medium(msg, body, lid, attachments):
     """
     Standard 0.9 generator - Not recommended for future installations.
@@ -91,13 +91,13 @@ def medium(msg, body, lid, attachments):
     mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
     return mid
 
-# Redundant: Use data that is guaranteed to be the same across redundant setups
-# This is the recommended generator for redundant cluster setups.
+# cluster: Use data that is guaranteed to be the same across cluster setups
+# This is the recommended generator for cluster setups.
 # Unlike 'medium', this only makes use of the Date: header and not the archived-at,
 # as the archived-at may change from node to node (and will change if not in the raw mbox file)
-def redundant(msg, body, lid, attachments):
+def cluster(msg, body, lid, attachments):
     """
-    Use data that is guaranteed to be the same across redundant setups
+    Use data that is guaranteed to be the same across cluster setups
     (does not guarantee to create unique ids)
 
     The following message fields are concatenated to form the hash input:
