@@ -277,8 +277,6 @@ class Archiver(object):
                     msg_metadata[key] = hval
             except Exception as err:
                 print("Could not decode headers, ignoring..: %s" % err)
-        if not msg_metadata.get('message-id'):
-            msg_metadata['message-id'] = mid
         mdate = None
         uid_mdate = 0 # mdate for UID generation
         try:
