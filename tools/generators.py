@@ -98,12 +98,14 @@ def medium(msg, body, lid, attachments):
 def cluster(msg, body, lid, attachments):
     """
     Use data that is guaranteed to be the same across cluster setups
-    (does not guarantee to create unique ids)
+    For mails with a valid Message-ID this is likely to be unique
+    In other cases it is better than the medium generator as it uses several extra fields
 
     The following message fields are concatenated to form the hash input:
     - body as is if bytes else encoded ascii, ignoring invalid characters; if the body is null it is treated as an empty string
       (currently trailing whitespace is dropped)
     - lid
+    - Message-ID (if present)
     - Date header converted to YYYY/MM/DD HH:MM:SS (UTC)
       or "(null)" if the date does not exist or cannot be converted
     - sender, encoded as ascii (if the field exists)
@@ -111,7 +113,7 @@ def cluster(msg, body, lid, attachments):
     - the hashes of any attachments
 
     Parameters:
-    msg - the parsed message (used to get the date)
+    msg - the parsed message
     body - the parsed text content
     lid - list id
     attachments - list of attachments (uses the hashes)
@@ -128,6 +130,9 @@ def cluster(msg, body, lid, attachments):
     
     # Use List ID
     xbody += bytes(lid, encoding='ascii')
+
+    # Use Message-Id (or '' if missing)
+    xbody += bytes(msg.get('Message-Id', ''), encoding='ascii')
     
     # Use Date header. Don't use archived-at, as the archiver sets this if not present.
     mdate = None
