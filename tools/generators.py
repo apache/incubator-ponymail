@@ -128,9 +128,6 @@ def cluster(msg, body, lid, attachments):
     # Crop out any trailing whitespace in body
     xbody = re.sub(b"\s+$", b"", xbody)
     
-    # Use List ID
-    xbody += bytes(lid, encoding='ascii')
-
     # Use Message-Id (or '' if missing)
     xbody += bytes(msg.get('Message-Id', ''), encoding='ascii')
     
@@ -158,6 +155,8 @@ def cluster(msg, body, lid, attachments):
     if attachments:
         for a in attachments:
             xbody += bytes(a['hash'], encoding = 'ascii')
+
+    # generate the hash and combine with the lid to form the id
     mid = "r%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
     return mid
 

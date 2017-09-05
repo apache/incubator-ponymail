@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Drop lid from 'cluster' hash - it's already in the id (#400)
 - Enh: 'cluster' generator ids are not sufficiently unique (#398)
 - archiver/importer adds a Message-Id to mails if they don't have one (#403)
 - Fixed an issue with ID generation where an email body does not exist
