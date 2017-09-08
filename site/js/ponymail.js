@@ -2082,7 +2082,11 @@ function shortenID(mid) {
 
     // add padding if < 7 chars long
     while (id1.length < 7) id1 = '-' + id1
+
     var id2 = parseInt(mid.substr(9,9), 16).toString(36)
+    if (isNaN(id2)) { // conversion failed
+            return mid; // return unchanged
+    }
     while (id2.length < 7) id2 = '-' + id2
     
     // add 'Z' which is the short link denoter
