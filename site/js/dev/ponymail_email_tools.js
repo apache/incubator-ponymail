@@ -205,7 +205,10 @@ function formatEpochUTC(epoch){
 // hex -> base 36 conversion for creating shorter permalinks
 function shortenID(mid) {
     var id1 = parseInt(mid.substr(0,9), 16).toString(36)
-    
+    if (isNaN(id1)) { // conversion failed
+            return mid; // return unchanged
+    }
+
     // add padding if < 7 chars long
     while (id1.length < 7) id1 = '-' + id1
     var id2 = parseInt(mid.substr(9,9), 16).toString(36)

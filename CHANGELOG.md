@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Bug: shorten links does not work with cluster ids (#406)
 - Drop lid from 'cluster' hash - it's already in the id (#400)
 - Enh: 'cluster' generator ids are not sufficiently unique (#398)
 - archiver/importer adds a Message-Id to mails if they don't have one (#403)
