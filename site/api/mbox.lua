@@ -26,6 +26,13 @@ local utils = require 'lib/utils'
 --[[
     Parse the source to construct a valid 'From ' line.
 
+    e.g.
+    From dev-return-648-archive-asf-public=cust-asf.ponee.io@ponymail.incubator.apache.org Fri Dec 09 2016 12:48:01 2016
+
+    Note that the timestamp must be in the same format as unix ctime and must be in UTC
+    All the fields have constant width, i.e. the day of the month is zero-padded
+    (There are some existing archives that use space padding instead).
+
     Look for:
     Return-Path: <dev-return-648-archive-asf-public=cust-asf.ponee.io@ponymail.incubator.apache.org>
     ...
@@ -41,7 +48,7 @@ local function getFromLine(r, source)
     local received = source:match("Received: +from .-; +(.-)[\r\n]")
     if not received then received = "" end
     local recd = r.date_parse_rfc(received) or 0
-    local timeStamp = os.date('%c',  recd) -- ctime format
+    local timeStamp = os.date('!%a %b %d %H:%M:%S %Y',  recd) -- ctime format in UTC
 
     return "From " .. replyTo .. " " .. timeStamp
 end
