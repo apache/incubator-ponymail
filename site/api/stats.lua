@@ -487,12 +487,12 @@ function handle(r)
         end
     end
 
-    -- extract years and months for response
-    datespan.firstYear = tonumber(os.date("%Y", first))
-    datespan.firstMonth = tonumber(os.date("%m", first))
+    -- extract years and months for response (using UTC, i.e. leading !)
+    datespan.firstYear = tonumber(os.date("!%Y", first))
+    datespan.firstMonth = tonumber(os.date("!%m", first))
 
-    datespan.lastYear = tonumber(os.date("%Y", last))
-    datespan.lastMonth = tonumber(os.date("%m", last))
+    datespan.lastYear = tonumber(os.date("!%Y", last))
+    datespan.lastMonth = tonumber(os.date("!%m", last))
     
     -- Debug time point 4
     if DEBUG then
