@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Bug: atom.lua - should generate date in UTC, not local time (#408)
 - Bug: shorten links does not work with cluster ids (#406)
 - Drop lid from 'cluster' hash - it's already in the id (#400)
 - Enh: 'cluster' generator ids are not sufficiently unique (#398)

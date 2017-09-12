@@ -166,7 +166,8 @@ function handle(r)
 <id>%s/list.html?%s</id>
     ]]):format(listid, hostname, listid, hostname, listid, hostname, listid) )
     for k, eml in pairs(emls) do
-        local date = os.date("%Y-%m-%dT%H:%M:%S", eml.epoch) .. "Z"
+        -- use UTC (leading !)
+        local date = os.date("!%Y-%m-%dT%H:%M:%S", eml.epoch) .. "Z"
         r:puts(([[
 <entry>
 <title>%s</title>
