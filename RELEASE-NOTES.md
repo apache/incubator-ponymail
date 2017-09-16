@@ -9,7 +9,7 @@ Release Notes
 There was a bug in the preferences API that could result in one or more null entries
 being added to the favorite mailing lists for an account. This would prevent the '*' tab from displaying.
 The bug has been fixed which will prevent further nulls from being created.
-There is a script - tools/nullfav.py - which can be used to clean up the favorites.
+There is a script - tools/nullfav.py - which can be used to clean up existing favorites.
 Run as follows:
 
 $ python3 nullfav.py # list affected accounts
