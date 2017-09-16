@@ -4,10 +4,6 @@ Release Notes
 
 ## Version 0.10 (TBA) ##
 
-### Change in medium id generation may affect Permalinks ###
-
-TBA, depending on the results of dev list discussions.
-
 ### Fixing null favorite entries ###
 
 There was a bug in the preferences API that could result in one or more null entries
