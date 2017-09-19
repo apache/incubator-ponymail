@@ -118,12 +118,22 @@ function handle(r)
             if listAccessible or not v.private then
                 local doc = elastic.get('mbox_source', v.mid)
                 if doc and doc.source then
-                    r:puts(getFromLine(r, doc.source))
-                    r:puts("\n")
+                    local checkFirst -- should we check the first line?
+                    if not doc.source:match('^From ') then -- only add the header if there is none
+                        r:puts(getFromLine(r, doc.source))
+                        r:puts("\n")
+                        checkFirst=true
+                    else
+                        checkFirst=false
+                    end
+                    
                     -- pick out individual lines (including last which may not have EOL)
+                    -- it's tricky to add the prefix to the output unless the From is at the start of a line
+                    -- so it's easier to just skip the first match if necessary
                     for line in doc.source:gmatch("[^\r\n]*\r?\n?") do
                         -- check if 'From ' needs to be escaped
-                        if line:match("^From ") then r:puts(">") end
+                        if checkFirst and line:match("^From ") then r:puts(">") end
+                        checkFirst=true
                         -- TODO consider whether to optionally prefix '>From ', '^>>From ' etc. 
                         -- If so, just change the RE to "^>*From "
                         r:puts(line) -- original line

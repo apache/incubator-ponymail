@@ -512,7 +512,8 @@ class Archiver(object):
     def mbox_source(self, msg):
         # Common method shared with import-mbox
         policy = msg.policy.clone(max_line_length=0) # don't wrap headers
-        b = msg.as_bytes(policy=policy)
+        hasFrom=(msg.get_unixfrom() != None) # only use the envelope if it exists
+        b = msg.as_bytes(unixfrom=hasFrom, policy=policy)
         try:
             # Can we store as ASCII?
             return b.decode('ascii', errors='strict')
