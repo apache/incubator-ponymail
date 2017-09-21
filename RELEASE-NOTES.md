@@ -96,9 +96,3 @@ that Permalinks are unique or permanent.
  ------
 
  - HTML-only mails are not archived unless the Python `html2text` package (GPLv3) is installed and the `--html2text` command line arg is used
- - The email source as stored in the database is not guaranteed the same as the input.
-   - The source is derived from the parsed mail, which drops the leading From_ line and may change header spacing or line wrapping
-   - The archiver may add headers to the source
-   - The archiver changes the List-Id if the --lid parameter is used
-   - Since the From_ line is not preserved it has to be regenerated for the mbox download.
-     The regenerated line will not always be the same as the original
