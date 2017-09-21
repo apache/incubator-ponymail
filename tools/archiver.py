@@ -359,7 +359,7 @@ class Archiver(object):
 
         return  ojson, contents
             
-    def archive_message(self, mlist, msg):
+    def archive_message(self, mlist, msg, raw_msg):
         """Send the message to the archiver.
 
         :param mlist: The IMailingList object.
@@ -416,7 +416,7 @@ class Archiver(object):
             consistency = self.consistency,
             body = {
                 "message-id": msg_metadata['message-id'],
-                "source": self.mbox_source(msg)
+                "source": self.mbox_source(raw_msg)
             }
         )
         
@@ -509,11 +509,8 @@ class Archiver(object):
                             logger.info("Notification sent to %s for %s" % (cid, mid))
         return lid, ojson['mid']
 
-    def mbox_source(self, msg):
+    def mbox_source(self, b):
         # Common method shared with import-mbox
-        policy = msg.policy.clone(max_line_length=0) # don't wrap headers
-        hasFrom=(msg.get_unixfrom() != None) # only use the envelope if it exists
-        b = msg.as_bytes(unixfrom=hasFrom, policy=policy)
         try:
             # Can we store as ASCII?
             return b.decode('ascii', errors='strict')
@@ -643,7 +640,7 @@ if __name__ == '__main__':
             msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
             
             try:
-                lid, mid = archie.archive_message(msg_metadata, msg)
+                lid, mid = archie.archive_message(msg_metadata, msg, msgstring)
                 print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
             except Exception as err:
                 if args.verbose:

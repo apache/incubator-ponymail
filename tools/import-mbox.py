@@ -239,7 +239,8 @@ class SlurpThread(Thread):
             LEY = EY
             
             
-            for message in messages:
+            for key in messages.iterkeys():
+                message=messages.get(key)
                 # If --filter is set, discard any messages not matching by continuing to next email
                 if fromFilter and 'from' in message and message['from'].find(fromFilter) == -1:
                     continue
@@ -306,6 +307,9 @@ class SlurpThread(Thread):
                         continue
 
                 if json:
+                    file=messages.get_file(key, True)
+                    raw_msg=file.read()
+                    file.close()
                     if args.dups:
                         try:
                             duplicates[json['mid']].append(json['message-id'] + " in " + filename)
@@ -317,7 +321,7 @@ class SlurpThread(Thread):
                         json_source = {
                             'mid': json['mid'], # needed for bulk-insert only, not needed in database
                             'message-id': json['message-id'],
-                            'source': archie.mbox_source(message)
+                            'source': archie.mbox_source(raw_msg)
                         }
                     except Exception as e:
                         self.printid("Error '%s' processing id %s msg %s " % (e, json['mid'], json['message-id']))

@@ -1,4 +1,6 @@
 ## CHANGES in 0.10:
+- Archiver loses some message information (#402)
+- Mail parsing can change source spacing (#410)
 - Bug: use actual envelope header if present (#412)
 - Bug: stats.lua should use UTC for calculating year and month (#409)
 - Bug: atom.lua - should generate date in UTC, not local time (#408)
