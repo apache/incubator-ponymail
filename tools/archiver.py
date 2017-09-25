@@ -215,6 +215,8 @@ class Archiver(object):
         body = None
         firstHTML = None
         for part in msg.walk():
+            if args.verbose:
+                print("Content-Type: %s" % part.get_content_type())
             """
                 Find the first body part and the first HTML part
                 Note: cannot use break here because firstHTML is needed if len(body) <= 1
