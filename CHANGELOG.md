@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Bug: import-mbox should not check database during a dry run (#413)
 - Archiver loses some message information (#402)
 - Mail parsing can change source spacing (#410)
 - Bug: use actual envelope header if present (#412)
