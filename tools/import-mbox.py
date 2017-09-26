@@ -471,19 +471,17 @@ print("Checking that the database index %s exists ... " % dbname)
 # elasticsearch logs lots of warnings on retries/connection failure
 import logging
 logging.getLogger("elasticsearch").setLevel(logging.ERROR)
-try:
-    if not es.indices.exists(dbname):
-        print("Error: the index '%s' does not exist!" % (dbname))
-        if args.dry:
-            print("Dry-run; continuing to check input data")
-        else:
+
+if args.dry:
+    print("Dry-run; continuing to check input data")
+else:
+    try:
+        if not es.indices.exists(dbname):
+            print("Error: the index '%s' does not exist!" % (dbname))
             sys.exit(1)
-    print("Database exists OK")
-except Exception as err:
-    print("Error: unable to check if the index %s exists!: %s" % (dbname, err))
-    if args.dry:
-        print("Dry-run; continuing to check input data")
-    else:
+        print("Database exists OK")
+    except Exception as err:
+        print("Error: unable to check if the index %s exists!: %s" % (dbname, err))
         sys.exit(1)
 
 
