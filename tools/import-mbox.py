@@ -37,7 +37,7 @@ import gzip
 
 # Temporary patch to fix Python email package limitation
 # It must be removed when the Python package is fixed
-from mboxo_patch import MboxoFactory
+from mboxo_patch import MboxoFactory, MboxoReader
 
 try:
     from elasticsearch import Elasticsearch, helpers
@@ -308,6 +308,10 @@ class SlurpThread(Thread):
 
                 if json:
                     file=messages.get_file(key, True)
+                    # If the parsed data is filtered, also need to filter the raw input
+                    # so the source agrees with the summary info
+                    if message.__class__.__name__ == 'MboxoFactory':
+                        file=MboxoReader(file)
                     raw_msg=file.read()
                     file.close()
                     if args.dups:
