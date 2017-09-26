@@ -67,6 +67,7 @@ config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
 iBody = None
+args=None
 
 if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from zope.interface import implementer
@@ -215,7 +216,8 @@ class Archiver(object):
         body = None
         firstHTML = None
         for part in msg.walk():
-            if args.verbose:
+            # can be called from importer
+            if args and args.verbose:
                 print("Content-Type: %s" % part.get_content_type())
             """
                 Find the first body part and the first HTML part
