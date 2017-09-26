@@ -58,7 +58,9 @@ class MboxoReader(mailbox._PartialFile):
         if self.remain != 0:
             super().seek(whence=1, offset=-self.remain)
         # ensure we get enough to match successfully when refilling
-        size = size if size > FROM_MANGLED_LEN else FROM_MANGLED_LEN
+        # size can be None; assume large enough if so
+        if size:
+            size = size if size > FROM_MANGLED_LEN else FROM_MANGLED_LEN
         bytes = super()._read(size, read_method)
         bufflen=len(bytes)
         # did we get anything new?
