@@ -312,7 +312,14 @@ class SlurpThread(Thread):
                     # so the source agrees with the summary info
                     if message.__class__.__name__ == 'MboxoFactory':
                         file=MboxoReader(file)
-                    raw_msg=file.read()
+                    # Temporary work-round for #415 until MboxoReader is fixed
+                    buf=bytearray()
+                    while True:
+                        tmp=file.read()
+                        if len(tmp) <= 0:
+                            break
+                        buf.extend(tmp)
+                    raw_msg=bytes(buf)
                     file.close()
                     if args.dups:
                         try:
