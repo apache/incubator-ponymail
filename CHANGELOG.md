@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Bug: MboxoReader needs to return all data for a read() call (#415)
 - Bug: import-mbox should not check database during a dry run (#413)
 - Archiver loses some message information (#402)
 - Mail parsing can change source spacing (#410)

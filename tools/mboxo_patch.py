@@ -57,14 +57,16 @@ class MboxoReader(mailbox._PartialFile):
         # get the next chunk, resetting if necessary 
         if self.remain != 0:
             super().seek(whence=1, offset=-self.remain)
+        # if size is None or negative, then read returns everything.
+        # in which case there is no need to wory about matching across reads
+        limited_read = size and size >= 0
         # ensure we get enough to match successfully when refilling
-        # size can be None; assume large enough if so
-        if size:
-            size = size if size > FROM_MANGLED_LEN else FROM_MANGLED_LEN
+        if limited_read and size < FROM_MANGLED_LEN:
+            size = FROM_MANGLED_LEN
         bytes = super()._read(size, read_method)
         bufflen=len(bytes)
         # did we get anything new?
-        if bufflen > self.remain:
+        if limited_read and bufflen > self.remain:
             # is there a potential cross-boundary match?
             if bytes.endswith(FROMS):
                 # yes, work out what to keep
