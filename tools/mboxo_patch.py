@@ -27,6 +27,14 @@ To use:
 from mboxo_patch import MboxoFactory
 ...
 messages = mailbox.mbox(filename, MboxoFactory)
+
+N.B.
+To simplify the code, the MboxoReader class changes the
+size parameter to 7 if (and only if): 0 <= size < 7
+The return byte buffer can thus be larger than expected.
+However this is only a theoretical possibility
+as the mailbox code uses a size of 8192 (or None)
+
 """
 import mailbox
 
