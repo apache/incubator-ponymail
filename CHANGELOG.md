@@ -1,4 +1,9 @@
 ## CHANGES in 0.10:
+- Added empty line quotes to JS compaction feature
+- Changed default theme to 'compact'
+- Fixed mismatch between field mappings, which prevented setups from working
+- Added --dbprefix for setup.py for proxied ES databases
+- Added fielddata values to email subjects to fix word clouds on ES>=5.x
 - Bug: MboxoReader needs to return all data for a read() call (#415)
 - Bug: import-mbox should not check database during a dry run (#413)
 - Archiver loses some message information (#402)
