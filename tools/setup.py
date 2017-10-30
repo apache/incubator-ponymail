@@ -414,7 +414,7 @@ def createIndex():
             },
             "in-reply-to" : {
               "type" : "string",
-#               "index" : "not_analyzed"
+               "index" : "not_analyzed"
             },
             "list" : {
               "type" : "string",
