@@ -88,7 +88,7 @@ var prefs = {
     compactQuotes: 'yes',           // Show quotes from original email as compacted blocks?
     notifications: 'direct',        // Notify on direct or indirect replies to your posts?
     hideStats: 'yes',               // Hide the email statistics window?
-    theme: 'default',               // Set to 'social' to default to the social theme
+    theme: 'compact',               // Set to 'social' to default to the social theme
     autoScale: 'no',                // Whether to scale results-per-page to window height (4K screens etc)
     loggedIn: false
 }
