@@ -295,7 +295,8 @@ def createIndex():
               "type" : "string"
             },
             "subject" : {
-              "type" : "string"
+              "type" : "string",
+              "fielddata": True
             },
             "to" : {
               "type" : "string"
@@ -440,6 +441,7 @@ def createIndex():
             },
             "subject" : {
               "type" : "string",
+              "fielddata": True
 #               "index" : "not_analyzed"
             },
             "to" : {
