@@ -56,7 +56,7 @@ parser = argparse.ArgumentParser(description='Command line options.')
 
 parser.add_argument('--defaults', dest='defaults', action='store_true', 
                    help='Use default settings')
-
+parser.add_argument('--dbprefix', dest='dbprefix')
 parser.add_argument('--clobber', dest='clobber', action='store_true',
                    help='Allow overwrite of ponymail.cfg & ../site/api/lib/config.lua (default: create *.tmp if either exists)')
 parser.add_argument('--dbhost', dest='dbhost', type=str, nargs=1,
@@ -100,7 +100,7 @@ genname = ""
 wce = False
 shards = 0
 replicas = -1
-
+up = None
 
 # If called with --defaults (like from Docker), use default values
 if args.defaults:
@@ -116,6 +116,8 @@ if args.defaults:
     genname = "cluster"
 
 # Accept CLI args, copy them
+if args.dbprefix:
+    up = args.dbprefix
 if args.dbhost:
     hostname = args.dbhost[0]
 if args.dbport:
@@ -139,6 +141,9 @@ if args.generator:
     
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
+
+while up == None:
+    up = input("Database URL prefix if any (hit enter if none): ")
     
 while port < 1:
     try:
@@ -194,7 +199,7 @@ def createIndex():
             'host': hostname,
             'port': port,
             'use_ssl': False,
-            'url_prefix': ''
+            'url_prefix': up
         }],
         max_retries=5,
         retry_on_timeout=True
