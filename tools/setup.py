@@ -100,7 +100,7 @@ genname = ""
 wce = False
 shards = 0
 replicas = -1
-up = None
+urlPrefix = None
 
 # If called with --defaults (like from Docker), use default values
 if args.defaults:
@@ -117,7 +117,7 @@ if args.defaults:
 
 # Accept CLI args, copy them
 if args.dbprefix:
-    up = args.dbprefix
+    urlPrefix = args.dbprefix
 if args.dbhost:
     hostname = args.dbhost[0]
 if args.dbport:
@@ -142,8 +142,8 @@ if args.generator:
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
 
-while up == None:
-    up = input("Database URL prefix if any (hit enter if none): ")
+while urlPrefix == None:
+    urlPrefix = input("Database URL prefix if any (hit enter if none): ")
     
 while port < 1:
     try:
@@ -199,7 +199,7 @@ def createIndex():
             'host': hostname,
             'port': port,
             'use_ssl': False,
-            'url_prefix': up
+            'url_prefix': urlPrefix
         }],
         max_retries=5,
         retry_on_timeout=True
