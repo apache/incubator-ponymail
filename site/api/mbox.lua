@@ -59,18 +59,17 @@ function handle(r)
     if get.list and get.date then
         local lid = ("<%s>"):format(get.list:gsub("@", "."):gsub("[<>]", ""))
         local flid = get.list:gsub("[.@]", "_")
-        local month = get.date:match("(%d+%-%d+)")
-        if not month then
+        local y, m = get.date:match("(%d+)%-(%d+)")
+        if not (y and m) then
             cross.contentType(r, "text/plain")
             r:puts("Wrong date format given!\n")
             return cross.OK
         end
-        if r.headers_out then
-            r.headers_out['Content-Disposition'] = "attachment; filename=" .. flid .. "_" .. month .. ".mbox"
-        end
-        local y, m = month:match("(%d+)%-(%d+)")
         m = tonumber(m)
         y = tonumber(y)
+        if r.headers_out then
+            r.headers_out['Content-Disposition'] = ("attachment; filename=%s_%04d-%02d.mbox"):format(flid,y,m)
+        end
         local d = utils.lastDayOfMonth(y,m)
         
         -- fetch all results from the list (up to 10k results), make sure to get the 'private' element

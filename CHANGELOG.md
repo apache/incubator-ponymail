@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- mbox.lua output filename does not match ISO standard (#420)
 - Added empty line quotes to JS compaction feature
 - Changed default theme to 'compact'
 - Added --dbprefix for setup.py for proxied ES databases
