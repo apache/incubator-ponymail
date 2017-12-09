@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Bug: GUI can hide reply text when analysing quoted text (#421)
 - mbox.lua output filename does not match ISO standard (#420)
 - Added empty line quotes to JS compaction feature
 - Changed default theme to 'compact'
