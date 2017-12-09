@@ -67,10 +67,16 @@ function handle(r)
         end
         m = tonumber(m)
         y = tonumber(y)
+        local d = utils.lastDayOfMonth(y,m)
+        if not d then
+            cross.contentType(r, "text/plain")
+            r:puts("Invalid date given!\n")
+            return cross.OK
+        end
+
         if r.headers_out then
             r.headers_out['Content-Disposition'] = ("attachment; filename=%s_%04d-%02d.mbox"):format(flid,y,m)
         end
-        local d = utils.lastDayOfMonth(y,m)
         
         -- fetch all results from the list (up to 10k results), make sure to get the 'private' element
         local docs = elastic.raw {
