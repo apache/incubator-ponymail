@@ -61,6 +61,7 @@ import sys
 import generators
 import uuid
 import json
+import certifi
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -185,7 +186,8 @@ class Archiver(object):
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
                 'url_prefix': uri,
-                'http_auth': auth
+                'http_auth': auth,
+                'ca_certs': certifi.where()
             }]
         # Backup ES?
         backup = config.get("elasticsearch", "backup", fallback="")
@@ -196,7 +198,8 @@ class Archiver(object):
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
                 'url_prefix': uri,
-                'http_auth': auth
+                'http_auth': auth,
+                'ca_certs': certifi.where()
             }
             )
         # If we have a dump dir, we can risk failing the connection.
