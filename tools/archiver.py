@@ -59,6 +59,8 @@ import logging
 import traceback
 import sys
 import generators
+import uuid
+import json
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -68,6 +70,7 @@ auth = None
 parseHTML = False
 iBody = None
 args=None
+dumpDir = None
 
 if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from zope.interface import implementer
@@ -196,10 +199,20 @@ class Archiver(object):
                 'http_auth': auth
             }
             )
-        self.es = Elasticsearch(dbs,
-            max_retries=5,
-            retry_on_timeout=True
-            )
+        # If we have a dump dir, we can risk failing the connection.
+        if dumpDir:
+            try:
+                self.es = Elasticsearch(dbs,
+                    max_retries=5,
+                    retry_on_timeout=True
+                    )
+            except:
+                print("ES connection failed, but dumponfail specified, dumping to %s" % dumpDir)
+        else:
+            self.es = Elasticsearch(dbs,
+                max_retries=5,
+                retry_on_timeout=True
+                )
 
     def msgfiles(self, msg):
         attachments = []
@@ -394,36 +407,55 @@ class Archiver(object):
         msg_metadata = self.msg_metadata
         irt = self.irt
 
-        if contents:
-            for key in contents:
-                self.index(
-                    index=self.dbname,
-                    doc_type="attachment",
-                    id=key,
-                    body = {
-                        'source': contents[key]
-                    }
-                )
-    
-        self.index(
-            index=self.dbname,
-            doc_type="mbox",
-            id=ojson['mid'],
-            consistency = self.consistency,
-            body = ojson
-        )
-        
-        self.index(
-            index=self.dbname,
-            doc_type="mbox_source",
-            id=ojson['mid'],
-            consistency = self.consistency,
-            body = {
-                "message-id": msg_metadata['message-id'],
-                "source": self.mbox_source(raw_msg)
-            }
-        )
-        
+        try:
+            if contents:
+                for key in contents:
+                    self.index(
+                        index=self.dbname,
+                        doc_type="attachment",
+                        id=key,
+                        body = {
+                            'source': contents[key]
+                        }
+                    )
+            
+            self.index(
+                index=self.dbname,
+                doc_type="mbox",
+                id=ojson['mid'],
+                consistency = self.consistency,
+                body = ojson
+            )
+            
+            self.index(
+                index=self.dbname,
+                doc_type="mbox_source",
+                id=ojson['mid'],
+                consistency = self.consistency,
+                body = {
+                    "message-id": msg_metadata['message-id'],
+                    "source": self.mbox_source(raw_msg)
+                }
+            )
+        # If we have a dump dir and ES failed, push to dump dir instead as a JSON object
+        # We'll leave it to another process to pick up the slack.
+        except Exception as err:
+            if dumpDir:
+                print("Pushing to ES failed, but dumponfail specified, dumping JSON docs")
+                uid = uuid.uuid4()
+                mboxPath = os.path.join(dumpDir, "%s.json" % uid)
+                with open(mboxPath, "w") as f:
+                    json.dump(f, {
+                        'mbox': ojson,
+                        'mbox_source': {
+                            "message-id": msg_metadata['message-id'],
+                            "source": self.mbox_source(raw_msg)
+                        },
+                        'attachments': contents
+                    })
+                    f.close()
+                sys.exit(0) # We're exiting here, the rest can't be done without ES
+                
         # If MailMan and list info is present, save/update it in ES:
         if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
             self.index(
@@ -554,11 +586,14 @@ if __name__ == '__main__':
                        help='Try to convert HTML to text if no text/plain message is found')
     parser.add_argument('--dry', dest='dry', action='store_true',
                        help='Do not save emails to elasticsearch, only test parsing')
+    parser.add_argument('--dumponfail', dest='dump',
+                       help='If pushing to ElasticSearch fails, dump documents in JSON format to this directory and fail silently.')
     args = parser.parse_args()
     
     if args.html2text:
         parseHTML = True
-
+    if args.dump:
+        dumpDir = args.dump
     if args.verbose:
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     else:
