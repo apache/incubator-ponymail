@@ -153,7 +153,7 @@ class Archiver(object):
 
     """ Intercept index calls and fix up consistency argument """
     def index(self, **kwargs):
-        if ES_MAJOR == 5:
+        if ES_MAJOR in [5,6]:
             if kwargs.pop('consistency', None): # drop the key if present
                 if self.wait_for_active_shards: # replace with wait if defined
                     kwargs['wait_for_active_shards'] = self.wait_for_active_shards
@@ -173,7 +173,7 @@ class Archiver(object):
         self.consistency = config.get('elasticsearch', 'write', fallback='quorum')
         if ES_MAJOR == 2:
             pass
-        elif ES_MAJOR == 5:
+        elif ES_MAJOR in [5,6]:
             self.wait_for_active_shards = config.get('elasticsearch', 'wait', fallback=1)
         else:
             raise Exception("Unexpected elasticsearch version ", ES_VERSION)
