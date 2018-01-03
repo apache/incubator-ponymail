@@ -1,4 +1,6 @@
 ## CHANGES in 0.10:
+- Bug: HTTPS connections may fail with ES 6.x libraries (#425)
+- Enh: Support ES 6.x library (#424)
 - Enh: Optionally dump JSON documents to disk if push to ES fails (#423).
 - Bug: GUI can hide reply text when analysing quoted text (#421)
 - mbox.lua output filename does not match ISO standard (#420)
