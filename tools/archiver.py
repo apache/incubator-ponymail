@@ -448,14 +448,14 @@ class Archiver(object):
                 uid = uuid.uuid4()
                 mboxPath = os.path.join(dumpDir, "%s.json" % uid)
                 with open(mboxPath, "w") as f:
-                    json.dump(f, {
+                    json.dump({
                         'mbox': ojson,
                         'mbox_source': {
                             "message-id": msg_metadata['message-id'],
                             "source": self.mbox_source(raw_msg)
                         },
                         'attachments': contents
-                    })
+                    },f , indent = 2)
                     f.close()
                 sys.exit(0) # We're exiting here, the rest can't be done without ES
                 
