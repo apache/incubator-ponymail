@@ -41,6 +41,12 @@ end
 -- findSubject: match an email with an earlier one with the same topic
 -- used for orphaned emails
 local function findSubject(gblob, blob, subject, epoch, maxAge)
+    -- If subject does not start with Re:, Fwd:, AW: etc, we
+    -- should not assume it's a reply. If we can't find via IRT etc
+    -- then just disregard it as a new thread.
+    if not subject:match("^[A-Za-z]+:") then
+        return nil
+    end
     local subj = subject:gsub("^[A-Za-z]:%s+", "")
     for k, v in pairs(blob) do
         if v.subject and v.subject == subj and v.epoch < epoch and (not maxAge or (maxAge and v.epoch >= (epoch - (maxAge*86400)))) then
@@ -619,12 +625,15 @@ function handle(r)
                 end
             end
             
-            if not irt or irt == JSON.null or #irt == 0 then
+            -- If this is a reply to a previous email, try assuming the subject can
+            -- be used to find the parent.
+            if not irt or irt == JSON.null or #irt == 0 and email.subject:match("^[A-Za-z]+:") then
                 irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
             end
             
             -- If we can't match by in-reply-to or references, match/group by subject, ignoring Re:/Fwd:/etc
-            if not emails[irt] then
+            -- Only try this (just as above) if we spot a reply.
+            if not emails[irt] and email.subject:match("^[A-Za-z]+:") then
                 irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
                 while irt:match("^[a-zA-Z]+:%s+") do
                     irt = irt:gsub("^[a-zA-Z]+:%s+", "")
