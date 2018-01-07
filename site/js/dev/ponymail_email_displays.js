@@ -144,7 +144,18 @@ function displayEmail(json, id, level) {
         }
         // Default theme
         else {
-            thread.setAttribute("class", "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)])
+            tclass = "reply bs-callout bs-callout-" + cols[parseInt(Math.random() * cols.length - 0.01)]
+            // If we hit max_nesting levels, discard nesting display further down.
+            // Otherwise, we risk squeezing it into oblivion.
+            thread.style.padding = "5px"
+            thread.style.fontFamily = "Hack"
+            
+            if (level >= max_nesting) {
+                tclass = "reply" // No bs-callout if we nest too deep.
+                thread.style.paddingLeft = "0px";  // remove padding, left and right
+                thread.style.paddingRight = "0px";
+            }
+            thread.setAttribute("class", tclass)
             thread.style.background = estyle
             thread.style.marginTop = "30px"
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
@@ -156,9 +167,6 @@ function displayEmail(json, id, level) {
             
             
             thread.innerHTML += "<br/>"
-            //thread.style.border = "1px dotted #666"
-            thread.style.padding = "5px"
-            thread.style.fontFamily = "Hack"
             
             var fields = ['From', 'To', 'CC', 'Subject', 'Date']
             for (var i in fields) {
