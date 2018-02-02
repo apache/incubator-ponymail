@@ -1,4 +1,5 @@
 ## CHANGES in 0.10:
+- Bug: Use correct dependency order to fix OAuth login problem (#431)
 - Bug: HTTPS connections may fail with ES 6.x libraries (#425)
 - Enh: Support ES 6.x library (#424)
 - Enh: Optionally dump JSON documents to disk if push to ES fails (#423).
