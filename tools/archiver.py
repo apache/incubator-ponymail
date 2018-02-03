@@ -261,7 +261,7 @@ class Archiver(object):
                 
         return body    
 
-    def compute_updates(self, lid, private, msg):
+    def compute_updates(self, lid, private, msg, default_invalid_date_to_now=True):
         """Determine what needs to be sent to the archiver.
 
         :param lid: The list id
@@ -306,11 +306,10 @@ class Archiver(object):
             pass
         if not mdate and msg_metadata.get('archived-at'):
             mdate = email.utils.parsedate_tz(msg_metadata.get('archived-at'))
-        elif not mdate:
+        elif not mdate and default_invalid_date_to_now:
             print("Date (%s) seems totally wrong, setting to _now_ instead." % mdate)
             mdate = time.gmtime() # Get a standard 9-tuple
             mdate = mdate + (0, ) # Fake a TZ (10th element)
-        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
         body = self.msgbody(msg)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
@@ -332,7 +331,8 @@ class Archiver(object):
 
         attachments, contents = self.msgfiles(msg)
         irt = ""
-        if body is not None or attachments:
+        if (mdate is not None) and (body is not None or attachments):
+            mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
             pmid = mid
             try:
                 if archiver_generator == "full":
