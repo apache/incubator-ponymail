@@ -118,7 +118,7 @@ function displayEmail(json, id, level) {
             // Make the colored bar to the left that indicates nest level
             var bclass = "bubble-" + cols[parseInt(Math.random() * cols.length - 0.01)]
             // append body
-            thread.innerHTML += "<div class='" + bclass + "' style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal;'>" + ebody + '</div>'
+            thread.innerHTML += "<div class='" + bclass + "' style='padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-wrap; word-break: normal;'>" + ebody + '</div>'
             
             // Do we have attachments in this email?
             if (json.attachments && json.attachments.length > 0) {
@@ -194,7 +194,7 @@ function displayEmail(json, id, level) {
             if (json.private) {
                     pv = "background: none !important;"
                 }
-            thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-line; word-break: normal; " + pv + "'>" + ebody + '</pre>'
+            thread.innerHTML += "<pre style='color: inherit; padding: 8px; font-family: Hack; word-wrap: normal; white-space: pre-wrap; word-break: normal; " + pv + "'>" + ebody + '</pre>'
             
             // Same as with social theme - "highlight new emails"
             if (thread.hasAttribute("meme")) {

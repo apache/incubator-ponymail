@@ -1,3 +1,6 @@
+## Changes in 0.11-SNAPSHOT
+- Bug: Indentation in mail content (leading white-space) not shown (#432)
+
 ## CHANGES in 0.10:
 - Bug: Use correct dependency order to fix OAuth login problem (#431)
 - Bug: HTTPS connections may fail with ES 6.x libraries (#425)
