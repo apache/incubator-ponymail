@@ -1,7 +1,7 @@
 ## Changes in 0.11-SNAPSHOT
 - Bug: Indentation in mail content (leading white-space) not shown (#432)
 - Bug: does not make sense to allow empty domain name in LID (#434)
-- Bug: Inconsistent LID validation - don't require min 3 chars (#356)
+- Bug: Inconsistent LID validation (#356)
 
 ## CHANGES in 0.10:
 - Bug: Use correct dependency order to fix OAuth login problem (#431)

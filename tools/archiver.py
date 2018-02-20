@@ -128,7 +128,11 @@ def normalize_lid(lid):
     if m:
         lid = m.group(1)
     # Belt-and-braces: remove possible extraneous chars
-    return "<%s>" % lid.strip(" <>").replace("@", ".")
+    lid = "<%s>" % lid.strip(" <>").replace("@", ".")
+    if not re.match(r"^<.+\..+>$", lid):
+        print("Invalid list-id %s" % lid)
+        sys.exit(-1)
+    return lid
 
 class Archiver(object):
     """ A mailman 3 archiver that forwards messages to pony mail. """
