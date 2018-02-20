@@ -331,8 +331,9 @@ Pony Mail - Email for Ponies and People.
     local lists = {}
     for listname, entry in pairs(listcounts) do
         local _, list, domain = aaa.parseLid(listname)
-        -- TODO is it necessary to check the lengths?
-        if list and domain and #list > 0 and #domain > 3 then
+        -- Note: the default implementation ensures that list and domain are non-empty
+        -- Check lengths just in case a local version does not do so  
+        if list and domain and #list > 0 and #domain > 0 then
             -- there may be both private and public docs in the list
             for privacy, recent_count in pairs(entry) do
                 local isPublic = privacy == 'false'
