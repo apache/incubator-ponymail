@@ -101,7 +101,7 @@ end
   The domain is the rest. The full lid is the whole input, without < and >.
 ]]
 local function parseLid(lid)
-    return lid:match("^<(([^.]+)%.(.-))>$")
+    return lid:match("^<(([^.]+)%.(.+))>$")
 end
 
 
