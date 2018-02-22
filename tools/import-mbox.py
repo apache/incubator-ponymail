@@ -399,7 +399,7 @@ parser.add_argument('--mod-mbox', dest='modmbox', action='store_true',
 parser.add_argument('--pipermail', dest='pipermail', action='store_true',
                    help='This is pipermail, derive files from it (list ID has to be set!)')
 parser.add_argument('--lid', dest='listid', type=str, nargs=1,
-                   help='Optional List-ID to override source with.')
+                   help='Optional List-ID to override source with. Format: <list-name>@<domain>')
 parser.add_argument('--project', dest='project', type=str, nargs=1,
                    help='Optional project to look for ($project-* will be imported as well)')
 parser.add_argument('--ext', dest='ext', type=str, nargs=1,
