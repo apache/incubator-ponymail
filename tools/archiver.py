@@ -312,7 +312,10 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             print("Date (%s) seems totally wrong, setting to _now_ instead." % mdate)
             mdate = time.gmtime() # Get a standard 9-tuple
             mdate = mdate + (0, ) # Fake a TZ (10th element)
-        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
+
+        # mdate calculations are all done, prepare the index entry
+        epoch = email.utils.mktime_tz(mdate))
+        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(epoch)
         body = self.msgbody(msg)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
@@ -365,7 +368,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 'message-id': msg_metadata['message-id'],
                 'mid': mid,
                 'cc': msg_metadata.get('cc'),
-                'epoch': email.utils.mktime_tz(mdate),
+                'epoch': epoch,
                 'list': lid,
                 'list_raw': lid,
                 'date': mdatestring,
