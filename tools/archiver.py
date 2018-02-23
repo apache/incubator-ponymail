@@ -69,7 +69,7 @@ config = configparser.RawConfigParser()
 config.read("%s/ponymail.cfg" % path)
 auth = None
 parseHTML = False
-iBody = None
+iBody = None  # N.B. Also used by import-mbox.py
 args=None
 dumpDir = None
 
@@ -121,7 +121,7 @@ def pm_charsets(msg):
             charsets.update([c])
     return charsets
 
-def normalize_lid(lid):
+def normalize_lid(lid): # N.B. Also used by import-mbox.py
     """ Ensure that a lid is in standard form, i.e. <a.b.c.d> """
     # first drop any leading or trailing chars
     m = re.search(r"<(.+)>", lid)
@@ -134,7 +134,7 @@ def normalize_lid(lid):
         sys.exit(-1)
     return lid
 
-class Archiver(object):
+class Archiver(object): # N.B. Also used by import-mbox.py
     """ A mailman 3 archiver that forwards messages to pony mail. """
     if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
         implementer(IArchiver)
