@@ -302,10 +302,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             except Exception as err:
                 print("Could not decode headers, ignoring..: %s" % err)
         mdate = None
-        uid_mdate = 0 # mdate for UID generation
         try:
             mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
-            uid_mdate = email.utils.mktime_tz(mdate) # Only set if Date header is valid
         except:
             pass
         if not mdate and msg_metadata.get('archived-at'):
