@@ -41,7 +41,7 @@ Note: date and epoch are in UTC
 
 ### Fetching list data
 Usage:
-`GET /api/stats.lua?list=$list&domain=$domain[&d=$timespan][&q=$query][&header_from=$from][&header_to=$to][&header_subject=$subject][&header_body=$body][&quick][&s=$s&e=$e]`
+`GET /api/stats.lua?list=$list&domain=$domain[&d=$timespan][&q=$query][&header_from=$from][&header_to=$to][&header_subject=$subject][&header_body=$body][&quick][&emailsOnly][&s=$s&e=$e]`
 
 Parameters:
 
@@ -58,6 +58,11 @@ Parameters:
     - $to: Optional To: address
     - $subject: Optional Subject: line
     - $body: Optional body text
+
+Options:
+
+    - quick: only return list of email epochs
+    - emailsOnly: only return list of emails; omit thread structure, top 10 participants and word-cloud
     
 Response example:
 

@@ -76,6 +76,9 @@ function handle(r)
         r:puts("{}")
         return cross.OK
     end
+    -- emailsOnly: return email summaries only, not derived data:
+    -- i.e. omit thread_struct, top 10 participants and word-cloud   
+    local emailsOnly = get.emailsOnly
     local qs = "*" -- positive query
     local nqs = "" -- negative query
     local dd = "lte=1M"
@@ -326,7 +329,7 @@ function handle(r)
     end
 
     local cloud = nil
-    if config.wordcloud and not statsOnly then
+    if config.wordcloud and not statsOnly and not emailsOnly then
         cloud = {}
         -- Word cloud!
         local doc = elastic.raw {
@@ -585,7 +588,7 @@ function handle(r)
 
             local name = extractCanonName(email.from)
             local eid = ("%s <%s>"):format(name, eml)
-            if not statsOnly then
+            if not statsOnly and not emailsOnly then
                 senders[eid] = senders[eid] or {
                     email = eml,
                     gravatar = gravatar,
@@ -681,7 +684,7 @@ function handle(r)
     local allparts = 0 -- number of participants
     local top10 = {}
 
-    if not statsOnly then
+    if not statsOnly and not emailsOnly then
         local stable = {}
         for k, v in pairs(senders) do
             table.insert(stable, v)
@@ -724,7 +727,7 @@ function handle(r)
     listdata.max = maxresults
     listdata.using_wc = wc
     listdata.no_threads = #threads
-    if not statsOnly then
+    if not statsOnly and not emailsOnly then
         listdata.thread_struct = threads
     end
     listdata.firstYear = datespan.firstYear
