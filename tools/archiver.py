@@ -314,8 +314,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             mdate = mdate + (0, ) # Fake a TZ (10th element)
 
         # mdate calculations are all done, prepare the index entry
-        epoch = email.utils.mktime_tz(mdate))
-        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(epoch)
+        epoch = email.utils.mktime_tz(mdate)
+        mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(epoch))
         body = self.msgbody(msg)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
