@@ -42,8 +42,8 @@ from mboxo_patch import MboxoFactory, MboxoReader
 try:
     from elasticsearch import Elasticsearch, helpers
     from formatflowed import convertToWrapped # only needed by archiver
-except:
-    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
+except Exception as err:
+    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.",err)
     sys.exit(-1)
 
 # must be done after import check above
