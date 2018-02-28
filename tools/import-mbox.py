@@ -208,7 +208,6 @@ class SlurpThread(Thread):
                             tmpfile.flush()
                             tmpfile.close()
                             tmpname = tmpfile.name
-                            filename = tmpname
                             dFile = True # Slated for deletion upon having been read
                             self.printid("%s -> %u bytes" % (tmpname, len(bmd)))
                     except Exception as err:
