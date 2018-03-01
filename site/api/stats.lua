@@ -661,9 +661,13 @@ function handle(r)
                     table.insert(threads, emails[mid])
                 end
             end
-            email.references = nil
+            -- keep references if thread_struct is omitted
+            if not emailsOnly then
+                 email.references = nil
+            end
             email.to = nil
-            email['in-reply-to'] = nil
+            -- Duplicate of email.irt
+            email['in-reply-to'] = nil -- 
             if not account and config.antispam then
                 email.from = email.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
             end
