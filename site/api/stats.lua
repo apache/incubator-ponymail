@@ -506,7 +506,6 @@ function handle(r)
     -- Get threads
     local threads = {}
     local emails = {}
-    local emails_full = {}
     local emls = {}
     local senders = {}
     
