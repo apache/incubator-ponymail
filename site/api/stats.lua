@@ -633,7 +633,7 @@ function handle(r)
                     irt = irt:gsub("^[a-zA-Z]+:%s+", "")
                 end
             end
-            local refpoint = email['in-reply-to'] or email['references'] or ""
+            local refpoint = irt or email['references'] or ""
             local point = emails[irt] or (#refpoint > 0 and findSubject(emails, emls, irt, email.epoch))
             -- Try a little harder??
             if not point and email.subject:match("^[A-Za-z]+:%s+") then  -- if this is a 'Re:' or 'Aw:' or 'Fwd:', try to find parent anyway
@@ -646,7 +646,7 @@ function handle(r)
                     table.insert(point.children, emails[mid])
                 end
             else
-                if (email['in-reply-to'] ~= JSON.null and #email['in-reply-to'] > 0) then
+                if (irt ~= JSON.null and #irt > 0) then
                     emails[irt] = {
                         children = {
                             emails[mid]
