@@ -600,70 +600,73 @@ function handle(r)
             local irt = email['in-reply-to']
             email.id = v._id
             email.irt = irt
-            emails[mid] = {
-                tid = v._id,
-                nest = 1,
-                epoch = email.epoch,
-                children = {
-                    
+
+            -- only calculate threads if necessary
+            if not emailsOnly then
+                emails[mid] = {
+                    tid = v._id,
+                    nest = 1,
+                    epoch = email.epoch,
+                    children = {
+                        
+                    }
                 }
-            }
-            
-            if not irt or irt == JSON.null or #irt == 0 then
-                irt = ""
-            end
-            if not emails[irt] and email.references and email.references ~= JSON.null then
-                for ref in email.references:gmatch("([^%s]+)") do
-                    if emails[ref] then
-                        irt = ref
-                        break
+                
+                if not irt or irt == JSON.null or #irt == 0 then
+                    irt = ""
+                end
+                if not emails[irt] and email.references and email.references ~= JSON.null then
+                    for ref in email.references:gmatch("([^%s]+)") do
+                        if emails[ref] then
+                            irt = ref
+                            break
+                        end
                     end
                 end
-            end
-            
-            if not irt or irt == JSON.null or #irt == 0 then
-                irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
-            end
-            
-            -- If we can't match by in-reply-to or references, match/group by subject, ignoring Re:/Fwd:/etc
-            if not emails[irt] then
-                irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
-                while irt:match("^[a-zA-Z]+:%s+") do
-                    irt = irt:gsub("^[a-zA-Z]+:%s+", "")
-                end
-            end
-            local refpoint = irt or email['references'] or ""
-            local point = emails[irt] or (#refpoint > 0 and findSubject(emails, emls, irt, email.epoch))
-            -- Try a little harder??
-            if not point and email.subject:match("^[A-Za-z]+:%s+") then  -- if this is a 'Re:' or 'Aw:' or 'Fwd:', try to find parent anyway
-                point = findSubject(emails, emls, irt, email.epoch, 30) -- at most, go back 30 days. if not, then they don't belong together...I guess
-            end
                 
-            if point then
-                if point.nest < 50 then
-                    point.nest = point.nest + 1
-                    table.insert(point.children, emails[mid])
+                if not irt or irt == JSON.null or #irt == 0 then
+                    irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
                 end
-            else
-                if (irt ~= JSON.null and #irt > 0) then
-                    emails[irt] = {
-                        children = {
-                            emails[mid]
-                        },
-                        nest = 1,
-                        epoch = email.epoch,
-                        tid = v._id
-                    }
-                    emails[mid].nest = emails[irt].nest + 1
-                    table.insert(threads, emails[irt])
+                
+                -- If we can't match by in-reply-to or references, match/group by subject, ignoring Re:/Fwd:/etc
+                if not emails[irt] then
+                    irt = email.subject:gsub("^[a-zA-Z]+:%s+", "")
+                    while irt:match("^[a-zA-Z]+:%s+") do
+                        irt = irt:gsub("^[a-zA-Z]+:%s+", "")
+                    end
+                end
+                local refpoint = irt or email['references'] or ""
+                local point = emails[irt] or (#refpoint > 0 and findSubject(emails, emls, irt, email.epoch))
+                -- Try a little harder??
+                if not point and email.subject:match("^[A-Za-z]+:%s+") then  -- if this is a 'Re:' or 'Aw:' or 'Fwd:', try to find parent anyway
+                    point = findSubject(emails, emls, irt, email.epoch, 30) -- at most, go back 30 days. if not, then they don't belong together...I guess
+                end
+                    
+                if point then
+                    if point.nest < 50 then
+                        point.nest = point.nest + 1
+                        table.insert(point.children, emails[mid])
+                    end
                 else
-                    table.insert(threads, emails[mid])
+                    if (irt ~= JSON.null and #irt > 0) then
+                        emails[irt] = {
+                            children = {
+                                emails[mid]
+                            },
+                            nest = 1,
+                            epoch = email.epoch,
+                            tid = v._id
+                        }
+                        emails[mid].nest = emails[irt].nest + 1
+                        table.insert(threads, emails[irt])
+                    else
+                        table.insert(threads, emails[mid])
+                    end
                 end
+                -- needed for emailsOnly
+                email.references = nil
             end
-            -- keep references if thread_struct is omitted
-            if not emailsOnly then
-                 email.references = nil
-            end
+
             email.to = nil
             -- Duplicate of email.irt
             email['in-reply-to'] = nil
