@@ -667,7 +667,7 @@ function handle(r)
             end
             email.to = nil
             -- Duplicate of email.irt
-            email['in-reply-to'] = nil -- 
+            email['in-reply-to'] = nil
             if not account and config.antispam then
                 email.from = email.from:gsub("(%S+)@(%S+)", function(a,b) return a:sub(1,2) .. "..." .. "@" .. b end)
             end
@@ -726,7 +726,8 @@ function handle(r)
     end
 
     if JSON.encode_max_depth then
-        JSON.encode_max_depth(500)
+        -- TODO see #439
+        JSON.encode_max_depth(1000)
     end
     listdata.max = maxresults
     listdata.using_wc = wc
