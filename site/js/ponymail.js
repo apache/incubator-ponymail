@@ -1824,8 +1824,8 @@ function highlightNewEmails(id) {
 }
 
 function displaySingleThread(json) {
-    if (json && json.thread) {
-        current_thread_json = [json.thread]
+    if (json && json.emails[0]) {
+        current_thread_json = [json.emails[0]]
         current_flat_json = json.emails
     }
     var thread = document.getElementById('thread_0')
@@ -4721,8 +4721,8 @@ function showStats(json) {
 
 // simple func that just redirects to the original thread URL we just got if possible
 function timeTravelSingleThreadRedirect(json) {
-    if (json && json.thread) {
-        location.href = URL_BASE + "/thread.html/" + (pm_config.shortLinks ? shortenID(json.thread.mid) : json.thread.mid)
+    if (json && json.emails[0]) {
+        location.href = URL_BASE + "/thread.html/" + (pm_config.shortLinks ? shortenID(json.emails[0].mid) : json.emails[0].mid)
     }
 }
 
@@ -4742,24 +4742,24 @@ function timeTravelListRedirect(json, state) {
         }
     }
     // Did we receive timetravel data?
-    if (json && json.thread) {
+    if (json && json.emails[0]) {
         var osubs = countSubs(current_thread_json[state.id])
-        var nsubs = countSubs(json.thread)
+        var nsubs = countSubs(json.emails[0])
         var oid = current_thread_json[state.id].tid
         
         // Did we actually get more emails now than we had before?
-        if (nsubs > osubs || nsubs >= osubs && !json.thread.irt) {
+        if (nsubs > osubs || nsubs >= osubs && !json.emails[0].irt) {
             if (prefs.displayMode == 'threaded') {
                 toggleEmails_threaded(state.id)
-                current_thread_json[state.id] = json.thread
+                current_thread_json[state.id] = json.emails[0]
                 toggleEmails_threaded(state.id)
             } else if (prefs.displayMode == 'treeview') {
                 toggleEmails_treeview(state.id)
-                current_thread_json[state.id] = json.thread
+                current_thread_json[state.id] = json.emails[0]
                 toggleEmails_treeview(state.id)
             }
-            var subs = countSubs(json.thread)
-            var parts = countParts(json.thread)
+            var subs = countSubs(json.emails[0])
+            var parts = countParts(json.emails[0])
             // If we have subs/people labels available, change them and set the newly found stats
             if (document.getElementById('subs_' + state.id) != null) {
                 document.getElementById('subs_' + state.id).innerHTML = "<span class='glyphicon glyphicon-envelope'> </span> " + subs + " replies"

@@ -462,8 +462,8 @@ function highlightNewEmails(id) {
 }
 
 function displaySingleThread(json) {
-    if (json && json.thread) {
-        current_thread_json = [json.thread]
+    if (json && json.emails[0]) {
+        current_thread_json = [json.emails[0]]
         current_flat_json = json.emails
     }
     var thread = document.getElementById('thread_0')

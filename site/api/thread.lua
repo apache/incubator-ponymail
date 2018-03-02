@@ -112,7 +112,6 @@ function handle(r)
             --doc.body = nil
             r:puts(JSON.encode({
                 took = DEBUG and (r:clock() - START) or nil,
-                thread = doc,
                 emails = emls_thrd,
             }))
             return cross.OK
