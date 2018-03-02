@@ -157,7 +157,9 @@ function displayEmail(json, id, level) {
             
             thread.innerHTML += "<br/>"
             //thread.style.border = "1px dotted #666"
-            thread.style.padding = "5px"
+            thread.style.padding = "0px"
+            thread.style.leftpadding = "10px"
+            thread.style.rightpadding = "0px"
             thread.style.fontFamily = "Hack"
             
             var fields = ['From', 'To', 'CC', 'Subject', 'Date']
