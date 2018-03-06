@@ -95,6 +95,8 @@ def medium(msg, body, lid, attachments):
 # This is the recommended generator for cluster setups.
 # Unlike 'medium', this only makes use of the Date: header and not the archived-at,
 # as the archived-at may change from node to node (and will change if not in the raw mbox file)
+# Also the lid is not included in the hash, so the hash does not change if the lid is overridden
+#
 def cluster(msg, body, lid, attachments):
     """
     Use data that is guaranteed to be the same across cluster setups
@@ -104,7 +106,6 @@ def cluster(msg, body, lid, attachments):
     The following message fields are concatenated to form the hash input:
     - body as is if bytes else encoded ascii, ignoring invalid characters; if the body is null it is treated as an empty string
       (currently trailing whitespace is dropped)
-    - lid
     - Message-ID (if present)
     - Date header converted to YYYY/MM/DD HH:MM:SS (UTC)
       or "(null)" if the date does not exist or cannot be converted
@@ -112,6 +113,8 @@ def cluster(msg, body, lid, attachments):
     - subject, encoded as ascii (if the field exists)
     - the hashes of any attachments
 
+    Note: the lid is not included in the hash.
+    
     Parameters:
     msg - the parsed message
     body - the parsed text content
