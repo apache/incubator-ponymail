@@ -35,10 +35,6 @@ import multiprocessing
 import tempfile
 import gzip
 
-# Temporary patch to fix Python email package limitation
-# It must be removed when the Python package is fixed
-from mboxo_patch import MboxoFactory, MboxoReader
-
 try:
     from elasticsearch import Elasticsearch, helpers
     from formatflowed import convertToWrapped # only needed by archiver
@@ -81,6 +77,7 @@ timeout = 600
 fromFilter = None
 dedup = False
 dedupped = 0
+noMboxo = False # Don't skip MBoxo patch
 
 # Fetch config
 path = os.path.dirname(os.path.realpath(__file__))
@@ -213,7 +210,7 @@ class SlurpThread(Thread):
                     except Exception as err:
                         self.printid("This wasn't a gzip file: %s" % err )
                 self.printid("Slurping %s" % filename)
-                messages = mailbox.mbox(tmpname, MboxoFactory, create=False)
+                messages = mailbox.mbox(tmpname, None if noMboxo else MboxoFactory, create=False)
 
             else:
                 ml = mla[0]
@@ -231,7 +228,7 @@ class SlurpThread(Thread):
                 tmpname = hashlib.sha224(("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile)).encode('utf-8') ).hexdigest()
                 with open(tmpname, "w") as f:
                     f.write(inp)
-                messages = mailbox.mbox(tmpname, MboxoFactory, create=False)
+                messages = mailbox.mbox(tmpname, None if noMboxo else MboxoFactory, create=False)
 
             count = 0
             bad = 0
@@ -425,6 +422,8 @@ parser.add_argument('--timeout', dest='timeout', type=int, nargs=1,
                    help='Optional timeout in secs for importing an mbox/maildir file (default is 600 seconds)')
 parser.add_argument('--filter', dest = 'fromfilter', type=str, nargs=1,
                     help = 'Optional sender filter: Only import emails from this address')
+parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
+                    help = 'Skip Mboxo processing')
 
 args = parser.parse_args()
 
@@ -461,6 +460,13 @@ if args.ibody:
     archiver.iBody = args.ibody[0]
 if args.fromfilter:
     fromFilter = args.fromfilter[0]
+if args.nomboxo:
+    noMboxo = args.nomboxo
+else:
+    # Temporary patch to fix Python email package limitation
+    # It must be removed when the Python package is fixed
+    from mboxo_patch import MboxoFactory, MboxoReader
+
 if args.resend:
     resendTo = args.resend[0]
     from smtplib import SMTP

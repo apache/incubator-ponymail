@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Enh: make MboxoFactory optional (#442)
 - Bug: duplication of data in response from thread.lua (#440)
 - Bug: Indentation in mail content (leading white-space) not shown (#432)
 - Bug: does not make sense to allow empty domain name in LID (#434)
