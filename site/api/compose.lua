@@ -77,6 +77,7 @@ function handle(r)
                 
                 -- standard headers + headers we need ourselves for parsing in the archiver (notifications etc)
                 local headers = {
+                    ['Content-Type'] = 'text/plain; charset=utf-8',
                     ['X-PonyMail-Sender'] = r:sha1(account.cid),
                     ['X-PonyMail-Agent'] = "PonyMail Composer/0.2",
                     ['message-id'] = ("<pony-%s-%s@%s>"):format(r:sha1(account.cid), r:sha1(r:clock() .. os.time() .. r.useragent_ip), post.to:gsub("@", ".")),
