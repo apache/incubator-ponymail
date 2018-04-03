@@ -5,6 +5,7 @@
 - Bug: does not make sense to allow empty domain name in LID (#434)
 - Bug: Inconsistent LID validation (#356)
 - Enh: option to reduce stats.lua output (#438)
+- Bug: Threading should take References header into account (#444)
 
 ## CHANGES in 0.10:
 - Bug: Use correct dependency order to fix OAuth login problem (#431)

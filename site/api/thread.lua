@@ -39,7 +39,8 @@ local function fetchChildren(r, pdoc, c, biglist, account)
     biglist = biglist or {}
     local children = {}
     -- find any emails that reference this one
-    local docs = elastic.findFast('in-reply-to:"' .. r:escape(pdoc['message-id'])..'"', 50, "mbox")
+    local emid = r:escape(pdoc['message-id'])
+    local docs = elastic.findFast( ('in-reply-to:"%s" OR references:"%s"'):format(emid, emid), 50, "mbox")
     for k, doc in pairs(docs) do
         -- if we haven't seen this email before, check for its kids and add it to the bunch
         if (not biglist[doc['message-id']]) and aaa.canAccessDoc(r, doc, account) then
