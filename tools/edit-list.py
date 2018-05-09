@@ -27,6 +27,7 @@ This utility can be used to:
 
 """
 
+import os
 import sys
 import time
 import configparser
@@ -41,8 +42,9 @@ except:
 
 
 # Fetch config
+path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
+config.read("%s/ponymail.cfg" % path)
 
 dbname = config.get("elasticsearch", "dbname")
 ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
