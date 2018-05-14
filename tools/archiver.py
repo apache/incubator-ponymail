@@ -463,6 +463,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     },f , indent = 2)
                     f.close()
                 sys.exit(0) # We're exiting here, the rest can't be done without ES
+            # otherwise fail as before
+            raise err
                 
         # If MailMan and list info is present, save/update it in ES:
         if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
