@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: copy-list.py does not work (#450)
 - Bug: unnecessary test (will always succeed) in copy-list.py (#451)
 - Bug: archiver ignores failures if dumponfail is not defined (#449)
 - Enh: make MboxoFactory optional (#442)

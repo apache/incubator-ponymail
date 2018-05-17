@@ -155,10 +155,11 @@ while (scroll_size > 0):
             source = es.get(index = dbname, doc_type = 'mbox_source', id = doc)
         except:
             print("Source for %s not found, hmm..." % doc)
-        if targetLID:
-            if not newdb:
-                body['list_raw'] = targetLID
-                body['list'] = targetLID
+        if targetLID != sourceLID:
+            doc = hit['_id'].replace(sourceLID,targetLID)
+            body['_source']['mid'] = doc
+            body['_source']['list_raw'] = targetLID
+            body['_source']['list'] = targetLID
         js_arr.append({
             '_op_type': 'index',
             '_index': newdb if newdb else dbname,
