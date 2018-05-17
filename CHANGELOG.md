@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: ES 5.x does not support word-cloud (stats.lua) (#345)
 - Add version info to elastic module
 - Bug: setup.py fails with ES2 - fielddata (#453)
 - Bug: setup.py --default should not prompt for urlPrefix (#452)
