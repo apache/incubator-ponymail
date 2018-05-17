@@ -26,6 +26,7 @@ import logging
 
 try:
     from elasticsearch import Elasticsearch, helpers
+    from elasticsearch import VERSION as ES_VERSION
 except Exception as e:
     sys.exit("Sorry, you need to install the elasticsearch module from pip first. (%s)" % str(e))
 
@@ -63,7 +64,20 @@ class Elastic:
             max_retries=5,
             retry_on_timeout=True
             )
-    
+        self.dbVersion = None
+
+    def libraryVersion(self):
+        return ES_VERSION
+    def libraryMajor(self):
+        return ES_VERSION[0]
+
+    def engineVersion(self):
+        if not self.dbVersion:
+            self.dbVersion = self.info()['version']['number']
+        return self.dbVersion
+    def engineMajor(self):
+        return int(self.engineVersion().split('.')[0])
+        
     def search(self, doc_type='mbox', **kwargs):
         return self.es.search(
             index=self.dbname,
@@ -96,6 +110,9 @@ class Elastic:
     def scroll(self, **kwargs):
         return self.es.scroll(**kwargs)
     
+    def info(self, **kwargs):
+        return self.es.info(**kwargs)
+
     def bulk(self, actions, **kwargs):
         return helpers.bulk(self.es, actions, **kwargs)
 
@@ -108,3 +125,7 @@ class Elastic:
     """
     def clear_scroll(self, *args, **kwargs):
         return self.es.clear_scroll(*args, **kwargs)
+
+if __name__ == '__main__':
+    es = Elastic()
+    print("Versions: Library: %d %s Engine: %d (%s)" % (es.libraryMajor(), es.libraryVersion(), es.engineMajor(), es.engineVersion()))

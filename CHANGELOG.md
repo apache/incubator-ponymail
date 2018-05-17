@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Add version info to elastic module
 - Bug: setup.py fails with ES2 - fielddata (#453)
 - Bug: setup.py --default should not prompt for urlPrefix (#452)
 - Bug: copy-list.py does not work (#450)
