@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: setup.py --default should not prompt for urlPrefix (#452)
 - Bug: copy-list.py does not work (#450)
 - Bug: unnecessary test (will always succeed) in copy-list.py (#451)
 - Bug: archiver ignores failures if dumponfail is not defined (#449)

@@ -114,6 +114,7 @@ if args.defaults:
     shards = 1
     replicas = 0
     genname = "cluster"
+    urlPrefix = ''
 
 # Accept CLI args, copy them
 if args.dbprefix:
