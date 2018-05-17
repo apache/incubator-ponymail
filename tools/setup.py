@@ -206,6 +206,10 @@ def createIndex():
         retry_on_timeout=True
         )
 
+    DB_VERSION=es.info()['version']['number']
+    DB_MAJOR=int(DB_VERSION.split('.')[0])
+    print("Versions: library %d (%s), engine %d (%s)" % (ES_MAJOR, '.'.join(map(str,ES_VERSION)) , DB_MAJOR, DB_VERSION))
+
     # Check if index already exists
     if es.indices.exists(dbname):
         if args.soe:
@@ -297,7 +301,7 @@ def createIndex():
             },
             "subject" : {
               "type" : "string",
-              "fielddata": True
+              "fielddata": True # dropped later if DB_MAJOR==2
             },
             "to" : {
               "type" : "string"
@@ -442,7 +446,7 @@ def createIndex():
             },
             "subject" : {
               "type" : "string",
-              "fielddata": True
+              "fielddata": True # dropped later if DB_MAJOR==2
 #               "index" : "not_analyzed"
             },
             "to" : {
@@ -456,7 +460,11 @@ def createIndex():
           }
         }
     }
- 
+
+    if DB_MAJOR == 2: # ES 2 handles fielddata differently
+        del mappings['mbox']['properties']['subject']['fielddata']
+        del mappings['notifications']['properties']['subject']['fielddata']
+
     res = es.indices.create(index = dbname, body = {
                 "mappings" : mappings,
                 "settings": settings
