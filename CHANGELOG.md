@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: unnecessary test (will always succeed) in copy-list.py (#451)
 - Bug: archiver ignores failures if dumponfail is not defined (#449)
 - Enh: make MboxoFactory optional (#442)
 - Bug: duplication of data in response from thread.lua (#440)

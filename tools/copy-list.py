@@ -118,71 +118,70 @@ if newdb:
 count = 0
 
     
-if targetLID or newdb:
-    print("Updating docs...")
-    then = time.time()
-    page = es.search(
-        index=dbname,
-        doc_type="mbox",
-        scroll = '30m',
-        search_type = 'scan',
-        size = 100,
-        body = {
-            'query': {
-                'bool': {
-                    'must': [
-                        {
-                            'wildcard' if wildcard else 'term': {
-                                'list_raw': sourceLID
-                            }
+print("Updating docs...")
+then = time.time()
+page = es.search(
+    index=dbname,
+    doc_type="mbox",
+    scroll = '30m',
+    search_type = 'scan',
+    size = 100,
+    body = {
+        'query': {
+            'bool': {
+                'must': [
+                    {
+                        'wildcard' if wildcard else 'term': {
+                            'list_raw': sourceLID
                         }
-                    ]
-                }
+                    }
+                ]
             }
         }
-        )
+    }
+    )
+sid = page['_scroll_id']
+scroll_size = page['hits']['total']
+js_arr = []
+while (scroll_size > 0):
+    page = es.scroll(scroll_id = sid, scroll = '30m')
     sid = page['_scroll_id']
-    scroll_size = page['hits']['total']
-    js_arr = []
-    while (scroll_size > 0):
-        page = es.scroll(scroll_id = sid, scroll = '30m')
-        sid = page['_scroll_id']
-        scroll_size = len(page['hits']['hits'])
-        for hit in page['hits']['hits']:
-            doc = hit['_id']
-            body = es.get(index = dbname, doc_type = 'mbox', id = doc)
-            source = None
-            try:
-                source = es.get(index = dbname, doc_type = 'mbox_source', id = doc)
-            except:
-                print("Source for %s not found, hmm..." % doc)
-            if targetLID:
-                if not newdb:
-                    body['list_raw'] = targetLID
-                    body['list'] = targetLID
+    scroll_size = len(page['hits']['hits'])
+    for hit in page['hits']['hits']:
+        doc = hit['_id']
+        body = es.get(index = dbname, doc_type = 'mbox', id = doc)
+        source = None
+        try:
+            source = es.get(index = dbname, doc_type = 'mbox_source', id = doc)
+        except:
+            print("Source for %s not found, hmm..." % doc)
+        if targetLID:
+            if not newdb:
+                body['list_raw'] = targetLID
+                body['list'] = targetLID
+        js_arr.append({
+            '_op_type': 'index',
+            '_index': newdb if newdb else dbname,
+            '_type': 'mbox',
+            '_id': doc,
+            '_source': body['_source']
+        })
+        if source:
             js_arr.append({
                 '_op_type': 'index',
                 '_index': newdb if newdb else dbname,
-                '_type': 'mbox',
+                '_type': 'mbox_source',
                 '_id': doc,
-                '_source': body['_source']
+                '_source': source['_source']
             })
-            if source:
-                js_arr.append({
-                    '_op_type': 'index',
-                    '_index': newdb if newdb else dbname,
-                    '_type': 'mbox_source',
-                    '_id': doc,
-                    '_source': source['_source']
-                })
+        
+        count += 1
+        if (count % 50 == 0):
+            print("Processed %u emails..." % count)
+            helpers.bulk(es, js_arr)
+            js_arr = []
+
+if len(js_arr) > 0:
+    helpers.bulk(es, js_arr)
             
-            count += 1
-            if (count % 50 == 0):
-                print("Processed %u emails..." % count)
-                helpers.bulk(es, js_arr)
-                js_arr = []
-    
-    if len(js_arr) > 0:
-        helpers.bulk(es, js_arr)
-                
-    print("All done, processed %u docs in %u seconds" % (count, time.time() - then))
+print("All done, processed %u docs in %u seconds" % (count, time.time() - then))
