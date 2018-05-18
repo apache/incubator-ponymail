@@ -454,6 +454,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 mboxPath = os.path.join(dumpDir, "%s.json" % uid)
                 with open(mboxPath, "w") as f:
                     json.dump({
+                        'id': ojson['mid'],
                         'mbox': ojson,
                         'mbox_source': {
                             "message-id": msg_metadata['message-id'],

@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: push-failures.py expects to find non-existent 'id' key in json file (#454)
 - Bug: ES 5.x does not support word-cloud (stats.lua) (#345)
 - Add version info to elastic module
 - Bug: setup.py fails with ES2 - fielddata (#453)

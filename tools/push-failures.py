@@ -70,17 +70,21 @@ for f in files:
     with open(fpath, "r") as f:
         ojson = json.load(f)
         if 'mbox' in ojson and 'mbox_source' in ojson:
+            try:
+                id = ojson['id']
+            except KeyError:
+                id = ojson['mbox']['mid']
             es.index(
                 index=dbname,
                 doc_type="mbox",
-                id=ojson['id'],
+                id=id,
                 body = ojson['mbox']
             )
             
             es.index(
                 index=dbname,
                 doc_type="mbox_source",
-                id=ojson['id'],
+                id=id,
                 body = ojson['mbox_source']
             )
             
