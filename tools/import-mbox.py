@@ -117,7 +117,6 @@ class BulkThread(Thread):
         self.wc = wc
 
     def insert(self):
-        global config
         sys.stderr.flush()
 
         js_arr = []
@@ -149,7 +148,7 @@ class SlurpThread(Thread):
         print("%s: %s" % (self.name, message))
 
     def run(self):
-        global block, y, es, lists, baddies, config, resendTo, timeout, dedupped, dedup
+        global block, y, es, lists, baddies, resendTo, timeout, dedupped, dedup
         self.name = Thread.getName(self)
         ja = []
         jas = []
