@@ -23,6 +23,7 @@
 import configparser
 import sys
 import logging
+import certifi
 
 try:
     from elasticsearch import Elasticsearch, helpers
