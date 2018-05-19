@@ -20,7 +20,7 @@
     also adds defaults for most methods
 """
 
-import configparser
+from ponymailconfig import PonymailConfig
 import sys
 import logging
 import certifi
@@ -34,8 +34,7 @@ except Exception as e:
 class Elastic:
     def __init__(self, dbname=None, **kwargs):
         # Fetch config
-        config = configparser.RawConfigParser()
-        config.read('ponymail.cfg')
+        config = PonymailConfig()
         self.dbname = dbname or config.get("elasticsearch", "dbname")
         ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
         uri = config.get("elasticsearch", "uri", fallback="")
