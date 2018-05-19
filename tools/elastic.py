@@ -59,7 +59,8 @@ class Elastic:
                 'port': int(config.get("elasticsearch", "port")),
                 'use_ssl': ssl,
                 'url_prefix': uri,
-                'auth': auth
+                'auth': auth,
+                'ca_certs': certifi.where()
             }],
             max_retries=5,
             retry_on_timeout=True
