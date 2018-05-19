@@ -22,5 +22,5 @@ site/api/lib/aaa_site.lua
 
 # Note:
 # Add local overrides to one of the following files:
-# $HOME/.config/git/ignore - applies to all local git repos
+# git config --get core.excludesfile - applies to all local git repos
 # $GIT_DIR/info/exclude - applies to the local git repo (not replicated)
