@@ -23,7 +23,7 @@ import json
 
 try:
     from elasticsearch import Elasticsearch
-except:
+except ImportError:
     print("Sorry, you need to install the elasticsearch module from pip first.")
     sys.exit(-1)
     
