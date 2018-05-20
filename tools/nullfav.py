@@ -53,19 +53,19 @@ while (scroll_size > 0):
     sid = page['_scroll_id']
     scroll_size = len(page['hits']['hits'])
     for hit in page['hits']['hits']:
-        id = hit['_id']
+        mid = hit['_id']
         source = hit['_source']
         if FAVES in source:
             favorites = source[FAVES]
             if TARGET in favorites:
                 newfav = [x for x in favorites if x != TARGET]
                 if not args.apply:
-                    print("Would update account id %s" % id)
+                    print("Would update account mid %s" % mid)
                     continue
-                print("Updating account id %s" % id)
+                print("Updating account mid %s" % mid)
                 try:
                     elastic.update(doc_type='account',
-                        id = id,
+                        id = mid,
                         body = {
                           'doc': {
                             FAVES: newfav
@@ -74,7 +74,7 @@ while (scroll_size > 0):
                     )
                     updated +=1
                 except Exception as e:
-                    print("Error updating id %s: %s" % (id,e))
+                    print("Error updating mid %s: %s" % (mid,e))
                     failed += 1
 
 if args.apply:
