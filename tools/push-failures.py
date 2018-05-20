@@ -19,7 +19,6 @@
 """
 
 import sys
-import time
 import configparser
 import argparse
 import json
@@ -27,9 +26,9 @@ import os
 import certifi
 
 try:
-    from elasticsearch import Elasticsearch, helpers
-except:
-    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
+    from elasticsearch import Elasticsearch
+except ImportError:
+    print("Sorry, you need to install the elasticsearch module from pip first.")
     sys.exit(-1)
 
 
@@ -71,20 +70,20 @@ for f in files:
         ojson = json.load(f)
         if 'mbox' in ojson and 'mbox_source' in ojson:
             try:
-                id = ojson['id']
+                mid = ojson['id']
             except KeyError:
-                id = ojson['mbox']['mid']
+                mid = ojson['mbox']['mid']
             es.index(
                 index=dbname,
                 doc_type="mbox",
-                id=id,
+                id=mid,
                 body = ojson['mbox']
             )
             
             es.index(
                 index=dbname,
                 doc_type="mbox_source",
-                id=id,
+                id=mid,
                 body = ojson['mbox_source']
             )
             
