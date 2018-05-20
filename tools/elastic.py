@@ -117,14 +117,14 @@ class Elastic:
     def bulk(self, actions, **kwargs):
         return helpers.bulk(self.es, actions, **kwargs)
 
-    """ 
-        Call this to release the scroll id and its resources
-
-        It looks like the Python library already releases the SID
-        if the caller scrolls to the end of the results, so only need to call this
-        when terminating scrolling early.
-    """
     def clear_scroll(self, *args, **kwargs):
+        """ 
+            Call this to release the scroll id and its resources
+    
+            It looks like the Python library already releases the SID
+            if the caller scrolls to the end of the results, so only need to call this
+            when terminating scrolling early.
+        """
         return self.es.clear_scroll(*args, **kwargs)
 
 if __name__ == '__main__':
