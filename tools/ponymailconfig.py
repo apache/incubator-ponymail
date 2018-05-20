@@ -33,6 +33,6 @@ from configparser import RawConfigParser
 class PonymailConfig(RawConfigParser):
 
     def __init__(self,*args, **kwargs):
-        super(self.__class__, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         path = os.path.dirname(os.path.realpath(__file__))
         RawConfigParser.read(self, "%s/ponymail.cfg" % path)
