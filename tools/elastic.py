@@ -28,11 +28,11 @@ import certifi
 try:
     from elasticsearch import Elasticsearch, helpers
     from elasticsearch import VERSION as ES_VERSION
-except Exception as e:
+except ImportError as e:
     sys.exit("Sorry, you need to install the elasticsearch module from pip first. (%s)" % str(e))
 
 class Elastic:
-    def __init__(self, dbname=None, **kwargs):
+    def __init__(self, dbname=None):
         # Fetch config
         config = PonymailConfig()
         self.dbname = dbname or config.get("elasticsearch", "dbname")
