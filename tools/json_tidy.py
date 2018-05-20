@@ -30,12 +30,12 @@ parser.add_argument("--drop", help="Comma-separated list of top-level keys to dr
 
 args = parser.parse_args()
 
-input = json.loads(sys.stdin.read())
+inp = json.loads(sys.stdin.read())
 for key in args.drop.split(','):
     try:
-        del input[key]
+        del inp[key]
     except KeyError:
         pass
 
-json.dump(input, sys.stdout, indent=args.indent, sort_keys=True)
+json.dump(inp, sys.stdout, indent=args.indent, sort_keys=True)
 print("") # EOL at EOF
