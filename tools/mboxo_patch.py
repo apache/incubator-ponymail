@@ -55,10 +55,10 @@ FROMS=(FROM_MANGLED[:-1],
        FROM_MANGLED[:-6],
        )
 
-class MboxoReader(mailbox._PartialFile):
+class MboxoReader(mailbox._PartialFile): # pylint: disable=W0212
     def __init__(self, f, start=None, stop=None):
         self.remain=0 # number of bytes to keep for next read
-        super().__init__(f._file, start=f._start, stop=f._stop)
+        super().__init__(f._file, start=f._start, stop=f._stop) # pylint: disable=W0212
 
     # Override the read method to provide mboxo filtering
     def _read(self, size, read_method):
@@ -71,16 +71,16 @@ class MboxoReader(mailbox._PartialFile):
         # ensure we get enough to match successfully when refilling
         if limited_read and size < FROM_MANGLED_LEN:
             size = FROM_MANGLED_LEN
-        bytes = super()._read(size, read_method)
-        bufflen=len(bytes)
+        buff = super()._read(size, read_method)
+        bufflen=len(buff)
         # did we get anything new?
         if limited_read and bufflen > self.remain:
             # is there a potential cross-boundary match?
-            if bytes.endswith(FROMS):
+            if buff.endswith(FROMS):
                 # yes, work out what to keep
                 # N.B. rindex will fail if it cannot find the LF;
                 # this should be impossible
-                self.remain=bufflen - bytes.rindex(b'\n')
+                self.remain=bufflen - buff.rindex(b'\n')
             else:
                 # don't need to keep anything back
                 self.remain=0
@@ -90,7 +90,7 @@ class MboxoReader(mailbox._PartialFile):
         # we cannot use -0 to mean end of array...
         end = bufflen if self.remain == 0 else -self.remain
         # exclude the potential split match from the return
-        return bytes[:end].replace(FROM_MANGLED, FROM_UNMANGLED)
+        return buff[:end].replace(FROM_MANGLED, FROM_UNMANGLED)
 
 class MboxoFactory(mailbox.mboxMessage):
     def __init__(self, message=None):
