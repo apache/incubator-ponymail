@@ -62,5 +62,5 @@ def _collapse_rfc2231_value(value, errors='replace',
 def patch():
     old = utils.collapse_rfc2231_value
     utils.collapse_rfc2231_value = _collapse_rfc2231_value
-    return old
     print("Overiding broken collapse_rfc2231_value")
+    return old
