@@ -35,7 +35,7 @@ import json
 
 try:
     from elasticsearch import Elasticsearch, helpers
-except:
+except ImportError:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
 

@@ -29,7 +29,7 @@ try:
     from elasticsearch import Elasticsearch
     from elasticsearch import VERSION as ES_VERSION
     ES_MAJOR = ES_VERSION[0]
-except:
+except ImportError:
     dopip = True
     
 if dopip and (getpass.getuser() != "root"):
@@ -44,7 +44,7 @@ elif dopip:
     try:
         subprocess.check_call(('pip3','install','elasticsearch','formatflowed', 'netaddr', 'certifi'))
         from elasticsearch import Elasticsearch
-    except:
+    except ImportError:
         print("Oh dear, looks like this failed :(")
         print("Please install elasticsearch and formatflowed before you try again:")
         print("pip install elasticsearch formatflowed netaddr certifi")
