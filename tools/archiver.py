@@ -84,9 +84,9 @@ if config.has_option('elasticsearch', 'user'):
 
 archiver_generator = config.get("archiver", "generator", fallback="medium")
 
-def encode_base64(bytes):
+def encode_base64(buff):
     """ Convert bytes to base64 as text string (no newlines) """
-    return standard_b64encode(bytes).decode('ascii', 'ignore')
+    return standard_b64encode(buff).decode('ascii', 'ignore')
 
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
@@ -402,8 +402,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
 
         ojson, contents = self.compute_updates(lid, private, msg)
         if not ojson:
-            id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
-            raise Exception("Could not parse message %s for %s" % (id,lid))
+            _id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
+            raise Exception("Could not parse message %s for %s" % (_id,lid))
 
         if args.dry:
             print("**** Dry run, not saving message to database *****")
