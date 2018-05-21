@@ -120,7 +120,6 @@ class BulkThread(Thread):
         sys.stderr.flush()
 
         js_arr = []
-        i = 0
         for entry in self.json:
             js = entry
             mid = js['mid']
@@ -175,8 +174,6 @@ class SlurpThread(Thread):
             finally:
                 block.release()
 
-            EY = 1980
-            EM = 1
             stime = time.time()
             dFile = False
             if maildir:
@@ -215,12 +212,6 @@ class SlurpThread(Thread):
                 ml = mla[0]
                 mboxfile = mla[1]
                 self.printid("Slurping %s/%s" % (ml, mboxfile))
-                m = re.match(r"(\d\d\d\d)(\d\d)", mboxfile)
-                EY = 1997
-                EM = 1
-                if m:
-                    EY = int(m.group(1))
-                    EM = int(m.group(2))
                 ctx = urlopen("%s%s/%s" % (source, ml, mboxfile ))
                 inp = ctx.read().decode(ctx.headers.get_content_charset() or 'utf-8', errors='ignore')
     
@@ -231,7 +222,6 @@ class SlurpThread(Thread):
 
             count = 0
             bad = 0
-            LEY = EY
             
             
             for key in messages.iterkeys():
