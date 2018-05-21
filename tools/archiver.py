@@ -45,7 +45,6 @@ ES_MAJOR = ES_VERSION[0]
 from formatflowed import convertToWrapped
 import hashlib
 import email.utils
-from email import policy
 import time
 from collections import namedtuple
 import re
@@ -54,7 +53,6 @@ import chardet
 import configparser
 import os
 import fnmatch
-import io
 import logging
 import traceback
 import sys
@@ -79,7 +77,6 @@ if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from mailman.interfaces.archiver import ArchivePolicy
     logger = logging.getLogger("mailman.archiver")
 elif __name__ == '__main__':
-    import sys
     import argparse
 
 if config.has_option('elasticsearch', 'user'):
@@ -694,7 +691,6 @@ if __name__ == '__main__':
                 print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
             except Exception as err:
                 if args.verbose:
-                    import traceback
                     traceback.print_exc()
                 print("Archiving failed!: %s" % err)
                 raise Exception("Archiving to ES failed")
