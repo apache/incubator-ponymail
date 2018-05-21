@@ -29,8 +29,8 @@ import configparser
 import argparse
 
 try:
-    from elasticsearch import Elasticsearch, helpers
-except:
+    from elasticsearch import Elasticsearch, helpers, ElasticsearchException
+except ImportError:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
     sys.exit(-1)
     
@@ -153,7 +153,7 @@ while (scroll_size > 0):
         source = None
         try:
             source = es.get(index = dbname, doc_type = 'mbox_source', id = doc)
-        except:
+        except ElasticsearchException:
             print("Source for %s not found, hmm..." % doc)
         if targetLID != sourceLID:
             doc = hit['_id'].replace(sourceLID,targetLID)
