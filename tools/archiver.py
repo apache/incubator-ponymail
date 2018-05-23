@@ -50,7 +50,7 @@ from collections import namedtuple
 import re
 from base64 import standard_b64encode
 import chardet
-import configparser
+from ponymailconfig import PonymailConfig
 import os
 import fnmatch
 import logging
@@ -62,9 +62,7 @@ import json
 import certifi
 
 # Fetch config
-path = os.path.dirname(os.path.realpath(__file__))
-config = configparser.RawConfigParser()
-config.read("%s/ponymail.cfg" % path)
+config = PonymailConfig()
 auth = None
 parseHTML = False
 iBody = None  # N.B. Also used by import-mbox.py

@@ -26,7 +26,7 @@ import mailbox
 import email.errors, email.utils, email.header
 from urllib.request import urlopen
 import re
-import configparser
+from ponymailconfig import PonymailConfig
 import argparse
 from os import listdir
 from os.path import isfile, join, isdir
@@ -80,9 +80,7 @@ dedupped = 0
 noMboxo = False # Don't skip MBoxo patch
 
 # Fetch config
-path = os.path.dirname(os.path.realpath(__file__))
-config = configparser.RawConfigParser()
-config.read("%s/ponymail.cfg" % path)
+config = PonymailConfig()
 auth = None
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
