@@ -111,6 +111,9 @@ class Elastic:
             **kwargs
         )
     
+    def get(self, **kwargs):
+        return self.es.get(index=self.dbname, **kwargs)
+
     def scroll(self, **kwargs):
         return self.es.scroll(**kwargs)
     
