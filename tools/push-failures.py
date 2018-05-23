@@ -18,39 +18,12 @@
 """ Utility for retrying docs that we failed to index earlier.
 """
 
-import sys
-import configparser
 import argparse
 import json
 import os
-import certifi
+from elastic import Elastic
 
-try:
-    from elasticsearch import Elasticsearch
-except ImportError:
-    print("Sorry, you need to install the elasticsearch module from pip first.")
-    sys.exit(-1)
-
-
-# Fetch config
-config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
-
-dbname = config.get("elasticsearch", "dbname")
-ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
-uri = config.get("elasticsearch", "uri", fallback="")
-
-es = Elasticsearch([
-    {
-        'host': config.get("elasticsearch", "hostname"),
-        'port': int(config.get("elasticsearch", "port")),
-        'use_ssl': ssl,
-        'url_prefix': uri,
-        'ca_certs': certifi.where()
-    }],
-    max_retries=5,
-    retry_on_timeout=True
-    )
+es = Elastic()
 
 parser = argparse.ArgumentParser(description='Command line options.')
 # Cannot have both source and mid as input
@@ -60,6 +33,8 @@ parser.add_argument('--source', dest='dumpdir',
 args = parser.parse_args()
 
 dumpDir = args.dumpdir if args.dumpdir else '.'
+
+print("Looking for *.json files in %s" % dumpDir)
 
 files = [f for f in os.listdir(dumpDir) if os.path.isfile(os.path.join(dumpDir, f)) and f.endswith('.json')]
 
@@ -74,14 +49,12 @@ for f in files:
             except KeyError:
                 mid = ojson['mbox']['mid']
             es.index(
-                index=dbname,
                 doc_type="mbox",
                 id=mid,
                 body = ojson['mbox']
             )
             
             es.index(
-                index=dbname,
                 doc_type="mbox_source",
                 id=mid,
                 body = ojson['mbox_source']
@@ -90,7 +63,6 @@ for f in files:
             if 'attachments' in ojson and ojson['attachments']:
                 for k, v in ojson['attachments'].items():
                     es.index(
-                        index=dbname,
                         doc_type="attachment",
                         id=k,
                         body = {

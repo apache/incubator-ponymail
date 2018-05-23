@@ -15,51 +15,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 import time
-import configparser
 import argparse
 import json
 
-try:
-    from elasticsearch import Elasticsearch
-except ImportError:
-    print("Sorry, you need to install the elasticsearch module from pip first.")
-    sys.exit(-1)
-    
+from elastic import Elastic
 
-# Fetch config
-config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
+dbname=None
 
-makePublic = None
-makePrivate = None
-sourceLID = None
-targetLID = None
-deleteEmails = None
-wildcard = None
+parser = argparse.ArgumentParser(description='Command line options.')
+parser.add_argument('--dbname', dest='dbname', type=str, nargs=1,
+                   help='Override index name')
+parser.add_argument('--pretty', dest='pretty', action='store_true', 
+                   help='Convert List IDs to email addresses')
+parser.add_argument('--debug', dest='debug', action='store_true', 
+                   help='Output the result JSON instead, very noisy!')
+parser.add_argument('--counts', dest='counts', action='store_true', 
+                   help='Show the count of messages for each list')
 
-ssl = False
-dbname = config.get("elasticsearch", "dbname")
-if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
-    ssl = True
-uri = ""
-if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
-    uri = config.get("elasticsearch", "uri")
-es = Elasticsearch([
-    {
-        'host': config.get("elasticsearch", "hostname"),
-        'port': int(config.get("elasticsearch", "port")),
-        'use_ssl': ssl,
-        'url_prefix': uri
-    }],
-    max_retries=5,
-    retry_on_timeout=True
-    )
+args = parser.parse_args()
+
+if args.dbname:
+    dbname = args.dbname[0]
 
 then = time.time()
+
+# get config and set up default database
+# If dbname is None, the config setting will be used
+es = Elastic(dbname=dbname)
+
 page = es.search(
-    index=dbname,
     doc_type="mbox",
     size = 0,
     body = {
@@ -96,16 +81,6 @@ page = es.search(
     }
     )
 
-parser = argparse.ArgumentParser(description='Command line options.')
-parser.add_argument('--pretty', dest='pretty', action='store_true', 
-                   help='Convert List IDs to email addresses')
-parser.add_argument('--debug', dest='debug', action='store_true', 
-                   help='Output the result JSON instead, very noisy!')
-parser.add_argument('--counts', dest='counts', action='store_true', 
-                   help='Show the count of messages for each list')
-
-args = parser.parse_args()
-pretty = args.pretty
 plist = {}
 total_private = 0
 if args.debug:
@@ -116,7 +91,7 @@ else:
         msgcount = domain['doc_count']
         prvcount = domain['privacy']['doc_count']
         total_private += prvcount
-        if pretty:
+        if args.pretty:
             if listid.find(".") != -1:
                 l, d = listid.strip("<>").split(".", 1)
                 plist[d] = plist[d] if d in plist else {}

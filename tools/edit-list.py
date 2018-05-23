@@ -29,35 +29,17 @@ This utility can be used to:
 
 import sys
 import time
-import configparser
 import argparse
 import json
 
-try:
-    from elasticsearch import Elasticsearch, helpers
-except ImportError:
-    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
-    sys.exit(-1)
+from elastic import Elastic
 
-
-# Fetch config
-config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
-
-dbname = config.get("elasticsearch", "dbname")
-ssl = config.get("elasticsearch", "ssl", fallback="false").lower() == 'true'
-uri = config.get("elasticsearch", "uri", fallback="")
-
-es = Elasticsearch([
-    {
-        'host': config.get("elasticsearch", "hostname"),
-        'port': int(config.get("elasticsearch", "port")),
-        'use_ssl': ssl,
-        'url_prefix': uri
-    }],
-    max_retries=5,
-    retry_on_timeout=True
-    )
+es = Elastic()
+dbname = es.getdbname()
+# get config and set up default databas
+es = Elastic()
+# default database name
+dbname = es.getdbname()
 
 parser = argparse.ArgumentParser(description='Command line options.')
 # Cannot have both source and mid as input
@@ -158,7 +140,6 @@ if desc:
         if targetLID:
             LID = targetLID
         es.index(
-            index=dbname,
             doc_type="mailinglists",
             id=LID,
             body = {
@@ -185,7 +166,6 @@ if targetLID or makePrivate or makePublic or deleteEmails or mid or obfuscate:
             }
         }
     page = es.search(
-        index=dbname,
         doc_type="mbox",
         scroll = '30m',
         search_type = 'scan',
@@ -239,11 +219,11 @@ if targetLID or makePrivate or makePublic or deleteEmails or mid or obfuscate:
             if (count % 500 == 0):
                 print("Processed %u emails..." % count)
                 if not dryrun:
-                    helpers.bulk(es, js_arr)
+                    es.bulk(js_arr)
                     js_arr = []
 
     if len(js_arr) > 0:
         if not dryrun:
-            helpers.bulk(es, js_arr)
+            es.bulk(js_arr)
 
     print("All done, processed %u docs in %u seconds" % (count, time.time() - then))

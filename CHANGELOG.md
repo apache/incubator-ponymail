@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Enh: remove duplicated code in tools scripts by using elastic.py module (#456)
 - Enh: separate module to read config file 
 - Bug: push-failures.py expects to find non-existent 'id' key in json file (#454)
 - Bug: ES 5.x does not support word-cloud (stats.lua) (#345)

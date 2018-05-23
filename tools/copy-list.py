@@ -25,19 +25,9 @@ This utility can be used to:
 
 import sys
 import time
-import configparser
 import argparse
 
-try:
-    from elasticsearch import Elasticsearch, helpers, ElasticsearchException
-except ImportError:
-    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.")
-    sys.exit(-1)
-    
-
-# Fetch config
-config = configparser.RawConfigParser()
-config.read('ponymail.cfg')
+from elastic import Elastic    
 
 sourceLID = None
 targetLID = None
@@ -46,23 +36,10 @@ debug = False
 notag = False
 newdb = None
 
-ssl = False
-dbname = config.get("elasticsearch", "dbname")
-if config.has_option("elasticsearch", "ssl") and config.get("elasticsearch", "ssl").lower() == 'true':
-    ssl = True
-uri = ""
-if config.has_option("elasticsearch", "uri") and config.get("elasticsearch", "uri") != "":
-    uri = config.get("elasticsearch", "uri")
-es = Elasticsearch([
-    {
-        'host': config.get("elasticsearch", "hostname"),
-        'port': int(config.get("elasticsearch", "port")),
-        'use_ssl': ssl,
-        'url_prefix': uri
-    }],
-    max_retries=5,
-    retry_on_timeout=True
-    )
+# get config and set up default databas
+es = Elastic()
+# default database name
+dbname = es.getdbname()
 
 rootURL = ""
 
@@ -126,7 +103,6 @@ count = 0
 print("Updating docs...")
 then = time.time()
 page = es.search(
-    index=dbname,
     doc_type="mbox",
     scroll = '30m',
     search_type = 'scan',
@@ -154,12 +130,7 @@ while (scroll_size > 0):
     scroll_size = len(page['hits']['hits'])
     for hit in page['hits']['hits']:
         doc = hit['_id']
-        body = es.get(index = dbname, doc_type = 'mbox', id = doc)
-        source = None
-        try:
-            source = es.get(index = dbname, doc_type = 'mbox_source', id = doc)
-        except ElasticsearchException:
-            print("Source for %s not found, hmm..." % doc)
+        body = es.get(doc_type = 'mbox', id = doc)
         if targetLID != sourceLID:
             doc = hit['_id'].replace(sourceLID,targetLID)
             body['_source']['mid'] = doc
@@ -172,7 +143,8 @@ while (scroll_size > 0):
             '_id': doc,
             '_source': body['_source']
         })
-        if source:
+        source = es.get(doc_type = 'mbox_source', id = doc, ignore=404)
+        if source['found']:
             js_arr.append({
                 '_op_type': 'index',
                 '_index': newdb if newdb else dbname,
@@ -180,14 +152,16 @@ while (scroll_size > 0):
                 '_id': doc,
                 '_source': source['_source']
             })
+        else:
+            print("Source for %s not found, hmm..." % doc)
         
         count += 1
         if (count % 50 == 0):
             print("Processed %u emails..." % count)
-            helpers.bulk(es, js_arr)
+            es.bulk(js_arr)
             js_arr = []
 
 if len(js_arr) > 0:
-    helpers.bulk(es, js_arr)
+    es.bulk(js_arr)
             
 print("All done, processed %u docs in %u seconds" % (count, time.time() - then))
