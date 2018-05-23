@@ -107,9 +107,14 @@ if newdb and not targetLID:
 
 if targetLID:
     targetLID = "<%s>" % targetLID.replace("@", ".").strip("<>")
+
+if targetLID == sourceLID and not newdb:
+    print("Nothing to do! Target same as source")
+    parser.print_help()
+    sys.exit(-1)
     
 print("Beginning list copy:")
-print("  - List ID: %s" % sourceLID)
+print("  - Source ID: %s" % sourceLID)
 if targetLID:
     print("  - Target ID: %s" % targetLID)
 if newdb:
