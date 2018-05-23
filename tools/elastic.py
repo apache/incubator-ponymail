@@ -79,6 +79,9 @@ class Elastic:
     def engineMajor(self):
         return int(self.engineVersion().split('.')[0])
         
+    def getdbname(self):
+        return self.dbname
+
     def search(self, doc_type='mbox', **kwargs):
         return self.es.search(
             index=self.dbname,
