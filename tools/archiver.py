@@ -345,7 +345,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     mid = generators.legacy(msg, body, lid, attachments)
             except Exception as err:
                 if logger:
-                    logger.warn("Could not generate MID: %s", err)
+                    logger.warning("Could not generate MID: %s", err)
                 mid = pmid
             if 'in-reply-to' in msg_metadata:
                 try:
