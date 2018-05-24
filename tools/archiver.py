@@ -345,7 +345,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     mid = generators.legacy(msg, body, lid, attachments)
             except Exception as err:
                 if logger:
-                    logger.warn("Could not generate MID: %s" % err)
+                    logger.warn("Could not generate MID: %s", err)
                 mid = pmid
             if 'in-reply-to' in msg_metadata:
                 try:
@@ -478,7 +478,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             )
         
         if logger:
-            logger.info("Pony Mail archived message %s successfully" % ojson['mid'])
+            logger.info("Pony Mail archived message %s successfully", ojson['mid'])
         oldrefs = []
         
         # Is this a direct reply to a pony mail email?
@@ -513,7 +513,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                             }
                         )
                         if logger:
-                            logger.info("Notification sent to %s for %s" % (cid, mid))
+                            logger.info("Notification sent to %s for %s", cid, mid)
 
         # Are there indirect replies to pony emails?
         if msg_metadata.get('references'):
@@ -548,7 +548,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                             }
                         )
                         if logger:
-                            logger.info("Notification sent to %s for %s" % (cid, mid))
+                            logger.info("Notification sent to %s for %s", cid, mid)
         return lid, ojson['mid']
 
     def mbox_source(self, b):
