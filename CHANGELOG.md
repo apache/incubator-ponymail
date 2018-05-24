@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: import-mbox.py: imap code should not reset ES instance (#460)
 - Bug: tmpname used before it has been set up in import-mbox (#458)
 - Bug: variable 'mid' used before assignment in archiver.py (#459)
 - Enh: remove duplicated code in tools scripts by using elastic.py module (#456)

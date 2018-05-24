@@ -573,7 +573,6 @@ elif re.match(r"imaps?://", source):
 
     # fetch message-id => _id pairs from elasticsearch
 
-    es = Elasticsearch()
     result = es.search(scroll = '5m', 
         body = {
             'size': 1024, 
