@@ -478,7 +478,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             )
         
         if logger:
-            logger.info("Pony Mail archived message %s successfully" % mid)
+            logger.info("Pony Mail archived message %s successfully" % ojson['mid'])
         oldrefs = []
         
         # Is this a direct reply to a pony mail email?

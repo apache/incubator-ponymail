@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: variable 'mid' used before assignment in archiver.py (#459)
 - Enh: remove duplicated code in tools scripts by using elastic.py module (#456)
 - Enh: separate module to read config file 
 - Bug: push-failures.py expects to find non-existent 'id' key in json file (#454)
