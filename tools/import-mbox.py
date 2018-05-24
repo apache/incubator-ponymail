@@ -176,8 +176,8 @@ class SlurpThread(Thread):
             dFile = False
             if imap:
                 imap4 = mla[2]
-                def mailgen(list):
-                    for uid in list:
+                def mailgen(_list):
+                    for uid in _list:
                         msgbytes = imap4.uid('fetch', uid, '(RFC822)')[1][0][1]
                         yield email.message_from_bytes(msgbytes)
                 messages = mailgen(mla[0])
