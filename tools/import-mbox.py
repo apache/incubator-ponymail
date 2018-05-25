@@ -38,7 +38,7 @@ import gzip
 try:
     from elasticsearch import Elasticsearch, helpers
     from formatflowed import convertToWrapped # only needed by archiver
-except Exception as err:
+except ImportError as err:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.",err)
     sys.exit(-1)
 
