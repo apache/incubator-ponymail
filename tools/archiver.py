@@ -682,10 +682,10 @@ if __name__ == '__main__':
         if 'list-id' in msg:
             if not msg.get('archived-at'):
                 msg.add_header('archived-at', email.utils.formatdate())
-            msg_metadata = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
+            list_data = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
             
             try:
-                lid, mid = archie.archive_message(msg_metadata, msg, msgstring)
+                lid, mid = archie.archive_message(list_data, msg, msgstring)
                 print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
             except Exception as err:
                 if args.verbose:
