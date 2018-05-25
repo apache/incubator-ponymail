@@ -98,3 +98,5 @@ that Permalinks are unique or permanent.
  - HTML-only mails are not archived unless the Python `html2text` package (GPLv3) is installed and the `--html2text` command line arg is used
 
  - there are no proper unit tests
+
+ - the 'full' generator uses the same format as the 'medium' generator for the ids
