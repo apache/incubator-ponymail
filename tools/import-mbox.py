@@ -104,40 +104,32 @@ es = Elasticsearch([
 
 rootURL = ""
 
-class BulkThread(Thread):
+def bulk_insert(name, json, xes, dtype, wc = 'quorum'):
+    if args.dry:
+        return
 
-    def __init__(self, name, json, xes, dtype = 'mbox', wc = 'quorum'):
-        Thread.__init__(self)
-        self.name = name
-        self.json = json
-        self.xes = xes
-        self.dtype = dtype
-        self.wc = wc
+    sys.stderr.flush()
 
-    def insert(self):
-        sys.stderr.flush()
-
-        js_arr = []
-        for entry in self.json:
-            js = entry
-            mid = js['mid']
-            if self.dtype == 'mbox_source':
-                del js['mid']
-            js_arr.append({
-                '_op_type': 'index',
-                '_consistency': self.wc,
-                '_index': dbname,
-                '_type': self.dtype,
-                '_id': mid,
-                'doc': js,
-                '_source': js
-            })
-        if not args.dry:
-            try:
-                helpers.bulk(self.xes, js_arr)
-            except Exception as err:
-                print("%s: Warning: Could not bulk insert: %s into %s" % (self.name,err,self.dtype))
-#             print("%s: Inserted %u entries into %s" % (self.name, len(js_arr),self.dtype))
+    js_arr = []
+    for entry in json:
+        js = entry
+        mid = js['mid']
+        if dtype == 'mbox_source':
+            del js['mid']
+        js_arr.append({
+            '_op_type': 'index',
+            '_consistency': wc,
+            '_index': dbname,
+            '_type': dtype,
+            '_id': mid,
+            'doc': js,
+            '_source': js
+        })
+    try:
+        helpers.bulk(xes, js_arr)
+#       print("%s: Inserted %u entries into %s" % (name, len(js_arr),dtype))
+    except Exception as err:
+        print("%s: Warning: Could not bulk insert: %s into %s" % (name,err,dtype))
 
 class SlurpThread(Thread):
 
@@ -334,12 +326,10 @@ class SlurpThread(Thread):
                                     }
                                 )
                     if len(ja) >= 40:
-                        bulk = BulkThread(self.name, ja, es, 'mbox')
-                        bulk.insert()
+                        bulk_insert(self.name, ja, es, 'mbox')
                         ja = []
                         
-                        bulks = BulkThread(self.name, jas, es, 'mbox_source')
-                        bulks.insert()
+                        bulk_insert(self.name, jas, es, 'mbox_source')
                         jas = []
                 else:
                     self.printid("Failed to parse: Return=%s Message-Id=%s" % (message.get('Return-Path'), message.get('Message-Id')))
@@ -358,13 +348,11 @@ class SlurpThread(Thread):
             goodies += count
             baddies += bad
             if len(ja) > 0:
-                bulk = BulkThread(self.name, ja, es, 'mbox')
-                bulk.insert()
+                bulk_insert(self.name, ja, es, 'mbox')
             ja = []
             
             if len(jas) > 0:
-                bulks = BulkThread(self.name, jas, es, 'mbox_source')
-                bulks.insert()
+                bulk_insert(self.name, jas, es, 'mbox_source')
             jas = []
         self.printid("Done, %u elements left to slurp" % len(lists))
         
