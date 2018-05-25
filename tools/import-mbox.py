@@ -44,7 +44,7 @@ except ImportError as err:
 # must be done after import check above
 import archiver
     
-y = 0
+goodies = 0
 baddies = 0
 duplicates={} # detect if mid is re-used this run
 block = Lock()
@@ -146,7 +146,7 @@ class SlurpThread(Thread):
         print("%s: %s" % (self.name, message))
 
     def run(self):
-        global block, y, es, lists, baddies, resendTo, timeout, dedupped, dedup
+        global block, goodies, es, lists, baddies, resendTo, timeout, dedupped, dedup
         self.name = Thread.getName(self)
         ja = []
         jas = []
@@ -356,7 +356,7 @@ class SlurpThread(Thread):
                 self.printid("Parsed %s/%s: %u records (failed: %u) from %s" % (ml, mboxfile, count, bad, tmpname))
                 os.unlink(tmpname)
                 
-            y += count
+            goodies += count
             baddies += bad
             if len(ja) > 0:
                 bulk = BulkThread(self.name, ja, es, 'mbox')
@@ -683,6 +683,6 @@ if args.dups:
             for msg in duplicates[mid]:
                 print(msg)
 
-print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (y, int(time.time() - start), baddies))
+print("All done! %u records inserted/updated after %u seconds. %u records were bad and ignored" % (goodies, int(time.time() - start), baddies))
 if dedupped > 0:
     print("%u records were not inserted due to deduplication" % dedupped)
