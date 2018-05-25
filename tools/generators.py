@@ -26,7 +26,7 @@ import re
 
 # Full generator: uses the entire email (including server-dependent data)
 # This is the recommended generator for single-node setups.
-def full(msg, body, lid, attachments):
+def full(msg, _body, lid, _attachments):
     """
     Full generator: uses the entire email
     (including server-dependent data)
@@ -35,9 +35,9 @@ def full(msg, body, lid, attachments):
     
     Parameters:
     msg - the parsed message
-    body - the parsed text content (not used)
+    _body - the parsed text content (not used)
     lid - list id
-    attachments - list of attachments (not used)
+    _attachments - list of attachments (not used)
 
     Returns: "<hash>@<lid>" where hash is sha224 of message bytes
     """
@@ -46,7 +46,7 @@ def full(msg, body, lid, attachments):
 
 # Medium: Standard 0.9 generator - Not recommended for future installations.
 # See 'full' or 'cluster' generators instead.
-def medium(msg, body, lid, attachments):
+def medium(msg, body, lid, _attachments):
     """
     Standard 0.9 generator - Not recommended for future installations.
     (does not generate sufficiently unique ids)
@@ -63,7 +63,7 @@ def medium(msg, body, lid, attachments):
     msg - the parsed message (used to get the date)
     body - the parsed text content (may be null)
     lid - list id
-    attachments - list of attachments (not used)
+    _attachments - list of attachments (not used)
 
     Returns: "<hash>@<lid>" where hash is sha224 of the message items noted above
     """
@@ -165,7 +165,7 @@ def cluster(msg, body, lid, attachments):
 
 
 # Old school way of making IDs
-def legacy(msg, body, lid, attachments):
+def legacy(msg, body, lid, _attachments):
     """
     Original generator - DO NOT USE
     (does not generate unique ids)
@@ -179,7 +179,7 @@ def legacy(msg, body, lid, attachments):
     msg - the parsed message (used to get the date)
     body - the parsed text content (may be null)
     lid - list id
-    attachments - list of attachments (not used)
+    _attachments - list of attachments (not used)
 
     Returns: "<hash>@<uid_mdate>@<lid>" where hash is sha224 of the message items noted above
     """
