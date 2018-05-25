@@ -567,12 +567,12 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             # No, so must use base64 to avoid corruption on re-encoding
             return encode_base64(b)
 
-    def list_url(self, mlist):
+    def list_url(self, _mlist):
         """ Required by MM3 plugin API
         """
         return None
 
-    def permalink(self, mlist, msg):
+    def permalink(self, _mlist, _msg):
         """ Required by MM3 plugin API
         """
         return None

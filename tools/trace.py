@@ -45,7 +45,7 @@ def trace(s='', depth=1):
     stack=inspect.stack()
     maxIndex = len(stack) - 1
     depth = maxIndex if depth >= maxIndex else depth
-    frame,filename,line_number,function_name,lines,index = stack[depth]
+    _frame,filename,line_number,function_name,_lines,_index = stack[depth]
     print(">>>>[%d]%s@%s#%s: %s"%(depth,basename(filename),line_number,function_name,s))
 
 def func_name(depth=1):
@@ -55,7 +55,7 @@ def func_name(depth=1):
     stack=inspect.stack()
     maxIndex = len(stack) - 1
     depth = maxIndex if depth >= maxIndex else depth
-    frame,filename,line_number,function_name,lines,index = stack[depth]
+    _frame,_filename,_linenumber,function_name,_lines,_index = stack[depth]
     return function_name
 
 if __name__ == '__main__':
