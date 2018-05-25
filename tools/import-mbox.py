@@ -254,7 +254,7 @@ class SlurpThread(Thread):
                     bad += 1
                     continue
 
-                json, contents = archie.compute_updates(list_override, private, message)
+                json, contents, _msg_data, _irt = archie.compute_updates(list_override, private, message)
                 
                 # Not sure this can ever happen
                 if json and not (json['list'] and json['list_raw']):

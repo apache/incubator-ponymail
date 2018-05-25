@@ -267,6 +267,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 
         return body    
 
+    # N.B. this is also called by import-mbox.py
     def compute_updates(self, lid, private, msg):
         """Determine what needs to be sent to the archiver.
 
