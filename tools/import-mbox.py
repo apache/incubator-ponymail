@@ -121,7 +121,6 @@ class BulkThread(Thread):
         for entry in self.json:
             js = entry
             mid = js['mid']
-            print(mid)
             if self.dtype == 'mbox_source':
                 del js['mid']
             js_arr.append({
