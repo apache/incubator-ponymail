@@ -134,19 +134,21 @@ class Archiver(object): # N.B. Also used by import-mbox.py
     if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
         implementer(IArchiver)
 
-    # This is a list of the headers we're interested in publishing.
+    # This is a list of headers which are stored in msg_metadata
     keys = [
         "archived-at",
         "delivered-to",
         "from",
         "cc",
+        "content-type",
         "to",
         "date",
         "in-reply-to",
         "message-id",
         "subject",
-        "x-message-id-hash",
         "references",
+        # The following don't appear to be needed currently
+        "x-message-id-hash",
         "x-mailman-rule-hits",
         "x-mailman-rule-misses",
     ]
