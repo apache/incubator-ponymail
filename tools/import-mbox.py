@@ -37,7 +37,6 @@ import gzip
 
 try:
     from elasticsearch import Elasticsearch, helpers
-    from formatflowed import convertToWrapped # only needed by archiver
 except ImportError as err:
     print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.",err)
     sys.exit(-1)
@@ -443,7 +442,6 @@ if args.dedup:
 if args.ext:
     extension = args.ext[0]
 if args.html2text:
-    import html2text # needed by archiver
     parseHTML = True
 if args.ibody:
     archiver.iBody = args.ibody[0]
