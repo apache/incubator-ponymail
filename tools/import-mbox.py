@@ -107,7 +107,8 @@ rootURL = ""
 
 class BulkThread(Thread):
 
-    def assign(self, id, json, xes, dtype = 'mbox', wc = 'quorum'):
+    def __init__(self, id, json, xes, dtype = 'mbox', wc = 'quorum'):
+        Thread.__init__(self)
         self.id = id
         self.json = json
         self.xes = xes
@@ -121,6 +122,7 @@ class BulkThread(Thread):
         for entry in self.json:
             js = entry
             mid = js['mid']
+            print(mid)
             if self.dtype == 'mbox_source':
                 del js['mid']
             js_arr.append({
@@ -334,13 +336,11 @@ class SlurpThread(Thread):
                                     }
                                 )
                     if len(ja) >= 40:
-                        bulk = BulkThread()
-                        bulk.assign(self.name, ja, es, 'mbox')
+                        bulk = BulkThread(self.name, ja, es, 'mbox')
                         bulk.insert()
                         ja = []
                         
-                        bulks = BulkThread()
-                        bulks.assign(self.name, jas, es, 'mbox_source')
+                        bulks = BulkThread(self.name, jas, es, 'mbox_source')
                         bulks.insert()
                         jas = []
                 else:
@@ -360,14 +360,12 @@ class SlurpThread(Thread):
             y += count
             baddies += bad
             if len(ja) > 0:
-                bulk = BulkThread()
-                bulk.assign(self.name, ja, es, 'mbox')
+                bulk = BulkThread(self.name, ja, es, 'mbox')
                 bulk.insert()
             ja = []
             
             if len(jas) > 0:
-                bulks = BulkThread()
-                bulks.assign(self.name, jas, es, 'mbox_source')
+                bulks = BulkThread(self.name, jas, es, 'mbox_source')
                 bulks.insert()
             jas = []
         self.printid("Done, %u elements left to slurp" % len(lists))
