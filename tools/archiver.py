@@ -253,12 +253,17 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         # this requires a GPL lib, user will have to install it themselves
         if firstHTML and (not body or len(body) <= 1 or (iBody and str(body).find(str(iBody)) != -1)):
             body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
-    
+ 
+        # See issue#463
+        # This code will try at most one charset
+        # If the decode fails, it will use utf-8
         for charset in pm_charsets(msg):
             try:
                 body = body.decode(charset) if type(body) is bytes else body
+                # at this point body can no longer be bytes
             except:
                 body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
+                # at this point body can no longer be bytes
                 
         return body    
 
