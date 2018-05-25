@@ -107,9 +107,9 @@ rootURL = ""
 
 class BulkThread(Thread):
 
-    def __init__(self, id, json, xes, dtype = 'mbox', wc = 'quorum'):
+    def __init__(self, name, json, xes, dtype = 'mbox', wc = 'quorum'):
         Thread.__init__(self)
-        self.id = id
+        self.name = name
         self.json = json
         self.xes = xes
         self.dtype = dtype
@@ -138,8 +138,8 @@ class BulkThread(Thread):
             try:
                 helpers.bulk(self.xes, js_arr)
             except Exception as err:
-                print("%s: Warning: Could not bulk insert: %s into %s" % (self.id,err,self.dtype))
-#             print("%s: Inserted %u entries into %s" % (self.id, len(js_arr),self.dtype))
+                print("%s: Warning: Could not bulk insert: %s into %s" % (self.name,err,self.dtype))
+#             print("%s: Inserted %u entries into %s" % (self.name, len(js_arr),self.dtype))
 
 class SlurpThread(Thread):
 
