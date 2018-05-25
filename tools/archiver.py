@@ -381,10 +381,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 'attachments': attachments
             }
 
-        self.msg_metadata = msg_metadata
-        self.irt = irt
-
-        return  ojson, contents
+        return  ojson, contents, msg_metadata, irt
             
     def archive_message(self, mlist, msg, raw_msg):
         """Send the message to the archiver.
@@ -405,7 +402,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
             private = True
 
-        ojson, contents = self.compute_updates(lid, private, msg)
+        ojson, contents, msg_metadata, irt = self.compute_updates(lid, private, msg)
         if not ojson:
             _id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
             raise Exception("Could not parse message %s for %s" % (_id,lid))
@@ -413,9 +410,6 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         if args.dry:
             print("**** Dry run, not saving message to database *****")
             return lid, ojson['mid']
-
-        msg_metadata = self.msg_metadata
-        irt = self.irt
 
         try:
             if contents:
