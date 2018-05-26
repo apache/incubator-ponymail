@@ -111,7 +111,7 @@ class SlurpThread(Thread):
         print("%s: %s" % (self.name, message))
 
     def run(self):
-        global block, goodies, es, lists, baddies, resendTo, timeout, dedupped, dedup
+        global goodies, baddies, dedupped
         self.name = Thread.getName(self)
         ja = []
         jas = []
