@@ -44,12 +44,12 @@ dbname = es.getdbname()
 rootURL = ""
 
 parser = argparse.ArgumentParser(description='Command line options.')
-parser.add_argument('--source', dest='source', type=str, nargs=1,
-                   help='Source list to edit')
-parser.add_argument('--target', dest='target', type=str, nargs=1,
-                   help='(optional) new list ID')
-parser.add_argument('--newdb', dest='newdb', type=str, nargs=1,
-                   help='(optional) new ES database name')
+parser.add_argument('--source', dest='source', type=str, required=True,
+                   metavar='<list id>', help='Source list to edit')
+parser.add_argument('--target', dest='target', type=str,
+                   metavar='<list id>', help='(optional) new list ID')
+parser.add_argument('--newdb', dest='newdb', type=str,
+                   metavar='<index name>', help='(optional) new ES database name')
 parser.add_argument('--wildcard', dest='glob', action='store_true', 
                    help='Allow wildcards in --source')
 parser.add_argument('--notag', dest='notag', action='store_true', 
@@ -57,22 +57,12 @@ parser.add_argument('--notag', dest='notag', action='store_true',
 
 args = parser.parse_args()
 
-if args.source:
-    sourceLID = args.source[0]
-if args.target:
-    targetLID = args.target[0]
-if args.newdb:
-    newdb = args.newdb[0]
-if args.glob:
-    wildcard = args.glob
-if args.notag:
-    notag = args.notag
+sourceLID = args.source
+targetLID = args.target
+newdb = args.newdb
+wildcard = args.glob
+notag = args.notag
 
-    
-if not sourceLID:
-    print("No source list ID specified!")
-    parser.print_help()
-    sys.exit(-1)
 if not (targetLID or newdb):
     print("Nothing to do! No target list ID or DB name specified")
     parser.print_help()
@@ -96,6 +86,9 @@ if targetLID:
     print("  - Target ID: %s" % targetLID)
 if newdb:
     print("  - Target DB: %s" % newdb)
+    if not es.indices.exists(newdb):
+        print("Target database does not exist!")
+        sys.exit(-1)
 
 count = 0
 
