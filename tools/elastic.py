@@ -26,7 +26,7 @@ import logging
 import certifi
 
 try:
-    from elasticsearch import Elasticsearch, helpers
+    from elasticsearch import Elasticsearch, helpers, ElasticsearchException
     from elasticsearch import VERSION as ES_VERSION
 except ImportError as e:
     sys.exit("Sorry, you need to install the elasticsearch module from pip first. (%s)" % str(e))
@@ -74,7 +74,11 @@ class Elastic:
 
     def engineVersion(self):
         if not self.dbVersion:
-            self.dbVersion = self.info()['version']['number']
+            try:
+                self.dbVersion = self.info()['version']['number']
+            except ElasticsearchException:
+                # default if cannot connect; allows retry
+                return '0.0.0'
         return self.dbVersion
     def engineMajor(self):
         return int(self.engineVersion().split('.')[0])
