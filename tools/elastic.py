@@ -66,6 +66,8 @@ class Elastic:
             retry_on_timeout=True
             )
         self.dbVersion = None
+        # Mimic ES hierarchy: es.indices.xyz()
+        self.indices=_indices_wrap(self)
 
     def libraryVersion(self):
         return ES_VERSION
@@ -137,6 +139,21 @@ class Elastic:
         """
         return self.es.clear_scroll(*args, **kwargs)
 
+class _indices_wrap(object):
+    """
+        Wrapper for the ES indices methods we use
+    """
+    def __init__(self, parent):
+        self.es = parent.es
+
+    def exists(self, *args, **kwargs):
+        return self.es.indices.exists(*args, **kwargs)
+
 if __name__ == '__main__':
     es = Elastic()
     print("Versions: Library: %d %s Engine: %d (%s)" % (es.libraryMajor(), es.libraryVersion(), es.engineMajor(), es.engineVersion()))
+    try:
+        print(es.indices.exists(index='ponymail'))
+        print(es.indices.exists('test'))
+    except Exception as e:
+        print(type(e))
