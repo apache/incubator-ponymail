@@ -26,8 +26,9 @@ import logging
 import certifi
 
 try:
-    from elasticsearch import Elasticsearch, helpers, ConnectionError
+    from elasticsearch import Elasticsearch, helpers
     from elasticsearch import VERSION as ES_VERSION
+    from elasticsearch import ConnectionError as ES_ConnectionError
 except ImportError as e:
     sys.exit("Sorry, you need to install the elasticsearch module from pip first. (%s)" % str(e))
 
@@ -78,7 +79,7 @@ class Elastic:
         if not self.dbVersion:
             try:
                 self.dbVersion = self.info()['version']['number']
-            except ConnectionError:
+            except ES_ConnectionError:
                 # default if cannot connect; allows retry
                 return '0.0.0'
         return self.dbVersion
@@ -155,5 +156,5 @@ if __name__ == '__main__':
     try:
         print(es.indices.exists(index='ponymail'))
         print(es.indices.exists('test'))
-    except Exception as e:
+    except ES_ConnectionError as e:
         print(type(e))
