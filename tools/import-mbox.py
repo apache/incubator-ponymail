@@ -26,7 +26,7 @@ import mailbox
 import email.errors, email.utils, email.header
 from urllib.request import urlopen
 import re
-from ponymailconfig import PonymailConfig
+from elastic import Elastic
 import argparse
 from os import listdir
 from os.path import isfile, join, isdir
@@ -35,13 +35,6 @@ import multiprocessing
 import tempfile
 import gzip
 
-try:
-    from elasticsearch import Elasticsearch, helpers
-except ImportError as err:
-    print("Sorry, you need to install the elasticsearch and formatflowed modules from pip first.",err)
-    sys.exit(-1)
-
-# must be done after import check above
 import archiver
     
 goodies = 0
@@ -78,29 +71,10 @@ dedup = False
 dedupped = 0
 noMboxo = False # Don't skip MBoxo patch
 
-# Fetch config
-config = PonymailConfig()
-auth = None
-if config.has_option('elasticsearch', 'user'):
-    auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
-
-
-
-dbname = config.get("elasticsearch", "dbname")
-ssl = config.get("elasticsearch", "ssl", fallback = "False").lower() == 'true'
-    
-uri = config.get("elasticsearch", "uri", fallback = "")
-es = Elasticsearch([
-    {
-        'host': config.get("elasticsearch", "hostname"),
-        'port': int(config.get("elasticsearch", "port")),
-        'use_ssl': ssl,
-        'url_prefix': uri,
-        'http_auth': auth
-    }],
-    max_retries=5,
-    retry_on_timeout=True
-    )
+# Fetch config and set up ES
+es = Elastic()
+# We need the index name for bulk actions
+dbname = es.getdbname()
 
 rootURL = ""
 
@@ -126,7 +100,7 @@ def bulk_insert(name, json, xes, dtype, wc = 'quorum'):
             '_source': js
         })
     try:
-        helpers.bulk(xes, js_arr)
+        xes.bulk(js_arr,ignore=404)
 #       print("%s: Inserted %u entries into %s" % (name, len(js_arr),dtype))
     except Exception as err:
         print("%s: Warning: Could not bulk insert: %s into %s" % (name,err,dtype))
@@ -257,7 +231,6 @@ class SlurpThread(Thread):
                 # If --dedup is active, try to filter out any messages that already exist on the list
                 if json and dedup and message.get('message-id', None):
                     res = es.search(
-                        index=dbname,
                         doc_type="mbox",
                         size = 1,
                         _source = ['mid'], # so can report the match source
@@ -318,7 +291,6 @@ class SlurpThread(Thread):
                         if not args.dry:
                             for key in contents:
                                 es.index(
-                                    index=dbname,
                                     doc_type="attachment",
                                     id=key,
                                     body = {
@@ -458,8 +430,9 @@ logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 if args.dry:
     print("Dry-run; continuing to check input data")
 else:
+    # Need to check the index before starting bulk operations
     try:
-        if not es.indices.exists(dbname):
+        if not es.indices.exists(index=dbname):
             print("Error: the index '%s' does not exist!" % (dbname))
             sys.exit(1)
         print("Database exists OK")
@@ -622,11 +595,11 @@ elif re.match(r"imaps?://", source):
             print("deleting: " + mid)
 
     while len(queue1) > 0:
-        helpers.bulk(es, queue1[0:1024])
+        es.bulk(queue1[0:1024])
         del queue1[0:1024]
 
     while len(queue2) > 0:
-        helpers.bulk(es, queue2[0:1024])
+        es.bulk(queue2[0:1024])
         del queue2[0:1024]
 
     # add new items to elasticsearch from imap
