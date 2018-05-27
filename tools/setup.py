@@ -59,19 +59,19 @@ parser.add_argument('--defaults', dest='defaults', action='store_true',
 parser.add_argument('--dbprefix', dest='dbprefix')
 parser.add_argument('--clobber', dest='clobber', action='store_true',
                    help='Allow overwrite of ponymail.cfg & ../site/api/lib/config.lua (default: create *.tmp if either exists)')
-parser.add_argument('--dbhost', dest='dbhost', type=str, nargs=1,
+parser.add_argument('--dbhost', dest='dbhost', type=str,
                    help='ES backend hostname')
-parser.add_argument('--dbport', dest='dbport', type=str, nargs=1,
+parser.add_argument('--dbport', dest='dbport', type=str,
                    help='DB port')
-parser.add_argument('--dbname', dest='dbname', type=str, nargs=1,
+parser.add_argument('--dbname', dest='dbname', type=str,
                    help='ES DB name')
-parser.add_argument('--dbshards', dest='dbshards', type=int, nargs=1,
+parser.add_argument('--dbshards', dest='dbshards', type=int,
                    help='DB Shard Count')
-parser.add_argument('--dbreplicas', dest='dbreplicas', type=int, nargs=1,
+parser.add_argument('--dbreplicas', dest='dbreplicas', type=int,
                   help='DB Replica Count')
-parser.add_argument('--mailserver', dest='mailserver', type=str, nargs=1,
+parser.add_argument('--mailserver', dest='mailserver', type=str,
                    help='Host name of outgoing mail server')
-parser.add_argument('--mldom', dest='mldom', type=str, nargs=1,
+parser.add_argument('--mldom', dest='mldom', type=str,
                    help='Domains to accept mail for via UI')
 parser.add_argument('--wordcloud', dest='wc', action='store_true', 
                    help='Enable word cloud')
@@ -81,7 +81,7 @@ parser.add_argument('--noindex', dest='noi', action='store_true',
                    help="Don't make an ES index, assume it exists")
 parser.add_argument('--nocloud', dest='nwc', action='store_true', 
                    help='Do not enable word cloud')
-parser.add_argument('--generator', dest='generator', type=str, nargs=1,
+parser.add_argument('--generator', dest='generator', type=str,
                    help='Document ID Generator to use (legacy, medium, cluster, full)')
 args = parser.parse_args()    
 
@@ -120,25 +120,25 @@ if args.defaults:
 if args.dbprefix:
     urlPrefix = args.dbprefix
 if args.dbhost:
-    hostname = args.dbhost[0]
+    hostname = args.dbhost
 if args.dbport:
-    port = int(args.dbport[0])
+    port = int(args.dbport)
 if args.dbname:
-    dbname = args.dbname[0]
+    dbname = args.dbname
 if args.mailserver:
-    mlserver = args.mailserver[0]
+    mlserver = args.mailserver
 if args.mldom:
-    mldom = args.mldom[0]
+    mldom = args.mldom
 if args.wc:
     wc = args.wc
 if args.nwc:
     wc = False
 if args.dbshards:
-    shards = args.dbshards[0]
+    shards = args.dbshards
 if args.dbreplicas:
-    replicas = args.dbreplicas[0]
+    replicas = args.dbreplicas
 if args.generator:
-    genname = args.generator[0]
+    genname = args.generator
     
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
