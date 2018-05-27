@@ -26,9 +26,9 @@ from elastic import Elastic
 parser = argparse.ArgumentParser(description='Command line options.')
 # Cannot have both source and mid as input
 source_group = parser.add_mutually_exclusive_group(required=True)
-source_group.add_argument('--source', dest='source', type=str, nargs=1, metavar='list-name',
+source_group.add_argument('--source', dest='source', type=str, metavar='list-name',
                    help='Source list to edit')
-source_group.add_argument('--mid', dest='mid', type=str, nargs=1, metavar='message-id',
+source_group.add_argument('--mid', dest='mid', type=str, metavar='message-id',
                    help='Source Message-ID to edit')
 
 action_group = parser.add_mutually_exclusive_group(required=True)
@@ -79,7 +79,7 @@ if args.missing:
     scroll = '30m'
     then = time.time()
     elastic = Elastic()
-    sourceLID = ("%s" if args.notag else "<%s>")  % args.source[0].replace("@", ".").strip("<>")
+    sourceLID = ("%s" if args.notag else "<%s>")  % args.source.replace("@", ".").strip("<>")
     page = elastic.scan(# defaults to mbox
             scroll = scroll,
             body = {
