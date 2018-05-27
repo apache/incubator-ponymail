@@ -77,65 +77,69 @@ count = 0
 scroll = '30m'
 then = time.time()
 elastic = Elastic()
-sourceLID = ("%s" if args.notag else "<%s>")  % args.source.replace("@", ".").strip("<>")
-page = elastic.scan(# defaults to mbox
-        scroll = scroll,
-        body = {
-            "_source" : ['subject','message-id'],
-            "query" : {
-                "bool" : {
-                    "must" : {
-                        'wildcard' if args.wildcard else 'term': {
-                            'list_raw': sourceLID
+if args.source:
+    sourceLID = ("%s" if args.notag else "<%s>")  % args.source.replace("@", ".").strip("<>")
+    page = elastic.scan(# defaults to mbox
+            scroll = scroll,
+            body = {
+                "_source" : ['subject','message-id'],
+                "query" : {
+                    "bool" : {
+                        "must" : {
+                            'wildcard' if args.wildcard else 'term': {
+                                'list_raw': sourceLID
+                                }
+                            },
+                        # missing is not supported in ES 5.x
+                        "must_not": {
+                            "exists" : {
+                                "field" : field
                             }
-                        },
-                    # missing is not supported in ES 5.x
-                    "must_not": {
-                        "exists" : {
-                            "field" : field
                         }
                     }
                 }
             }
-        }
-    )
-print(page)
-sid = page['_scroll_id']
-scroll_size = page['hits']['total']
-print("Found %d matches" % scroll_size)
-if args.debug:
+        )
     print(page)
-js_arr = []
-while (scroll_size > 0):
-    page = elastic.scroll(scroll_id = sid, scroll = scroll)
+    sid = page['_scroll_id']
+    scroll_size = page['hits']['total']
+    print("Found %d matches" % scroll_size)
     if args.debug:
         print(page)
-    sid = page['_scroll_id']
-    scroll_size = len(page['hits']['hits'])
-    for hit in page['hits']['hits']:
-        doc = hit['_id']
-        body = {}
-        if setField:
-            body[field] = value
-        js_arr.append({
-            '_op_type': 'update',
-            '_index': elastic.dbname,
-            '_type': 'mbox',
-            '_id': doc,
-            'doc': body
-        })
-        count += 1
-        source = hit['_source']
-        print("Id: %s Msg-id: %s Subject: %s" %(doc, getField(source, 'message-id'), getField(source,'subject')))
-        if (count % 500 == 0):
-            print("Processed %u emails..." % count)
+    js_arr = []
+    while (scroll_size > 0):
+        page = elastic.scroll(scroll_id = sid, scroll = scroll)
+        if args.debug:
+            print(page)
+        sid = page['_scroll_id']
+        scroll_size = len(page['hits']['hits'])
+        for hit in page['hits']['hits']:
+            doc = hit['_id']
+            body = {}
             if setField:
-                update(elastic, js_arr)
-            js_arr = []
+                body[field] = value
+            js_arr.append({
+                '_op_type': 'update',
+                '_index': elastic.dbname,
+                '_type': 'mbox',
+                '_id': doc,
+                'doc': body
+            })
+            count += 1
+            source = hit['_source']
+            print("Id: %s Msg-id: %s Subject: %s" %(doc, getField(source, 'message-id'), getField(source,'subject')))
+            if (count % 500 == 0):
+                print("Processed %u emails..." % count)
+                if setField:
+                    update(elastic, js_arr)
+                js_arr = []
+    
+    print("Processed %u emails." % count)
+    if len(js_arr) > 0:
+        if setField:
+            update(elastic, js_arr)
 
-print("Processed %u emails." % count)
-if len(js_arr) > 0:
-    if setField:
-        update(elastic, js_arr)
+if args.mid:
+    parser.error("--mid: not yet implemented")
 
 print("All done, processed %u docs in %u seconds" % (count, time.time() - then))
