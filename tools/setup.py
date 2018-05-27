@@ -19,6 +19,7 @@ import getpass
 import subprocess
 import argparse
 import shutil
+import logging
 
 if sys.version_info <= (3, 3):
     print("This script requires Python 3.4 or higher")
@@ -27,8 +28,6 @@ if sys.version_info <= (3, 3):
 dopip = False
 try:
     from elasticsearch import Elasticsearch
-    from elasticsearch import VERSION as ES_VERSION
-    ES_MAJOR = ES_VERSION[0]
 except ImportError:
     dopip = True
     
@@ -43,6 +42,7 @@ elif dopip:
     print("Hang on!")
     try:
         subprocess.check_call(('pip3','install','elasticsearch','formatflowed', 'netaddr', 'certifi'))
+        # retry the import
         from elasticsearch import Elasticsearch
     except ImportError:
         print("Oh dear, looks like this failed :(")
@@ -50,6 +50,11 @@ elif dopip:
         print("pip install elasticsearch formatflowed netaddr certifi")
         sys.exit(-1)
 
+# at this point we can assume elasticsearch is loaded
+from elasticsearch import ElasticsearchException
+from elasticsearch import ConnectionError as ES_ConnectionError
+from elasticsearch import VERSION as ES_VERSION
+ES_MAJOR = ES_VERSION[0]
 
 # CLI arg parsing
 parser = argparse.ArgumentParser(description='Command line options.')
@@ -195,21 +200,6 @@ while replicas < 0:
 print("Okay, I got all I need, setting up Pony Mail...")
 
 def createIndex():
-    es = Elasticsearch([
-        {
-            'host': hostname,
-            'port': port,
-            'use_ssl': False,
-            'url_prefix': urlPrefix
-        }],
-        max_retries=5,
-        retry_on_timeout=True
-        )
-
-    DB_VERSION=es.info()['version']['number']
-    DB_MAJOR=int(DB_VERSION.split('.')[0])
-    print("Versions: library %d (%s), engine %d (%s)" % (ES_MAJOR, '.'.join(map(str,ES_VERSION)) , DB_MAJOR, DB_VERSION))
-
     # Check if index already exists
     if es.indices.exists(dbname):
         if args.soe:
@@ -472,14 +462,48 @@ def createIndex():
         )
     
     print("Index created! %s " % res)
-    
+
+# we need to connect to database to determine the engine version   
+es = Elasticsearch([
+    {
+        'host': hostname,
+        'port': port,
+        'use_ssl': False,
+        'url_prefix': urlPrefix
+    }],
+    max_retries=5,
+    retry_on_timeout=True
+    )
+
+# elasticsearch logs lots of warnings on retries/connection failure
+logging.getLogger("elasticsearch").setLevel(logging.ERROR)
+
+try:
+    DB_VERSION=es.info()['version']['number']
+except ES_ConnectionError:
+    print("WARNING: Connection error: could not determine the engine version.")
+    DB_VERSION='0.0.0'
+
+DB_MAJOR=int(DB_VERSION.split('.')[0])
+print("Versions: library %d (%s), engine %d (%s)" % (ES_MAJOR, '.'.join(map(str,ES_VERSION)) , DB_MAJOR, DB_VERSION))
+
+if not DB_MAJOR == ES_MAJOR:
+    print("WARNING: library version does not agree with engine version!")
+
+if DB_MAJOR == 0: # not known
+    if args.noi:
+        # allow setup to be used without engine running
+        print("Could not determine the engine version. Assume it is the same as the library version.")
+        DB_MAJOR = ES_MAJOR
+    else:
+        # if we cannot connect to get the version, we cannot create the index later
+        print("Could not connect to the engine. Fatal.")
+        sys.exit(1)
+
 if not args.noi:
     try:
-        import logging
-        # elasticsearch logs lots of warnings on retries/connection failure
-        logging.getLogger("elasticsearch").setLevel(logging.ERROR)
         createIndex()
-    except Exception as e:
+    except ElasticsearchException as e:
         print("Index creation failed: %s" % e)
         sys.exit(1)
 
@@ -519,7 +543,7 @@ generator:              %s
 
 ###############################################################
             """ % (hostname, dbname, port, 
-                   'wait:                  active shard count' if ES_MAJOR == 5 else 'write:                 consistency level (default quorum)', genname))
+                   'wait:                  active shard count' if DB_MAJOR == 5 else 'write:                 consistency level (default quorum)', genname))
 
 config_path = "../site/api/lib"
 config_file = "config.lua"
