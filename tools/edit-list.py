@@ -44,15 +44,15 @@ dbname = es.getdbname()
 parser = argparse.ArgumentParser(description='Command line options.')
 # Cannot have both source and mid as input
 source_group = parser.add_mutually_exclusive_group()
-source_group.add_argument('--source', dest='source', type=str, nargs=1,
+source_group.add_argument('--source', dest='source', type=str,
                    help='Source list to edit')
-source_group.add_argument('--mid', dest='mid', type=str, nargs=1,
+source_group.add_argument('--mid', dest='mid', type=str,
                    help='Source Message-ID to edit')
-parser.add_argument('--rename', dest='target', type=str, nargs=1,
+parser.add_argument('--rename', dest='target', type=str,
                    help='(optional) new list ID')
-parser.add_argument('--desc', dest='desc', type=str, nargs=1,
+parser.add_argument('--desc', dest='desc', type=str,
                    help='(optional) new list description')
-parser.add_argument('--obfuscate', dest='obfuscate', type=str, nargs=1,
+parser.add_argument('--obfuscate', dest='obfuscate', type=str,
                    help='Things to obfuscate in body, if any')
 # private and public are mutually exclusive
 privacy_group = parser.add_mutually_exclusive_group()
@@ -73,17 +73,17 @@ parser.add_argument('--test', dest='test', action='store_true',
 
 args = parser.parse_args()
 
-sourceLID = args.source and args.source[0]
-targetLID = args.target and args.target[0]
-desc = args.desc and args.desc[0]
+sourceLID = args.source
+targetLID = args.target
+desc = args.desc
 makePrivate = args.private
 makePublic = args.public
 deleteEmails = args.delete
 wildcard = args.glob
 debug = args.debug
 notag = args.notag
-mid = args.mid and args.mid[0]
-obfuscate = args.obfuscate and args.obfuscate[0]
+mid = args.mid
+obfuscate = args.obfuscate
 dryrun = args.test
 
 privacyChange = makePrivate or makePublic
@@ -133,6 +133,7 @@ if obfuscate:
 count = 0
 
 if desc:
+    print("  - Action: add description: %s" % desc)
     if dryrun:
         print("DRY RUN - NO CHANGES WILL BE MADE")
     else:
@@ -148,6 +149,7 @@ if desc:
                 'description': desc
             }
         )
+        print("All done, updated description.")
 
 if targetLID or makePrivate or makePublic or deleteEmails or mid or obfuscate:
     if dryrun:
