@@ -24,7 +24,7 @@ from elastic import Elastic
 dbname=None
 
 parser = argparse.ArgumentParser(description='Command line options.')
-parser.add_argument('--dbname', dest='dbname', type=str, nargs=1,
+parser.add_argument('--dbname', dest='dbname', type=str,
                    help='Override index name')
 parser.add_argument('--pretty', dest='pretty', action='store_true', 
                    help='Convert List IDs to email addresses')
@@ -35,8 +35,7 @@ parser.add_argument('--counts', dest='counts', action='store_true',
 
 args = parser.parse_args()
 
-if args.dbname:
-    dbname = args.dbname[0]
+dbname = args.dbname
 
 then = time.time()
 
