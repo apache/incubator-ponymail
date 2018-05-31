@@ -53,13 +53,13 @@ for f in files:
                 id=mid,
                 body = ojson['mbox']
             )
-            
+
             es.index(
                 doc_type="mbox_source",
                 id=mid,
                 body = ojson['mbox_source']
             )
-            
+
             if 'attachments' in ojson and ojson['attachments']:
                 for k, v in ojson['attachments'].items():
                     es.index(

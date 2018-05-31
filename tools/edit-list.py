@@ -89,7 +89,7 @@ dryrun = args.test
 privacyChange = makePrivate or makePublic
 otherChange = targetLID or desc or obfuscate
 anyChange = privacyChange or otherChange
-    
+
 if not sourceLID and not mid:
     print("No source list ID specified!")
     parser.print_help()

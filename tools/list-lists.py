@@ -26,11 +26,11 @@ dbname=None
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--dbname', dest='dbname', type=str,
                    help='Override index name')
-parser.add_argument('--pretty', dest='pretty', action='store_true', 
+parser.add_argument('--pretty', dest='pretty', action='store_true',
                    help='Convert List IDs to email addresses')
-parser.add_argument('--debug', dest='debug', action='store_true', 
+parser.add_argument('--debug', dest='debug', action='store_true',
                    help='Output the result JSON instead, very noisy!')
-parser.add_argument('--counts', dest='counts', action='store_true', 
+parser.add_argument('--counts', dest='counts', action='store_true',
                    help='Show the count of messages for each list')
 
 args = parser.parse_args()
@@ -100,7 +100,7 @@ else:
                 print(listid, msgcount, prvcount)
             else:
                 print(listid)
-    
+
     for dom in sorted(plist):
         for ln in sorted(plist[dom]):
             if args.counts:

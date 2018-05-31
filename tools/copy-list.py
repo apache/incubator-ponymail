@@ -27,7 +27,7 @@ import sys
 import time
 import argparse
 
-from elastic import Elastic    
+from elastic import Elastic
 
 sourceLID = None
 targetLID = None
@@ -50,9 +50,9 @@ parser.add_argument('--target', dest='target', type=str,
                    metavar='<list id>', help='(optional) new list ID')
 parser.add_argument('--newdb', dest='newdb', type=str,
                    metavar='<index name>', help='(optional) new ES database name')
-parser.add_argument('--wildcard', dest='glob', action='store_true', 
+parser.add_argument('--wildcard', dest='glob', action='store_true',
                    help='Allow wildcards in --source')
-parser.add_argument('--notag', dest='notag', action='store_true', 
+parser.add_argument('--notag', dest='notag', action='store_true',
                    help='List IDs do not have <> in them')
 
 args = parser.parse_args()
@@ -79,7 +79,7 @@ if targetLID == sourceLID and not newdb:
     print("Nothing to do! Target same as source")
     parser.print_help()
     sys.exit(-1)
-    
+
 print("Beginning list copy:")
 print("  - Source ID: %s" % sourceLID)
 if targetLID:
@@ -92,7 +92,7 @@ if newdb:
 
 count = 0
 
-    
+
 print("Updating docs...")
 then = time.time()
 page = es.search(
@@ -147,7 +147,7 @@ while (scroll_size > 0):
             })
         else:
             print("Source for %s not found, hmm..." % doc)
-        
+
         count += 1
         if (count % 50 == 0):
             print("Processed %u emails..." % count)
@@ -156,5 +156,5 @@ while (scroll_size > 0):
 
 if len(js_arr) > 0:
     es.bulk(js_arr)
-            
+
 print("All done, processed %u docs in %u seconds" % (count, time.time() - then))

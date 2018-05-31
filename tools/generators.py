@@ -32,7 +32,7 @@ def full(msg, _body, lid, _attachments):
     (including server-dependent data)
     The id is almost certainly unique,
     but different copies of the message are likely to have different headers, thus ids
-    
+
     Parameters:
     msg - the parsed message
     _body - the parsed text content (not used)
@@ -114,7 +114,7 @@ def cluster(msg, body, lid, attachments):
     - the hashes of any attachments
 
     Note: the lid is not included in the hash.
-    
+
     Parameters:
     msg - the parsed message
     body - the parsed text content
@@ -127,13 +127,13 @@ def cluster(msg, body, lid, attachments):
     if not body: # Make sure body is not None, which will fail.
         body = ""
     xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
-    
+
     # Crop out any trailing whitespace in body
     xbody = re.sub(b"\s+$", b"", xbody)
-    
+
     # Use Message-Id (or '' if missing)
     xbody += bytes(msg.get('Message-Id', ''), encoding='ascii')
-    
+
     # Use Date header. Don't use archived-at, as the archiver sets this if not present.
     mdate = None
     mdatestring = "(null)" # Default to null, ONLY changed if replicable across imports
@@ -143,17 +143,17 @@ def cluster(msg, body, lid, attachments):
     except:
         pass
     xbody += bytes(mdatestring, encoding='ascii')
-    
+
     # Use sender
     sender = msg.get('from', None)
     if sender:
         xbody += bytes(sender, encoding = 'ascii')
-    
+
     # Use subject
     subject = msg.get('subject', None)
     if subject:
         xbody += bytes(subject, encoding = 'ascii')
-    
+
     # Use attachment hashes if present
     if attachments:
         for a in attachments:
@@ -170,7 +170,7 @@ def legacy(msg, body, lid, _attachments):
     Original generator - DO NOT USE
     (does not generate unique ids)
 
-    The hash input is created from 
+    The hash input is created from
     - body: if bytes as is else encoded ascii, ignoring invalid characters; if the body is null an Exception is thrown
 
     The uid_mdate for the id is the Date converted to UTC epoch else 0

@@ -32,7 +32,7 @@ source_group.add_argument('--mid', dest='mid', type=str, metavar='message-id',
                    help='Source Message-ID to edit')
 
 action_group = parser.add_mutually_exclusive_group(required=True)
-# N.B. Use nargs=1 below, because the same field is used for get and set 
+# N.B. Use nargs=1 below, because the same field is used for get and set
 action_group.add_argument('--listmissing', dest='missing', type=str, nargs=1, metavar='fieldname',
                    help='list missing fields')
 action_group.add_argument('--setmissing', dest='missing', type=str, nargs=2, metavar=('fieldname', 'value'),
@@ -133,7 +133,7 @@ if args.source:
                 if setField:
                     update(elastic, js_arr)
                 js_arr = []
-    
+
     print("Processed %u emails." % count)
     if len(js_arr) > 0:
         if setField:

@@ -30,7 +30,7 @@ try:
     from elasticsearch import Elasticsearch
 except ImportError:
     dopip = True
-    
+
 if dopip and (getpass.getuser() != "root"):
     print("It looks like you need to install some python modules first")
     print("Either run this as root to do so, or run: ")
@@ -59,7 +59,7 @@ ES_MAJOR = ES_VERSION[0]
 # CLI arg parsing
 parser = argparse.ArgumentParser(description='Command line options.')
 
-parser.add_argument('--defaults', dest='defaults', action='store_true', 
+parser.add_argument('--defaults', dest='defaults', action='store_true',
                    help='Use default settings')
 parser.add_argument('--dbprefix', dest='dbprefix')
 parser.add_argument('--clobber', dest='clobber', action='store_true',
@@ -78,17 +78,17 @@ parser.add_argument('--mailserver', dest='mailserver', type=str,
                    help='Host name of outgoing mail server')
 parser.add_argument('--mldom', dest='mldom', type=str,
                    help='Domains to accept mail for via UI')
-parser.add_argument('--wordcloud', dest='wc', action='store_true', 
+parser.add_argument('--wordcloud', dest='wc', action='store_true',
                    help='Enable word cloud')
-parser.add_argument('--skiponexist', dest='soe', action='store_true', 
+parser.add_argument('--skiponexist', dest='soe', action='store_true',
                    help='Skip setup if ES index exists')
-parser.add_argument('--noindex', dest='noi', action='store_true', 
+parser.add_argument('--noindex', dest='noi', action='store_true',
                    help="Don't make an ES index, assume it exists")
-parser.add_argument('--nocloud', dest='nwc', action='store_true', 
+parser.add_argument('--nocloud', dest='nwc', action='store_true',
                    help='Do not enable word cloud')
 parser.add_argument('--generator', dest='generator', type=str,
                    help='Document ID Generator to use (legacy, medium, cluster, full)')
-args = parser.parse_args()    
+args = parser.parse_args()
 
 print("Welcome to the Pony Mail setup script!")
 print("Let's start by determining some settings...")
@@ -144,13 +144,13 @@ if args.dbreplicas:
     replicas = args.dbreplicas
 if args.generator:
     genname = args.generator
-    
+
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
 
 while urlPrefix == None:
     urlPrefix = input("Database URL prefix if any (hit enter if none): ")
-    
+
 while port < 1:
     try:
         port = int(input("What port is ElasticSearch listening on? (normally 9200): "))
@@ -162,7 +162,7 @@ while dbname == "":
 
 while mlserver == "":
     mlserver = input("What is the hostname of the outgoing mailserver? (e.g. mail.foo.org): ")
-    
+
 while mldom == "":
     mldom = input("Which domains would you accept mail to from web-replies? (e.g. foo.org or *): ")
 
@@ -184,7 +184,7 @@ while genname == "":
             genname = gens[gno-1]
     except ValueError:
         pass
-    
+
 while shards < 1:
     try:
         shards = int(input("How many shards for the ElasticSearch index? "))
@@ -460,10 +460,10 @@ def createIndex():
                 "settings": settings
             }
         )
-    
+
     print("Index created! %s " % res)
 
-# we need to connect to database to determine the engine version   
+# we need to connect to database to determine the engine version
 es = Elasticsearch([
     {
         'host': hostname,
@@ -517,7 +517,7 @@ print("Writing importer config (%s)" % ponymail_cfg)
 with open(ponymail_cfg, "w") as f:
     f.write("""
 ###############################################################
-# Pony Mail Configuration file                                             
+# Pony Mail Configuration file
 
 # Main ES configuration
 [elasticsearch]
@@ -542,7 +542,7 @@ generator:              %s
 #cropout:               string to crop from list-id
 
 ###############################################################
-            """ % (hostname, dbname, port, 
+            """ % (hostname, dbname, port,
                    'wait:                  active shard count' if DB_MAJOR == 5 else 'write:                 consistency level (default quorum)', genname))
 
 config_path = "../site/api/lib"
@@ -575,7 +575,7 @@ local config = {
 --            env = 'subprocess' -- use environment vars instead of request headers
 --        }
     },
---  allow_insecure_cookie = true, -- override the default (false) - only use for test installations 
+--  allow_insecure_cookie = true, -- override the default (false) - only use for test installations
 --  no_association = {}, -- domains that are not allowed for email association
 --  listsDisplay = 'regex', -- if defined, hide list names that don't match the regex
 --  debug = false, -- whether to return debug information
@@ -583,11 +583,11 @@ local config = {
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
-    
+
 print("Copying sample JS config to config.js (if needed)...")
 if not os.path.exists("../site/js/config.js") and os.path.exists("../site/js/config.js.sample"):
     shutil.copy("../site/js/config.js.sample", "../site/js/config.js")
-    
-    
+
+
 print("All done, Pony Mail should...work now :)")
 print("If you are using an external mail inbound server, \nmake sure to copy archiver.py and ponymail.cfg to it")

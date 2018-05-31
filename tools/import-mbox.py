@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
- 
+
 # -*- coding: utf-8 -*-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -36,7 +36,7 @@ import tempfile
 import gzip
 
 import archiver
-    
+
 goodies = 0
 baddies = 0
 duplicates={} # detect if mid is re-used this run
@@ -122,7 +122,7 @@ class SlurpThread(Thread):
         filename = ""
 
         archie = archiver.Archiver(parseHTML = parseHTML)
-    
+
         while len(lists) > 0:
             self.printid("%u elements left to slurp" % len(lists))
 
@@ -148,7 +148,7 @@ class SlurpThread(Thread):
                         yield email.message_from_bytes(msgbytes)
                 messages = mailgen(mla[0])
             elif filebased:
-                
+
                 tmpname = mla[0]
                 filename = mla[0]
                 if filename.find(".gz") != -1:
@@ -179,7 +179,7 @@ class SlurpThread(Thread):
                 self.printid("Slurping %s/%s" % (ml, mboxfile))
                 ctx = urlopen("%s%s/%s" % (source, ml, mboxfile ))
                 inp = ctx.read().decode(ctx.headers.get_content_charset() or 'utf-8', errors='ignore')
-    
+
                 tmpname = hashlib.sha224(("%f-%f-%s-%s.mbox" % (random.random(), time.time(), ml, mboxfile)).encode('utf-8') ).hexdigest()
                 with open(tmpname, "w") as f:
                     f.write(inp)
@@ -190,8 +190,8 @@ class SlurpThread(Thread):
 
             count = 0
             bad = 0
-            
-            
+
+
             for key in messages.iterkeys():
                 message=messages.get(key)
                 # If --filter is set, discard any messages not matching by continuing to next email
@@ -221,7 +221,7 @@ class SlurpThread(Thread):
                     continue
 
                 json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
-                
+
                 # Not sure this can ever happen
                 if json and not (json['list'] and json['list_raw']):
                     self.printid("No list id found for %s " % json['message-id'])
@@ -246,7 +246,7 @@ class SlurpThread(Thread):
                                         {
                                             'term': {
                                                 'list_raw': json['list']
-                                            }                                                 
+                                            }
                                         }
                                     ]
                                 }
@@ -300,7 +300,7 @@ class SlurpThread(Thread):
                     if len(ja) >= 40:
                         bulk_insert(self.name, ja, es, 'mbox')
                         ja = []
-                        
+
                         bulk_insert(self.name, jas, es, 'mbox_source')
                         jas = []
                 else:
@@ -316,18 +316,18 @@ class SlurpThread(Thread):
             else:
                 self.printid("Parsed %s/%s: %u records (failed: %u) from %s" % (ml, mboxfile, count, bad, tmpname))
                 os.unlink(tmpname)
-                
+
             goodies += count
             baddies += bad
             if len(ja) > 0:
                 bulk_insert(self.name, ja, es, 'mbox')
             ja = []
-            
+
             if len(jas) > 0:
                 bulk_insert(self.name, jas, es, 'mbox_source')
             jas = []
         self.printid("Done, %u elements left to slurp" % len(lists))
-        
+
 parser = argparse.ArgumentParser(description='Command line options.')
 parser.add_argument('--source', dest='source', type=str, nargs=1,
                    help='Source to scan (http(s)://, imap(s):// or file path)')
@@ -454,16 +454,16 @@ def globDir(d):
             print("alright, I'll try to figure it out myself!")
     for fi in sorted(mboxes):
         lists.append([fi, fileToLID.get(d) if fileToLID.get(d) else list_override])
-    
+
     for nd in sorted(dirs):
         globDir(join(d,nd))
- 
+
 
 # HTTP(S) based import?
 if re.match(r"https?://", source):
     data = urlopen(source).read().decode('utf-8')
     print("Fetched %u bytes of main data, parsing month lists" % len(data))
-    
+
     if project:
         # ensure there is a '-' between project and list name otherwise we match too much
         # Note: It looks like mod_mbox always uses single quoted hrefs
@@ -487,7 +487,7 @@ if re.match(r"https?://", source):
                     print("Adding %s/%s to slurp list" % (ml, mboxfile))
                     if quickmode and qn >= 2:
                         break
-    
+
     if args.pipermail:
         filebased = True
         piperWeirdness = True
@@ -520,7 +520,7 @@ elif re.match(r"imaps?://", source):
     imap = True
     import urllib, getpass, imaplib
     url = urllib.parse.urlparse(source)
-    
+
     port = url.port or (143 if url.scheme == 'imap' else 993)
     user = url.username or getpass.getuser()
     password = url.password or getpass.getpass('IMAP Password: ')
@@ -529,10 +529,10 @@ elif re.match(r"imaps?://", source):
 
     # fetch message-id => _id pairs from elasticsearch
 
-    result = es.search(scroll = '5m', 
+    result = es.search(scroll = '5m',
         body = {
-            'size': 1024, 
-            'fields': ['message-id'], 
+            'size': 1024,
+            'fields': ['message-id'],
             'query': {'match': {'list': listname}}
         }
     )

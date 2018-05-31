@@ -62,7 +62,7 @@ class MboxoReader(mailbox._PartialFile): # pylint: disable=W0212
 
     # Override the read method to provide mboxo filtering
     def _read(self, size, read_method):
-        # get the next chunk, resetting if necessary 
+        # get the next chunk, resetting if necessary
         if self.remain != 0:
             super().seek(whence=1, offset=-self.remain)
         # if size is None or negative, then read returns everything.

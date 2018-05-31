@@ -42,7 +42,7 @@ subscribe
         print("Sent subscription request for %s to %s" % (sender, recip))
     else:
         msg = email.message_from_file(sys.stdin)
-        
+
         if msg.get('to') and msg.get('reply-to') and msg.get('subject'):
             if msg.get('to').find(sys.argv[1]) != -1 and \
                 re.search(r"-request@", msg.get('reply-to')) or \
@@ -53,7 +53,7 @@ subscribe
                 with open("%s/wrapper.log" % path, "a") as f:
                     f.write("%s - %s: %s\n" % (msg.get('to'), msg.get('reply-to'), msg.get('subject')))
                     f.write("We've got a subscription request for %s. \n" % msg.get('reply-to'))
-                
+
                 smtpObj = smtplib.SMTP('localhost')
                 smtpObj.sendmail(sys.argv[1], [msg.get('reply-to')], """From: %s
 To: %s
@@ -70,4 +70,3 @@ Subject: %s
                     print(p.communicate(input=msg.as_string().encode('utf-8')))
                     p.stdin.close()
                     f.write("-----\n")
-            

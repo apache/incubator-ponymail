@@ -43,7 +43,7 @@ class Elastic:
         if config.has_option('elasticsearch', 'user'):
             auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
-    
+
         # elasticsearch logs lots of warnings on retries/connection failure
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
@@ -85,7 +85,7 @@ class Elastic:
         return self.dbVersion
     def engineMajor(self):
         return int(self.engineVersion().split('.')[0])
-        
+
     def getdbname(self):
         return self.dbname
 
@@ -101,7 +101,7 @@ class Elastic:
             index=self.dbname,
             **kwargs
         )
-    
+
     def update(self, **kwargs):
         return self.es.update(
             index=self.dbname,
@@ -117,13 +117,13 @@ class Elastic:
             scroll = scroll,
             **kwargs
         )
-    
+
     def get(self, **kwargs):
         return self.es.get(index=self.dbname, **kwargs)
 
     def scroll(self, **kwargs):
         return self.es.scroll(**kwargs)
-    
+
     def info(self, **kwargs):
         return self.es.info(**kwargs)
 
@@ -131,9 +131,9 @@ class Elastic:
         return helpers.bulk(self.es, actions, **kwargs)
 
     def clear_scroll(self, *args, **kwargs):
-        """ 
+        """
             Call this to release the scroll id and its resources
-    
+
             It looks like the Python library already releases the SID
             if the caller scrolls to the end of the results, so only need to call this
             when terminating scrolling early.

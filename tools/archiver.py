@@ -227,8 +227,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 attachments.append(part_meta)
                 contents[part_meta['hash']] = part_file
         return attachments, contents
-    
-    
+
+
     def msgbody(self, msg):
         body = None
         firstHTML = None
@@ -249,11 +249,11 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     firstHTML = part.get_payload(decode=True)
             except Exception as err:
                 print(err)
-            
+
         # this requires a GPL lib, user will have to install it themselves
         if firstHTML and (not body or len(body) <= 1 or (iBody and str(body).find(str(iBody)) != -1)):
             body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
- 
+
         # See issue#463
         # This code will try at most one charset
         # If the decode fails, it will use utf-8
@@ -264,8 +264,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             except:
                 body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
                 # at this point body can no longer be bytes
-                
-        return body    
+
+        return body
 
     # N.B. this is also called by import-mbox.py
     def compute_updates(self, lid, private, msg):
@@ -288,7 +288,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             # Standard crop out?
             else:
                 lid = lid.replace(self.cropout, "")
-        
+
         defaultEmptyString = lambda value: value and str(value) or ""
         msg_metadata = dict([(k, defaultEmptyString(msg.get(k))) for k in self.keys])
         mid = hashlib.sha224(str("%s-%s" % (lid, msg_metadata['archived-at'])).encode('utf-8')).hexdigest() + "@" + (lid if lid else "none")
@@ -383,7 +383,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             }
 
         return  ojson, contents, msg_metadata, irt
-            
+
     def archive_message(self, mlist, msg, raw_msg):
         """Send the message to the archiver.
 
@@ -423,7 +423,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                             'source': contents[key]
                         }
                     )
-            
+
             self.index(
                 index=self.dbname,
                 doc_type="mbox",
@@ -431,7 +431,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 consistency = self.consistency,
                 body = ojson
             )
-            
+
             self.index(
                 index=self.dbname,
                 doc_type="mbox_source",
@@ -463,7 +463,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 sys.exit(0) # We're exiting here, the rest can't be done without ES
             # otherwise fail as before
             raise err
-                
+
         # If MailMan and list info is present, save/update it in ES:
         if hasattr(mlist, 'description') and hasattr(mlist, 'list_name') and mlist.description and mlist.list_name:
             self.index(
@@ -478,11 +478,11 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     'private': private
                 }
             )
-        
+
         if logger:
             logger.info("Pony Mail archived message %s successfully", ojson['mid'])
         oldrefs = []
-        
+
         # Is this a direct reply to a pony mail email?
         if irt != "":
             dm = re.search(r"pony-([a-f0-9]+)-([a-f0-9]+)@", irt)
@@ -524,7 +524,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 mid = im.group(2)
                 if self.es.exists(index = self.dbname, doc_type = 'account', id = cid):
                     doc = self.es.get(index = self.dbname, doc_type = 'account', id = cid)
-                    
+
                     # does the user want to be notified of indirect replies?
                     if doc and 'preferences' in doc['_source'] and doc['_source']['preferences'].get('notifications') == 'indirect' and not cid in oldrefs:
                         oldrefs.append(cid)
@@ -571,7 +571,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         """ Required by MM3 plugin API
         """
         return None
-    
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line options.')
     parser.add_argument('--lid', dest='lid', type=str, nargs=1,
@@ -582,22 +582,22 @@ if __name__ == '__main__':
                        help='(optional) source IP (mail server) to allow posts from, ignore if no match')
     parser.add_argument('--ignore', dest='ignorefrom', type=str, nargs=1,
                        help='Sender/list to ignore input from (owner etc)')
-    parser.add_argument('--private', dest='private', action='store_true', 
+    parser.add_argument('--private', dest='private', action='store_true',
                        help='This is a private archive')
-    parser.add_argument('--makedate', dest='makedate', action='store_true', 
+    parser.add_argument('--makedate', dest='makedate', action='store_true',
                        help='Use the archive timestamp as the email date instead of the Date header')
-    parser.add_argument('--quiet', dest='quiet', action='store_true', 
+    parser.add_argument('--quiet', dest='quiet', action='store_true',
                        help='Do not exit -1 if the email could not be parsed')
-    parser.add_argument('--verbose', dest='verbose', action='store_true', 
+    parser.add_argument('--verbose', dest='verbose', action='store_true',
                        help='Output additional log messages')
-    parser.add_argument('--html2text', dest='html2text', action='store_true', 
+    parser.add_argument('--html2text', dest='html2text', action='store_true',
                        help='Try to convert HTML to text if no text/plain message is found')
     parser.add_argument('--dry', dest='dry', action='store_true',
                        help='Do not save emails to elasticsearch, only test parsing')
     parser.add_argument('--dumponfail', dest='dump',
                        help='If pushing to ElasticSearch fails, dump documents in JSON format to this directory and fail silently.')
     args = parser.parse_args()
-    
+
     if args.html2text:
         parseHTML = True
     if args.dump:
@@ -609,23 +609,23 @@ if __name__ == '__main__':
         # Also eliminates: 'Undecodable raw error response from server:' warning message
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
-        
+
     archie = Archiver(parseHTML = parseHTML)
     # use binary input so parser can use appropriate charset
     input_stream = sys.stdin.buffer
-    
+
     try:
         msgstring = input_stream.read()
         try:
             msg = email.message_from_bytes(msgstring)
         except Exception as err:
             print("STDIN parser exception: %s" % err)
-        
+
         # We're reading from STDIN, so let's fake an MM3 call
         ispublic = True
         ignorefrom = None
         allowfrom = None
-            
+
         if args.altheader:
             altheader = args.altheader[0]
             if altheader in msg:
@@ -647,15 +647,15 @@ if __name__ == '__main__':
                 msg.replace_header('List-ID', args.lid[0])
             except:
                 msg.add_header('list-id', args.lid[0])
-                
-                
+
+
         #Ignore based on --ignore flag?
         if args.ignorefrom:
             ignorefrom = args.ignorefrom[0]
             if fnmatch.fnmatch(msg.get("from"), ignorefrom) or (msg.get("list-id") and fnmatch.fnmatch(msg.get("list-id"), ignorefrom)):
                 print("Ignoring message as instructed by --ignore flag")
                 sys.exit(0)
-        
+
         # Check CIDR if need be
         if args.allowfrom:
             from netaddr import IPNetwork, IPAddress
@@ -678,14 +678,14 @@ if __name__ == '__main__':
         # Replace date header with $now?
         if args.makedate:
             msg.replace_header('date', email.utils.formatdate())
-            
+
         if args.private:
             ispublic = False
         if 'list-id' in msg:
             if not msg.get('archived-at'):
                 msg.add_header('archived-at', email.utils.formatdate())
             list_data = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id = msg.get('list-id'), archive_public=ispublic)
-            
+
             try:
                 lid, mid = archie.archive_message(list_data, msg, msgstring)
                 print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
@@ -705,4 +705,4 @@ if __name__ == '__main__':
         else:
             print("Could not parse email: %s (@ %s)" % (err, line))
             sys.exit(-1)
-            
+
