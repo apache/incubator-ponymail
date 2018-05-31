@@ -20,6 +20,7 @@ import subprocess
 import argparse
 import shutil
 import logging
+import json
 
 if sys.version_info <= (3, 3):
     print("This script requires Python 3.4 or higher")
@@ -30,7 +31,7 @@ try:
     from elasticsearch import Elasticsearch
 except ImportError:
     dopip = True
-    
+
 if dopip and (getpass.getuser() != "root"):
     print("It looks like you need to install some python modules first")
     print("Either run this as root to do so, or run: ")
@@ -59,7 +60,7 @@ ES_MAJOR = ES_VERSION[0]
 # CLI arg parsing
 parser = argparse.ArgumentParser(description='Command line options.')
 
-parser.add_argument('--defaults', dest='defaults', action='store_true', 
+parser.add_argument('--defaults', dest='defaults', action='store_true',
                    help='Use default settings')
 parser.add_argument('--dbprefix', dest='dbprefix')
 parser.add_argument('--clobber', dest='clobber', action='store_true',
@@ -78,17 +79,17 @@ parser.add_argument('--mailserver', dest='mailserver', type=str,
                    help='Host name of outgoing mail server')
 parser.add_argument('--mldom', dest='mldom', type=str,
                    help='Domains to accept mail for via UI')
-parser.add_argument('--wordcloud', dest='wc', action='store_true', 
+parser.add_argument('--wordcloud', dest='wc', action='store_true',
                    help='Enable word cloud')
-parser.add_argument('--skiponexist', dest='soe', action='store_true', 
+parser.add_argument('--skiponexist', dest='soe', action='store_true',
                    help='Skip setup if ES index exists')
-parser.add_argument('--noindex', dest='noi', action='store_true', 
+parser.add_argument('--noindex', dest='noi', action='store_true',
                    help="Don't make an ES index, assume it exists")
-parser.add_argument('--nocloud', dest='nwc', action='store_true', 
+parser.add_argument('--nocloud', dest='nwc', action='store_true',
                    help='Do not enable word cloud')
 parser.add_argument('--generator', dest='generator', type=str,
                    help='Document ID Generator to use (legacy, medium, cluster, full)')
-args = parser.parse_args()    
+args = parser.parse_args()
 
 print("Welcome to the Pony Mail setup script!")
 print("Let's start by determining some settings...")
@@ -144,13 +145,13 @@ if args.dbreplicas:
     replicas = args.dbreplicas
 if args.generator:
     genname = args.generator
-    
+
 while hostname == "":
     hostname = input("What is the hostname of the ElasticSearch server? (e.g. localhost): ")
 
 while urlPrefix == None:
     urlPrefix = input("Database URL prefix if any (hit enter if none): ")
-    
+
 while port < 1:
     try:
         port = int(input("What port is ElasticSearch listening on? (normally 9200): "))
@@ -162,7 +163,7 @@ while dbname == "":
 
 while mlserver == "":
     mlserver = input("What is the hostname of the outgoing mailserver? (e.g. mail.foo.org): ")
-    
+
 while mldom == "":
     mldom = input("Which domains would you accept mail to from web-replies? (e.g. foo.org or *): ")
 
@@ -184,7 +185,7 @@ while genname == "":
             genname = gens[gno-1]
     except ValueError:
         pass
-    
+
 while shards < 1:
     try:
         shards = int(input("How many shards for the ElasticSearch index? "))
@@ -216,240 +217,8 @@ def createIndex():
         "number_of_replicas" : replicas
     }
 
-    mappings = {
-        "mbox" : {
-          "properties" : {
-            "@import_timestamp" : {
-              "type" : "date",
-              "format" : "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd"
-            },
-            "attachments" : {
-              "properties" : {
-                "content_type" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "filename" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "hash" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "size" : {
-                  "type" : "long"
-                }
-              }
-            },
-            "body" : {
-              "type" : "string"
-            },
-            "cc": {
-              "type": "string"
-            },
-            "date" : {
-              "type" : "date",
-              "store" : True,
-              "format" : "yyyy/MM/dd HH:mm:ss",
-              "index" : "not_analyzed"
-            },
-            "epoch" : { # number of seconds since the epoch
-              "type" : "long",
-              "index" : "not_analyzed"
-            },
-            "from" : {
-              "type" : "string"
-            },
-            "from_raw" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "in-reply-to" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "list" : {
-              "type" : "string"
-            },
-            "list_raw" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "message-id" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "mid" : {
-              "type" : "string"
-            },
-            "private" : {
-              "type" : "boolean"
-            },
-            "references" : {
-              "type" : "string"
-            },
-            "subject" : {
-              "type" : "string",
-              "fielddata": True # dropped later if DB_MAJOR==2
-            },
-            "to" : {
-              "type" : "string"
-            }
-          }
-        },
-        "attachment" : {
-          "properties" : {
-            "source" : {
-              "type" : "binary"
-            }
-          }
-        },
-        "mbox_source" : {
-          "_all": {
-            "enabled": False # this doc type is not searchable
-          },
-          "properties" : {
-            "source" : {
-              "type" : "binary"
-            },
-            "message-id" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "mid" : {
-              "type" : "string"
-            }
-          }
-        },
-        "mailinglists" : {
-          "_all": {
-            "enabled": False # this doc type is not searchable
-          },
-          "properties" : {
-            "description" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "list" : {
-              "type" : "string",
-#               "index" : "not_analyzed"
-            },
-            "name" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            }
-          }
-        },
-        "account" : {
-          "_all": {
-            "enabled": False # this doc type is not searchable
-          },
-          "properties" : {
-            "cid" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "credentials" : {
-              "properties" : {
-                "altemail" : {
-                  "type" : "object"
-                },
-                "email" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "fullname" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "uid" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                }
-              }
-            },
-            "internal" : {
-              "properties" : {
-                "cookie" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "ip" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                },
-                "oauth_used" : {
-                  "type" : "string",
-                  "index" : "not_analyzed"
-                }
-              }
-            },
-            "request_id" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            }
-          }
-        },
-        "notifications" : {
-          "_all": {
-            "enabled": False # this doc type is not searchable
-          },
-          "properties" : {
-            "date" : {
-              "type" : "date",
-              "store" : True,
-              "format" : "yyyy/MM/dd HH:mm:ss"
-            },
-            "epoch" : {
-              "type" : "long"
-            },
-            "from" : {
-              "type" : "string",
-#               "index" : "not_analyzed"
-            },
-            "in-reply-to" : {
-              "type" : "string",
-               "index" : "not_analyzed"
-            },
-            "list" : {
-              "type" : "string",
-#               "index" : "not_analyzed"
-            },
-            "message-id" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "mid" : {
-              "type" : "string",
-#               "index" : "not_analyzed"
-            },
-            "private" : {
-              "type" : "boolean"
-            },
-            "recipient" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            },
-            "seen" : {
-              "type" : "long"
-            },
-            "subject" : {
-              "type" : "string",
-              "fielddata": True # dropped later if DB_MAJOR==2
-#               "index" : "not_analyzed"
-            },
-            "to" : {
-              "type" : "string",
-#               "index" : "not_analyzed"
-            },
-            "type" : {
-              "type" : "string",
-              "index" : "not_analyzed"
-            }
-          }
-        }
-    }
+    this_files_path = os.path.dirname(os.path.realpath(__file__))
+    mappings = json.load(open("%s/mappings.json" % this_files_path, "r"))
 
     if DB_MAJOR == 2: # ES 2 handles fielddata differently
         del mappings['mbox']['properties']['subject']['fielddata']
@@ -460,10 +229,10 @@ def createIndex():
                 "settings": settings
             }
         )
-    
+
     print("Index created! %s " % res)
 
-# we need to connect to database to determine the engine version   
+# we need to connect to database to determine the engine version
 es = Elasticsearch([
     {
         'host': hostname,
@@ -517,7 +286,7 @@ print("Writing importer config (%s)" % ponymail_cfg)
 with open(ponymail_cfg, "w") as f:
     f.write("""
 ###############################################################
-# Pony Mail Configuration file                                             
+# Pony Mail Configuration file
 
 # Main ES configuration
 [elasticsearch]
@@ -542,7 +311,7 @@ generator:              %s
 #cropout:               string to crop from list-id
 
 ###############################################################
-            """ % (hostname, dbname, port, 
+            """ % (hostname, dbname, port,
                    'wait:                  active shard count' if DB_MAJOR == 5 else 'write:                 consistency level (default quorum)', genname))
 
 config_path = "../site/api/lib"
@@ -575,7 +344,7 @@ local config = {
 --            env = 'subprocess' -- use environment vars instead of request headers
 --        }
     },
---  allow_insecure_cookie = true, -- override the default (false) - only use for test installations 
+--  allow_insecure_cookie = true, -- override the default (false) - only use for test installations
 --  no_association = {}, -- domains that are not allowed for email association
 --  listsDisplay = 'regex', -- if defined, hide list names that don't match the regex
 --  debug = false, -- whether to return debug information
@@ -583,11 +352,11 @@ local config = {
 }
 return config
             """ % (hostname, port, dbname, mlserver, mldom, "true" if wce else "false"))
-    
+
 print("Copying sample JS config to config.js (if needed)...")
 if not os.path.exists("../site/js/config.js") and os.path.exists("../site/js/config.js.sample"):
     shutil.copy("../site/js/config.js.sample", "../site/js/config.js")
-    
-    
+
+
 print("All done, Pony Mail should...work now :)")
 print("If you are using an external mail inbound server, \nmake sure to copy archiver.py and ponymail.cfg to it")
