@@ -1,0 +1,228 @@
+{
+    "account": {
+        "_all": {
+            "enabled": false
+        },
+        "properties": {
+            "cid": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "credentials": {
+                "properties": {
+                    "altemail": {
+                        "type": "object"
+                    },
+                    "email": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "fullname": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "uid": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    }
+                }
+            },
+            "internal": {
+                "properties": {
+                    "cookie": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "ip": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "oauth_used": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    }
+                }
+            },
+            "request_id": {
+                "index": "not_analyzed",
+                "type": "string"
+            }
+        }
+    },
+    "attachment": {
+        "properties": {
+            "source": {
+                "type": "binary"
+            }
+        }
+    },
+    "mailinglists": {
+        "_all": {
+            "enabled": false
+        },
+        "properties": {
+            "description": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "list": {
+                "type": "string"
+            },
+            "name": {
+                "index": "not_analyzed",
+                "type": "string"
+            }
+        }
+    },
+    "mbox": {
+        "properties": {
+            "@import_timestamp": {
+                "format": "yyyy/MM/dd HH:mm:ss||yyyy/MM/dd",
+                "type": "date"
+            },
+            "attachments": {
+                "properties": {
+                    "content_type": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "filename": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "hash": {
+                        "index": "not_analyzed",
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "long"
+                    }
+                }
+            },
+            "body": {
+                "type": "string"
+            },
+            "cc": {
+                "type": "string"
+            },
+            "date": {
+                "format": "yyyy/MM/dd HH:mm:ss",
+                "index": "not_analyzed",
+                "store": true,
+                "type": "date"
+            },
+            "epoch": {
+                "index": "not_analyzed",
+                "type": "long"
+            },
+            "from": {
+                "type": "string"
+            },
+            "from_raw": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "in-reply-to": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "list": {
+                "type": "string"
+            },
+            "list_raw": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "message-id": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "mid": {
+                "type": "string"
+            },
+            "private": {
+                "type": "boolean"
+            },
+            "references": {
+                "type": "string"
+            },
+            "subject": {
+                "fielddata": true,
+                "type": "string"
+            },
+            "to": {
+                "type": "string"
+            }
+        }
+    },
+    "mbox_source": {
+        "_all": {
+            "enabled": false
+        },
+        "properties": {
+            "message-id": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "mid": {
+                "type": "string"
+            },
+            "source": {
+                "type": "binary"
+            }
+        }
+    },
+    "notifications": {
+        "_all": {
+            "enabled": false
+        },
+        "properties": {
+            "date": {
+                "format": "yyyy/MM/dd HH:mm:ss",
+                "store": true,
+                "type": "date"
+            },
+            "epoch": {
+                "type": "long"
+            },
+            "from": {
+                "type": "string"
+            },
+            "in-reply-to": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "list": {
+                "type": "string"
+            },
+            "message-id": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "mid": {
+                "type": "string"
+            },
+            "private": {
+                "type": "boolean"
+            },
+            "recipient": {
+                "index": "not_analyzed",
+                "type": "string"
+            },
+            "seen": {
+                "type": "long"
+            },
+            "subject": {
+                "fielddata": true,
+                "type": "string"
+            },
+            "to": {
+                "type": "string"
+            },
+            "type": {
+                "index": "not_analyzed",
+                "type": "string"
+            }
+        }
+    }
+}
