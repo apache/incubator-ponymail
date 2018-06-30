@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Thie is feedwrapper - a mailing list auto-subscriber and/or feed passthrough program.
+This is feedwrapper - a mailing list auto-subscriber and/or feed passthrough program.
 Activate it by adding "|/usr/bin/env python3 /path/to/ponymail/tools/feedwrapper.py localuser@thisdomain.abc"
 Then subscribe to lists by running: python3 feedwrapper sub localuser@thisdomain.abc ml-subscribe@mldomain.foo"
 """
