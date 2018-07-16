@@ -84,7 +84,6 @@ function handle(r)
     local dd = "lte=1M"
     local maxresults = config.maxResults or 5000
     local account = user.get(r)
-    local rights = nil
     -- Param: d=nnnnn (numeric)
     -- does not appear to be supported below
     if get.d and tonumber(get.d) and tonumber(get.d) > 0 then
