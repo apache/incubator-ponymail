@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Enh: display buttons even if no mails are found in a month (#470)
 - Bug: Javascript URLs must always use URL_BASE (#469)
 - Bug: setup.py uses ES library version to decide what features the database supports (#464)
 - Various tidyups suggested by Pylint

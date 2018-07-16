@@ -3959,7 +3959,8 @@ function buildPage(json, state) {
 
     viewModes[prefs.displayMode].list(json, 0, 0, state ? state.deep : false);
     if (!json.emails || !json.emails.length || json.emails.length == 0) {
-        document.getElementById('emails').innerHTML = "<h3>No emails found that fit the search criteria</h3>"
+        // prepend the message rather than replacing the buttons
+        document.getElementById('emails').innerHTML = "<h3>No emails found that fit the search criteria</h3>" + document.getElementById('emails').innerHTML
     }
     if (json.private && json.private == true) {
         document.getElementById('emails').innerHTML += "<h4>Looks like you don't have access to this archive. Maybe you need to be logged in?</h4>"
