@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: Javascript URLs must always use URL_BASE (#469)
 - Bug: setup.py uses ES library version to decide what features the database supports (#464)
 - Various tidyups suggested by Pylint
 - Bug: archiver.py can never detect content-type: flowed (#461)

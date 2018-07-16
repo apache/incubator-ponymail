@@ -42,7 +42,7 @@ function showDomains(l) {
         }
         var a = document.createElement("a")
         var t = document.createTextNode(dom + extend)
-        a.setAttribute("href", "list.html?" + dom)
+        a.setAttribute("href", URL_BASE + "/list.html?" + dom)
         a.appendChild(t)
         li.appendChild(a)
         ul.appendChild(li)

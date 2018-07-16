@@ -4111,7 +4111,7 @@ function getListInfo(list, xdomain, nopush) {
         var li = document.createElement("li")
         var a = document.createElement("a")
         var t = document.createTextNode(dom)
-        a.setAttribute("href", "list.html?" + dom)
+        a.setAttribute("href", URL_BASE + "/list.html?" + dom)
         a.appendChild(t)
         li.appendChild(a)
         lc.appendChild(li)
@@ -4250,7 +4250,7 @@ function showDomains(l) {
         }
         var a = document.createElement("a")
         var t = document.createTextNode(dom + extend)
-        a.setAttribute("href", "list.html?" + dom)
+        a.setAttribute("href", URL_BASE + "/list.html?" + dom)
         a.appendChild(t)
         li.appendChild(a)
         ul.appendChild(li)
@@ -4607,7 +4607,7 @@ function searchAll(q, dspan, from, subject, where) {
 
 // Adds an opensearch engine to the browser
 function addSearchEngine() {
-    window.external.AddSearchProvider("/api/websearch.lua?" + gxdomain)
+    window.external.AddSearchProvider(URL_BASE + "/api/websearch.lua?" + gxdomain)
 }
 
 // for firefox (chrome doesn't seem to get it just yet): add an opensearch header element,
@@ -4617,7 +4617,7 @@ function addSearchBar() {
     var sl = document.createElement('link')
     sl.setAttribute("rel", "search")
     sl.setAttribute("type", "application/opensearchdescription+xml")
-    sl.setAttribute("href", "/api/websearch.lua?" + gxdomain)
+    sl.setAttribute("href", URL_BASE + "/api/websearch.lua?" + gxdomain)
     sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
     h.appendChild(sl)
 }
@@ -5294,7 +5294,7 @@ function setupUser() {
     var li = document.createElement("li")
     var a = document.createElement("a")
     var t = document.createTextNode("Notifications")
-    a.setAttribute("href", "notifications.html")
+    a.setAttribute("href", URL_BASE + "/notifications.html")
     
     a.appendChild(t)
     if (login.notifications && login.notifications > 0) {
@@ -5326,7 +5326,7 @@ function setupUser() {
             sli.setAttribute("class", "pull-left")
             var st = document.createTextNode(l)
             var sa = document.createElement('a')
-            sa.setAttribute("href", "list.html?" + l)
+            sa.setAttribute("href", URL_BASE + "/list.html?" + l)
             sa.appendChild(st)
             sli.appendChild(sa)
             ul.appendChild(sli)
@@ -5340,7 +5340,7 @@ function setupUser() {
     var li = document.createElement("li")
     var a = document.createElement("a")
     var t = document.createTextNode("Manage email addresses")
-    a.setAttribute("href", "merge.html")
+    a.setAttribute("href", URL_BASE + "/merge.html")
     a.appendChild(t)
     
     li.appendChild(a)

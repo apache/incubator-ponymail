@@ -466,7 +466,7 @@ function getListInfo(list, xdomain, nopush) {
         var li = document.createElement("li")
         var a = document.createElement("a")
         var t = document.createTextNode(dom)
-        a.setAttribute("href", "list.html?" + dom)
+        a.setAttribute("href", URL_BASE + "/list.html?" + dom)
         a.appendChild(t)
         li.appendChild(a)
         lc.appendChild(li)

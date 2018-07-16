@@ -173,7 +173,7 @@ function searchAll(q, dspan, from, subject, where) {
 
 // Adds an opensearch engine to the browser
 function addSearchEngine() {
-    window.external.AddSearchProvider("/api/websearch.lua?" + gxdomain)
+    window.external.AddSearchProvider(URL_BASE + "/api/websearch.lua?" + gxdomain)
 }
 
 // for firefox (chrome doesn't seem to get it just yet): add an opensearch header element,
@@ -183,7 +183,7 @@ function addSearchBar() {
     var sl = document.createElement('link')
     sl.setAttribute("rel", "search")
     sl.setAttribute("type", "application/opensearchdescription+xml")
-    sl.setAttribute("href", "/api/websearch.lua?" + gxdomain)
+    sl.setAttribute("href", URL_BASE + "/api/websearch.lua?" + gxdomain)
     sl.setAttribute("title", "PonyMail: " + gxdomain + " mailing lists")
     h.appendChild(sl)
 }

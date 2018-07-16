@@ -190,7 +190,7 @@ function setupUser() {
     var li = document.createElement("li")
     var a = document.createElement("a")
     var t = document.createTextNode("Notifications")
-    a.setAttribute("href", "notifications.html")
+    a.setAttribute("href", URL_BASE + "/notifications.html")
     
     a.appendChild(t)
     if (login.notifications && login.notifications > 0) {
@@ -222,7 +222,7 @@ function setupUser() {
             sli.setAttribute("class", "pull-left")
             var st = document.createTextNode(l)
             var sa = document.createElement('a')
-            sa.setAttribute("href", "list.html?" + l)
+            sa.setAttribute("href", URL_BASE + "/list.html?" + l)
             sa.appendChild(st)
             sli.appendChild(sa)
             ul.appendChild(sli)
@@ -236,7 +236,7 @@ function setupUser() {
     var li = document.createElement("li")
     var a = document.createElement("a")
     var t = document.createTextNode("Manage email addresses")
-    a.setAttribute("href", "merge.html")
+    a.setAttribute("href", URL_BASE + "/merge.html")
     a.appendChild(t)
     
     li.appendChild(a)
