@@ -141,7 +141,7 @@ function handle(r)
                         checkFirst=true
                         -- TODO consider whether to optionally prefix '>From ', '^>>From ' etc. 
                         -- If so, just change the RE to "^>*From "
-                        r:puts(line) -- original line
+                        r:write(line) -- original line
                     end
                     r:puts("\n")
                 end

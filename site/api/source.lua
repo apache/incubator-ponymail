@@ -46,7 +46,7 @@ function handle(r)
         if aaa.canAccessDoc(r, doc, account) then
             local doc_raw = elastic.get('mbox_source', doc.request_id)
             if doc_raw then
-                r:puts(doc_raw.source)
+                r:write(doc_raw.source)
             else
                 r:puts("Could not find the email source, sorry!")
             end

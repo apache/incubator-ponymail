@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Enh: Ensure non-printable chars are not lost in source and mbox output (#476)
 - Enh: display buttons even if no mails are found in a month (#470)
 - Bug: Javascript URLs must always use URL_BASE (#469)
 - Bug: setup.py uses ES library version to decide what features the database supports (#464)
