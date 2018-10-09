@@ -142,8 +142,6 @@ function handle(r)
             doc, sid = elastic.scroll(sid)
         end
         elastic.clear_scroll(sid) -- we're done with the sid, release it
-        -- scroll always sorts by _doc so we need to fix that
-        table.sort (hits, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     else
         local doc = elastic.raw(squery)
         hits = doc.hits.hits
