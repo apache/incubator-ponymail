@@ -53,6 +53,37 @@ local function getFromLine(r, source)
     return "From " .. replyTo .. " " .. timeStamp
 end
 
+local function writeMbox(r, docs)
+    -- for each email, get the actual source of it to plop into the mbox file
+    for k, v in pairs(docs.hits.hits) do
+        v = v._source
+        local doc = elastic.get('mbox_source', v.mid)
+        if doc and doc.source then
+            local checkFirst -- should we check the first line?
+            if not doc.source:match('^From ') then -- only add the header if there is none
+                r:puts(getFromLine(r, doc.source))
+                r:puts("\n")
+                checkFirst=true
+            else
+                checkFirst=false
+            end
+            
+            -- pick out individual lines (including last which may not have EOL)
+            -- it's tricky to add the prefix to the output unless the From is at the start of a line
+            -- so it's easier to just skip the first match if necessary
+            for line in doc.source:gmatch("[^\r\n]*\r?\n?") do
+                -- check if 'From ' needs to be escaped
+                if checkFirst and line:match("^From ") then r:puts(">") end
+                checkFirst=true
+                -- TODO consider whether to optionally prefix '>From ', '^>>From ' etc. 
+                -- If so, just change the RE to "^>*From "
+                r:write(line) -- original line
+            end
+            r:puts("\n")
+        end
+    end
+end
+
 function handle(r)
     cross.contentType(r, "application/mbox")
     local get = r:parseargs()
@@ -77,75 +108,96 @@ function handle(r)
         if r.headers_out then
             r.headers_out['Content-Disposition'] = ("attachment; filename=%s_%04d-%02d.mbox"):format(flid,y,m)
         end
-        
-        -- fetch all results from the list (up to 10k results), make sure to get the 'private' element
-        local docs = elastic.raw {
-            _source = {'mid','private'},
+
+        local DATERANGE = {
+            range = {
+                date = {
+                    gte = ("%04d/%02d/%02d 00:00:00"):format(y,m,1),
+                    lte = ("%04d/%02d/%02d 23:59:59"):format(y,m,d)
+                }
+            }
+        }
+
+        local LIST = {
+            term = {
+                list_raw = lid
+            }
+        }
+
+        -- Pre-process the list to find its size and whether there are any private mails
+        local squery = {
             query = {
                 bool = {
                     must = {
-                        {
-                            range = {
-                                date = {
-                                    gte = ("%04d/%02d/%02d 00:00:00"):format(y,m,1),
-                                    lte = ("%04d/%02d/%02d 23:59:59"):format(y,m,d)
-                                }
-                            }
-                        },
-                        {
-                            term = {
-                                list_raw = lid
-                            }
-                        }
+                        DATERANGE,
+                        LIST
                     }
                 }
             },
-            sort = {
-                {
-                    epoch = {
-                        order = "asc"
+            size = 0, -- no data wanted this time
+            aggs = {
+                privacy = {
+                    terms = {
+                        field = "private"
                     }
-                }  
-            },
-            size = 10000
+                }
+            }
         }
 
-        local account = user.get(r)
-        local listAccessible = nil -- not yet initialised
-        -- for each email, get the actual source of it to plop into the mbox file
-        for k, v in pairs(docs.hits.hits) do
-            v = v._source
-            -- aaa.rights() can be expensive, so only do it once per download
-            if v.private and listAccessible == nil then
-                -- we are dealing with a single list here so only need to check once
-                listAccessible = aaa.canAccessList(r, lid, account)
+        -- find list details
+        local docs = elastic.raw(squery)
+        local total_docs = docs.hits.total
+
+        local fetchPrivate = false -- should we try to fetch private messages?
+        for _, privacy in pairs(docs.aggregations.privacy.buckets) do
+            -- do we have a private message?
+            if privacy.key_as_string == "true" and privacy.doc_count > 0 then
+                -- if so, are we allowed access?
+                fetchPrivate = aaa.canAccessList(r, lid, user.get(r))
+                break
             end
-            if listAccessible or not v.private then
-                local doc = elastic.get('mbox_source', v.mid)
-                if doc and doc.source then
-                    local checkFirst -- should we check the first line?
-                    if not doc.source:match('^From ') then -- only add the header if there is none
-                        r:puts(getFromLine(r, doc.source))
-                        r:puts("\n")
-                        checkFirst=true
-                    else
-                        checkFirst=false
-                    end
-                    
-                    -- pick out individual lines (including last which may not have EOL)
-                    -- it's tricky to add the prefix to the output unless the From is at the start of a line
-                    -- so it's easier to just skip the first match if necessary
-                    for line in doc.source:gmatch("[^\r\n]*\r?\n?") do
-                        -- check if 'From ' needs to be escaped
-                        if checkFirst and line:match("^From ") then r:puts(">") end
-                        checkFirst=true
-                        -- TODO consider whether to optionally prefix '>From ', '^>>From ' etc. 
-                        -- If so, just change the RE to "^>*From "
-                        r:write(line) -- original line
-                    end
-                    r:puts("\n")
-                end
+        end
+
+        -- Now set up the data query
+        local MUST
+        if fetchPrivate then
+            MUST = {
+                DATERANGE,
+                LIST
+            }
+        else -- either there are no private messages or we don't have access
+            MUST = {
+                DATERANGE,
+                LIST,
+                {
+                    term = {
+                        private = false
+                    }
+                }
+            }
+        end
+
+        -- create the actual query
+        local squery = {
+            _source = {'mid'},
+            query = {
+                bool = {
+                    must = MUST
+                }
+            },
+            size = elastic.MAX_RESULT_WINDOW
+        }
+
+        if total_docs > elastic.MAX_RESULT_WINDOW then
+            local docs, sid = elastic.scroll(squery)
+            while docs and docs.hits and docs.hits.hits and #docs.hits.hits > 0 do -- scroll as long as we get new results
+                writeMbox(r, docs)
+                docs, sid = elastic.scroll(sid)
             end
+            elastic.clear_scroll(sid) -- we're done with the sid, release it
+        else
+            local docs = elastic.raw(squery)
+            writeMbox(r, docs)
         end
     else
         cross.contentType(r, "text/plain")
