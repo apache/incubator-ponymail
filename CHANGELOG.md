@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: no need to sort after scroll (#477)
 - Enh: Ensure non-printable chars are not lost in source and mbox output (#476)
 - Enh: display buttons even if no mails are found in a month (#470)
 - Bug: Javascript URLs must always use URL_BASE (#469)

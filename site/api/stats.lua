@@ -560,8 +560,6 @@ function handle(r)
             js, sid = elastic.scroll(sid)
         end
         elastic.clear_scroll(sid) -- we're done with the sid, release it
-		    -- ES scroll uses _doc order for efficiency; we need to sort here
-    		table.sort (dhh, function (k1, k2) return k1._source.epoch > k2._source.epoch end )
     -- otherwise, we can just do a standard raw query
     else
         local doc = elastic.raw(squery)
