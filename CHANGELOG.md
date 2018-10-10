@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Bug: elastic.lua#scroll forces sort to use _doc (#478)
 - Bug: cannot download more than 10K mails to a mbox file (#475)
 - Enh: Ensure non-printable chars are not lost in source and mbox output (#476)
 - Enh: display buttons even if no mails are found in a month (#470)

@@ -212,8 +212,6 @@ local function scroll(sidOrQuery, doctype)
                 hasBody = true
             end
         end
-        -- ensure we sort by _doc
-        query.sort = { '_doc' }
         local url = config.es_url .. doctype .. "/_search?scroll=1m"
         -- start off the scroll
         json = performRequest(url, query)
