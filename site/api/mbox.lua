@@ -185,6 +185,13 @@ function handle(r)
                     must = MUST
                 }
             },
+            sort = {
+                {
+                    epoch = {
+                        order = "asc"
+                    }
+                }
+            },
             size = elastic.MAX_RESULT_WINDOW
         }
 
