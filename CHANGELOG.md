@@ -1,4 +1,5 @@
 ## Changes in 0.11-SNAPSHOT
+- Enh: Enforce UTF-8 in content headers (#479)
 - Bug: elastic.lua#scroll forces sort to use _doc (#478)
 - Bug: cannot download more than 10K mails to a mbox file (#475)
 - Bug: no need to sort after scroll (#477)

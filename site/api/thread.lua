@@ -70,7 +70,7 @@ local function fetchChildren(r, pdoc, c, biglist, account)
 end
 
 function handle(r)
-    cross.contentType(r, "application/json")
+    cross.contentType(r, "application/json; charset=UTF-8")
     local DEBUG = config.debug or false
     local START = DEBUG and r:clock() or nil
     local get = r:parseargs()

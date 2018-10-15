@@ -48,7 +48,7 @@ local function fetchChildren(r, pdoc, c, biglist)
 end
 
 function handle(r)
-    cross.contentType(r, "application/xhtml+xml")
+    cross.contentType(r, "application/xhtml+xml; charset=UTF-8")
     local get = r:parseargs()
 
     -- make sure we have a list or a thread to display results from

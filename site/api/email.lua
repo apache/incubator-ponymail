@@ -27,7 +27,7 @@ local utils = require 'lib/utils'
 local mime = require "mime"
 
 function handle(r)
-    cross.contentType(r, "application/json")
+    cross.contentType(r, "application/json; charset=UTF-8")
     local get = r:parseargs()
     -- get the parameter (if any) and tidy it up
     local eid = (get.id or ""):gsub("\"", "")

@@ -60,7 +60,7 @@ local function extractCanonName(from)
 end
 
 function handle(r)
-    cross.contentType(r, "application/json")
+    cross.contentType(r, "application/json; charset=UTF-8")
     local DEBUG = config.debug or false
     local t = {}
     local START = DEBUG and r:clock() or nil
