@@ -175,5 +175,11 @@ function isArray(obj) {
     return (obj && obj.constructor && obj.constructor == Array)
 }
 
+
+// sanitize_domain: only accept valid mailing list IDs
+function sanitize_domain(val) {
+    var m = val.match(/[-@a-z.0-9]+/);
+    return m ? m[0] : "unknown";
+}
 // Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)

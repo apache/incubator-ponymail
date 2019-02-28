@@ -44,7 +44,7 @@ function showTrends(json, state) {
     }
     
     // Link back to list view if possible
-    var lname = json.list.replace(/</, "&lt;")
+    var lname = json.list;
     if (lname.search(/\*/) == -1) {
         lname = "<a href='list.html?" + lname + "'>" + lname + "</a>"
     }
@@ -286,6 +286,8 @@ function gatherTrends() {
     var list = a_arr[0]
     var dspan = a_arr[1]
     var query = a_arr[2]
+    
+    list = sanitize_domain(list);
     
     // Try to detect header searches, if present
     var nquery = ""
