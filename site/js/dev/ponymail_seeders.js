@@ -54,8 +54,6 @@ function seedPrefs(json, state) {
 // preGetListInfo: Callback that fetches preferences and sets up list data
 // invoked by onload in list.html and search.html
 function preGetListInfo(list, xdomain, nopush) {
-    if (list) list = sanitize_domain(list);
-    if (xdomain) xdomain = sanitize_domain(xdomain);
     GetAsync("/api/preferences.lua", {
         l: list,
         x: xdomain,

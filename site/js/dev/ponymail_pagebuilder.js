@@ -391,7 +391,15 @@ function getListInfo(list, xdomain, nopush) {
     }
     if ((xdomain == undefined || xdomain == "") && list) {
         xdomain = list.replace(/^.*?@/, "")
-        
+    }
+    
+    if (list) list = sanitize_address(list);
+    if (xdomain) xdomain = sanitize_address(xdomain);
+    
+    // If invalid address passed, complain and exit - no need to attempt fetching stats
+    if (list == 'INVALID' || xdomain == 'INVALID') {
+        alert("Invalid mailing list address supplied!");
+        return
     }
     
     // Sort lists by usage before we enter here...

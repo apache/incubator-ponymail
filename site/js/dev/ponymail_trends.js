@@ -287,7 +287,11 @@ function gatherTrends() {
     var dspan = a_arr[1]
     var query = a_arr[2]
     
-    list = sanitize_domain(list);
+    list = sanitize_address(list);
+    if (list == 'INVALID') {
+        alert("Invalid mailing list address supplied!");
+        return
+    }
     
     // Try to detect header searches, if present
     var nquery = ""
