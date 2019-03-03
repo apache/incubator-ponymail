@@ -2321,10 +2321,10 @@ function isArray(obj) {
 }
 
 
-// sanitize_domain: only accept valid mailing list IDs
-function sanitize_domain(val) {
-    var m = val.match(/[-@a-z.0-9]+/);
-    return m ? m[0] : "unknown";
+// ML address: only accept valid mailing list IDs
+function sanitize_address(val) {
+    var m = val.match(/^[-@A-Za-z.0-9]+$/);
+    return m ? m[0] : "INVALID";
 }
 // Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)
@@ -4042,7 +4042,15 @@ function getListInfo(list, xdomain, nopush) {
     }
     if ((xdomain == undefined || xdomain == "") && list) {
         xdomain = list.replace(/^.*?@/, "")
-        
+    }
+    
+    if (list) list = sanitize_address(list);
+    if (xdomain) xdomain = sanitize_address(xdomain);
+    
+    // If invalid address passed, complain and exit - no need to attempt fetching stats
+    if (list == 'INVALID' || xdomain == 'INVALID') {
+        alert("Invalid mailing list address supplied!");
+        return
     }
     
     // Sort lists by usage before we enter here...
@@ -4674,8 +4682,6 @@ function seedPrefs(json, state) {
 // preGetListInfo: Callback that fetches preferences and sets up list data
 // invoked by onload in list.html and search.html
 function preGetListInfo(list, xdomain, nopush) {
-    if (list) list = sanitize_domain(list);
-    if (xdomain) xdomain = sanitize_domain(xdomain);
     GetAsync("/api/preferences.lua", {
         l: list,
         x: xdomain,
@@ -5084,7 +5090,11 @@ function gatherTrends() {
     var dspan = a_arr[1]
     var query = a_arr[2]
     
-    list = sanitize_domain(list);
+    list = sanitize_address(list);
+    if (list == 'INVALID') {
+        alert("Invalid mailing list address supplied!");
+        return
+    }
     
     // Try to detect header searches, if present
     var nquery = ""
