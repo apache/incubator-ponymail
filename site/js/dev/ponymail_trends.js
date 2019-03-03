@@ -287,8 +287,8 @@ function gatherTrends() {
     var dspan = a_arr[1]
     var query = a_arr[2]
     
-    list = sanitize_address(list);
-    if (list == 'INVALID') {
+    list = validate_address(list);
+    if (list == INVALID_MAGIC_STRING) {
         alert("Invalid mailing list address supplied!");
         return
     }

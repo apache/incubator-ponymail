@@ -60,6 +60,7 @@ var pending_urls = {} // URL list for GetAsync's support functions (such as the 
 var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
+var INVALID_MAGIC_MARKER = "$INVALID"
 
 var URL_BASE = pm_config.URLBase ? pm_config.URLBase.replace(/\/+/g, "/") : ""
 

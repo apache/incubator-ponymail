@@ -393,11 +393,11 @@ function getListInfo(list, xdomain, nopush) {
         xdomain = list.replace(/^.*?@/, "")
     }
     
-    if (list) list = sanitize_address(list);
-    if (xdomain) xdomain = sanitize_address(xdomain);
+    if (list) list = validate_address(list);
+    if (xdomain) xdomain = validate_address(xdomain);
     
     // If invalid address passed, complain and exit - no need to attempt fetching stats
-    if (list == 'INVALID' || xdomain == 'INVALID') {
+    if (list == INVALID_MAGIC_STRING || xdomain == INVALID_MAGIC_STRING) {
         alert("Invalid mailing list address supplied!");
         return
     }

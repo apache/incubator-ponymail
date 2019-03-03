@@ -177,9 +177,9 @@ function isArray(obj) {
 
 
 // ML address: only accept valid mailing list IDs
-function sanitize_address(val) {
+function validate_address(val) {
     var m = val.match(/^[-@A-Za-z.0-9]+$/);
-    return m ? m[0] : "INVALID";
+    return m ? m[0] : INVALID_MAGIC_STRING;
 }
 // Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)
