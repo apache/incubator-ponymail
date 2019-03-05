@@ -287,12 +287,11 @@ function gatherTrends() {
     var dspan = a_arr[1]
     var query = a_arr[2]
     
-    list = validate_address(list);
-    if (list == INVALID_MAGIC_STRING) {
+    if (!valid_address(list)) {
         alert("Invalid mailing list address supplied!");
         return
     }
-    
+
     // Try to detect header searches, if present
     var nquery = ""
     if (query && query.length > 0) {

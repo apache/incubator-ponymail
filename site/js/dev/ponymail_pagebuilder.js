@@ -393,15 +393,13 @@ function getListInfo(list, xdomain, nopush) {
         xdomain = list.replace(/^.*?@/, "")
     }
     
-    if (list) list = validate_address(list);
-    if (xdomain) xdomain = validate_address(xdomain);
-    
     // If invalid address passed, complain and exit - no need to attempt fetching stats
-    if (list == INVALID_MAGIC_STRING || xdomain == INVALID_MAGIC_STRING) {
+    // N.B. Only check list and xdomain if they are defined
+    if ((list && ! valid_address(list)) || (xdomain && ! valid_address(xdomain))) {
         alert("Invalid mailing list address supplied!");
         return
     }
-    
+
     // Sort lists by usage before we enter here...
     var listnames = []
     if (all_lists[xdomain]) {

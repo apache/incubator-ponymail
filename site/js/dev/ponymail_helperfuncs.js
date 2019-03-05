@@ -175,11 +175,11 @@ function isArray(obj) {
     return (obj && obj.constructor && obj.constructor == Array)
 }
 
-
-// ML address: only accept valid mailing list IDs
-function validate_address(val) {
-    var m = val.match(/^[-@A-Za-z.0-9]+$/);
-    return m ? m[0] : INVALID_MAGIC_STRING;
+// ML address: only accept valid mailing list name, domain or both
+// return true if the address is valid
+function valid_address(val) {
+    return val.match(/^[-@A-Za-z.0-9]+$/);
 }
+
 // Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)

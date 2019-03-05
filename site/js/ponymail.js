@@ -68,7 +68,6 @@ var pending_urls = {} // URL list for GetAsync's support functions (such as the 
 var pb_refresh = 0
 var treeview_guard = {}
 var mbox_month = null
-var INVALID_MAGIC_MARKER = "$INVALID"
 
 var URL_BASE = pm_config.URLBase ? pm_config.URLBase.replace(/\/+/g, "/") : ""
 
@@ -2321,12 +2320,12 @@ function isArray(obj) {
     return (obj && obj.constructor && obj.constructor == Array)
 }
 
-
-// ML address: only accept valid mailing list IDs
-function validate_address(val) {
-    var m = val.match(/^[-@A-Za-z.0-9]+$/);
-    return m ? m[0] : INVALID_MAGIC_STRING;
+// ML address: only accept valid mailing list name, domain or both
+// return true if the address is valid
+function valid_address(val) {
+    return val.match(/^[-@A-Za-z.0-9]+$/);
 }
+
 // Check for slow URLs every 0.1 seconds
 window.setInterval(checkForSlows, 100)
 
@@ -4045,15 +4044,13 @@ function getListInfo(list, xdomain, nopush) {
         xdomain = list.replace(/^.*?@/, "")
     }
     
-    if (list) list = validate_address(list);
-    if (xdomain) xdomain = validate_address(xdomain);
-    
     // If invalid address passed, complain and exit - no need to attempt fetching stats
-    if (list == INVALID_MAGIC_STRING || xdomain == INVALID_MAGIC_STRING) {
+    // N.B. Only check list and xdomain if they are defined
+    if ((list && ! valid_address(list)) || (xdomain && ! valid_address(xdomain))) {
         alert("Invalid mailing list address supplied!");
         return
     }
-    
+
     // Sort lists by usage before we enter here...
     var listnames = []
     if (all_lists[xdomain]) {
@@ -5091,12 +5088,11 @@ function gatherTrends() {
     var dspan = a_arr[1]
     var query = a_arr[2]
     
-    list = validate_address(list);
-    if (list == INVALID_MAGIC_STRING) {
+    if (!valid_address(list)) {
         alert("Invalid mailing list address supplied!");
         return
     }
-    
+
     // Try to detect header searches, if present
     var nquery = ""
     if (query && query.length > 0) {
