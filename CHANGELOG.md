@@ -1,4 +1,4 @@
-## Changes in 0.11-SNAPSHOT
+## Changes in 0.11:
 - Bug: Tidy up list names on seeding pages to avoid breakage
 - Enh: Enforce UTF-8 in content headers (#479)
 - Bug: elastic.lua#scroll forces sort to use _doc (#478)

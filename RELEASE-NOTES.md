@@ -2,7 +2,11 @@
 
 Release Notes
 
-## Version 0.10 (TBA) ##
+# Version 0.11 #
+
+No changes that require additional setup.
+
+# Version 0.10 #
 
 ### Fixing null favorite entries ###
 
