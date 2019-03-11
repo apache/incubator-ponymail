@@ -27,7 +27,7 @@
 // They keep track of the JSON we have received, storing it in the browser,
 // Thus lightening the load on the backend (caching and such)
 
-var _VERSION_ = "0.11" // Current version (as far as we know)
+var _VERSION_ = "0.12-SNAPSHOT" // Current version (as far as we know)
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var d_ppp = 15; // results per page
 var c_page = 0; // current page position for list view
