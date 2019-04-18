@@ -20,11 +20,15 @@
 local JSON = require 'cjson'
 
 -- Get a list of PMCs the user is a part of
-local function getPMCs(r, uid)
+local function getPMCs(uid)
     local groups = {}
-    local ldapdata = io.popen( ([[ldapsearch -x -LLL "(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))" cn]]):format(uid,uid) )
+    -- Check for valid chars. Important since the uid is passed to the shell.
+    if not uid:match("^[-a-z0-9_.]+$") then
+        return groups
+    end
+    local ldapdata = io.popen( ([[ldapsearch -x -LLL -b ou=project,ou=groups,dc=apache,dc=org "(owner=uid=%s,ou=people,dc=apache,dc=org)" dn]]):format(uid) )
     local data = ldapdata:read("*a")
-    for match in data:gmatch("dn: cn=([-a-zA-Z0-9]+),ou=pmc,ou=committees,ou=groups,dc=apache,dc=org") do
+    for match in data:gmatch("dn: cn=([-a-zA-Z0-9]+),ou=project,ou=groups,dc=apache,dc=org") do
         table.insert(groups, match)
     end
     return groups
@@ -32,23 +36,21 @@ end
 
 
 -- Is $uid a member of the ASF?
-local function isMember(r, uid)
-    
-    local ldapdata = io.popen([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org]])
-    local data = ldapdata:read("*a")
-    for match in data:gmatch("memberUid: ([-a-z0-9_.]+)") do
-        -- Found it?
-        if match == uid then
-            return true
-        end
+local function isMember(uid)
+    -- Check for valid chars. Important since the uid is passed to the shell.
+    if not uid:match("^[-a-z0-9_.]+$") then
+        return false
     end
-    return false
+    local ldapdata = io.popen(([[ldapsearch -x -LLL -b cn=member,ou=groups,dc=apache,dc=org '(memberUid=%s)' dn]]):format(uid))
+    -- This returns a string starting with 'dn: cn=member,ou=groups,dc=apache,dc=org' or the empty string.
+    local data = ldapdata:read("*a")
+    return nil ~= data:match("dn: cn=member,ou=groups,dc=apache,dc=org")
 end
 
 -- Get a list of domains the user has private email access to (or wildcard if org member)
 local function getRights(r, usr)
     local uid = usr.credentials.uid
-    
+
     -- First, check the 30 minute cache
     local NOWISH = math.floor(os.time() / 1800)
     local USER_KEY = "aaa_rights_" .. NOWISH .. "_" .. uid
@@ -59,11 +61,11 @@ local function getRights(r, usr)
 
     local rights = {}
     -- Check if uid has member (admin) rights
-    if usr.internal.admin or isMember(r, uid) then
+    if usr.internal.admin or isMember(uid) then
         table.insert(rights, "*")
     -- otherwise, get PMC list and construct array
     else
-        local list = getPMCs(r, uid)
+        local list = getPMCs(uid)
         for k, v in pairs(list) do
             table.insert(rights, v .. ".apache.org")
         end
