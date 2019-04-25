@@ -118,7 +118,7 @@ class Elastic:
             **kwargs
         )
     
-    def scan_and_scroll(self, doc_type='mbox', scroll='3m', size = 1, **kwargs):
+    def scan_and_scroll(self, doc_type='mbox', scroll='3m', size = 100, **kwargs):
         """ Run a backwards compatible scan/scroll, passing an iterator
             that returns one page of hits per iteration. This
             incorporates es.scroll for continuous iteration, and thus the
