@@ -1,6 +1,7 @@
 ## Changes in 0.12:
 - Bug: Errors with Elasticsearch 5.x in edit-lists.py (#489)
 - Enh: Support scan/scroll for all current versions of ES (#489-contd)
+- Bug/Enh: setup.py tries to install Python modules (#465)
 
 ## Changes in 0.11:
 - Bug: Tidy up list names on seeding pages to avoid breakage
