@@ -117,7 +117,30 @@ class Elastic:
             scroll = scroll,
             **kwargs
         )
-
+    
+    def scan_and_scroll(self, doc_type='mbox', scroll='3m', size = 1, **kwargs):
+        """ Run a backwards compatible scan/scroll, passing an iterator
+            that returns one page of hits per iteration. This
+            incorporates es.scoll for continuous iteration, and thus the
+            scroll() does NOT need to be called at all by the calling
+            process. """
+        results = self.es.search(
+            index=self.dbname,
+            doc_type=doc_type,
+            size = size,
+            scroll = scroll,
+            **kwargs
+        )
+        if results['hits'].get('hits', []): # Might not be there in 2.x?
+            yield results
+        
+        # While we have hits waiting, scroll...
+        scroll_size = results['hits']['total']
+        while (scroll_size > 0):
+            results = self.scroll(scroll_id = results['_scroll_id'], scroll = scroll)
+            scroll_size = len(results['hits']['hits']) # If >0, try another scroll next.
+            yield results
+            
     def get(self, **kwargs):
         return self.es.get(index=self.dbname, **kwargs)
 
