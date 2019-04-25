@@ -35,23 +35,11 @@ FAVES='favorites'
 TARGET=None
 
 elastic = Elastic()
-scroll = '5m'
-page = elastic.scan(doc_type='account',
-    scroll = scroll,
-    body = {
-        "_source" : [FAVES],
-    }
-)
-sid = page['_scroll_id']
-scroll_size = page['hits']['total']
-print("Found %d accounts" % scroll_size)
-
-updated=0
-failed=0
-while (scroll_size > 0):
-    page = elastic.scroll(scroll_id = sid, scroll = scroll)
-    sid = page['_scroll_id']
-    scroll_size = len(page['hits']['hits'])
+scroll_size = None # Only show it first time round
+for page in elastic.scan_and_scroll(doc_type='account', body = { "_source" : [FAVES] }):
+    if not scroll_size:
+        scroll_size = page['hits']['total']
+        print("Found %d accounts" % scroll_size)
     for hit in page['hits']['hits']:
         mid = hit['_id']
         source = hit['_source']
