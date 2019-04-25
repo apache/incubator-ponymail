@@ -121,7 +121,7 @@ class Elastic:
     def scan_and_scroll(self, doc_type='mbox', scroll='3m', size = 1, **kwargs):
         """ Run a backwards compatible scan/scroll, passing an iterator
             that returns one page of hits per iteration. This
-            incorporates es.scoll for continuous iteration, and thus the
+            incorporates es.scroll for continuous iteration, and thus the
             scroll() does NOT need to be called at all by the calling
             process. """
         results = self.es.search(
