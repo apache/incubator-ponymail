@@ -20,37 +20,35 @@ import subprocess
 import argparse
 import shutil
 import logging
+import importlib.util
 
 if sys.version_info <= (3, 3):
     print("This script requires Python 3.4 or higher")
     sys.exit(-1)
 
-dopip = False
-try:
-    from elasticsearch import Elasticsearch
-except ImportError:
-    dopip = True
+# Check for all required python packages
+wanted_pkgs = [
+    'elasticsearch',
+    'formatflowed',
+    'netaddr',
+    'certifi'
+    ]
 
-if dopip and (getpass.getuser() != "root"):
+for pkg in wanted_pkgs:
+    if importlib.util.find_spec(pkg):
+        wanted_pkgs.remove(pkg)
+
+if wanted_pkgs:
     print("It looks like you need to install some python modules first")
-    print("Either run this as root to do so, or run: ")
-    print("pip3 install elasticsearch formatflowed netaddr certifi")
+    print("The following packages are required: ")
+    for pkg in wanted_pkgs:
+        print(" - %s" % pkg)
+    print("You may use your package manager, or run the following command:")
+    print("pip3 install %s" % " ".join(wanted_pkgs))
     sys.exit(-1)
 
-elif dopip:
-    print("Before we get started, we need to install some modules")
-    print("Hang on!")
-    try:
-        subprocess.check_call(('pip3','install','elasticsearch','formatflowed', 'netaddr', 'certifi'))
-        # retry the import
-        from elasticsearch import Elasticsearch
-    except ImportError:
-        print("Oh dear, looks like this failed :(")
-        print("Please install elasticsearch and formatflowed before you try again:")
-        print("pip install elasticsearch formatflowed netaddr certifi")
-        sys.exit(-1)
-
-# at this point we can assume elasticsearch is loaded
+# at this point we can assume elasticsearch is present
+from elasticsearch import Elasticsearch
 from elasticsearch import ElasticsearchException
 from elasticsearch import ConnectionError as ES_ConnectionError
 from elasticsearch import VERSION as ES_VERSION
