@@ -1,3 +1,7 @@
+## Changes in 0.12:
+- Bug: Errors with Elasticsearch 5.x in edit-lists.py (#489)
+- Enh: Support scan/scroll for all current versions of ES (#489-contd)
+
 ## Changes in 0.11:
 - Bug: Tidy up list names on seeding pages to avoid breakage
 - Enh: Enforce UTF-8 in content headers (#479)
