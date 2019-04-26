@@ -124,6 +124,7 @@ while (scroll_size > 0):
     for hit in page['hits']['hits']:
         doc = hit['_id']
         body = es.get(doc_type = 'mbox', id = doc)
+        srcdoc = doc # save
         if targetLID != sourceLID:
             doc = hit['_id'].replace(sourceLID,targetLID)
             body['_source']['mid'] = doc
@@ -136,7 +137,7 @@ while (scroll_size > 0):
             '_id': doc,
             '_source': body['_source']
         })
-        source = es.get(doc_type = 'mbox_source', id = doc, ignore=404)
+        source = es.get(doc_type = 'mbox_source', id = srcdoc, ignore=404)
         if source['found']:
             js_arr.append({
                 '_op_type': 'index',
