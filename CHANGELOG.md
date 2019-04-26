@@ -1,6 +1,7 @@
 ## Changes in 0.12:
 - Bug: Errors with Elasticsearch 5.x in edit-lists.py (#489)
 - Bug: Errors with Elasticsearch 5.x in nullfav.py (#489)
+- Bug: Errors with Elasticsearch 5.x in copy-list.py (#489)
 - Enh: Support scan/scroll for all current versions of ES (#489-contd)
 - Bug: copy-list.py --target does not work (#491)
 - Bug/Enh: setup.py tries to install Python modules (#465)

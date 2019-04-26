@@ -95,32 +95,22 @@ count = 0
 
 print("Updating docs...")
 then = time.time()
-page = es.search(
-    doc_type="mbox",
-    scroll = '30m',
-    search_type = 'scan',
-    size = 100,
-    body = {
-        'query': {
-            'bool': {
-                'must': [
-                    {
-                        'wildcard' if wildcard else 'term': {
-                            'list_raw': sourceLID
-                        }
+query = {
+    'query': {
+        'bool': {
+            'must': [
+                {
+                    'wildcard' if wildcard else 'term': {
+                        'list_raw': sourceLID
                     }
-                ]
-            }
+                }
+            ]
         }
     }
-    )
-sid = page['_scroll_id']
-scroll_size = page['hits']['total']
+}
 js_arr = []
-while (scroll_size > 0):
-    page = es.scroll(scroll_id = sid, scroll = '30m')
+for page in es.scan_and_scroll(body = query):
     sid = page['_scroll_id']
-    scroll_size = len(page['hits']['hits'])
     for hit in page['hits']['hits']:
         doc = hit['_id']
         body = es.get(doc_type = 'mbox', id = doc)
