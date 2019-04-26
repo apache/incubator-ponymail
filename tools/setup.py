@@ -28,10 +28,10 @@ if sys.version_info <= (3, 3):
 
 # Check for all required python packages
 wanted_pkgs = [
-    'elasticsearch',
-    'formatflowed',
-    'netaddr',
-    'certifi'
+    'elasticsearch',# used by setup.py, archiver.py and elastic.py
+    'formatflowed', # used by archiver.py
+    'netaddr',      # used by archiver.py
+    'certifi'       # used by archiver.py and elastic.py
     ]
 
 for pkg in wanted_pkgs:
