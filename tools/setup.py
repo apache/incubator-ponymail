@@ -15,8 +15,6 @@
 # limitations under the License.
 
 import sys, os, os.path
-import getpass
-import subprocess
 import argparse
 import shutil
 import logging
