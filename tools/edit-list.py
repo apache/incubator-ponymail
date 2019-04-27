@@ -30,7 +30,6 @@ This utility can be used to:
 import sys
 import time
 import argparse
-import json
 
 from elastic import Elastic
 
