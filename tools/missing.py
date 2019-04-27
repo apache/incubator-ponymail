@@ -59,11 +59,11 @@ def getField(src,name):
     except KeyError:
         return '(Uknown)'
 
-def update(elastic, js_arr):
+def update(es, arr):
     if args.debug:
-        print(js_arr)
+        print(arr)
     if not args.test:
-        elastic.bulk(js_arr)
+        es.bulk(arr)
 
 setField = len(args.missing) > 1
 field = args.missing[0]
@@ -74,45 +74,32 @@ if setField:
 else:
     print("List missing/null field %s" % field)
 count = 0
-scroll = '30m'
 then = time.time()
 elastic = Elastic()
 if args.source:
     sourceLID = ("%s" if args.notag else "<%s>")  % args.source.replace("@", ".").strip("<>")
-    page = elastic.scan(# defaults to mbox
-            scroll = scroll,
-            body = {
-                "_source" : ['subject','message-id'],
-                "query" : {
-                    "bool" : {
-                        "must" : {
-                            'wildcard' if args.wildcard else 'term': {
-                                'list_raw': sourceLID
-                                }
-                            },
-                        # missing is not supported in ES 5.x
-                        "must_not": {
-                            "exists" : {
-                                "field" : field
-                            }
+    query = {
+        "_source" : ['subject','message-id'],
+        "query" : {
+            "bool" : {
+                "must" : {
+                    'wildcard' if args.wildcard else 'term': {
+                        'list_raw': sourceLID
                         }
+                    },
+                # missing is not supported in ES 5.x
+                "must_not": {
+                    "exists" : {
+                        "field" : field
                     }
                 }
             }
-        )
-    print(page)
-    sid = page['_scroll_id']
-    scroll_size = page['hits']['total']
-    print("Found %d matches" % scroll_size)
-    if args.debug:
-        print(page)
+        }
+    }
     js_arr = []
-    while (scroll_size > 0):
-        page = elastic.scroll(scroll_id = sid, scroll = scroll)
+    for page in elastic.scan_and_scroll(body = query):
         if args.debug:
             print(page)
-        sid = page['_scroll_id']
-        scroll_size = len(page['hits']['hits'])
         for hit in page['hits']['hits']:
             doc = hit['_id']
             body = {}
