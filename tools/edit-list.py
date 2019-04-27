@@ -179,7 +179,7 @@ def main():
                 body = {
                     'list': LID,
                     'name': LID,
-                    'description': desc
+                    'description':args.desc
                 }
             )
             print("All done, updated description.")
