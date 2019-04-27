@@ -34,6 +34,8 @@ args = parser.parse_args()
 FAVES='favorites'
 TARGET=None
 
+updated = 0
+failed = 0
 elastic = Elastic()
 scroll_size = None # Only show it first time round
 for page in elastic.scan_and_scroll(doc_type='account', body = { "_source" : [FAVES] }):
