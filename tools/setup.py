@@ -31,21 +31,23 @@ wanted_pkgs = [
     'elasticsearch',# used by setup.py, archiver.py and elastic.py
     'formatflowed', # used by archiver.py
     'netaddr',      # used by archiver.py
-    'certifi'       # used by archiver.py and elastic.py
+    'certifi',       # used by archiver.py and elastic.py
     ]
 
+missing_pkgs = list(wanted_pkgs) # copy to avoid corruption
 for pkg in wanted_pkgs:
     if importlib.util.find_spec(pkg):
-        wanted_pkgs.remove(pkg)
+        missing_pkgs.remove(pkg)
 
-if wanted_pkgs:
+if missing_pkgs:
     print("It looks like you need to install some python modules first")
     print("The following packages are required: ")
-    for pkg in wanted_pkgs:
+    for pkg in missing_pkgs:
         print(" - %s" % pkg)
     print("You may use your package manager, or run the following command:")
-    print("pip3 install %s" % " ".join(wanted_pkgs))
+    print("pip3 install %s" % " ".join(missing_pkgs))
     sys.exit(-1)
+
 
 # at this point we can assume elasticsearch is present
 from elasticsearch import Elasticsearch
