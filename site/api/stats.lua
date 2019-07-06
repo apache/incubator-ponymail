@@ -256,7 +256,7 @@ function handle(r)
         wc = true
         sterm = {
             regexp = {
-                list = "^[^.]+." .. get.domain .. "$"
+                list_raw = "\\<[^.]+\\." .. get.domain .. "\\>"
             }
         }
     end
