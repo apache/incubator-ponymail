@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: Composer uses wrong format in FROM/From headers (#496)
 - Bug: Errors with Elasticsearch 5.x in edit-lists.py (#489)
 - Bug: Errors with Elasticsearch 5.x in nullfav.py (#489)
 - Bug: Errors with Elasticsearch 5.x in copy-list.py (#489)
