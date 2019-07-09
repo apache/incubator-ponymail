@@ -63,13 +63,13 @@ function handle(r)
                     fname = account.preferences.fullname
                 end
                 -- construct sender name+address
-                local fr = ([["%s"<%s>]]):format(fname or account.credentials.fullname, account.credentials.email)
+                local fr = ([[%s<%s>]]):format(fname or account.credentials.fullname, account.credentials.email)
                 
                 -- Using alt email??
                 if account.credentials.altemail and post.alt then
                     for k, v in pairs(account.credentials.altemail) do
                         if v.email == post.alt then
-                            fr = ([["%s"<%s>]]):format(fname or account.credentials.fullname, v.email)
+                            fr = ([[%s<%s>]]):format(fname or account.credentials.fullname, v.email)
                             break
                         end
                     end
@@ -114,7 +114,7 @@ function handle(r)
                 
                 -- send email!
                 local rv, er = smtp.send{
-                    from = fr,
+                    from = fr:gsub(".-<", "<"), -- MTAs only need the email address in MAIL FROM, cut out the name.
                     rcpt = to,
                     source = source,
                     server = config.mailserver
