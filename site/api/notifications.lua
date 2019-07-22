@@ -15,8 +15,8 @@
  limitations under the License.
 ]]--
 
--- This is thread.lua - a script for fetching a thread based on a message
--- that is in said thread.
+-- This is notifications.lua - a script for fetching up to 50 email notifications
+-- also marks an email as seen if required
 
 local JSON = require 'cjson'
 local elastic = require 'lib/elastic'
