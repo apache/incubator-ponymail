@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: Google OAuth used with wrong response_type (#500)
 - Bug: Composer uses wrong format in FROM/From headers (#496)
 - Bug: Errors with Elasticsearch 5.x in edit-lists.py (#489)
 - Bug: Errors with Elasticsearch 5.x in nullfav.py (#489)
