@@ -92,7 +92,8 @@ def parse_attachment(part):
         # Use str() in case the name is not in ASCII.
         # In such cases, the get() method returns a Header not a string
         dispositions = str(cd).strip().split(";")
-        if dispositions[0].lower() == "attachment":
+        cdtype = dispositions[0].lower()
+        if cdtype == "attachment" or cdtype == 'inline':
             fd = part.get_payload(decode=True)
             # Allow for empty string
             if fd == None: return None, None
