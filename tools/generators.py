@@ -191,3 +191,20 @@ def legacy(msg, body, lid, _attachments):
         pass
     mid = "%s@%s@%s" % (hashlib.sha224(body if type(body) is bytes else body.encode('ascii', 'ignore')).hexdigest(), uid_mdate, lid)
     return mid
+
+__GENERATORS={
+    'full': full,
+    'medium': medium,
+    'cluster': cluster,
+    'legacy': legacy,
+}
+
+def generator(name):
+    try:
+        return __GENERATORS[name]
+    except:
+        print("WARN: generator %s not found, defaulting to 'legacy'" % name)
+        return legacy
+
+def generate(name, msg, body, lid, attachments):
+    return generator(name)(msg, body, lid, attachments)

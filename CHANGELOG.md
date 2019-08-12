@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Enh: move generator selection to generator.py (#504)
 - Bug: Bug: parser fails to extract inline attachments (#501)
 - Bug: Google OAuth used with wrong response_type (#500)
 - Bug: Composer uses wrong format in FROM/From headers (#496)

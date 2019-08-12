@@ -344,14 +344,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         if body is not None or attachments:
             pmid = mid
             try:
-                if archiver_generator == "full":
-                    mid = generators.full(msg, body, lid, attachments)
-                elif archiver_generator == "medium":
-                    mid = generators.medium(msg, body, lid, attachments)
-                elif archiver_generator == "cluster":
-                    mid = generators.cluster(msg, body, lid, attachments)
-                else:
-                    mid = generators.legacy(msg, body, lid, attachments)
+                mid = generators.generate(archiver_generator, msg, body, lid, attachments)
             except Exception as err:
                 if logger:
                     logger.warning("Could not generate MID: %s", err)
