@@ -22,7 +22,7 @@ This file tests the generators against mbox files
 """
 
 # PYTHONPATH is used to give access to archiver.py
-# PYTHONPATH=../tools python3 archtest.py files
+# PYTHONPATH=../tools python3 generatortest.py generatortest.yaml
  
 import mailbox
 import archiver
