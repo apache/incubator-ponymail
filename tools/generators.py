@@ -50,6 +50,7 @@ def medium(msg, body, lid, _attachments):
     """
     Standard 0.9 generator - Not recommended for future installations.
     (does not generate sufficiently unique ids)
+    Also the lid is included in the hash; this causes problems if the listname needs to be changed.
 
     The following message fields are concatenated to form the hash input:
     - body: if bytes as is else encoded ascii, ignoring invalid characters; if the body is null an Exception is thrown
@@ -88,6 +89,43 @@ def medium(msg, body, lid, _attachments):
         mdate = mdate + (0, ) # Fake a TZ (10th element)
     mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(email.utils.mktime_tz(mdate)))
     xbody += bytes(mdatestring, encoding='ascii')
+    mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
+    return mid
+
+# Original medium generator used for a while in June 2016
+# Committed: https://gitbox.apache.org/repos/asf?p=incubator-ponymail.git;a=commitdiff;h=aa989610
+# Replaced:  https://gitbox.apache.org/repos/asf?p=incubator-ponymail.git;a=commitdiff;h=4732d25f
+def medium_original(msg, body, lid, _attachments):
+    """
+    NOT RECOMMENDED - does not generate sufficiently unique ids
+    Also the lid is included in the hash; this causes problems if the listname needs to be changed.
+
+    The following message fields are concatenated to form the hash input:
+    - body: if bytes as is else encoded ascii, ignoring invalid characters; if the body is null an Exception is thrown
+    - lid
+    - Date header if it exists and parses OK; converted to UTC seconds since the epoch; else 0
+
+    Parameters:
+    msg - the parsed message (used to get the date)
+    body - the parsed text content (may be null)
+    lid - list id
+    _attachments - list of attachments (not used)
+
+    Returns: "<hash>@<lid>" where hash is sha224 of the message items noted above
+    """
+
+    # Use text body
+    xbody = body if type(body) is bytes else body.encode('ascii', 'ignore')
+    # Use List ID
+    xbody += bytes(lid)
+
+    uid_mdate = 0 # mdate for UID generation
+    try:
+        mdate = email.utils.parsedate_tz(msg_metadata.get('date'))
+        uid_mdate = email.utils.mktime_tz(mdate) # Only set if Date header is valid
+    except:
+       pass
+    xbody += bytes(uid_mdate)
     mid = "%s@%s" % (hashlib.sha224(xbody).hexdigest(), lid)
     return mid
 
@@ -195,6 +233,7 @@ def legacy(msg, body, lid, _attachments):
 __GENERATORS={
     'full': full,
     'medium': medium,
+    'medium_original': medium_original,
     'cluster': cluster,
     'legacy': legacy,
 }
