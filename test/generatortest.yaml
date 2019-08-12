@@ -1,0 +1,170 @@
+---
+tests:
+-  resources/pass/commits_ponymail_apache_org_2016-06.mbox:
+   - mid: a5d549f8a6b2dfd8d88764ff8e4a1792136aa587c03ce89e4705018f@1464754620@<commits.ponymail.apache.org>
+     message-id: <4475c7c2e3b24fde8be96d3f87bd2f13@git.apache.org>
+     gen: legacy
+   - mid: 0b17645c91ef98a41c8ba2ff409f9c7f0498feab21b3126997b06009@1464754621@<commits.ponymail.apache.org>
+     message-id: <5c28039bbe864273b1eba0051aea3a2e@git.apache.org>
+   - mid: 35559cab9c6eef805d7bda74415a2bd2a891bb9ce5bb631db32a2f9b@1464755515@<commits.ponymail.apache.org>
+     message-id: <f49613bbfb2e46568307c736017ff9ea@git.apache.org>
+   - mid: 0b8151da94e3aede660f1e0358c873c5fa7af2a7d4096550dea04815@1464755516@<commits.ponymail.apache.org>
+     message-id: <c22202740616473e8f5944429dd485df@git.apache.org>
+   - mid: 5a27ecdc166532eef5a223e85a7c285a7d599f46e9a85072064a0bb5@1464760687@<commits.ponymail.apache.org>
+     message-id: <39ba302b73c54c85b9eeed2e1d7adc49@git.apache.org>
+   - mid: 815b86f9327500b669fe8bee8d69d54633409ee6d47935212509031e@1464762028@<commits.ponymail.apache.org>
+     message-id: <0c02aa52c47d4a958b7abe2bf296f428@git.apache.org>
+   - mid: 0209d7a8aa3d47ec484b0a1cc860436eba7619b7c7b42a895f58b809@1464762029@<commits.ponymail.apache.org>
+     message-id: <f3c42a94edd24f388bab20c6e7b8123d@git.apache.org>
+   - mid: caaab1465da613061fae9357eb1b74b53989c812acb9436334c0d0fc@1464763439@<commits.ponymail.apache.org>
+     message-id: <5ac04d6a106545efb59558a44189f8f6@git.apache.org>
+   - mid: 6394967b9090934031bec4260faaa8d1b42faf77369e7c4267b05c65@1464763645@<commits.ponymail.apache.org>
+     message-id: <0ed453b35c114e93a1c29da870d2e991@git.apache.org>
+   - mid: 80f2503e512d5362c6012046b6953ffd8224201cd5b3e6445a864e95@1464764380@<commits.ponymail.apache.org>
+     message-id: <93b258f269864e90b1225683d999da51@git.apache.org>
+   - mid: 1c1791636568580cbd322953291b936df9f9b2f0a0e4a86e297dcd32@1464769667@<commits.ponymail.apache.org>
+     message-id: <e4ca0e48493d48f785e035f5989a6ee0@git.apache.org>
+   - mid: e7012ac253e126733feafc445acbb06e73e6c2f82958d4cedd4c4316@1464774765@<commits.ponymail.apache.org>
+     message-id: <1a21ee51e7b04579942a4fbcb1986ae6@git.apache.org>
+   - mid: fa344c64c2c5b2c010be7231ad29da864f56f94a11a4ea835becabaa@1464784863@<commits.ponymail.apache.org>
+     message-id: <3c28b203ad154646be3e45d56a24315f@git.apache.org>
+   - mid: cb91de1459a0dfcb3a2d8abc172ccc204839f059b4e15a28abb5477f@1464784864@<commits.ponymail.apache.org>
+     message-id: <a1346c9fc529448cab2e5e8cd466db3a@git.apache.org>
+   - mid: 8a030bbe8f1e3a3354e2a4df48aa532491104a1abeac23c551ef4062@1464784865@<commits.ponymail.apache.org>
+     message-id: <77d5bc8bf3284d0f837b3ed8e6766b68@git.apache.org>
+   - mid: cf3129ddd59e7e17bf3a3376587e79cc412ca687b608f25f7c9c0566@1464784866@<commits.ponymail.apache.org>
+     message-id: <3207734addfa4691ba1d05b81183dc78@git.apache.org>
+   - mid: 29d63757295db5c00d82123b8bab294d8ba5f77f8616d997b51f8fe7@1464784867@<commits.ponymail.apache.org>
+     message-id: <cb19d703c02d4c65a474664294618434@git.apache.org>
+   - mid: 71b32f47781a5583f27317c06809aa5aa8dce8a40ecc34ea694af66d@1464784868@<commits.ponymail.apache.org>
+     message-id: <3ffa1e0f2bc3403197418fed7b3b9bca@git.apache.org>
+   - mid: c332058f2e617a52e378eec32c7ab2671fbc19a9392e9f054fbbc228@1464784869@<commits.ponymail.apache.org>
+     message-id: <6552fe5fcff342ca981ec348786b8232@git.apache.org>
+   - mid: 09979e752331310b4f05192e2d42ebed6da68e4eac0c873e42b40106@1464784870@<commits.ponymail.apache.org>
+     message-id: <13d44ca52cdf4d8993ec8f899d4d57c7@git.apache.org>
+   - mid: 1a86195666c9f677ba3f459d71d119c3b75c56799f91f8c75f50407d@1464784871@<commits.ponymail.apache.org>
+     message-id: <a7eac4dfe5354a009af519b7ce23d733@git.apache.org>
+   - mid: 3a9769fa57850ca453b01d52af73781f5243c943018224a867b4f63f@1464784872@<commits.ponymail.apache.org>
+     message-id: <92cfc03721e0487a846b36e3a6db8da0@git.apache.org>
+   - mid: 304547ea16eb09aead6ee5ca1f20401e5bae62f03f50b824979a6ffa@1464784873@<commits.ponymail.apache.org>
+     message-id: <e5e1d91dd42244d08bcec733b45ce538@git.apache.org>
+   - mid: 7a8cd379babe8e83d58e429cdeadd3beeb060e47322f8e965d3acecc@1464785912@<commits.ponymail.apache.org>
+     message-id: <7bb823a6fbf645e0943759e29ca2c67e@git.apache.org>
+   - mid: 85640e4075764900da2e734cd2a123f7909f0baeebafd0e4fdb3c1c5@<commits.ponymail.apache.org>
+     message-id: <pony-f85cc4d67b0b00a9017135e4201b9225b5053fac-bb226b0ffe10c100b2a009d71a3fda7245b9865a@commits.ponymail.apache.org>
+     gen: medium_original
+   - mid: 4cba4ac4c1d66aeff438f0dea8ed0db1cd3a25680342ca6d12bb188b@<commits.ponymail.apache.org>
+     message-id: <951139456f694d2a831e0de670da47b0@git.apache.org>
+   - mid: 99e1a40d3ce06a1e09cc8a27e898deedee62455b8c7ad7359dd4323c@<commits.ponymail.apache.org>
+     message-id: <bee810c90e4f41eaa2ce6fdad0449d39@git.apache.org>
+   - mid: 51dfe8a64b8cb5c016db95e4bb164faf51e6b2d556b4c255a125f7ee@<commits.ponymail.apache.org>
+     message-id: <af0cda1e818645039e2a3ea3cc655925@git.apache.org>
+     gen: medium
+   - mid: bf458d3873aedae55431294f60326d85456c3a162b552db5fb0c8641@<commits.ponymail.apache.org>
+     message-id: <662ce76c2bc54822a3617bcd8154220b@git.apache.org>
+   - mid: b39348316bae9da1939c490b2feb911f8c600bb53920f61de76e593e@<commits.ponymail.apache.org>
+     message-id: <7bd6b5eccc6d47818d33746e5d0e99d1@git.apache.org>
+   - mid: af6e3fc1cd10f1d1044fbebd7cfa4f79baa8de3484245cd52c4db9aa@<commits.ponymail.apache.org>
+     message-id: <260a5e6f3c1f4aa6a24686359a853e6f@git.apache.org>
+   - mid: a09c7e4610724c1fffdf369e9696710aa807350931da4959667a38c3@<commits.ponymail.apache.org>
+     message-id: <c21033eb33644c0bb5fe83f45c8e9176@git.apache.org>
+   - mid: 2601e40b5bf46f3ab558029aa84adf37508e41280c1b7cb73a2b1e40@<commits.ponymail.apache.org>
+     message-id: <318569eb2a464c94b480901b12b8adfb@git.apache.org>
+   - mid: 54a25d66c68c6203b49d3802a8fb41f95932968931d72f14ea81cefb@<commits.ponymail.apache.org>
+     message-id: <fdc075d37b824b6f82e14b1af95c3f4e@git.apache.org>
+   - mid: 020c382149ce08157c2aef47d348ce8f71560799cb1175d55066a644@<commits.ponymail.apache.org>
+     message-id: <711ca44130fc4a4f842b42f2066d442a@git.apache.org>
+   - mid: 2180ee437d1139d75c817909dfb32bddbaa5c50229d611c447e906e0@<commits.ponymail.apache.org>
+     message-id: <108ae49cfe644cb39777189d49b2dff1@git.apache.org>
+   - mid: 722665793db119e1effaa92c802895aa303041edf5f4a9060b6540c6@<commits.ponymail.apache.org>
+     message-id: <4433e720681e412a931a72c30a108c3d@git.apache.org>
+   - mid: 37b3ae674948e85893494f6e61e56f9bd2f38d0030b5a72091f78f8d@<commits.ponymail.apache.org>
+     message-id: <4c3878b195274d7c9cb8ae902ae495fd@git.apache.org>
+   - mid: 86f108fa0d6165e5db04ea352bc160e62452e71d8d26379b9d1480c8@<commits.ponymail.apache.org>
+     message-id: <d049605e80a448298319469fd36c818d@git.apache.org>
+   - mid: 360fd4ae5f3ed14a7d9fb316290835c0dfcdd54a744c278cd5e7832e@<commits.ponymail.apache.org>
+     message-id: <cf1ce3cd0f1d44fe8cfd9bc949a6ca8a@git.apache.org>
+   - mid: e5eea524bba6d2d61bb3bc8dc2a10842a2db53943053814e44f60bc2@<commits.ponymail.apache.org>
+     message-id: <51f3d5ae18e947f798e452b1ef25a5df@git.apache.org>
+   - mid: b4b0c77f7db829fc7a6750d1ade699be39def6549fc0b2cac5b6fbca@<commits.ponymail.apache.org>
+     message-id: <a2548650008641668a1330fca8282d00@git.apache.org>
+   - mid: 88c88f25a839b03c3a5f5fcfc9d4f248af537079a2cd27fd0365de78@<commits.ponymail.apache.org>
+     message-id: <c856c3e3e8f9491faa04c7c7dc1a034f@git.apache.org>
+   - mid: 32a66d9cf0c7baa4d79a51228062ab3caa961caf55f0376211361041@<commits.ponymail.apache.org>
+     message-id: <cf95d7066c1247ce9f087ad9b044e3a5@git.apache.org>
+   - mid: fd72b69be2826d28f51d2c1d44cedcc3a1608c777cbd46850d6538be@<commits.ponymail.apache.org>
+     message-id: <f01f4f45689c47f0824410209392c861@git.apache.org>
+   - mid: 2cfd6ac2efc6a5593ed1a4431990135e6fb56216a9e2c015e5629cbf@<commits.ponymail.apache.org>
+     message-id: <bc061bab66564794ab2d2effc186b53e@git.apache.org>
+   - mid: 3ffbaed76ccd1f94ba8da0c2b601bac5cce2c10dd9aac77dc68b2cb2@<commits.ponymail.apache.org>
+     message-id: <fc6e9eb250ac44e6afc36480ef29f876@git.apache.org>
+   - mid: 30df6a1b5045ffb4d1989404cc6e09dc30efd5a50a230f620c0785c9@<commits.ponymail.apache.org>
+     message-id: <7466a7201d6344ba8969a9c0b18f7f83@git.apache.org>
+   - mid: 412fcdbb687e22931ee2470188998fab5dbfad4f9bcc166ac3d8c76b@<commits.ponymail.apache.org>
+     message-id: <00df6ff51a8843cd97a4b1c79e6396d8@git.apache.org>
+   - mid: 242092784f158973efb5430a4b140cca9ab87dc1045e114d4e8af91c@<commits.ponymail.apache.org>
+     message-id: <20160604080347.79CE63A01A9@svn01-us-west.apache.org>
+   - mid: a74335aad14eb1aff9929f7638d93cfdb51cf4b9e3fc36a2e9874477@<commits.ponymail.apache.org>
+     message-id: <20160604080424.AC7613A01A9@svn01-us-west.apache.org>
+   - mid: 5bc321cab11c1a854d4de108ff69e5e24c74ea2ac423baa2f7ca0413@<commits.ponymail.apache.org>
+     message-id: <20160604081213.ADDE13A01A9@svn01-us-west.apache.org>
+   - mid: 727859a840a2461f03b80fa978fa237731c751a4481d131389525a91@<commits.ponymail.apache.org>
+     message-id: <d067567082f6451aa8c5b2009f76dd56@git.apache.org>
+   - mid: 3911e3505733d85b8db27568e3fdc2152f119eac87063d915e2be430@<commits.ponymail.apache.org>
+     message-id: <2fac95a4481a4747ba9aba2bb98ee840@git.apache.org>
+   - mid: d17c7d929425684634b2f41aaabe22c7e6424b5e42213c04e95e4858@<commits.ponymail.apache.org>
+     message-id: <f42fdd9ce1ec41abb1f0ab5dbd78da29@git.apache.org>
+   - mid: 12b377c9c7271a2f705a5ab877be060b69432bad10be11ea56713c4f@<commits.ponymail.apache.org>
+     message-id: <99a6b841e75144e2b4b5fdac922338b5@git.apache.org>
+   - mid: e2760d30399f3fe60d0d4a3345048aa6a6d6d043cb77889379439883@<commits.ponymail.apache.org>
+     message-id: <33b9dc1784f742669abad2c02260ba1c@git.apache.org>
+   - mid: c4ad309ad363c1111d1e7a9bef687a940adefb851a1e2d15598541d8@<commits.ponymail.apache.org>
+     message-id: <2c156e856f2840ad87343a102cc2f37b@git.apache.org>
+   - mid: f1e3d36a87b00b185c329d363d1e0fbb01fa54939d4549b64504837e@<commits.ponymail.apache.org>
+     message-id: <0f9579266d3244f0bc5269155174a693@git.apache.org>
+   - mid: d6076655775eef8514ad144ce8228af96c27f32a3240805b8bc80d39@<commits.ponymail.apache.org>
+     message-id: <0cac847aa54e4731b326817865758fde@git.apache.org>
+   - mid: 5b0c0038929893973987362fdec5005186318af5beca203c30343362@<commits.ponymail.apache.org>
+     message-id: <4e1c51fdf26643c59c7422bf057ea0a9@git.apache.org>
+   - mid: 737acf8db28fbb4bcda0f780a26c4596cbb4c9868b6c17c5c6a24d3f@<commits.ponymail.apache.org>
+     message-id: <5c137b247b1e4f59b235a16b833d2643@git.apache.org>
+   - mid: 00d6515f51225e1df70b974ee712a6f9c6b9928b75b587ffed018e6d@<commits.ponymail.apache.org>
+     message-id: <a9b979a874044810993c5cc9f2bd6ede@git.apache.org>
+   - mid: 70af73f3c439d2c22c30cd588d58938a28a84d4032421a5f5f21f5f1@<commits.ponymail.apache.org>
+     message-id: <6005e5fdf5204ff9acc9c7ca7579ecf8@git.apache.org>
+   - mid: 2fd4e42f1657cc38f5f0197bf941a20e5ca13f1085af26488540583f@<commits.ponymail.apache.org>
+     message-id: <c982aad4652c4fe3b27b37c2dc501c9a@git.apache.org>
+   - mid: 3f0c64764b32bd2082b75973348faee151a56b224b2b7a3bedf1cbd4@<commits.ponymail.apache.org>
+     message-id: <77ced1623b2f4dc3aaa0d1b0e86a19dc@git.apache.org>
+   - mid: 0d4dae4cb10cbdcd3519198ccff3147d62427959f6fc8c10a980eccc@<commits.ponymail.apache.org>
+     message-id: <756d40e8ad6f4c6280822b21fcff409f@git.apache.org>
+   - mid: 38615d13ca32971bacceeeb60a9135d27a4924d5c1c0eefc16fa3c92@<commits.ponymail.apache.org>
+     message-id: <5f45f84a2030480b8d6a3f2133cb04cc@git.apache.org>
+   - mid: 9eaa251f51e64e33b08fcbee038fc479a2cce77421999fcc48b96aa0@<commits.ponymail.apache.org>
+     message-id: <e022789b9b014507ac159225123ef634@git.apache.org>
+   - mid: 8e58091c22b09758fd2281a42d26563e396499be49e1f58cdbfe2d5a@<commits.ponymail.apache.org>
+     message-id: <19a68fdf5289472a9c5282e82a3fde17@git.apache.org>
+   - mid: 6ef79c631c146b83083daad427c5224517a6c62fe5cf117ea58fbdf4@<commits.ponymail.apache.org>
+     message-id: <9f0437b3609e479aa2dee47b06e16c1a@git.apache.org>
+   - mid: b18c3c281bc702aab7957a88b21e818322108e66e1c7f2578c842094@<commits.ponymail.apache.org>
+     message-id: <bdf502f951f3437988b052e1e3ad77dc@git.apache.org>
+   - mid: 41afdae21df63028681a7b857eca90a27037243fd5d2db106af3710b@<commits.ponymail.apache.org>
+     message-id: <071ed902246649f599b5cf5c64f24196@git.apache.org>
+   - mid: a986dcc5a3a61f366eb5dcd7d4446d70a25010061bf8ef1fa5d0d6c2@<commits.ponymail.apache.org>
+     message-id: <03869fd8a1c048d7bf48b19de8d37c7d@git.apache.org>
+   - mid: a88e1b042849bfe89245ddaa070d3e646d6c03bfac5d4a3beda7a827@<commits.ponymail.apache.org>
+     message-id: <f5c7e55654a24f7a8ef8a9b6d69fa559@git.apache.org>
+   - mid: ef4131c4c7a6bccfd2afb0d9e357ebf64d8e604e9d7008ac02144bee@<commits.ponymail.apache.org>
+     message-id: <13d8071f02a84b8f8a339af040ea05fe@git.apache.org>
+   - mid: 833f40e920cc517ed7a9b9b7864a02368fbbf3068f386acfea484f7f@<commits.ponymail.apache.org>
+     message-id: <ba8915bb92904e3ca1e579b7653086b1@git.apache.org>
+   - mid: f0262ec53472994082eb19bf1b5d31f9d342fd7d12b3a069f5c2a64a@<commits.ponymail.apache.org>
+     message-id: <531a0762ef6640608089a94befe5313a@git.apache.org>
+   - mid: ca6d17e04cd7da78bd2397807d40fd4cde53e3f6379f8a17712ce883@<commits.ponymail.apache.org>
+     message-id: <b0bd51d1c199448b925ea48d3fa15a4d@git.apache.org>
+   - mid: 9f3c7e086c182bb926a47f5363badf90b6b0b6e9f39f9415a697f99b@<commits.ponymail.apache.org>
+     message-id: <d8ed91d5b2444566be95699b63e22eba@git.apache.org>
+   - mid: 92208cce4d89ddfd20f07eb94b38f1111c9915431a26c31581944707@<commits.ponymail.apache.org>
+     message-id: <2f829747f0774583a42b22a508bc9fdf@git.apache.org>
+   - mid: 13f52f2a06bca7a28313cf6f49c9c0617dfe18f7cdad8d685cd7cdce@<commits.ponymail.apache.org>
+     message-id: <2febdbe23a0440aab4f05bdf005ff592@git.apache.org>
