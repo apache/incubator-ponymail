@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Enh: allow generator to be overridden for testing (#506)
 - Bug: generator.py does not include original medium generator (#505)
 - Enh: move generator selection to generator.py (#504)
 - Bug: Bug: parser fails to extract inline attachments (#501)

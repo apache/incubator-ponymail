@@ -590,6 +590,8 @@ if __name__ == '__main__':
                        help='Do not save emails to elasticsearch, only test parsing')
     parser.add_argument('--dumponfail', dest='dump',
                        help='If pushing to ElasticSearch fails, dump documents in JSON format to this directory and fail silently.')
+    parser.add_argument('--generator', dest='generator',
+                       help='Override the generator.')
     args = parser.parse_args()
 
     if args.html2text:
@@ -603,6 +605,8 @@ if __name__ == '__main__':
         # Also eliminates: 'Undecodable raw error response from server:' warning message
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
+    if args.generator:
+        archiver_generator = args.generator
 
     archie = Archiver(parseHTML = parseHTML)
     # use binary input so parser can use appropriate charset

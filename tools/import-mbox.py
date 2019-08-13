@@ -371,6 +371,8 @@ parser.add_argument('--filter', dest = 'fromfilter', type=str, nargs=1,
                     help = 'Optional sender filter: Only import emails from this address')
 parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
                     help = 'Skip Mboxo processing')
+parser.add_argument('--generator', dest='generator',
+                   help='Override the generator.')
 
 args = parser.parse_args()
 
@@ -440,6 +442,8 @@ else:
         print("Error: unable to check if the index %s exists!: %s" % (dbname, err))
         sys.exit(1)
 
+if args.generator:
+    archiver.archiver_generator = args.generator
 
 def globDir(d):
     dirs = [ f for f in listdir(d) if isdir(join(d,f)) ]
