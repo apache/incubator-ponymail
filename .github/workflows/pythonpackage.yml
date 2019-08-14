@@ -1,6 +1,8 @@
 name: Python package
 
-on: [push,repository_dispatch]
+#on: [push,repository_dispatch]
+# Only manual trigger for now
+on: repository_dispatch
 
 jobs:
   build:
