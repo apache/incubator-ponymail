@@ -99,7 +99,7 @@ function wordCloud(hash, width, height, debug) {
         
         
         var txt = makeWord(word, ss)
-        txt.setAttribute("id", word)
+        txt.setAttribute("id", "wordcloud_" + word)
         svg.appendChild(txt)
         if (!popped) {
             txt.setAttribute("x", 0)

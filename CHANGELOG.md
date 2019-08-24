@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: wordcloud.js can overwrite document ids (#507)
 - Enh: allow generator to be overridden for testing (#506)
 - Bug: generator.py does not include original medium generator (#505)
 - Enh: move generator selection to generator.py (#504)
