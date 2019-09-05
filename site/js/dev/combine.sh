@@ -17,7 +17,9 @@ echo '/*
 */
 // THIS IS AN AUTOMATICALLY COMBINED FILE. PLEASE EDIT dev/*.js!!
 ' > ../ponymail.js
-for f in `ls *.js`; do
+# Warning: ls/sort order depends on the locale; this can affect the order
+# of non-alphanumerics such as '.' and '_'. So force the use of 'C' locale
+for f in `LC_ALL=C ls *.js`; do
     printf "\n\n/******************************************\n Fetched from dev/${f}\n******************************************/\n\n" >> ../ponymail.js
     sed -e '/^\/\*/,/\*\//d' ${f} >> ../ponymail.js
 done
