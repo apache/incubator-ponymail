@@ -247,3 +247,6 @@ def generator(name):
 
 def generate(name, msg, body, lid, attachments):
     return generator(name)(msg, body, lid, attachments)
+
+def generator_names():
+    return list(__GENERATORS)
