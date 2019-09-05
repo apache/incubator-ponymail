@@ -90,7 +90,7 @@ function handle(r)
     if get.list and get.date then
         local lid = ("<%s>"):format(get.list:gsub("@", "."):gsub("[<>]", ""))
         local flid = get.list:gsub("[.@]", "_")
-        local y, m = get.date:match("^(%d+)%-(%d+)%")
+        local y, m = get.date:match("^(%d+)%-(%d+)$")
         if not (y and m) then
             cross.contentType(r, "text/plain")
             r:puts("Wrong date format given!\n")
