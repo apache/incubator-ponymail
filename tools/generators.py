@@ -52,6 +52,10 @@ def medium(msg, body, lid, _attachments):
     (does not generate sufficiently unique ids)
     Also the lid is included in the hash; this causes problems if the listname needs to be changed.
 
+    N.B. The id is not guaranteed stable - i.e. it may change if the message is reparsed. 
+    The id depends on the parsed body, which depends on the exact method used to parse the mail.
+    For example, are invalid characters ignored or replaced; is html parsing used?
+
     The following message fields are concatenated to form the hash input:
     - body: if bytes as is else encoded ascii, ignoring invalid characters; if the body is null an Exception is thrown
     - lid
@@ -140,6 +144,10 @@ def cluster(msg, body, lid, attachments):
     Use data that is guaranteed to be the same across cluster setups
     For mails with a valid Message-ID this is likely to be unique
     In other cases it is better than the medium generator as it uses several extra fields
+
+    N.B. The id is not guaranteed stable - i.e. it may change if the message is reparsed. 
+    The id depends on the parsed body, which depends on the exact method used to parse the mail.
+    For example, are invalid characters ignored or replaced; is html parsing used?
 
     The following message fields are concatenated to form the hash input:
     - body as is if bytes else encoded ascii, ignoring invalid characters; if the body is null it is treated as an empty string
