@@ -224,11 +224,11 @@ def main():
         # Handle proposed changes in batches of 500
         while len(proposed_changes) > 0:
             tmp.append(proposed_changes.pop(0))
-            if len(tmp) == 500:
+            if len(tmp) >= 500:
                 if not args.dryrun:
                     es.bulk(tmp)
+                processed += len(tmp)
                 tmp = []
-                processed += 500
                 print("Processed %u documents..." % processed)
         # Any stragglers remaining gets processed here
         if len(tmp) > 0:
