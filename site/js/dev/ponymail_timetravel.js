@@ -19,7 +19,7 @@
 // simple func that just redirects to the original thread URL we just got if possible
 function timeTravelSingleThreadRedirect(json) {
     if (json && json.emails[0]) {
-        location.href = URL_BASE + "/thread.html/" + (pm_config.shortLinks ? shortenID(json.emails[0].mid) : json.emails[0].mid)
+        location.href = URL_BASE + "/thread.html/" + (pm_config.shortLinks ? shortenID(json.emails[0].mid) : encodeURIComponent(json.emails[0].mid))
     }
 }
 

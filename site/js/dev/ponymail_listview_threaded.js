@@ -153,7 +153,7 @@ function loadList_threaded(mjson, limit, start, deep) {
             from = "<span class='from_name'>" + from.replace(/\"/g, "") + "</span>"
             nest += "<li class='list-group-item' style='min-height: 64px; float: left; width:100%;'><div style='min-height: 64px;'><div style='width:100%; float: left; padding-left: 70px;'>" +
                     d +
-                    "<a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' onclick='this.style=\"\"; latestEmailInThread = " +
+                    "<a style='" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : encodeURIComponent(eml.id)) + "' onclick='this.style=\"\"; latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" +
                     subject +
@@ -168,7 +168,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     "<img src='https://secure.gravatar.com/avatar/" + eml.gravatar + ".jpg?s=48&r=g&d=mm'/>" +
                     "</div>" +
                     "<div class='bubble-topic' style='float: left; width:calc(100% - 70px);'>"+ (eml.body||json[i].body||'').replace(/</g, "&lt;") + "<br/>" +
-                    "<a class='label label-info' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
+                    "<a class='label label-info' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : encodeURIComponent(eml.id)) + "' style='font-size: 85%; padding: 2px;' onclick='latestEmailInThread = " +
                     latest +
                     "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>Read more..</a>" +
                     "</div>" +
@@ -188,7 +188,7 @@ function loadList_threaded(mjson, limit, start, deep) {
                     from +
                     "</b></div> " +
                     "<div style='width: calc(100% - 230px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : encodeURIComponent(eml.id))  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     subs_label + people_label + "&nbsp; " +
                     "</div><div style='width: calc(100% - 270px); color: #999; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;'>" + sbody +
@@ -198,7 +198,7 @@ function loadList_threaded(mjson, limit, start, deep) {
         else {
             nest += "<li class='list-group-item'>" +
                     "<div style='width: calc(100% - 200px); white-space:nowrap; overflow: hidden;'>" +
-                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : eml.id)  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
+                    d + "<a style='overflow:hidden;" + estyle + "' href='thread.html/" + (pm_config.shortLinks ? shortenID(eml.id) : encodeURIComponent(eml.id))  + "' onclick='this.style=\"\"; latestEmailInThread = " + latest+ "; toggleEmails_threaded(" + i + "); latestEmailInThread = 0; return false;'>" + subject +
                     "</div></a> <div style='float: right;position:absolute;right:4px;top:12px;';><a style='float: right; opacity: 0.75; margin-left: 2px; margin-top: -3px;' href='api/atom.lua?mid=" + eml.id + "'><img src='images/atom.png' title='Subscribe to this thread as an atom feed'/></a><label style='float: right; width: 110px;' class='label label-" + ld + "' title='" + ti + "'>" + mdate + "</label>" +
                     subs_label + people_label + "&nbsp; " + "</div>" + "<div id='thread_" + i + "' style='display:none';></div></li>"
         }

@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Enh: URI-encode permalinks (#510)
 - Bug: only 12 months in a year (#508)
 - Bug: wordcloud.js can overwrite document ids (#507)
 - Enh: allow generator to be overridden for testing (#506)
