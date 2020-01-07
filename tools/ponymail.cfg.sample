@@ -33,6 +33,7 @@ ssl:                    false
 
 [archiver]
 #generator:             medium|full|cluster|other
+#baseurl:               https://my.archive.example.com
 
 [debug]
 #cropout:               string to crop from list-id
