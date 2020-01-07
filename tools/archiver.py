@@ -60,6 +60,7 @@ import generators
 import uuid
 import json
 import certifi
+import urllib.parse
 
 # Fetch config
 config = PonymailConfig()
@@ -68,6 +69,7 @@ parseHTML = False
 iBody = None  # N.B. Also used by import-mbox.py
 args=None
 dumpDir = None
+aURL = None
 
 if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     from zope.interface import implementer
@@ -76,6 +78,9 @@ if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
     logger = logging.getLogger("mailman.archiver")
 elif __name__ == '__main__':
     import argparse
+
+if config.has_option('archiver', 'baseurl'):
+    aURL = config.get('archiver', 'baseurl')
 
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
@@ -687,6 +692,8 @@ if __name__ == '__main__':
             try:
                 lid, mid = archie.archive_message(list_data, msg, msgstring)
                 print("%s: Done archiving to %s as %s!" % (email.utils.formatdate(), lid, mid))
+                if aURL:
+                    print("Published as: %s/thread.html/%s" % (aURL, urllib.parse.quote(mid)))
             except Exception as err:
                 if args.verbose:
                     traceback.print_exc()
