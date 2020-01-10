@@ -1824,7 +1824,7 @@ function highlightNewEmails(id) {
 }
 
 function displaySingleThread(json) {
-    if (json && json.emails[0]) {
+    if (json && json.emails && json.emails[0]) {
         current_thread_json = [json.emails[0]]
         current_flat_json = json.emails
     }
