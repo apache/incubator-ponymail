@@ -186,7 +186,7 @@ function compose(eid, lid, type) {
             var txt = document.createElement('input')
             txt.setAttribute("type", "text")
             txt.setAttribute("style", "width: 500px;")
-            txt.value = subject
+            txt.setAttribute("value",  subject)
             txt.setAttribute("id", "reply_subject")
             obj.appendChild(txt)
 
