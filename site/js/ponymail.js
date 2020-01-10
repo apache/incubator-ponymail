@@ -1510,7 +1510,7 @@ function displayEmail(json, id, level) {
             thread.style.background = estyle
             thread.style.marginTop = "30px"
             thread.innerHTML += ' &nbsp; <label class="label label-success" onclick="compose(\'' + json.mid + '\');" style="cursor: pointer; float: right; margin-left: 10px;">Reply</label>'
-            thread.innerHTML += ' &nbsp; <a href="' + URL_BASE + '/thread.html/'+(pm_config.shortLinks ? shortenID(json.mid) : json.mid)+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
+            thread.innerHTML += ' &nbsp; <a href="' + URL_BASE + '/thread.html/'+(pm_config.shortLinks ? shortenID(json.mid) : encodeURIComponent(json.mid))+'"><label class="label label-warning" style="cursor: pointer; float: right;">Permalink</label></a>'
             thread.innerHTML += ' &nbsp; <a href="' + URL_BASE + '/api/source.lua/'+json.mid+'"><label class="label label-danger" style="cursor: pointer; float: right; margin-right: 10px;">View Source</label></a> &nbsp; '
             if (level > 1) {
                 thread.innerHTML += ' &nbsp; <a href="javascript:void(0);" onclick="rollup(\'' + id_sanitised + '\');"><label class="label label-primary" title="roll up" style="cursor: pointer; float: right; margin-right: 10px;"><span id="rollup_' + id_sanitised + '" class="glyphicon glyphicon-chevron-up"> </span></label></a> &nbsp; '
