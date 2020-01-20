@@ -30,7 +30,7 @@ function handle(r)
     cross.contentType(r, "application/json; charset=UTF-8")
     local get = r:parseargs()
     -- get the parameter (if any) and tidy it up
-    local eid = (get.id or ""):gsub("\"", "")
+    local eid = (get.id or ""):gsub('"', '%%22')
     -- If it is the empty string then set it to "1" so ES doesn't barf
     -- N.B. ?id is treated as ?id=1
     if #eid == 0 then eid = "1" end
@@ -59,7 +59,9 @@ function handle(r)
         
         -- If we can access this email, ...
         if aaa.canAccessDoc(r, doc, account) then
-            doc.tid = doc.request_id
+            -- Because we allow quotes in message-IDs, we need to escape for standard UI.
+            doc.tid = r:escape_html(doc.request_id)
+            doc.mid = r:escape_html(doc.mid)
             
             -- Are we in fact looking for an attachment inside this email?
             if get.attachment then
