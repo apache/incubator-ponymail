@@ -60,8 +60,8 @@ function handle(r)
         -- If we can access this email, ...
         if aaa.canAccessDoc(r, doc, account) then
             -- Because we allow quotes in message-IDs, we need to escape for standard UI.
-            doc.tid = r:escape_html(doc.request_id)
-            doc.mid = r:escape_html(doc.mid)
+            doc.tid = doc.request_id:gsub('"', '%%22')
+            doc.mid = doc.mid:gsub('"', '%%22')
             
             -- Are we in fact looking for an attachment inside this email?
             if get.attachment then
