@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Enh: add some debug output to import-mbox (#396)
 - Enh: Allow fetching emails with quotes in their document ID
 - Enh: URI-encode permalinks (#510)
 - Bug: only 12 months in a year (#508)

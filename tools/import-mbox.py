@@ -287,6 +287,9 @@ class SlurpThread(Thread):
                     count += 1
                     ja.append(json)
                     jas.append(json_source)
+                    if args.verbose:
+                        # TODO optionally show other fields (e.g. From_ line)
+                        print("%(mid)s %(message-id)s" % json)
                     if contents:
                         if not args.dry:
                             for key in contents:
@@ -353,6 +356,8 @@ parser.add_argument('--private', dest='private', action='store_true',
                    help='This is a privately archived list. Filter through auth proxy.')
 parser.add_argument('--dry', dest='dry', action='store_true',
                    help='Do not save emails to elasticsearch, only test importing')
+parser.add_argument('--verbose', dest='verbose', action='store_true',
+                   help='Show details of generated id (for use with --dry)')
 parser.add_argument('--duplicates', dest='dups', action='store_true',
                    help='Detect duplicate mids in this run')
 parser.add_argument('--html2text', dest='html2text', action='store_true',
