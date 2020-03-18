@@ -25,19 +25,29 @@ This file tests the generators against mbox files
 # PYTHONPATH=../tools python3 generatortest.py generatortest.yaml
  
 import mailbox
-import archiver
 import sys
+import os
 import yaml
+import subprocess
 from pprint import pprint
+
+
+TOOLS = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),"tools")
+sys.path.append(TOOLS)
+import archiver
+ARCHIVER=os.path.join(TOOLS,"archiver.py")
+import generators
 
 list_override = None # could affect id
 private = False # does not affect id generation
 parseHTML = False # can this affect id generation?
+GENS=generators.generator_names()
 
 archie = archiver.Archiver(parseHTML = parseHTML)
 
 for arg in sys.argv[1:]:
     if arg.endswith('.yml') or arg.endswith('.yaml'):
+        errors = 0
         with open(arg, 'r') as stream:
             data = yaml.safe_load(stream)
             for test in data['tests']:
@@ -58,6 +68,7 @@ for arg in sys.argv[1:]:
                             archiver.archiver_generator = script['gen']
                         message = next(messages)
                         json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
+                        error = 0
                         for key in script:
                             if key == 'gen':
                                 continue
@@ -66,14 +77,26 @@ for arg in sys.argv[1:]:
                             elif script[key] == json[key]:
                                 pass
                             else:
-                                print("key %s: expected vs. actual\n %s\n %s\n%s %s" % (key, script[key], json[key], json['date'], json['subject']))
-        print("Completed %d tests" % scrcnt)        
+                                error = 1
+                                print("key %s\nexp: %s\nact: %s\n%s %s" % (key, script[key], json[key], json['date'], json['subject']))
+                        errors += error
+        print("Completed %d tests (%d errors)" % (scrcnt, errors))        
     elif arg.endswith('.mbox'):
         messages = mailbox.mbox(arg, None, create=False)
         for message in messages:
             print(message.get_from())
-            json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
-            print(json['mid'])
-            archiver.archiver_generator = 'medium'
+            for gen in GENS:
+                archiver.archiver_generator = gen
+                json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
+                print("%15s: %s" % (gen,json['mid']))
+    elif arg.endswith('.eml'): # a single email
+        for gen in GENS:
+            with open(arg,'rb') as f:
+                out = subprocess.run([ARCHIVER,"--dry","--generator",gen], stdin=f, capture_output=True, text=True)
+                try:
+                    mid = out.stdout.splitlines()[1].strip('!').split()[-1]
+                    print("%15s: %s" % (gen,mid))
+                except:
+                    print(out.stdout)
     else:
         print("Unknown file type %s" % arg)
