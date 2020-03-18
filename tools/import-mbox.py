@@ -289,7 +289,7 @@ class SlurpThread(Thread):
                     jas.append(json_source)
                     if args.verbose:
                         # TODO optionally show other fields (e.g. From_ line)
-                        print("MID:%(mid)s MSGID:%(message-id)s" % json)
+                        verbose_logger.info("MID:%(mid)s MSGID:%(message-id)s" , json)
                     if contents:
                         if not args.dry:
                             for key in contents:
@@ -433,6 +433,14 @@ print("Checking that the database index %s exists ... " % dbname)
 # elasticsearch logs lots of warnings on retries/connection failure
 import logging
 logging.getLogger("elasticsearch").setLevel(logging.ERROR)
+
+verbose_logger = None
+if args.verbose:
+    verbose_logger = logging.getLogger("verbose")
+    verbose_logger.setLevel(logging.INFO)
+    # The default handler is set to WARN level
+    verbose_logger.addHandler(logging.StreamHandler(sys.stdout))
+    archiver.logger = verbose_logger
 
 if args.dry:
     print("Dry-run; continuing to check input data")
