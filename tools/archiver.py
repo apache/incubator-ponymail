@@ -45,6 +45,7 @@ ES_MAJOR = ES_VERSION[0]
 from formatflowed import convertToWrapped
 import hashlib
 import email.utils
+import email.header
 import time
 from collections import namedtuple
 import re
