@@ -105,10 +105,7 @@ def parse_attachment(part):
             filename = part.get_filename()
             if filename:
                 print("Found attachment: %s" % filename)
-                attachment = {}
-                attachment['content_type'] = part.get_content_type()
-                attachment['size'] = len(fd)
-                attachment['filename'] = filename
+                attachment = {'content_type': part.get_content_type(), 'size': len(fd), 'filename': filename}
                 h = hashlib.sha256(fd).hexdigest()
                 b64 = encode_base64(fd)
                 attachment['hash'] = h
