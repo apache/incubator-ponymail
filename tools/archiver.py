@@ -102,7 +102,8 @@ def parse_attachment(part):
         if cdtype == "attachment" or cdtype == 'inline':
             fd = part.get_payload(decode=True)
             # Allow for empty string
-            if fd == None: return None, None
+            if fd is None:
+                return None, None
             filename = part.get_filename()
             if filename:
                 print("Found attachment: %s" % filename)
