@@ -30,6 +30,7 @@ import os
 import yaml
 import subprocess
 from pprint import pprint
+from collections import namedtuple
 
 
 TOOLS = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),"tools")
@@ -43,7 +44,9 @@ private = False # does not affect id generation
 parseHTML = False # can this affect id generation?
 GENS=generators.generator_names()
 
-archie = archiver.Archiver(parseHTML = parseHTML)
+archie = archiver.Archiver(parse_html = parseHTML)
+fake_args = namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
+
 
 for arg in sys.argv[1:]:
     if arg.endswith('.yml') or arg.endswith('.yaml'):
@@ -67,7 +70,7 @@ for arg in sys.argv[1:]:
                             print("Generator %s" % script['gen'])
                             archiver.archiver_generator = script['gen']
                         message = next(messages)
-                        json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
+                        json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message)
                         error = 0
                         for key in script:
                             if key == 'gen':
@@ -87,7 +90,7 @@ for arg in sys.argv[1:]:
             print(message.get_from())
             for gen in GENS:
                 archiver.archiver_generator = gen
-                json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
+                json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message)
                 print("%15s: %s" % (gen,json['mid']))
     elif arg.endswith('.eml'): # a single email
         for gen in GENS:
