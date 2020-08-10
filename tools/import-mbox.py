@@ -34,8 +34,8 @@ import glob
 import multiprocessing
 import tempfile
 import gzip
-
 import archiver
+import logging
 
 goodies = 0
 baddies = 0
@@ -121,7 +121,7 @@ class SlurpThread(Thread):
         mboxfile = ""
         filename = ""
 
-        archie = archiver.Archiver(parseHTML = parseHTML)
+        archie = archiver.Archiver(parse_html=parseHTML)
 
         while len(lists) > 0:
             self.printid("%u elements left to slurp" % len(lists))
@@ -220,7 +220,7 @@ class SlurpThread(Thread):
                     bad += 1
                     continue
 
-                json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
+                json, contents, _msgdata, _irt = archie.compute_updates(args, list_override, private, message)
 
                 # Not sure this can ever happen
                 if json and not (json['list'] and json['list_raw']):
