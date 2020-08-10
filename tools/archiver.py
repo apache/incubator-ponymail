@@ -118,7 +118,12 @@ def pm_charsets(msg):
 
 def normalize_lid(lid): # N.B. Also used by import-mbox.py
     """ Ensure that a lid is in standard form, i.e. <a.b.c.d> """
-    # first drop any leading or trailing chars
+    # If of format "list name" <foo.bar.baz>
+    # we crop away the description (#511)
+    m = re.match(r'".*"\s+(.+)', lid)
+    if m:
+        lid = m.group(1)
+    # Drop <> and anything before/after, if found
     m = re.search(r"<(.+)>", lid)
     if m:
         lid = m.group(1)
