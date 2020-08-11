@@ -85,7 +85,7 @@ parser.add_argument('--noindex', dest='noi', action='store_true',
 parser.add_argument('--nocloud', dest='nwc', action='store_true',
                    help='Do not enable word cloud')
 parser.add_argument('--generator', dest='generator', type=str,
-                   help='Document ID Generator to use (legacy, medium, cluster, full)')
+                   help='Document ID Generator to use (legacy, medium, cluster, full, dkim)')
 args = parser.parse_args()
 
 print("Welcome to the Pony Mail setup script!")

@@ -193,7 +193,8 @@ class SlurpThread(Thread):
 
 
             for key in messages.iterkeys():
-                message=messages.get(key)
+                message = messages.get(key)
+                msgbytes = messages.get_bytes(key)
                 # If --filter is set, discard any messages not matching by continuing to next email
                 if fromFilter and 'from' in message and message['from'].find(fromFilter) == -1:
                     continue
@@ -220,7 +221,7 @@ class SlurpThread(Thread):
                     bad += 1
                     continue
 
-                json, contents, _msgdata, _irt = archie.compute_updates(args, list_override, private, message)
+                json, contents, _msgdata, _irt = archie.compute_updates(args, list_override, private, message, msgbytes)
 
                 # Not sure this can ever happen
                 if json and not (json['list'] and json['list_raw']):
