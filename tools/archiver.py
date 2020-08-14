@@ -168,7 +168,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             **kwargs
         )
 
-    def __init__(self, generator='full', parse_html=False, dump_dir=None):
+    def __init__(self, generator=archiver_generator, parse_html=False, dump_dir=None):
         """ Just initialize ES. """
         self.html = parse_html
         self.generator = generator
