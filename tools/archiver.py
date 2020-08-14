@@ -348,7 +348,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         if body is not None or attachments:
             pmid = mid
             try:
-                mid = generators.generate(archiver_generator, msg, body, lid, attachments)
+                mid = generators.generate(self.generator, msg, body, lid, attachments)
             except Exception as err:
                 if logger:
                     # N.B. use .get just in case there is no message-id
