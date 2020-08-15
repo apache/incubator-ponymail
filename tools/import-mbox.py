@@ -34,8 +34,9 @@ import glob
 import multiprocessing
 import tempfile
 import gzip
+
 import archiver
-import logging
+
 
 goodies = 0
 baddies = 0
