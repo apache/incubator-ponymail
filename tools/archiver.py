@@ -168,7 +168,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             **kwargs
         )
 
-    def __init__(self, generator='full', parse_html=False, dump_dir=None):
+    def __init__(self, generator=archiver_generator, parse_html=False, dump_dir=None):
         """ Just initialize ES. """
         self.html = parse_html
         self.generator = generator
@@ -251,7 +251,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 if not body and part.get_content_type() == 'text/enriched':
                     body = part.get_payload(decode=True)
                 elif self.html and not firstHTML and part.get_content_type() == 'text/html':
-                    first_html = part.get_payload(decode=True)
+                    firstHTML = part.get_payload(decode=True)
             except Exception as err:
                 print(err)
 
@@ -348,7 +348,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         if body is not None or attachments:
             pmid = mid
             try:
-                mid = generators.generate(archiver_generator, msg, body, lid, attachments, raw_msg)
+                mid = generators.generate(self.generator, msg, body, lid, attachments, raw_msg)
             except Exception as err:
                 if logger:
                     # N.B. use .get just in case there is no message-id
