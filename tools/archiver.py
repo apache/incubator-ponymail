@@ -326,8 +326,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(epoch))
         body = self.msgbody(msg, verbose=args.verbose, ignore_body=args.ibody)
         try:
-            if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
-                body = convertToWrapped(body, character_set="utf-8")
+            if 'content-type' in msg_metadata and 'format=flowed' in msg_metadata['content-type']:
+                body = convertToWrapped(bytes(body, 'utf-8'), character_set="utf-8")
             if isinstance(body, str):
                 body = body.encode('utf-8')
         except Exception as err:
