@@ -184,7 +184,6 @@ def cluster(msg, body, lid, attachments):
     xbody += bytes(msg.get('Message-Id', ''), encoding='ascii')
 
     # Use Date header. Don't use archived-at, as the archiver sets this if not present.
-    mdate = None
     mdatestring = "(null)" # Default to null, ONLY changed if replicable across imports
     try:
         mdate = email.utils.parsedate_tz(msg.get('date'))
