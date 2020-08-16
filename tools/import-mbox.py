@@ -122,7 +122,10 @@ class SlurpThread(Thread):
         mboxfile = ""
         filename = ""
 
-        archie = archiver.Archiver(parse_html=parseHTML)
+        if args.generator:
+            archie = archiver.Archiver(generator=args.generator, parse_html=parseHTML)            
+        else:
+            archie = archiver.Archiver(parse_html=parseHTML)            
 
         while len(lists) > 0:
             self.printid("%u elements left to slurp" % len(lists))
@@ -455,9 +458,6 @@ else:
     except Exception as err:
         print("Error: unable to check if the index %s exists!: %s" % (dbname, err))
         sys.exit(1)
-
-if args.generator:
-    archiver.archiver_generator = args.generator
 
 def globDir(d):
     dirs = [ f for f in listdir(d) if isdir(join(d,f)) ]
