@@ -57,15 +57,14 @@ import uuid
 
 import certifi
 import chardet
-from elasticsearch import Elasticsearch
-from elasticsearch import VERSION as ES_VERSION
-from formatflowed import convertToWrapped
+import elasticsearch
+import formatflowed
 import netaddr
 
 from ponymailconfig import PonymailConfig
 import generators
 
-ES_MAJOR = ES_VERSION[0]
+ES_MAJOR = elasticsearch.VERSION[0]
 
 # Fetch config
 config = PonymailConfig()
@@ -186,7 +185,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         elif ES_MAJOR in [5,6,7]:
             self.wait_for_active_shards = config.get('elasticsearch', 'wait', fallback=1)
         else:
-            raise Exception("Unexpected elasticsearch version ", ES_VERSION)
+            raise Exception("Unexpected elasticsearch version ", elasticsearch.VERSION)
         self.cropout = config.get("debug", "cropout", fallback=None)
         uri = config.get("elasticsearch", "uri", fallback="")
         dbs = [
@@ -214,14 +213,14 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         # If we have a dump dir, we can risk failing the connection.
         if dump_dir:
             try:
-                self.es = Elasticsearch(dbs,
+                self.es = elasticsearch.Elasticsearch(dbs,
                     max_retries=5,
                     retry_on_timeout=True
                     )
             except:
                 print("ES connection failed, but dumponfail specified, dumping to %s" % dump_dir)
         else:
-            self.es = Elasticsearch(dbs,
+            self.es = elasticsearch.Elasticsearch(dbs,
                 max_retries=5,
                 retry_on_timeout=True
                 )
@@ -329,7 +328,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         body = self.msgbody(msg, verbose=args.verbose, ignore_body=args.ibody)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
-                body = convertToWrapped(body, character_set="utf-8")
+                body = formatflowed.convertToWrapped(body, character_set="utf-8")
             if isinstance(body, str):
                 body = body.encode('utf-8')
         except Exception:
