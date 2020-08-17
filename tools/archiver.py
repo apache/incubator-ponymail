@@ -39,31 +39,34 @@ sub someone to the list(s) and add this to their .forward file:
 
 logger = None
 
+import argparse
+from base64 import standard_b64encode
+from collections import namedtuple
+import email.header
+import email.utils
+import fnmatch
+import hashlib
+import json
+import logging
+import os
+import re
+import sys
+import time
+import traceback
+import uuid
+
+import certifi
+import chardet
 from elasticsearch import Elasticsearch
 from elasticsearch import VERSION as ES_VERSION
-ES_MAJOR = ES_VERSION[0]
 from formatflowed import convertToWrapped
-import hashlib
-import email.utils
-import email.header
-import time
-from collections import namedtuple
-import re
-from base64 import standard_b64encode
-import chardet
-from ponymailconfig import PonymailConfig
-import os
-import fnmatch
-import logging
-import traceback
-import sys
-import generators
-import uuid
-import json
-import certifi
-import urllib.parse
-import argparse
 import netaddr
+
+from ponymailconfig import PonymailConfig
+import generators
+import urllib.parse
+
+ES_MAJOR = ES_VERSION[0]
 
 # Fetch config
 config = PonymailConfig()
