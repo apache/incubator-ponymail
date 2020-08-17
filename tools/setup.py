@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys, os, os.path
 import argparse
-import shutil
-import logging
 import importlib.util
+import logging
+import os
+import os.path
+import shutil
+import sys
 
 if sys.version_info <= (3, 3):
     print("This script requires Python 3.4 or higher")
@@ -29,7 +31,7 @@ wanted_pkgs = [
     'elasticsearch',# used by setup.py, archiver.py and elastic.py
     'formatflowed', # used by archiver.py
     'netaddr',      # used by archiver.py
-    'certifi',       # used by archiver.py and elastic.py
+    'certifi',      # used by archiver.py and elastic.py
     ]
 
 missing_pkgs = list(wanted_pkgs) # copy to avoid corruption
