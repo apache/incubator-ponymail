@@ -40,8 +40,8 @@ sub someone to the list(s) and add this to their .forward file:
 logger = None
 
 import argparse
-from base64 import standard_b64encode
-from collections import namedtuple
+import base64
+import collections
 import email.header
 import email.utils
 import fnmatch
@@ -87,7 +87,7 @@ archiver_generator = config.get("archiver", "generator", fallback="medium")
 
 def encode_base64(buff):
     """ Convert bytes to base64 as text string (no newlines) """
-    return standard_b64encode(buff).decode('ascii', 'ignore')
+    return base64.standard_b64encode(buff).decode('ascii', 'ignore')
 
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
@@ -277,10 +277,14 @@ class Archiver(object): # N.B. Also used by import-mbox.py
     def compute_updates(self, args, lid, private, msg):
         """Determine what needs to be sent to the archiver.
 
+        :param args: Command line arguments for the archiver
         :param lid: The list id
-        :param msg: The message object.
+        :param private: Whether privately archived email or not (bool)
+        :param msg: The message object
 
-        :return None if the message could not be parsed
+        :return None if the message could not be parsed, otherwise a four-tuple consisting of:
+                the digested email as a dict, its attachments, its metadata fields and any
+                in-reply-to data found.
         """
 
         ojson = None
@@ -388,8 +392,10 @@ class Archiver(object): # N.B. Also used by import-mbox.py
     def archive_message(self, args, mlist, msg, raw_message):
         """Send the message to the archiver.
 
+        :param args: Command line args (verbose, ibody)
         :param mlist: The IMailingList object.
         :param msg: The message object.
+        :param raw_message: Raw message bytes
 
         :return (lid, mid)
         """
@@ -683,7 +689,7 @@ def main():
         if 'list-id' in msg:
             if not msg.get('archived-at'):
                 msg.add_header('archived-at', email.utils.formatdate())
-            list_data = namedtuple('importmsg', ['list_id', 'archive_public'])(list_id=msg.get('list-id'),
+            list_data = collections.namedtuple('importmsg', ['list_id', 'archive_public'])(list_id=msg.get('list-id'),
                                                                                archive_public=is_public)
 
             try:
