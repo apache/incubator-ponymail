@@ -64,7 +64,6 @@ import netaddr
 
 from ponymailconfig import PonymailConfig
 import generators
-import urllib.parse
 
 ES_MAJOR = ES_VERSION[0]
 
@@ -333,10 +332,10 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 body = convertToWrapped(body, character_set="utf-8")
             if isinstance(body, str):
                 body = body.encode('utf-8')
-        except Exception as err:
+        except Exception:
             try:
                 body = body.decode(chardet.detect(body)['encoding'])
-            except Exception as err:
+            except Exception:
                 try:
                     body = body.decode('latin-1')
                 except:
@@ -626,7 +625,6 @@ def main():
             print("STDIN parser exception: %s" % err)
 
         # We're reading from STDIN, so let's fake an MM3 call
-        ispublic = True
 
         if args.altheader:
             alt_header = args.altheader[0]
