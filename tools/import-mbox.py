@@ -125,7 +125,7 @@ class SlurpThread(Thread):
         if args.generator:
             archie = archiver.Archiver(generator=args.generator, parse_html=parseHTML)            
         else:
-            archie = archiver.Archiver(parse_html=parseHTML)            
+            archie = archiver.Archiver(parse_html=parseHTML)
 
         while len(lists) > 0:
             self.printid("%u elements left to slurp" % len(lists))
@@ -170,7 +170,7 @@ class SlurpThread(Thread):
                             dFile = True # Slated for deletion upon having been read
                             self.printid("%s -> %u bytes" % (tmpname, len(bmd)))
                     except Exception as err:
-                        self.printid("This wasn't a gzip file: %s" % err )
+                        self.printid("This wasn't a gzip file: %s" % err)
                 self.printid("Slurping %s" % filename)
                 if maildir:
                     messages = mailbox.Maildir(tmpname, create=False)
