@@ -332,7 +332,11 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         body = self.msgbody(msg, verbose=args.verbose, ignore_body=args.ibody)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
+                # N.B. the convertToWrapped call always fails, because body is a string instead of bytes
                 body = formatflowed.convertToWrapped(body, character_set="utf-8")
+                # DO NOT FIX IT -- otherwise generated MIDs will change
+                # If it is desired to activate flow-formatting, it can be done after MID generation
+                # N.B. This code cannot just be moved intact as it transforms all input
             if isinstance(body, str):
                 body = body.encode('utf-8')
         except Exception:
