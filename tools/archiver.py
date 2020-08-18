@@ -274,7 +274,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         return body
 
     # N.B. this is also called by import-mbox.py
-    def compute_updates(self, args, lid, private, msg):
+    def compute_updates(self, args, lid, private, msg, raw_msg):
         """Determine what needs to be sent to the archiver.
 
         :param args: Command line arguments for the archiver
@@ -357,7 +357,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         if body is not None or attachments:
             pmid = mid
             try:
-                mid = generators.generate(self.generator, msg, body, lid, attachments)
+                mid = generators.generate(self.generator, msg, body, lid, attachments, raw_msg)
             except Exception as err:
                 if logger:
                     # N.B. use .get just in case there is no message-id
@@ -393,7 +393,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
 
         return  ojson, contents, msg_metadata, irt
 
-    def archive_message(self, args, mlist, msg, raw_message):
+    def archive_message(self, args, mlist, msg, raw_msg):
         """Send the message to the archiver.
 
         :param args: Command line args (verbose, ibody)
@@ -414,7 +414,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
             private = True
 
-        ojson, contents, msg_metadata, irt = self.compute_updates(args, lid, private, msg)
+        ojson, contents, msg_metadata, irt = self.compute_updates(args, lid, private, msg, raw_msg)
         if not ojson:
             _id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
             raise Exception("Could not parse message %s for %s" % (_id,lid))

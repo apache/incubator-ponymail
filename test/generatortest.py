@@ -70,7 +70,7 @@ for arg in sys.argv[1:]:
                             print("Generator %s" % script['gen'])
                             archiver.archiver_generator = script['gen']
                         message = next(messages)
-                        json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message)
+                        json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message, message.as_bytes())
                         error = 0
                         for key in script:
                             if key == 'gen':
@@ -90,7 +90,7 @@ for arg in sys.argv[1:]:
             print(message.get_from())
             for gen in GENS:
                 archiver.archiver_generator = gen
-                json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message)
+                json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message, message.as_bytes())
                 print("%15s: %s" % (gen,json['mid']))
     elif arg.endswith('.eml'): # a single email
         for gen in GENS:
