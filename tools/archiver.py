@@ -622,7 +622,7 @@ def main():
         # Also eliminates: 'Undecodable raw error response from server:' warning message
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
-    archie = Archiver(generator=args.generator or archiver_generator, parse_html=args.html2text)
+    archie = Archiver(generator=args.generator or archiver_generator, parse_html=args.html2text, dump_dir=args.dump)
     # use binary input so parser can use appropriate charset
     input_stream = sys.stdin.buffer
 
