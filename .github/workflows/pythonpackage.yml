@@ -2,7 +2,7 @@ name: Python package
 
 #on: [push,repository_dispatch]
 # Only manual trigger for now
-on: repository_dispatch
+on: workflow_dispatch
 
 jobs:
   build:
