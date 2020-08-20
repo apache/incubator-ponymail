@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
+    - uses: actions/checkout@master   
+      with:
+        name: apache/incubator-ponymail-unit-tests
+        path: pmtests
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -24,7 +28,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Test with pytest
+#    - name: Test with pytest
+#      run: |
+#        pip install pytest
+#        pytest
+    - name: Test with Ponymail Unit tests
       run: |
-        pip install pytest
-        pytest
+        cd pmtests
+        ./runall --root ..
