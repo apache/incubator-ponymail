@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/checkout@master   
       with:
-        name: apache/incubator-ponymail-unit-tests
+        repository: apache/incubator-ponymail-unit-tests
         path: pmtests
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
