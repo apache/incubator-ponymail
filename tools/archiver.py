@@ -37,6 +37,7 @@ sub someone to the list(s) and add this to their .forward file:
 
 """
 
+# N.B. Also updated by import-mbox
 logger = None
 
 import argparse
