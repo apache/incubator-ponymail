@@ -35,4 +35,4 @@ jobs:
     - name: Test with Ponymail Unit tests
       run: |
         cd pmtests
-        ./runall --root ..
+        python runall.py --root ..
