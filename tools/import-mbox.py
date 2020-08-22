@@ -281,7 +281,7 @@ class SlurpThread(Thread):
                         json_source = {
                             'mid': json['mid'], # needed for bulk-insert only, not needed in database
                             'message-id': json['message-id'],
-                            'source': archie.mbox_source(raw_msg)
+                            'source': archiver.mbox_source(raw_msg)
                         }
                     except Exception as e:
                         self.printid("Error '%s' processing id %s msg %s " % (e, json['mid'], json['message-id']))

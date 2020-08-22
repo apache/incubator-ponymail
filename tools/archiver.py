@@ -90,6 +90,15 @@ def encode_base64(buff):
     """ Convert bytes to base64 as text string (no newlines) """
     return base64.standard_b64encode(buff).decode('ascii', 'ignore')
 
+def mbox_source(b):
+    # Common method shared with import-mbox
+    try:
+        # Can we store as ASCII?
+        return b.decode('ascii', errors='strict')
+    except UnicodeError:
+        # No, so must use base64 to avoid corruption on re-encoding
+        return encode_base64(b)
+
 def parse_attachment(part):
     cd = part.get("Content-Disposition", None)
     if cd:
@@ -451,7 +460,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 consistency = self.consistency,
                 body = {
                     "message-id": msg_metadata['message-id'],
-                    "source": self.mbox_source(raw_message)
+                    "source": mbox_source(raw_message)
                 }
             )
         # If we have a dump dir and ES failed, push to dump dir instead as a JSON object
@@ -467,7 +476,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                         'mbox': ojson,
                         'mbox_source': {
                             "message-id": msg_metadata['message-id'],
-                            "source": self.mbox_source(raw_message)
+                            "source": mbox_source(raw_message)
                         },
                         'attachments': contents
                     },f , indent = 2)
@@ -564,15 +573,6 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                         if logger:
                             logger.info("Notification sent to %s for %s", cid, mid)
         return lid, ojson['mid']
-
-    def mbox_source(self, b):
-        # Common method shared with import-mbox
-        try:
-            # Can we store as ASCII?
-            return b.decode('ascii', errors='strict')
-        except UnicodeError:
-            # No, so must use base64 to avoid corruption on re-encoding
-            return encode_base64(b)
 
     def list_url(self, _mlist):
         """ Required by MM3 plugin API
