@@ -84,8 +84,6 @@ if config.has_option('archiver', 'baseurl'):
 if config.has_option('elasticsearch', 'user'):
     auth = (config.get('elasticsearch','user'), config.get('elasticsearch','password'))
 
-archiver_generator = config.get("archiver", "generator", fallback="medium")
-
 def encode_base64(buff):
     """ Convert bytes to base64 as text string (no newlines) """
     return base64.standard_b64encode(buff).decode('ascii', 'ignore')
@@ -179,10 +177,16 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             **kwargs
         )
 
-    def __init__(self, generator=archiver_generator, parse_html=False, dump_dir=None):
-        """ Just initialize ES. """
+    def __init__(self, generator=None, parse_html=False, ignore_body=None, dump_dir=None, verbose=False):
+
         self.html = parse_html
-        self.generator = generator
+        # Fall back to medium generator if nothing is set.
+        self.generator = generator or config.get("archiver", "generator", fallback="medium")
+        self.cropout = config.get("debug", "cropout", fallback=None)
+        self.verbose = verbose
+        self.ignore_body = ignore_body
+        self.dump_dir = dump_dir
+
         if parse_html:
             import html2text
             self.html2text = html2text.html2text
@@ -192,11 +196,10 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         self.consistency = config.get('elasticsearch', 'write', fallback='quorum')
         if ES_MAJOR == 2:
             pass
-        elif ES_MAJOR in [5,6,7]:
+        elif ES_MAJOR in [5,6]:
             self.wait_for_active_shards = config.get('elasticsearch', 'wait', fallback=1)
         else:
             raise Exception("Unexpected elasticsearch version ", elasticsearch.VERSION)
-        self.cropout = config.get("debug", "cropout", fallback=None)
         uri = config.get("elasticsearch", "uri", fallback="")
         dbs = [
             {
@@ -221,7 +224,8 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             }
             )
         # If we have a dump dir, we can risk failing the connection.
-        if dump_dir:
+        # NOTE: this does not contact the database, so is unlikely to fail
+        if self.dump_dir:
             try:
                 self.es = elasticsearch.Elasticsearch(dbs,
                     max_retries=5,
@@ -245,12 +249,12 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 contents[part_meta['hash']] = part_file
         return attachments, contents
 
-    def msgbody(self, msg, verbose=False, ignore_body=None):
+    def msgbody(self, msg):
         body = None
         firstHTML = None
         for part in msg.walk():
             # can be called from importer
-            if verbose:
+            if self.verbose:
                 print("Content-Type: %s" % part.get_content_type())
             """
                 Find the first body part and the first HTML part
@@ -267,7 +271,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 print(err)
 
         # this requires a GPL lib, user will have to install it themselves
-        if firstHTML and (not body or len(body) <= 1 or (ignore_body and str(body).find(str(ignore_body)) != -1)):
+        if firstHTML and (not body or len(body) <= 1 or (self.ignore_body and str(body).find(str(self.ignore_body)) != -1)):
             body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
 
         # See issue#463
@@ -284,10 +288,9 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         return body
 
     # N.B. this is also called by import-mbox.py
-    def compute_updates(self, args, lid, private, msg):
+    def compute_updates(self, lid, private, msg):
         """Determine what needs to be sent to the archiver.
 
-        :param args: Command line arguments for the archiver
         :param lid: The list id
         :param private: Whether privately archived email or not (bool)
         :param msg: The message object
@@ -339,7 +342,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         # mdate calculations are all done, prepare the index entry
         epoch = email.utils.mktime_tz(mdate)
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(epoch))
-        body = self.msgbody(msg, verbose=args.verbose, ignore_body=args.ibody)
+        body = self.msgbody(msg)
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
                 # N.B. the convertToWrapped call always fails, because body is a string instead of bytes
@@ -406,7 +409,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
     def archive_message(self, args, mlist, msg, raw_message):
         """Send the message to the archiver.
 
-        :param args: Command line args (verbose, ibody)
+        :param args: Command line args (dry, dump)
         :param mlist: The IMailingList object.
         :param msg: The message object.
         :param raw_message: Raw message bytes
@@ -424,7 +427,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         elif hasattr(mlist, 'archive_policy') and mlist.archive_policy is not ArchivePolicy.public:
             private = True
 
-        ojson, contents, msg_metadata, irt = self.compute_updates(args, lid, private, msg)
+        ojson, contents, msg_metadata, irt = self.compute_updates(lid, private, msg)
         if not ojson:
             _id = msg.get('message-id') or msg.get('Subject') or msg.get("Date")
             raise Exception("Could not parse message %s for %s" % (_id,lid))
@@ -623,7 +626,7 @@ def main():
         # Also eliminates: 'Undecodable raw error response from server:' warning message
         logging.getLogger("elasticsearch").setLevel(logging.ERROR)
 
-    archie = Archiver(generator=args.generator or archiver_generator, parse_html=args.html2text, dump_dir=args.dump)
+    archie = Archiver(generator=args.generator, parse_html=args.html2text, ignore_body=args.ibody, verbose=args.verbose, dump_dir=args.dump)
     # use binary input so parser can use appropriate charset
     input_stream = sys.stdin.buffer
 

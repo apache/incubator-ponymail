@@ -64,7 +64,6 @@ fileToLID = {}
 interactive = False
 extension = ".mbox"
 piperWeirdness = False
-parseHTML = False
 resendTo = None
 timeout = 600
 fromFilter = None
@@ -122,11 +121,10 @@ class SlurpThread(Thread):
         mboxfile = ""
         filename = ""
 
-        if args.generator:
-            archie = archiver.Archiver(generator=args.generator, parse_html=parseHTML)            
-        else:
-            archie = archiver.Archiver(parse_html=parseHTML)
-
+        archie = archiver.Archiver(generator=args.generator, parse_html=args.html2text,
+                                   ignore_body=args.ibody[0] if args.ibody else None,
+                                   verbose=args.verbose)            
+ 
         while len(lists) > 0:
             self.printid("%u elements left to slurp" % len(lists))
 
@@ -224,7 +222,7 @@ class SlurpThread(Thread):
                     bad += 1
                     continue
 
-                json, contents, _msgdata, _irt = archie.compute_updates(args, list_override, private, message)
+                json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
 
                 # Not sure this can ever happen
                 if json and not (json['list'] and json['list_raw']):
@@ -411,10 +409,6 @@ if args.dedup:
     dedup = args.dedup
 if args.ext:
     extension = args.ext[0]
-if args.html2text:
-    parseHTML = True
-if args.ibody:
-    archiver.iBody = args.ibody[0]
 if args.fromfilter:
     fromFilter = args.fromfilter[0]
 if args.nomboxo:
