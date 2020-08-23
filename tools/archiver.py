@@ -97,7 +97,7 @@ def mbox_source(b):
         # No, so must use base64 to avoid corruption on re-encoding
         return encode_base64(b)
 
-def parse_attachment(part):
+def parse_attachment(part, verbose=False):
     cd = part.get("Content-Disposition", None)
     if cd:
         # Use str() in case the name is not in ASCII.
@@ -110,7 +110,8 @@ def parse_attachment(part):
             if fd is None: return None, None
             filename = part.get_filename()
             if filename:
-                print("Found attachment: %s" % filename)
+                if verbose:
+                    print("Found attachment: %s" % filename)
                 attachment = {'content_type': part.get_content_type(), 'size': len(fd), 'filename': filename}
                 h = hashlib.sha256(fd).hexdigest()
                 b64 = encode_base64(fd)
@@ -243,7 +244,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         attachments = []
         contents = {}
         for part in msg.walk():
-            part_meta, part_file = parse_attachment(part)
+            part_meta, part_file = parse_attachment(part, self.verbose)
             if part_meta:
                 attachments.append(part_meta)
                 contents[part_meta['hash']] = part_file
