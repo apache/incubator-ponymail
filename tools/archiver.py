@@ -344,13 +344,15 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         epoch = email.utils.mktime_tz(mdate)
         mdatestring = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(epoch))
         body = self.msgbody(msg)
+        saved_body = None # for format=flowed
         try:
             if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
-                # N.B. the convertToWrapped call always fails, because body is a string instead of bytes
+                saved_body = body # so we can redo it properly later
+                # N.B. the convertToWrapped call usually fails, because body is a generally a string here
+                # However sometimes body is bytes at this point in which case it works
                 body = formatflowed.convertToWrapped(body, character_set="utf-8")
                 # DO NOT FIX IT -- otherwise generated MIDs will change
-                # If it is desired to activate flow-formatting, it can be done after MID generation
-                # N.B. This code cannot just be moved intact as it transforms all input
+                # The code now applies the formatting properly later
             if isinstance(body, str):
                 body = body.encode('utf-8')
         except Exception:
@@ -386,6 +388,16 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                         irt = msg_metadata.get('in-reply-to').__str__()
                 except:
                     irt = ""
+
+            if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
+                if isinstance(saved_body, str):
+                    saved_body = saved_body.encode('utf-8', 'replace')
+                try:
+                    body = formatflowed.convertToWrapped(saved_body, wrap_fixed=False, character_set="utf-8")
+                    # print(body,file=sys.stderr)
+                except:
+                    pass # Don't try to recover
+
             ojson = {
                 'from_raw': msg_metadata['from'],
                 'from': msg_metadata['from'],
