@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: don't add archived-at header to parsed message (#521)
 - Enh: Be more lenient when parsing List-Id headers (#511)
 - Enh: add some debug output to import-mbox (#396)
 - Enh: Allow fetching emails with quotes in their document ID
