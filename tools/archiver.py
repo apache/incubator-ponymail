@@ -144,6 +144,15 @@ def normalize_lid(lid): # N.B. Also used by import-mbox.py
         sys.exit(-1)
     return lid
 
+CR = b'\r'
+LF = b'\n'
+CRLF=b'\r\n'
+# convert body to CRLF for use by convertToWrapped
+def to_crlf(body): # must be bytes
+    # it may seem odd to convert CRLF to LF and back again, but it is necessary to
+    # handle input with a mixture of CRLF and LF.
+    return body.replace(CRLF, LF).replace(CR, LF).replace(LF, CRLF)
+
 class Archiver(object): # N.B. Also used by import-mbox.py
     """ A mailman 3 archiver that forwards messages to pony mail. """
     if config.has_section('mailman') and config.has_option('mailman', 'plugin'):
@@ -393,7 +402,11 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 if isinstance(saved_body, str):
                     saved_body = saved_body.encode('utf-8', 'replace')
                 try:
-                    body = formatflowed.convertToWrapped(saved_body, wrap_fixed=False, character_set="utf-8")
+                    # Allow wrapping to be done on the client display by unwrapping
+                    # to a single long line.
+                    # The value 2000 should be more than enough for most email paragraphs.
+                    body = formatflowed.convertToWrapped(to_crlf(saved_body), width=2000, wrap_fixed=False, character_set="utf-8")
+                    # formatflowed requires CRLF line endings, but generates LF endings...
                 except:
                     pass # Don't try to recover
 
