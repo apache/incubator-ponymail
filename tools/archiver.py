@@ -394,7 +394,6 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     saved_body = saved_body.encode('utf-8', 'replace')
                 try:
                     body = formatflowed.convertToWrapped(saved_body, wrap_fixed=False, character_set="utf-8")
-                    # print(body,file=sys.stderr)
                 except:
                     pass # Don't try to recover
 
