@@ -405,8 +405,10 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                     # Allow wrapping to be done on the client display by unwrapping
                     # to a single long line.
                     # The value 2000 should be more than enough for most email paragraphs.
-                    body = formatflowed.convertToWrapped(to_crlf(saved_body), width=2000, wrap_fixed=False, character_set="utf-8")
+                    # body = formatflowed.convertToWrapped(to_crlf(saved_body), width=2000, wrap_fixed=False, character_set="utf-8")
                     # formatflowed requires CRLF line endings, but generates LF endings...
+                    # TEMP: disable conversion until can work out how to fix tests
+                    body = formatflowed.convertToWrapped(saved_body, width=2000, wrap_fixed=False, character_set="utf-8")
                 except:
                     pass # Don't try to recover
 
