@@ -2,6 +2,12 @@
 
 Release Notes
 
+# Version 0.12 (not yet released) #
+
+The archiver no longer adds an 'archive-at' header to incoming messages.
+This does not affect the source stored in the database, as it uses the raw input (since v0.10)
+Generators the use the header -- full, medium (if Date not available) -- are now consistent
+
 # Version 0.11 #
 
 No changes that require additional setup.
