@@ -6,7 +6,9 @@ Release Notes
 
 The archiver no longer adds an 'archive-at' header to incoming messages.
 This does not affect the source stored in the database, as it uses the raw input (since v0.10)
-Generators the use the header -- full, medium (if Date not available) -- are now consistent
+Generators that use the header -- full, medium (if Date not available) -- are now consistent
+
+Inline attachements are now parsed. This affects the output of the cluster generator.
 
 # Version 0.11 #
 
