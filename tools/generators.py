@@ -151,6 +151,8 @@ def cluster(msg, body, lid, attachments):
     N.B. The id is not guaranteed stable - i.e. it may change if the message is reparsed. 
     The id depends on the parsed body, which depends on the exact method used to parse the mail.
     For example, are invalid characters ignored or replaced; is html parsing used?
+    The output also depends on attachment hashes, so any changes to attachment parsing
+    can also change the output. For example, the code now handles inline attachments.
 
     The following message fields are concatenated to form the hash input:
     - body as is if bytes else encoded ascii, ignoring invalid characters; if the body is null it is treated as an empty string
