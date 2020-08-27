@@ -291,7 +291,7 @@ class SlurpThread(Thread):
                     jas.append(json_source)
                     if args.verbose and verbose_logger:
                         # TODO optionally show other fields (e.g. From_ line)
-                        verbose_logger.info("MID:%(mid)s MSGID:%(message-id)s" , json)
+                        verbose_logger.info("MID:%s MSGID:%s" % (json['mid'], json['message-id'].strip()))
                     if contents:
                         if not args.dry:
                             for key in contents:
