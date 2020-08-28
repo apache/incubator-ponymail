@@ -187,7 +187,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             **kwargs
         )
 
-    def __init__(self, generator=None, parse_html=False, ignore_body=None, dump_dir=None, verbose=False):
+    def __init__(self, generator=None, parse_html=False, ignore_body=None, dump_dir=None, verbose=False, skipff=False):
 
         self.html = parse_html
         # Fall back to medium generator if nothing is set.
@@ -196,6 +196,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         self.verbose = verbose
         self.ignore_body = ignore_body
         self.dump_dir = dump_dir
+        self.skipff = skipff
 
         if parse_html:
             import html2text
@@ -355,7 +356,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         body = self.msgbody(msg)
         saved_body = None # for format=flowed
         try:
-            if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
+            if not self.skipff and 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
                 saved_body = body # so we can redo it properly later
                 # N.B. the convertToWrapped call usually fails, because body is a generally a string here
                 # However sometimes body is bytes at this point in which case it works
@@ -644,6 +645,10 @@ def main():
                             'fail silently.')
     parser.add_argument('--generator', dest='generator',
                        help='Override the generator.')
+    parser.add_argument('--generator', dest='generator',
+                       help='Override the generator.')
+    parser.add_argument('--skipff', dest = 'skipff', action='store_true',
+                       help = 'Skip format=flowed processing (mainly for unit-testing)')
     args = parser.parse_args()
 
     if args.verbose:

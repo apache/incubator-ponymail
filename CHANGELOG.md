@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: archiver.py: convertToWrapped expects bytes (#462)
 - Bug: convertToWrapped expects a bytestring (#518)
 - Bug: don't add archived-at header to parsed message (#521)
 - Enh: Be more lenient when parsing List-Id headers (#511)

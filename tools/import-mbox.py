@@ -123,7 +123,8 @@ class SlurpThread(Thread):
 
         archie = archiver.Archiver(generator=args.generator, parse_html=args.html2text,
                                    ignore_body=args.ibody[0] if args.ibody else None,
-                                   verbose=args.verbose)            
+                                   verbose=args.verbose,
+                                   skipff=args.skipff)            
  
         while len(lists) > 0:
             self.printid("%u elements left to slurp" % len(lists))
@@ -380,6 +381,8 @@ parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
                     help = 'Skip Mboxo processing')
 parser.add_argument('--generator', dest='generator',
                    help='Override the generator.')
+parser.add_argument('--skipff', dest = 'skipff', action='store_true',
+                    help = 'Skip format=flowed processing (mainly for unit-testing)')
 
 args = parser.parse_args()
 
