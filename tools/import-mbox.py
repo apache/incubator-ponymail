@@ -23,7 +23,7 @@ import hashlib
 import os
 from threading import Thread, Lock
 import mailbox
-import email.errors, email.utils, email.header
+import email
 from urllib.request import urlopen
 import re
 from elastic import Elastic
