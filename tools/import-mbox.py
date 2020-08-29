@@ -571,8 +571,8 @@ elif re.match(r"imaps?://", source):
     results = imap4.uid('fetch', uids, '(BODY[HEADER.FIELDS (MESSAGE-ID)])')
 
     mail = {}
-    uid_re = re.compile(b'^\d+ \(UID (\d+) BODY\[')
-    mid_re = re.compile(b'^Message-ID:\s*(.*?)\s*$', re.I)
+    uid_re = re.compile(r'^\d+ \(UID (\d+) BODY\[')
+    mid_re = re.compile(r'^Message-ID:\s*(.*?)\s*$', re.I)
     uid = None
     for result in results[1]:
         for line in result:
