@@ -119,13 +119,6 @@ def parse_attachment(part, verbose=False):
                 return attachment, b64 # Return meta data and contents separately
     return None, None
 
-def pm_charsets(msg):
-    charsets = set({})
-    for c in msg.get_charsets():
-        if c is not None:
-            charsets.update([c])
-    return charsets
-
 def normalize_lid(lid): # N.B. Also used by import-mbox.py
     """ Ensure that a lid is in standard form, i.e. <a.b.c.d> """
     # If of format "list name" <foo.bar.baz>
@@ -262,6 +255,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
 
     def msgbody(self, msg):
         body = None
+        body_charset = None # charset corresponding to chosen body (if any)
         firstHTML = None
         for part in msg.walk():
             # can be called from importer
@@ -274,21 +268,33 @@ class Archiver(object): # N.B. Also used by import-mbox.py
             try:
                 if not body and part.get_content_type() == 'text/plain':
                     body = part.get_payload(decode=True)
+                    body_charset = part.get_content_charset()
                 if not body and part.get_content_type() == 'text/enriched':
                     body = part.get_payload(decode=True)
+                    body_charset = part.get_content_charset()
                 elif self.html and not firstHTML and part.get_content_type() == 'text/html':
                     firstHTML = part.get_payload(decode=True)
+                    body_charset = part.get_content_charset()
             except Exception as err:
                 print(err)
 
         # this requires a GPL lib, user will have to install it themselves
         if firstHTML and (not body or len(body) <= 1 or (self.ignore_body and str(body).find(str(self.ignore_body)) != -1)):
             body = self.html2text(firstHTML.decode("utf-8", 'ignore') if type(firstHTML) is bytes else firstHTML)
+            # at this point body can no longer be bytes
 
-        # See issue#463
+        charsets = []
+        # prefer the charset associated with the body (if any)
+        if body_charset is not None:
+            charsets.append(body_charset)
+        for c in msg.get_charsets():
+            if c is not None and c not in charsets:
+                charsets.append(c)
+
+        # See issue#463 also #244
         # This code will try at most one charset
         # If the decode fails, it will use utf-8
-        for charset in pm_charsets(msg):
+        for charset in charsets:
             try:
                 body = body.decode(charset) if type(body) is bytes else body
                 # at this point body can no longer be bytes
@@ -296,6 +302,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 body = body.decode('utf-8', errors='replace') if type(body) is bytes else body
                 # at this point body can no longer be bytes
 
+        # At this point body may be bytes or string
         return body
 
     # N.B. this is also called by import-mbox.py
