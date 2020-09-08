@@ -363,7 +363,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
         body = self.msgbody(msg)
         saved_body = None # for format=flowed
         try:
-            if not self.skipff and 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
+            if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
                 saved_body = body # so we can redo it properly later
                 # N.B. the convertToWrapped call usually fails, because body is a generally a string here
                 # However sometimes body is bytes at this point in which case it works
@@ -406,7 +406,7 @@ class Archiver(object): # N.B. Also used by import-mbox.py
                 except:
                     irt = ""
 
-            if 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
+            if not self.skipff and 'content-type' in msg_metadata and msg_metadata['content-type'].find("flowed") != -1:
                 if isinstance(saved_body, str):
                     saved_body = saved_body.encode('utf-8', 'replace')
                 try:
@@ -653,7 +653,7 @@ def main():
     parser.add_argument('--generator', dest='generator',
                        help='Override the generator.')
     parser.add_argument('--skipff', dest = 'skipff', action='store_true',
-                       help = 'Skip format=flowed processing (mainly for unit-testing)')
+                       help = 'Skip final format=flowed processing (mainly for unit-testing)')
     args = parser.parse_args()
 
     if args.verbose:
