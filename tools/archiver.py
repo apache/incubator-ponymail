@@ -652,8 +652,6 @@ def main():
                             'fail silently.')
     parser.add_argument('--generator', dest='generator',
                        help='Override the generator.')
-    parser.add_argument('--generator', dest='generator',
-                       help='Override the generator.')
     parser.add_argument('--skipff', dest = 'skipff', action='store_true',
                        help = 'Skip format=flowed processing (mainly for unit-testing)')
     args = parser.parse_args()
