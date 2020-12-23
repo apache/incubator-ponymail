@@ -59,9 +59,19 @@ local function performRequest(url, query, ok404)
     if type(query) == "table" then
         js = JSON.encode(query)
     end
-    local result, hc = http.request(url, js)
+    local result = {}
+    local r, hc = http.request{
+        url = url,
+        method = "POST",
+        source = ltn12.source.string(js),
+        headers = {
+            ["Content-Type"] = "application/json",
+            ["Content-Length"] = string.len(js)
+        },
+        sink = ltn12.sink.table(result)
+    }
     checkReturn(hc, ok404)
-    local json = JSON.decode(result)
+    local json = JSON.decode(table.concat(result))
     -- TODO should we return the http status code?
     -- This might be necessary if codes such as 404 did not cause an error
     return json, hc
