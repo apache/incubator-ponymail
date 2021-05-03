@@ -506,7 +506,7 @@ function handle(r)
     local last = datespan.publast
     for lid, prvdates in pairs(datespan.private or {}) do
         if aaa.canAccessList(r, lid, account) then
-            # merge the stats from the private list
+            -- merge the stats from the private list
             for k,v in pairs(prvdates.monthly_emails) do
                 if datespan.monthly_emails[k] then
                     datespan.monthly_emails[k] = datespan.monthly_emails[k] + v
