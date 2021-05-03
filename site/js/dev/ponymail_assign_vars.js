@@ -20,7 +20,7 @@
 // Thus lightening the load on the backend (caching and such)
 
 var _VERSION_ = "0.12-SNAPSHOT" // Current version (as far as we know)
-var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 var d_ppp = 15; // results per page
 var c_page = 0; // current page position for list view
 var open_emails = [] // cache index for loaded emails

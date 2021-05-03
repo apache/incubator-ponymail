@@ -54,21 +54,23 @@ function buildCalendar(json) {
         if (fyear == firstYear) {
             n = "block"
         }
-        dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 110px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
-        var cale = "<div style='float: left; width: 80%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
+        var cale = ''
         var em = (new Date().getFullYear() == year) ? new Date().getMonth() : 11;
         for (var y = em; y >= 0; y--) {
-            var url = "list.html?" + xlist + ":" + (year+"-"+(y+1))
-            var pfx = ''
-            var sfx = ''
-            if ((year == firstYear && y < firstMonth0) || (year == lastYear && y > lastMonth0)) {
-                pfx = '<i>'
-                sfx = '</i>'
+            var yyyymm = (year+"-"+(y+1))
+            var url = "list.html?" + xlist + ":" + yyyymm
+            var yyyy0m = y < 9 ? (year+"-0"+(y+1)) : yyyymm
+            if (monthly_emails[yyyy0m]) {
+                var count = monthly_emails[yyyy0m]
+                cale += "<a href='" + url + "' onclick='return false;'><label id='calmonth_" + yyyymm + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + months[y] + ' ('+ count + ')' + "</label></a><br/>"
             }
-            cale += "<a href='" + url + "' onclick='return false;'><label id='calmonth_" + (year+"-"+(y+1)) + "' style='width: 80px; float: left;cursor: pointer;' class='label label-default label-hover' onclick='toggleEmail(" + year + ", " + (y + 1) + ");' >" + pfx + months[y] + sfx + "</label></a><br/>"
         }
-        cale += "</div>"
-        dp.innerHTML += cale
+        if (cale != '') {
+            cale += "</div>"
+            dp.innerHTML += "<label onmouseout='this.setAttribute(\"class\", \"label label-success\");'  onmouseover='this.setAttribute(\"class\", \"label label-warning\");' onclick='toggleCalendar(" + year + ");' class='label label-success' style='float: left; width: 110px; font-size: 11pt; cursor: pointer'>" + year + "</label><br/>"
+            var calehdr = "<div style='float: left; width: 80%; display: " + n + "; padding-left: 15px; margin-bottom: 15px;' id='cal_" + year + "'>"
+            dp.innerHTML += calehdr + cale
+        }
     }
     
     // Build the mobile version (dropdown)
