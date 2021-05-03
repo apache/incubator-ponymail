@@ -2323,7 +2323,7 @@ function isArray(obj) {
 // ML address: only accept valid mailing list name, domain or both
 // return true if the address is valid
 function valid_address(val) {
-    return val.match(/^[-@A-Za-z.0-9]+$/);
+    return val.match(/^[-_@A-Za-z.0-9]+$/);
 }
 
 // Check for slow URLs every 0.1 seconds
