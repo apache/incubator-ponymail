@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Enh: stats.lua could return monthly stats to show in calendar (#532)
 - Bug: archiver.py msgbody() function issues (#244 and #463)
 - Bug: archiver.py: convertToWrapped expects bytes (#462)
 - Bug: convertToWrapped expects a bytestring (#518)

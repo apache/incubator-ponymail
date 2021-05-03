@@ -25,6 +25,19 @@ local config = require 'lib/config'
 local cross = require 'lib/cross'
 local utils = require 'lib/utils'
 
+-- accumulate the monthly stats
+local function monthly_emails(buckets, target)
+    for _,v in pairs(buckets) do
+        if v.doc_count > 0 then
+            if target[v.key_as_string] then
+                target[v.key_as_string] = target[v.key_as_string] + v.doc_count
+            else
+                target[v.key_as_string] = v.doc_count
+            end
+        end
+    end
+end
+
 local BODY_MAXLEN = config.stats_maxBody or 200
 -- words to exclude from word cloud:
 local EXCLUDE = config.stats_wordExclude or ".|..|..."
@@ -429,6 +442,13 @@ function handle(r)
                                     max = {
                                         field = "epoch"
                                     }
+                                },
+                                monthly_emails = {
+                                    date_histogram = {
+                                        field = "date",
+                                        interval = "month",
+                                        format = "yyyy-MM"
+                                    }
                                 }
                             }
                         }
@@ -439,10 +459,12 @@ function handle(r)
         datespan = {}
         datespan.pubfirst = nil
         datespan.publast = nil
+        datespan.monthly_emails = {}
         -- find public min and max (buckets will be empty if there are no matching lists)
         for _, list in pairs(doc.aggregations.lists.buckets) do
             for _, private in pairs(list.private.buckets) do
                 if private.key_as_string == "false" then
+                    monthly_emails(private.monthly_emails.buckets, datespan.monthly_emails)
                     if (datespan.publast == nil) or (private.last.value > datespan.publast) then datespan.publast = private.last.value end
                     if (datespan.pubfirst == nil) or (private.first.value < datespan.pubfirst) then datespan.pubfirst = private.first.value end
                 end
@@ -459,16 +481,16 @@ function handle(r)
         for _, list in pairs(doc.aggregations.lists.buckets) do
             for _, private in pairs(list.private.buckets) do
                 if private.key_as_string == "true" then
+                    datespan.private = datespan.private or {}
+                    datespan.private[list.key] = datespan.private[list.key] or {}
+                    datespan.private[list.key].monthly_emails = datespan.private[list.key].monthly_emails or {}
+                    monthly_emails(private.monthly_emails.buckets, datespan.private[list.key].monthly_emails)
                     local prvlast = private.last.value
                     if prvlast > datespan.publast then
-                        datespan.private = datespan.private or {}
-                        datespan.private[list.key] = datespan.private[list.key] or {}
                         datespan.private[list.key].last = prvlast
                     end
                     local prvfirst = private.first.value
                     if prvfirst < datespan.pubfirst then
-                        datespan.private = datespan.private or {}
-                        datespan.private[list.key] = datespan.private[list.key] or {}
                         datespan.private[list.key].first = prvfirst
                     end
                 end
@@ -484,8 +506,16 @@ function handle(r)
     local last = datespan.publast
     for lid, prvdates in pairs(datespan.private or {}) do
         if aaa.canAccessList(r, lid, account) then
-           if prvdates.first and prvdates.first < first then first = prvdates.first end
-           if prvdates.last and prvdates.last > last then last = prvdates.last end
+            # merge the stats from the private list
+            for k,v in pairs(prvdates.monthly_emails) do
+                if datespan.monthly_emails[k] then
+                    datespan.monthly_emails[k] = datespan.monthly_emails[k] + v
+                else
+                    datespan.monthly_emails[k] = v
+                end
+            end
+            if prvdates.first and prvdates.first < first then first = prvdates.first end
+            if prvdates.last and prvdates.last > last then last = prvdates.last end
         end
     end
 
@@ -738,6 +768,7 @@ function handle(r)
     listdata.lastYear = datespan.lastYear
     listdata.firstMonth = datespan.firstMonth
     listdata.lastMonth = datespan.lastMonth
+    listdata.monthly_emails = datespan.monthly_emails
     listdata.list = listraw:gsub("^([^.]+)%.", "%1@"):gsub("[<>]+", "")
     listdata.emails = emls
     listdata.hits = #emls
