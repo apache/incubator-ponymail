@@ -37,6 +37,7 @@ function buildCalendar(json) {
     var lastYear  = json.lastYear
     var firstMonth0 = json.firstMonth - 1 // 0-based
     var lastMonth0 = json.lastMonth - 1 // 0-based
+    var monthly_emails = json.monthly_emails
     
     // Build the main calendar (desktop version)
     var dp = document.getElementById('datepicker')
