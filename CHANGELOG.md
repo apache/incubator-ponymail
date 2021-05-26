@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: buffering=1 not allowed with binary files (#534)
 - Bug: Invalid mailing list address supplied (#516)
 - Enh: stats.lua could return monthly stats to show in calendar (#532)
 - Bug: archiver.py msgbody() function issues (#244 and #463)

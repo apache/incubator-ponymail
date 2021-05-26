@@ -161,7 +161,7 @@ class SlurpThread(Thread):
                             bmd = bf.read()
                             bf.close() # explicit early close
                             bmd = gzip.decompress(bmd)
-                            tmpfile = tempfile.NamedTemporaryFile(mode='w+b', buffering=1, delete=False)
+                            tmpfile = tempfile.NamedTemporaryFile(mode='w+b', delete=False)
                             tmpfile.write(bmd)
                             tmpfile.flush()
                             tmpfile.close()
@@ -514,7 +514,7 @@ if re.match(r"https?://", source):
         for mlist in re.finditer(ns, data):
             ml = mlist.group(1)
             mldata = urlopen("%s%s" % (source, ml)).read()
-            tmpfile = tempfile.NamedTemporaryFile(mode='w+b', buffering=1, delete=False)
+            tmpfile = tempfile.NamedTemporaryFile(mode='w+b', delete=False)
             try:
                 if ml.find(".gz") != -1:
                     mldata = gzip.decompress(mldata)
