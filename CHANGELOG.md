@@ -1,5 +1,5 @@
 ## Changes in 0.12:
-- Bug: PM does not support ES 7 - undocumented (#536)
+- Bug: PM setup does not support ES 6 - undocumented (#536)
 - Bug: buffering=1 not allowed with binary files (#534)
 - Bug: Invalid mailing list address supplied (#516)
 - Enh: stats.lua could return monthly stats to show in calendar (#532)

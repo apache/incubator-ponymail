@@ -3,6 +3,6 @@
 # N.B. modules with license that are compatible with AL 2.0 should be included here
 # As such, html2text (GPL) and chardet (GPL) cannot be included
 certifi # MPL 2.0
-elasticsearch # AL2.0
+elasticsearch < 6.0.0 # AL2.0
 formatflowed # Python Software Foundation
 netaddr # BSD License, MIT License
