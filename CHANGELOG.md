@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: &since option for stats.lua is not documented (#537)
 - Bug: PM setup does not support ES 6 - undocumented (#536)
 - Bug: buffering=1 not allowed with binary files (#534)
 - Bug: Invalid mailing list address supplied (#516)
