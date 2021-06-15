@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+- Bug: notifications.lua 'seen' option is not documented (#539)
 - Bug: &since option for stats.lua is not documented (#537)
 - Bug: PM setup does not support ES 6 - undocumented (#536)
 - Bug: buffering=1 not allowed with binary files (#534)

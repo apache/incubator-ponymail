@@ -202,9 +202,10 @@ Response example:
 
 ### Fetching notifications for a logged in user
 Usage:
-`GET /api/notifications.lua`
+`GET /api/notifications.lua[?seen=$mid]`
 
-Parameters: `None` (cookie required)
+Parameters: (cookie required)
+  - $mid: id of the message to be marked as having been seen
 
 
 Response example:
@@ -213,6 +214,8 @@ Response example:
 {
     "notifications": {...}
 }
+or
+{"marked": true}
 ~~~
 
 ### Fetching a month's data as an mbox file
