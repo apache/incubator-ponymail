@@ -228,3 +228,21 @@ Response example:
 TBA
 ~~~
 
+### Get ATOM data for list or email
+
+Usage:
+`GET /api/atom/lua(?list=$lid|?mid=$mid)`
+
+Parameters: (cookie may be required)
+  - $lid: the list id, e.g. dev@ponymail.apache.org
+  - $mid: The email ID (Permalink)
+
+One of the above is required.
+In the case of the list id, data is returned for the last month.
+For email ID, the thread is returned.
+
+Response example:
+
+~~~
+TBA
+~~~
