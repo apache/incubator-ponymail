@@ -41,7 +41,7 @@ Note: date and epoch are in UTC
 
 ### Fetching list data
 Usage:
-`GET /api/stats.lua?list=$list&domain=$domain[&d=$timespan][&q=$query][&header_from=$from][&header_to=$to][&header_subject=$subject][&header_body=$body][&quick][&emailsOnly][&s=$s&e=$e][&since=$since]`
+`GET /api/stats.lua?list=$list&domain=$domain[&d=$timespan][&q=$query][&header_from=$from][&header_to=$to][&header_subject=$subject][&header_body=$body][&quick][&emailsOnly][&s=$s&e=$e][&since=$since][&dfrom=$dfrom&dto=$dto]`
 
 Parameters:
 
@@ -60,6 +60,8 @@ Parameters:
     - $body: Optional body text
     - $since: number of seconds since the epoch, defaults to now. 
        Returns '{"changed":false}' if no emails are later than epoch, otherwise proceeds with normal search
+    - $dfrom: days ago to start
+    - $dto: total days to match
 
 Options:
 

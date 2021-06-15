@@ -1,4 +1,5 @@
 ## Changes in 0.12:
+-  Bug: stats.lua dfrom and dto parameters are not documented in API (#544)
 - Bug: atom.lua is not documented (#538)
 - Bug: notifications.lua 'seen' option is not documented (#539)
 - Bug: &since option for stats.lua is not documented (#537)
