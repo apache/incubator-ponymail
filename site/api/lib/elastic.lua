@@ -62,8 +62,6 @@ local function performRequest(url, query, ok404)
     local result, hc = http.request(url, js)
     checkReturn(hc, ok404)
     local json = JSON.decode(result)
-    -- TODO should we return the http status code?
-    -- This might be necessary if codes such as 404 did not cause an error
     return json, hc
 end
 
