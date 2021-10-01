@@ -781,6 +781,9 @@ function handle(r)
     end
     listdata.numparts = allparts
     listdata.unixtime = os.time()
+    if config.showQuery == 'always' or (config.showQuery == 'ondemand' and get.showQuery) then
+        listdata.squery = squery
+    end
     
     r:puts(JSON.encode(listdata))
     
