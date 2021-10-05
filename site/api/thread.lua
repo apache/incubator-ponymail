@@ -84,9 +84,6 @@ function handle(r)
     -- Try searching by mid if not found, for backward compat
     if not doc or not doc.mid then
         local docs = elastic.find("message-id:\"" .. r:escape(eid) .. "\"", 1, "mbox")
-        if #docs == 1 then
-            doc = docs[1]
-        end
         if #docs == 0 and #eid == utils.SHORTENED_LINK_LEN then
             docs = elastic.find("mid:" .. r:escape(eid) .. "*", 1, "mbox")
         end
