@@ -50,16 +50,15 @@ tests:
      message-id: <e5e1d91dd42244d08bcec733b45ce538@git.apache.org>
    - mid: 7a8cd379babe8e83d58e429cdeadd3beeb060e47322f8e965d3acecc@1464785912@<commits.ponymail.apache.org>
      message-id: <7bb823a6fbf645e0943759e29ca2c67e@git.apache.org>
-   - mid: 85640e4075764900da2e734cd2a123f7909f0baeebafd0e4fdb3c1c5@<commits.ponymail.apache.org>
+   - mid: 788134ffd7d2b6630fefac41221e060c58fab35f3ffeb05978291ec0@<commits.ponymail.apache.org>
      message-id: <pony-f85cc4d67b0b00a9017135e4201b9225b5053fac-bb226b0ffe10c100b2a009d71a3fda7245b9865a@commits.ponymail.apache.org>
-     gen: medium_original
-   - mid: 4cba4ac4c1d66aeff438f0dea8ed0db1cd3a25680342ca6d12bb188b@<commits.ponymail.apache.org>
+     gen: medium # was medium_original, but that has been dropped
+   - mid: 660c3348c3ac301021c8d69c1a7c71549771c169d3d7efe9a94ef853@<commits.ponymail.apache.org>
      message-id: <951139456f694d2a831e0de670da47b0@git.apache.org>
-   - mid: 99e1a40d3ce06a1e09cc8a27e898deedee62455b8c7ad7359dd4323c@<commits.ponymail.apache.org>
+   - mid: 3ccf3f24f01ea81ff766567ea781b1ac78c2c7136a727437003a4a08@<commits.ponymail.apache.org>
      message-id: <bee810c90e4f41eaa2ce6fdad0449d39@git.apache.org>
    - mid: 51dfe8a64b8cb5c016db95e4bb164faf51e6b2d556b4c255a125f7ee@<commits.ponymail.apache.org>
      message-id: <af0cda1e818645039e2a3ea3cc655925@git.apache.org>
-     gen: medium
    - mid: bf458d3873aedae55431294f60326d85456c3a162b552db5fb0c8641@<commits.ponymail.apache.org>
      message-id: <662ce76c2bc54822a3617bcd8154220b@git.apache.org>
    - mid: b39348316bae9da1939c490b2feb911f8c600bb53920f61de76e593e@<commits.ponymail.apache.org>
