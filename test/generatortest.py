@@ -45,7 +45,6 @@ parseHTML = False # can this affect id generation?
 GENS=generators.generator_names()
 
 archie = archiver.Archiver(parse_html = parseHTML)
-fake_args = namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
 
 
 for arg in sys.argv[1:]:
@@ -68,9 +67,9 @@ for arg in sys.argv[1:]:
                             break
                         if 'gen' in script:
                             print("Generator %s" % script['gen'])
-                            archiver.archiver_generator = script['gen']
+                            archie.generator = script['gen']
                         message = next(messages)
-                        json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message)
+                        json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
                         error = 0
                         for key in script:
                             if key == 'gen':
@@ -89,8 +88,8 @@ for arg in sys.argv[1:]:
         for message in messages:
             print(message.get_from())
             for gen in GENS:
-                archiver.archiver_generator = gen
-                json, contents, _msgdata, _irt = archie.compute_updates(fake_args, list_override, private, message)
+                archie.generator = gen
+                json, contents, _msgdata, _irt = archie.compute_updates(list_override, private, message)
                 print("%15s: %s" % (gen,json['mid']))
     elif arg.endswith('.eml'): # a single email
         for gen in GENS:
