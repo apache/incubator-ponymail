@@ -41,3 +41,7 @@ jobs:
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
         cd pmtests
         python runall.py --root ..
+    - name: Generator tests
+      run: |
+        cd test
+        python generatortest.py generatortest.yaml
