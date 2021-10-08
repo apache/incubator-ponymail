@@ -783,6 +783,7 @@ function handle(r)
     listdata.unixtime = os.time()
     if get.showQuery and not config.noShowQuery then
         listdata.squery = squery
+        listdata.sdata = get
     end
     
     r:puts(JSON.encode(listdata))
