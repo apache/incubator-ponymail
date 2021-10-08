@@ -49,8 +49,9 @@ end
 r.puts = function(r, ...) _CACHE.puts = JSON.decode(...) end
 
 -- TODO
-r.escape_html = function(r, val) 
-    return val
+r.escape_html = function(r, val)
+  -- < > & are definitely escaped by the real escape_html
+  return val:gsub('>', '&gt;'):gsub('<', '&lt;'):gsub('&', '&amp;')
 end
 
 -- override the parse-args function so it returns our test data
