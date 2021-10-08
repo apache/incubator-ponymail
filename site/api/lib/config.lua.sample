@@ -38,6 +38,6 @@ local config = {
 --  listsDisplay = 'regex', -- if defined, hide list names that don't match the regex
 --  debug = false, -- whether to return debug information
     antispam = true,  -- Whether or not to add anti-spam measures aimed at anonymous users.
-    showQuery = 'ondemand', -- return query in JSON result: always|ondemand
+    noShowQuery = false, -- disallow return query in JSON result: true|false (default false)
 }
 return config
