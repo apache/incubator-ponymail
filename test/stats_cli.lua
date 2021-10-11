@@ -1,8 +1,26 @@
 #!/usr/bin/env lua
 
+--[[
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+]]--
+
 -- Allow CLI testing of stats.lua query parameters
 -- Invoke with pairs of parameters, being the key and value, e.g.
--- lua test_stats.lua list dev domain ponymail.apache.org q 'a/b' d lte=1y
+-- lua test_stats.lua list dev domain ponymail.apache.org q 'a/b' d lte=1y emailsOnly 1
+-- Note that parameters with no values are given the default value of "1" by mod_lua
 -- set MODE=inspect to print output query from inspect, otherwise print as JSON suitable for further processing
 
 -- Update path so we can always find the api/*.lua scripts
