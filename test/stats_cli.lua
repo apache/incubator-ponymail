@@ -104,4 +104,5 @@ then
   end
 else
   print("Need even arg count")
+  os.exit(1)
 end
