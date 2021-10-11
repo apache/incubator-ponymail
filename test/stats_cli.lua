@@ -24,7 +24,7 @@ local _CACHE = {} -- capture output
 http.request = function(url, data)
   -- capture HTTP parameters (assume only called once)
   _CACHE.url = url
-  _CACHE.query = JSON.decode(data)
+  _CACHE.querydata = JSON.decode(data)
   -- return simplest result that satisfies stats.lua
   result = [[
 {
@@ -46,7 +46,7 @@ r.ivm_get = function(r, key)
 end
 
 -- collect output (assume only one call to puts)
-r.puts = function(r, ...) _CACHE.puts = JSON.decode(...) end
+r.puts = function(r, ...) _CACHE.reply = JSON.decode(...) end
 
 -- TODO
 r.escape_html = function(r, val)
@@ -80,19 +80,10 @@ then
   end
   res = test(data)
   if os.getenv("MODE") == "inspect" then
-    print(inspect(res["query"]))
+    print(inspect(res["querydata"]))
   else
     print(JSON.encode(res))
   end
 else
   print("Need even arg count")
 end
--- for k,v in pairs(arg) do
---   if k > 0
---   then
---    print(v) 
---    test(JSON.decode(v))
---   end
--- end
--- test({d='lte=123d'},{gte = "now-123d", lte ='now+1d'})
--- test({d='gte=123d', header_from='a/b/c'},{lte = "now-123d"})
