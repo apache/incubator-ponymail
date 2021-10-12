@@ -90,7 +90,18 @@ local function test(args)
 end
 
 local argc = #arg
-if argc % 2 == 0
+if argc == 0 -- assume reading lines of JSON strings
+then
+  for line in io.lines()
+  do
+    jzon = JSON.decode(line)
+    jzon.quick = true -- disable most queries
+    _CACHE.args = jzon
+    _CACHE.status = handle(r)
+    print(JSON.encode(_CACHE)) 
+    io.flush()     
+  end
+elseif argc % 2 == 0
 then
   local data = {}
   for i = 1,argc,2 do
@@ -102,6 +113,13 @@ then
   else
     print(JSON.encode(res))
   end
+elseif argc == 1 -- assume JSON string
+then
+  jzon = JSON.decode(arg[1])
+  jzon.quick = true -- disable most queries
+  _CACHE.args = jzon
+  _CACHE.status = handle(r)
+  print(JSON.encode(_CACHE))
 else
   print("Need even arg count")
   os.exit(1)
