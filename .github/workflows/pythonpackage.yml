@@ -29,12 +29,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r test/requirements.txt
-    # - name: Set up LUA
-    #   uses: leafo/gh-actions-lua@v5
-    #   with:
-    #     luaVersion: "5.2"
-    # - name: Basic Test with LUA
-    #   run: lua -v
+    - name: Set up LUA
+    # This is the commit for v8.0.0 (current at time of approval by INFRA)
+      uses: leafo/gh-actions-lua@https://github.com/leafo/gh-actions-lua/commit/ea0ae38722c0b45aa4e770f7c4a650c6b26800d0
+      with:
+        luaVersion: "5.2"
+    - name: Basic Test with LUA
+      run: lua -v
 #    - name: Test with pytest
 #      run: |
 #        pip install pytest
