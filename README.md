@@ -1,3 +1,5 @@
+_NB: Development focus has shifted towards our [Pony Mail codename Foal](https://github.com/apache/incubator-ponymail-foal) replacement suite.<br/>Suggestions for new features should be focused on that repository instead._
+
 # Apache Pony Mail (Incubating)
 <img src="https://github.com/apache/incubator-ponymail/blob/master/site/images/logo_large.png" align="left"/><br/><br/>
 Apache Pony Mail (Incubating) is a web-based mail archive browser
@@ -12,7 +14,8 @@ using Mozilla Persona or OAuth2 (Google, GitHub, Facebook etc) for authenticatio
 
 ![Trends](https://github.com/apache/incubator-ponymail/blob/master/site/images/demo_trends.png)
 
-See [https://lists.apache.org](https://lists.apache.org) for a demo.
+See [https://lists.apache.org](https://lists.apache.org) for a demo (this now runs the 
+[Foal](https://github.com/apache/incubator-ponymail-foal) suite).
 
 Pony Mail works in both public, private and mixed-mode, allowing you 
 to have one unified place for all your communication, both public and 
