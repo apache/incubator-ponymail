@@ -1,6 +1,9 @@
 _NB: Development focus has shifted towards our [Pony Mail codename Foal](https://github.com/apache/incubator-ponymail-foal) replacement suite.<br/>Suggestions for new features should be focused on that repository instead._
 
 # Apache Pony Mail (Incubating)
+
+**Development on this project has shifted to [incubator-ponymail-foal](https://github.com/apache/incubator-ponymail-foal)**. This repository is now deprecated.
+
 <img src="https://github.com/apache/incubator-ponymail/blob/master/site/images/logo_large.png" align="left"/><br/><br/>
 Apache Pony Mail (Incubating) is a web-based mail archive browser
 licensed under the Apache License v/2.0 and built to scale 
