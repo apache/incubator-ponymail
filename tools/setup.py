@@ -122,7 +122,7 @@ if args.defaults:
     urlPrefix = ''
 
 # Accept CLI args, copy them
-if args.dbprefix:
+if args.dbprefix != None:
     urlPrefix = args.dbprefix
 if args.dbhost:
     hostname = args.dbhost
@@ -140,7 +140,7 @@ if args.nwc:
     wc = False
 if args.dbshards:
     shards = args.dbshards
-if args.dbreplicas:
+if args.dbreplicas != None:
     replicas = args.dbreplicas
 if args.generator:
     genname = args.generator
